@@ -24,6 +24,8 @@ login_mail_title = "New Bloomstack Account"
 
 welcome_email = "bloomstack_core.utils.welcome_email"
 
+setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
+
 # Includes in <head>
 # ------------------
 
