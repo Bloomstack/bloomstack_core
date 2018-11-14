@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include bloomstack_core *.css
+recursive-include bloomstack_core *.csv
+recursive-include bloomstack_core *.html
+recursive-include bloomstack_core *.ico
+recursive-include bloomstack_core *.js
+recursive-include bloomstack_core *.json
+recursive-include bloomstack_core *.md
+recursive-include bloomstack_core *.png
+recursive-include bloomstack_core *.py
+recursive-include bloomstack_core *.svg
+recursive-include bloomstack_core *.txt
+recursive-exclude bloomstack_core *.pyc
