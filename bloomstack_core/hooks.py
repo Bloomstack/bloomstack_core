@@ -22,6 +22,7 @@ app_include_js = "/assets/bloomstack_core/js/conf.js"
 
 login_mail_title = "New Bloomstack Account"
 
+welcome_email = "bloomstack_core.utils.welcome_email"
 
 # Includes in <head>
 # ------------------
