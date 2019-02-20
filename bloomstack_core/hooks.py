@@ -26,6 +26,10 @@ welcome_email = "bloomstack_core.utils.welcome_email"
 
 setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
 
+web_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
+app_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
+
+
 # Includes in <head>
 # ------------------
 
