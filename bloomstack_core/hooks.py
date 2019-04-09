@@ -137,4 +137,3 @@ app_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "bloomstack_core.event.get_events"
 # }
-
