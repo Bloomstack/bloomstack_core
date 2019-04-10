@@ -1,12 +1,98 @@
 
 frappe.provide('bloomstack_core');
 
+// disable change log popups from frappe / erpnext
+frappe.boot.change_log = []
+
 // add toolbar icon
-$(document).bind('toolbar_setup', function() {
+$(document).bind('toolbar_setup', () => {
 	frappe.app.name = "Bloomstack";
 
 	var $logo = $('<img class="erpnext-icon"/>')
 		.attr('src', '/assets/bloomstack_core/images/icon.png');
 
-	$('.navbar-home').empty().append($logo);
+	$('.navbar-home').empty().append($logo); var $help_menu = $('.dropdown-help ul .documentation-links');
+
+	// report issue menu item replacement
+	var $report_issue_menu_item = $(`<li><a href="#">${__('Contact Support')}</a></li>`)
+		.click(report_issue)
+		.insertBefore($help_menu);
+
+	var $guide_menu_item = $(`<li><a href=${frappe.boot.growth_guide_link} target="_blank">${__('Growth Guide')}</a></li>`)
+		.insertBefore($report_issue_menu_item);
+
+	// Hack to remove all but the above tag
+	$('.dropdown-help ul li')
+		.not($guide_menu_item)
+		.not($report_issue_menu_item)
+		.not($help_menu)
+		.remove();
+
+	function report_issue() {
+		// adds erpnext email filter guard... cause... paranoid... :D
+		const error_report_email = (frappe.boot.error_report_email || [])
+			.filter(email => email.search('erpnext') === -1)
+			.join(", ");
+
+		const error_report_message = `
+			<div style="min-height: 100px; border: 1px solid #bbb; \
+			border-radius: 5px; padding: 15px; margin-bottom: 15px;">
+				<h4>Site information:</h4>
+				<ul>
+					<li><strong>Current path:</strong> ${window.location.href}</li>
+					<li><strong>Date: </strong>
+						${frappe.datetime.global_date_format()},
+						${frappe.datetime.now_time()},
+						${Object.keys(frappe.boot.timezone_info.links)[0]}
+					</li>
+					<li><strong>Bloomstack version:</strong> ${frappe.boot.versions.bloomstack_core}</li>
+				</ul>
+			</div>
+			<h4>What seems to be the problem?</h4>`;
+
+		new frappe.views.CommunicationComposer({
+			subject: "",
+			recipients: error_report_email,
+			message: error_report_message,
+			doc: {
+				doctype: "User",
+				name: frappe.session.user
+			}
+		});
+
+		return false;
+	}
 });
+
+bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
+	// only one of these roles is allowed to use these feature
+	if (frappe.user.has_role(["Administrator", "Can Login As", "System Manager"])) {
+		frappe.call({
+			method: "frappe.client.get",
+			args: {
+				doctype: "User",
+				name: user,
+			},
+			callback: function (data) {
+				var user_doc = data.message;
+				// only administrator can login as system user
+				if (!frappe.user.has_role("Administrator") && user_doc && user_doc.user_type == "System User") {
+					return;
+				}
+
+				if (user_doc) {
+					frm.add_custom_button(label, function () {
+						frappe.call({
+							method: "bloomstack_core.utils.login_as",
+							args: { user: user },
+							freeze: true,
+							callback: function (data) {
+								window.location = "/desk";
+							}
+						})
+					}, submenu);
+				}
+			}
+		})
+	}
+}
