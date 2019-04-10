@@ -18,7 +18,10 @@ website_context = {
 
 boot_session = "bloomstack_core.boot.boot_session"
 
-app_include_js = "/assets/bloomstack_core/js/conf.js"
+app_include_js = [
+	"/assets/bloomstack_core/js/conf.js",
+	"/assets/bloomstack_core/js/query_report.js"
+]
 
 login_mail_title = "New Bloomstack Account"
 
