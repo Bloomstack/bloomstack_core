@@ -22,9 +22,7 @@ bloomstack_core.customizations.QueryReport = {
 	},
 	cleanup() {
 		// unfreeze the screen when query is complete
-		if (frappe.dom.freeze_count > 0) {
-			frappe.dom.unfreeze();
-		}
+		while (frappe.dom.freeze_count > 0) frappe.dom.unfreeze();
 	}
 }
 
