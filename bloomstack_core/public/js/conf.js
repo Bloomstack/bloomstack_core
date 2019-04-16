@@ -91,7 +91,7 @@ $(document).on("page-change", () => {
 		callback: (r) => {
 			if (!r.exc) {
 				// Empty out existing article links and append results
-				let $article_links = $(".dropdown-help #help-links").html("");
+				let $article_links = $(".dropdown-help #help-links").empty();
 
 				for (let article of r.message) {
 					$("<a>", {
