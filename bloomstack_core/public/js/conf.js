@@ -8,25 +8,35 @@ frappe.boot.change_log = []
 $(document).bind('toolbar_setup', () => {
 	frappe.app.name = "Bloomstack";
 
-	var $logo = $('<img class="erpnext-icon"/>')
+	const $logo = $('<img class="erpnext-icon"/>')
 		.attr('src', '/assets/bloomstack_core/images/icon.png');
 
-	$('.navbar-home').empty().append($logo); var $help_menu = $('.dropdown-help ul .documentation-links');
+	$('.navbar-home').empty().append($logo);
+
+	//////////////////////////////////////////////////
+	// BUILDING THE HELP MENU
+
+	const $help_menu = $('.dropdown-help ul .documentation-links');
+	const $article_links = $(".dropdown-help #help-links");
 
 	// report issue menu item replacement
-	var $report_issue_menu_item = $(`<li><a href="#">${__('Contact Support')}</a></li>`)
+	const $report_issue_menu_item = $(`<li><a href="#">${__('Contact Support')}</a></li>`)
 		.click(report_issue)
-		.insertBefore($help_menu);
+		.insertAfter($help_menu);
 
-	var $guide_menu_item = $(`<li><a href=${frappe.boot.growth_guide_link} target="_blank">${__('Growth Guide')}</a></li>`)
-		.insertBefore($report_issue_menu_item);
+	// Growth Guide link
+	const $guide_menu_item = $(`<li><a href=${frappe.boot.growth_guide_link} target="_blank">${__('Growth Guide')}</a></li>`)
+		.insertAfter($report_issue_menu_item);
 
-	// Hack to remove all but the above tag
+	// Hack to remove all but the above elements
 	$('.dropdown-help ul li')
+		.not($article_links)
+		.not($help_menu)
 		.not($guide_menu_item)
 		.not($report_issue_menu_item)
-		.not($help_menu)
 		.remove();
+
+	//////////////////////////////////////////////////
 
 	function report_issue() {
 		// adds erpnext email filter guard... cause... paranoid... :D
@@ -64,6 +74,37 @@ $(document).bind('toolbar_setup', () => {
 	}
 });
 
+$(document).on("page-change", () => {
+	let cur_route = frappe.get_route();
+	let doc_type = "";
+
+	// Only display articles for DocTypes
+	if (cur_route && ["Form", "List", "Tree"].includes(cur_route[0])) {
+		doc_type = cur_route[1];
+	}
+
+	frappe.call({
+		method: "bloomstack_core.config.docs.get_growth_guide_articles",
+		args: {
+			"doc_type": doc_type
+		},
+		callback: (r) => {
+			if (!r.exc) {
+				// Empty out existing article links and append results
+				let $article_links = $(".dropdown-help #help-links").empty();
+
+				for (let article of r.message) {
+					$("<a>", {
+						href: article.route,
+						text: article.name,
+						target: "_blank"
+					}).appendTo($article_links);
+				}
+			}
+		}
+	})
+})
+
 bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
 	// only one of these roles is allowed to use these feature
 	if (frappe.user.has_role(["Administrator", "Can Login As", "System Manager"])) {
@@ -74,7 +115,7 @@ bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
 				name: user,
 			},
 			callback: function (data) {
-				var user_doc = data.message;
+				const user_doc = data.message;
 				// only administrator can login as system user
 				if (!frappe.user.has_role("Administrator") && user_doc && user_doc.user_type == "System User") {
 					return;
