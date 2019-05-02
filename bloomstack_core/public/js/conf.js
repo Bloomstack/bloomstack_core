@@ -16,20 +16,25 @@ $(document).bind('toolbar_setup', () => {
 	//////////////////////////////////////////////////
 	// BUILDING THE HELP MENU
 
-	const $help_menu = $('.dropdown-help ul .documentation-links');
 	const $article_links = $(".dropdown-help #help-links");
+	const $help_menu = $('.dropdown-help ul .documentation-links');
 
-	// report issue menu item replacement
+	// link to BCC laws and regulations
+	const $bcc_site = $(`<li><a href="https://bcc.ca.gov/law_regs/" target="_blank">${__('BCC Guidelines')}</a></li>`)
+		.insertAfter($help_menu)
+
+	// replace Report Issue menu item
 	const $report_issue_menu_item = $(`<li><a href="#">${__('Contact Support')}</a></li>`)
 		.click(report_issue)
-		.insertAfter($help_menu);
+		.insertAfter($bcc_site);
 
-	// Growth Guide link
+	// link to Growth Guide
 	const $guide_menu_item = $(`<li><a href=${frappe.boot.growth_guide_link} target="_blank">${__('Growth Guide')}</a></li>`)
 		.insertAfter($report_issue_menu_item);
 
 	// Hack to remove all but the above elements
 	$('.dropdown-help ul li')
+		.not($bcc_site)
 		.not($article_links)
 		.not($help_menu)
 		.not($guide_menu_item)
