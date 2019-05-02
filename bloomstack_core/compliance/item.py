@@ -2,9 +2,6 @@ import frappe
 from bloomstack_core.utils import get_metrc, log_request
 from frappe import _
 
-METRC = get_metrc()
-
-
 def get_item(item):
 	"""
 	Get the METRC Item for a synced Bloomstack Item.
@@ -15,8 +12,9 @@ def get_item(item):
 	Returns:
 		dict: The METRC Item data, if it exists, otherwise `None`.
 	"""
+	metrc = get_metrc()
 
-	response = METRC.items.active.get()
+	response = metrc.items.active.get()
 
 	if not response.ok:
 		frappe.throw(_("Could not fetch items from METRC. Please try again later."))
@@ -38,8 +36,9 @@ def create_item(item):
 	"""
 
 	# Create the item record on METRC
+	metrc = get_metrc()
 	payload = build_payload(item)
-	response = METRC.items.create.post(json=payload)
+	response = metrc.items.create.post(json=payload)
 	log_request(response.url, payload, response, "Item", item.name)
 
 	if not response.ok:
@@ -58,9 +57,9 @@ def update_item(item):
 	Args:
 		item (object): The `Item` data to update in METRC.
 	"""
-
+	metrc = get_metrc()
 	payload = build_payload(item)
-	response = METRC.items.update.post(json=payload)
+	response = metrc.items.update.post(json=payload)
 	log_request(response.url, payload, response, "Item", item.name)
 
 	if not response.ok:
