@@ -51,7 +51,8 @@ doctype_js = {
 	"User": "public/js/user.js",
 	"Customer": "public/js/customer.js",
 	"Company": "public/js/company.js",
-	"Supplier": "public/js/supplier.js"
+	"Supplier": "public/js/supplier.js",
+	"Item": "public/js/item.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -105,13 +106,14 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Purchase Receipt": {
+		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags",
+	},
+	"Stock Entry": {
+		"on_submit": "bloomstack_core.compliance.package.create_package"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
