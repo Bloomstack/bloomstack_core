@@ -1,0 +1,19 @@
+services:
+  python:
+    image: tugboatqa/ubuntu:xenial
+    expose: 8000
+    default: true
+    http: true
+    https: true
+    https_redirect: true
+    depends: redis
+    commands:
+      init:
+        - git clone git@github.com:DigiThinkIT/tugboat.git setup
+        - chmod +x ./setup/install.sh
+        - ./setup/install.sh
+      build:
+        - chmod +x ./.tugboat/build.sh
+        - ./.tugboat/build.sh
+  redis:
+    image: tugboatqa/redis:4.0.9
