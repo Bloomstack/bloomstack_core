@@ -49,6 +49,9 @@ app_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
 # include js in doctype views
 doctype_js = {
 	"User": "public/js/user.js",
+	"Customer": "public/js/customer.js",
+	"Company": "public/js/company.js",
+	"Supplier": "public/js/supplier.js",
 	"Item": "public/js/item.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
