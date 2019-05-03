@@ -2,16 +2,15 @@ import frappe
 from bloomstack_core.utils import get_metrc, log_request
 from frappe import _
 
-METRC = get_metrc()
-
 
 def create_package(stock_entry, method):
 	# TODO: Handle non-manufacture Stock Entries for intermediate packages
 	if stock_entry.purpose != "Manufacture":
 		return
 
+	metrc = get_metrc()
 	payload = build_payload(stock_entry)
-	response = METRC.packages.create.post(json=payload)
+	response = metrc.packages.create.post(json=payload)
 	log_request(response.url, payload, response, "Stock Entry", stock_entry.name)
 
 	if not response.ok:
