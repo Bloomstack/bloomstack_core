@@ -1,4 +1,4 @@
-/* global frappe, erpnext, _ */
+/* global frappe, erpnext, __ */
 
 frappe.ui.form.on('Batch', {
 	refresh: (frm) => {

@@ -1,7 +1,9 @@
+/* global frappe, erpnext, __ */
+
 // Copyright (c) 2019, Bloom Stack, Inc and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Waste Disposal', {
+frappe.ui.form.on("Waste Disposal", {
 	refresh: function(frm) {
 		// Add button to retrieve items for disposal
 		if (frm.doc.docstatus < 1) {
@@ -13,11 +15,11 @@ frappe.ui.form.on('Waste Disposal', {
 		// Setup link queries for fields
 		erpnext.queries.setup_warehouse_query(frm);
 
-		frm.fields_dict.items.grid.get_field('item_code').get_query = function () {
+		frm.fields_dict.items.grid.get_field("item_code").get_query = function () {
 			return erpnext.queries.item({ is_stock_item: 1 });
 		};
 
-		frm.fields_dict.items.grid.get_field('batch_no').get_query = function (frm, cdt, cdn) {
+		frm.fields_dict.items.grid.get_field("batch_no").get_query = function (frm, cdt, cdn) {
 			let row = locals[cdt][cdn];
 
 			if (!row.warehouse) {
@@ -50,7 +52,7 @@ frappe.ui.form.on('Waste Disposal', {
 					frm.refresh();
 				}
 			}
-		})
+		});
 	},
 
 	get_items: function (frm) {
