@@ -2,11 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Compliance Settings', {
-	is_metrc_enabled: (frm) => {
-		frm.trigger("toggle_metrc_fields");
-	},
+	refresh: (frm) => {
 
-	toggle_metrc_fields: (frm) => {
-		frm.toggle_reqd(["metrc_url", "metrc_license_no", "metrc_vendor_key", "metrc_user_key"], frm.doc.is_metrc_enabled);
 	}
 });
