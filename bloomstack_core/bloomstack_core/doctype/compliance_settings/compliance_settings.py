@@ -38,6 +38,10 @@ def pull_metrc_item_categories():
 	"""
 
 	metrc = get_metrc()
+
+	if not metrc:
+		return
+
 	response = metrc.items.categories.get()
 
 	# Create root METRC item group
@@ -95,6 +99,10 @@ def pull_metrc_uoms():
 	"""
 
 	metrc = get_metrc()
+
+	if not metrc:
+		return
+
 	response = metrc.unitsofmeasure.active.get()
 
 	for uom in response.json():

@@ -15,6 +15,9 @@ def get_item(item):
 	"""
 	metrc = get_metrc()
 
+	if not metrc:
+		return
+
 	response = metrc.items.active.get()
 
 	if not response.ok:
@@ -38,6 +41,10 @@ def create_item(item):
 
 	# Create the item record on METRC
 	metrc = get_metrc()
+
+	if not metrc:
+		return
+
 	payload = build_payload(item)
 	response = metrc.items.create.post(json=payload)
 	log_request(response.url, payload, response, "Item", item.name)
@@ -59,6 +66,10 @@ def update_item(item):
 		item (object): The `Item` data to update in METRC.
 	"""
 	metrc = get_metrc()
+
+	if not metrc:
+		return
+
 	payload = build_payload(item)
 	response = metrc.items.update.post(json=payload)
 	log_request(response.url, payload, response, "Item", item.name)
