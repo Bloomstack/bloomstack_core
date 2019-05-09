@@ -9,6 +9,10 @@ def create_package(stock_entry, method):
 		return
 
 	metrc = get_metrc()
+
+	if not metrc:
+		return
+
 	payload = build_payload(stock_entry)
 	response = metrc.packages.create.post(json=payload)
 	log_request(response.url, payload, response, "Stock Entry", stock_entry.name)

@@ -2,7 +2,7 @@
 
 frappe.ui.form.on('Item', {
 	refresh: (frm) => {
-		if (!frm.is_new()) {
+		if (frappe.boot.compliance_enabled && !frm.is_new()) {
 			frappe.db.get_value("Compliance Item", { "item_code": frm.doc.item_code }, "name", (r) => {
 				if (r && r.name) {
 					frm.add_custom_button(__("View / Update"), () => {

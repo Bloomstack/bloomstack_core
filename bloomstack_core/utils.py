@@ -33,6 +33,9 @@ def login_as(user):
 def get_metrc():
 	settings = frappe.get_single("Compliance Settings")
 
+	if not settings.is_compliance_enabled:
+		return
+
 	if not all([settings.metrc_url, settings.metrc_vendor_key, settings.metrc_user_key, settings.metrc_vendor_key]):
 		frappe.throw("Please configure Compliance Settings")
 
