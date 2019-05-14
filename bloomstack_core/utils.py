@@ -78,3 +78,19 @@ def log_request(endpoint, request_data, response, ref_dt=None, ref_dn=None):
 	})
 	request.insert()
 	frappe.db.commit()
+
+@frappe.whitelist()
+def make_authorization_request(source_name, target_doc=None):
+	print(locals())
+
+@frappe.whitelist(allow_guest=True)
+def authorize_document(sign=None, signee=None, docname=None):
+	authorization_request = frappe.get_doc("Authorization Request", docname)
+	authorization_request.signature = sign
+	authorization_request.signee_name = signee
+	authorization_request.status = "Approved"
+	authorization_request.flags.ignore_permissions = True
+	authorization_request.save()
+
+	authorized_doc = frappe.get_doc("Quotation", authorization_request.linked_docname)
+	authorized_doc.submit()

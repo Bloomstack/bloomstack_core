@@ -1,0 +1,27 @@
+{% extends "templates/web.html" %}
+{% block title %} Authorize Document {% endblock %}
+
+{% block page_content %}
+{% if error %}
+{{ error }}
+{% else %}
+<div class="row">
+
+    <div class="col-lg-6">
+       {{ print_doc }}
+    </div>
+
+    <div class="col-lg-6">
+        Signee name: <input type="text" id="signee" value="" data-signee="{{ signee }}" required/> <br>
+        <div id="signature"></div>
+        <a class="btn btn-primary" id="step2">Sign document</a>
+    </div>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/assets/frappe/js/lib/jSignature.min.js"></script>
+<script>{% include "templates/includes/sign_document.js" %}</script>
+{% endblock %}
