@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import json
 
 import frappe
+from erpnext.stock.doctype.batch.batch import get_batch_qty
 from python_metrc import METRC
 
 
@@ -30,11 +31,34 @@ def login_as(user):
 	return False
 
 
+@frappe.whitelist()
+def move_expired_batches(source_name, target_doc=None):
+	batch_details = get_batch_qty(source_name)
+	target_warehouse = frappe.flags.args.get("warehouse")
+
+	item = frappe.db.get_value("Batch", source_name, "item")
+	uom = frappe.db.get_value("Item", item, "stock_uom")
+
+	stock_entry = frappe.new_doc("Stock Entry")
+	stock_entry.purpose = "Material Transfer"
+
+	for batch in batch_details:
+		if batch.get("qty") > 0:
+			stock_entry.append("items", {
+				"item_code": item,
+				"qty": batch.get("qty"),
+				"uom": uom,
+				"stock_uom": uom,
+				"batch_no": source_name,
+				"s_warehouse": batch.get("warehouse"),
+				"t_warehouse": target_warehouse
+			})
+
+	return stock_entry
+
+
 def get_metrc():
 	settings = frappe.get_single("Compliance Settings")
-
-	if not settings.is_compliance_enabled:
-		return
 
 	if not all([settings.metrc_url, settings.metrc_vendor_key, settings.metrc_user_key, settings.metrc_vendor_key]):
 		frappe.throw("Please configure Compliance Settings")
