@@ -112,7 +112,10 @@ doc_events = {
 	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
-	}
+	},
+    "Communication": {
+        "after_insert": "bloomstack_core.hook_events.communication.set_replied"
+    }
 }
 
 # Scheduled Tasks
