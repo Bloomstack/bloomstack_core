@@ -92,5 +92,9 @@ def authorize_document(sign=None, signee=None, docname=None):
 	authorization_request.flags.ignore_permissions = True
 	authorization_request.save()
 
-	authorized_doc = frappe.get_doc("Quotation", authorization_request.linked_docname)
+	authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
+	if authorized_doc.is_signed:
+		authorized_doc.is_signed =1
 	authorized_doc.submit()
+
+
