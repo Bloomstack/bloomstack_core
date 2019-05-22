@@ -10,7 +10,7 @@ su frappe -c "bench remove-app $TUGBOAT_GITHUB_REPO"
 su frappe -c "bench remove-app bloomstack_demo"
 
 # Create new site
-su frappe -c "bench new-site site1.local --mariadb-root-password tugboat --admin-password tugboat"
+su frappe -c "bench new-site site1.local --mariadb-root-password tugboat --admin-password PointlessPassword123!"
 su frappe -c "bench use site1.local"
 
 # Install ERPNext into site
