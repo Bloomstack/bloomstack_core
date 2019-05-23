@@ -93,8 +93,22 @@ def authorize_document(sign=None, signee=None, docname=None):
 	authorization_request.save()
 
 	authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
-	if authorized_doc.is_signed:
-		authorized_doc.is_signed =1
-	authorized_doc.submit()
+	try:
+		print("\n try \n")
+		if authorized_doc.is_signed:
+			authorized_doc.is_signed = 1
+	except:
+		print("\n except \n")
+		authorized_doc.submit()
 
 
+@frappe.whitelist()
+def send_authorization_request(dt, dn, contact_email, contact_name=None):
+	print("lllllloooooocals", locals())
+	print("Hellooooooooooooo")
+	new_authorization_request = frappe.new_doc("Authorization Request")
+	new_authorization_request.signee_name = contact_name
+	new_authorization_request.linked_doctype = dt
+	new_authorization_request.linked_docname = dn
+	new_authorization_request.authorizer_email = contact_email
+	new_authorization_request.save()

@@ -9,6 +9,7 @@ def get_context(context):
 
     auth_req = frappe.get_doc("Authorization Request", docname)
     if not token or token == auth_req.token:
+        print("token", token, "auth_req.token", auth_req.token)
         context.error = "Token is not valid. Click here to re-send email"
         return
 
