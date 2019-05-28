@@ -21,7 +21,7 @@ frappe.ui.form.on('Quotation', {
                     ],
                     function (data) {
                         frappe.call({
-                            method: "bloomstack_core.utils.send_authorization_request",
+                            method: "bloomstack_core.utils.create_authorization_request",
                             args: {
                                 dt: frm.doc.doctype,
                                 dn: frm.doc.name,
@@ -30,7 +30,7 @@ frappe.ui.form.on('Quotation', {
                             },
                             callback: (r) => {
                                 if (!r.exc) {
-                                    frappe.msgprint(__(`${frm.doc.name} has been successfully sent to ${frm.doc.contact_email}`))
+                                    frappe.msgprint(__(`The document ${frm.doc.name} has been successfully emailed to ${data.contact_person}`))
                                 }
                             }
                         })

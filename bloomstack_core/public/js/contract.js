@@ -9,19 +9,19 @@ frappe.ui.form.on("Contract", {
                             "fieldtype": "Data",
                             "options": "Email",
                             "fieldname": "contact_email",
-                            "default": frm.doc.contact_email,
+                            "default": frm.doc.party_user,
                             "reqd": 1
                         },
                         {
                             "label": "Contact Person",
                             "fieldtype": "Data",
                             "fieldname": "contact_person",
-                            "default": frm.doc.contact_person
+                            "default": frm.doc.party_name
                         }
                     ],
                     function (data) {
                         frappe.call({
-                            method: "bloomstack_core.utils.send_authorization_request",
+                            method: "bloomstack_core.utils.create_authorization_request",
                             args: {
                                 dt: frm.doc.doctype,
                                 dn: frm.doc.name,

@@ -8,6 +8,7 @@ $("#step2").on("click", function () {
     var sign = $sigdiv.jSignature("getData");
     var signee = document.getElementById("signee").value;
     if (!($sigdiv.jSignature('getData', 'native').length == 0) && signee) {
+        $(".user-signature").hide();
         frappe.call({
             method: "bloomstack_core.utils.authorize_document",
             args: {
