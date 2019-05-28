@@ -29,4 +29,3 @@ class AuthorizationRequest(Document):
 		})
 
 		frappe.sendmail(recipients=[self.authorizer_email], subject="You have a document to authorize", message=message)
-		print("EMAIL SENT *****")

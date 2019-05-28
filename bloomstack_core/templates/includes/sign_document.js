@@ -3,7 +3,6 @@ $(document).ready(function () {
     $sigdiv.jSignature();
     $sigdiv.jSignature("reset");
 
-
 $("#step2").on("click", function () {
     var sign = $sigdiv.jSignature("getData");
     var signee = document.getElementById("signee").value;
@@ -26,5 +25,4 @@ $("#step2").on("click", function () {
         alert('Please enter Sign and Signee ');
      }
 });
-
 });

@@ -4,4 +4,3 @@
 frappe.ui.form.on("Authorization Request", {
 
 });
-// frm.set_df_property("patient", "hidden", 0);
