@@ -160,3 +160,17 @@ def create_authorization_request(dt, dn, contact_email, contact_name=None):
 	new_authorization_request.linked_docname = dn
 	new_authorization_request.authorizer_email = contact_email
 	new_authorization_request.save()
+
+
+@frappe.whitelist()
+def update_odometer(dn, start=None, stop=None):
+	delivery_trip = frappe.get_doc("Delivery Trip", dn)
+	if start:
+		delivery_trip.update({"odometer_start": start})
+	else:
+		print("+++++++=delivery_trip.odometer_start", delivery_trip.odometer_start, "stop", stop)
+		print("type(delivery_trip.odometer_start)", type(delivery_trip.odometer_start), "stop", type(stop))
+		delivery_trip.update({"odometer_stop": stop, "actual-distance-travelled": (stop - delivery_trip.odometer_start)})
+
+	delivery_trip.save()
+	print("there!!!!!!!!!!!!",)
