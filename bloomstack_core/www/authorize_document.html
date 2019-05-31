@@ -7,14 +7,16 @@
 {% else %}
 <div class="row">
 
-    <div class="col-lg-6">
+    <div class="col-lg-8">
        {{ print_doc }}
     </div>
 
-    <div class="col-lg-6 user-signature">
-        Signee name: <input type="text" id="signee" value="" data-signee="{{ signee }}" required/> <br>
-        <div id="signature"></div>
-        <a class="btn btn-primary" id="step2">Sign document</a>
+    <div class="col-lg-4 user-signature">
+        Your Name: <input type="text" id="signee" value="" data-signee="{{ signee }}" required/> </br></br></br>
+        Signature:
+        <div id="signature"></div> <br><br></br>
+        <a class="btn btn-primary" id="approveDocument">Approve</a>  &emsp;&emsp;&emsp;
+        <a class="btn btn-primary" id="rejectDocument">Reject</a>
     </div>
 
 </div>

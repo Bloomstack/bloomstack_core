@@ -5,7 +5,9 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
-from frappe.utils import getdate, now_datetime, nowdate
+from frappe.utils import now_datetime
+from frappe.utils.data import get_url
+from erpnext import get_default_company
 
 class AuthorizationRequest(Document):
 	def after_insert(self):
@@ -16,16 +18,20 @@ class AuthorizationRequest(Document):
 	def generate_token(self):
 		self.token = frappe.generate_hash(self.name, 32)
 		self.token_generated_on = now_datetime()
-		self.request_link = "http://{0}/authorize_document?token={1}&name={2}".format(frappe.local.site, self.token, self.name)
+		self.request_link = "{0}/authorize_document?token={1}&name={2}".format(get_url(), self.token, self.name)
 		self.save()
-		
+
 	def send_authorization_request(self):
 		"""
 			Email the link to user for them to authorize the document
 		"""
 
+		doc = frappe.get_doc(self.linked_doctype, self.linked_docname)
+		company = get_default_company()
+
+		subject = "{0} requests your authorization on {1}".format(doc.company if doc.company else company, self.linked_doctype)
 		message = frappe.render_template("templates/emails/authorization_request.html", {
-			"link": self.request_link,
+			"authorization_request": self,
 		})
 
-		frappe.sendmail(recipients=[self.authorizer_email], subject="You have a document to authorize", message=message)
+		frappe.sendmail(recipients=[self.authorizer_email], subject=subject, message=message)

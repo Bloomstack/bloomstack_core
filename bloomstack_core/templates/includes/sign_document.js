@@ -1,28 +1,42 @@
 $(document).ready(function () {
     var $sigdiv = $("#signature")
-    $sigdiv.jSignature();
-    $sigdiv.jSignature("reset");
+    $sigdiv.jSignature();   // inits the jSignature widget.
+    $sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
-$("#step2").on("click", function () {
-    var sign = $sigdiv.jSignature("getData");
-    var signee = document.getElementById("signee").value;
-    if (!($sigdiv.jSignature('getData', 'native').length == 0) && signee) {
+    $("#approveDocument").on("click", function () {
+        var sign = $sigdiv.jSignature("getData");
+        var signee = $("#signee").value;
+        if (!($sigdiv.jSignature('getData', 'native').length == 0) && signee) {   // proceed only if user has put signature and signee name.
+            $(".user-signature").hide();
+            frappe.call({
+                method: "bloomstack_core.utils.authorize_document",
+                args: {
+                    sign: sign,
+                    signee: signee,
+                    docname: "{{ auth_req_docname }}",
+                },
+                freeze: true,
+                callback: (r) => {
+                    frappe.msgprint(__("The document has been approved by you!"));
+                }
+            })
+        }
+        else {
+            frappe.throw(__("Please put your name and signature!"));
+        }
+    });
+
+    $("#rejectDocument").on("click", function () {
         $(".user-signature").hide();
         frappe.call({
-            method: "bloomstack_core.utils.authorize_document",
+            method: "bloomstack_core.utils.reject_document",
             args: {
-                sign: sign,
-                signee: signee,
                 docname: "{{ auth_req_docname }}",
-                },
+            },
             freeze: true,
             callback: (r) => {
-                frappe.msgprint(__("The document has been approved by you!"));
+                frappe.msgprint(__("The document has been rejected by you!"));
             }
         })
-    }
-    else{
-        alert('Please enter Sign and Signee ');
-     }
-});
+    });
 });
