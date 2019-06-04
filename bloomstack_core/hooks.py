@@ -11,36 +11,35 @@ app_color = "light green"
 app_email = "developers@bloomstack.com"
 app_license = "MIT"
 
+boot_session = "bloomstack_core.boot.boot_session"
+login_mail_title = "New Bloomstack Account"
+welcome_email = "bloomstack_core.utils.welcome_email"
+setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
+error_report_email = "support@bloomstack.com"
 website_context = {
 	"favicon": "/assets/bloomstack_core/images/favicon.ico",
 	"splash_image": "/assets/bloomstack_core/images/splash.png"
 }
-
-boot_session = "bloomstack_core.boot.boot_session"
-
-app_include_js = [
-	"/assets/bloomstack_core/js/conf.js",
-	"/assets/bloomstack_core/js/query_report.js"
-]
-
-login_mail_title = "New Bloomstack Account"
-
-welcome_email = "bloomstack_core.utils.welcome_email"
-
-setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
-
-web_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
-app_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
 
 
 # Includes in <head>
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
+app_include_js = [
+	"/assets/bloomstack_core/js/conf.js",
+	"/assets/bloomstack_core/js/query_report.js"
+]
+app_include_css = [
+	"/assets/bloomstack_core/css/buttons.css",
+	"/assets/bloomstack_core/css/trees.css",
+	"/assets/bloomstack_core/css/mobile-fixes.css"
+]
 
 # include js, css files in header of web template
-# web_include_css = "/assets/bloomstack_core/css/bloomstack_core.css"
+web_include_css = [
+	"/assets/bloomstack_core/css/buttons.css"
+]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
 # include js in page
@@ -83,7 +82,11 @@ doctype_js = {
 # ------------
 
 # before_install = "bloomstack_core.install.before_install"
-# after_install = "bloomstack_core.install.after_install"
+after_install = [
+	"bloomstack_core.install_events.install.configure_selling_settings",
+	"bloomstack_core.install_events.install.configure_stock_settings",
+	"bloomstack_core.install_events.install.disable_standard_reports"
+]
 
 # Desk Notifications
 # ------------------
