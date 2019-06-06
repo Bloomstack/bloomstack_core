@@ -1,0 +1,16 @@
+.navbar-brand > img {
+    /* Fixes logo spilling to next line */
+    display: inline-block !important;
+}
+
+@media (max-width: 991px) {
+    /* Fixes awesome bar being pushed down due to size */
+    .navbar-desk {
+        width: 30% !important;
+    }
+
+    /* Fixes breadcrumbs spilling to next line, this is related to the above one */
+    #navbar-breadcrumbs {
+        display: block;
+    }
+}
