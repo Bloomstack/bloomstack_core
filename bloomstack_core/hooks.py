@@ -11,16 +11,20 @@ app_color = "light green"
 app_email = "developers@bloomstack.com"
 app_license = "MIT"
 
+
+# Set setup defaults
+setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
+setup_wizard_stages = "bloomstack_core.setup.setup_wizard.get_setup_stages"
+
+# Set website defaults
 boot_session = "bloomstack_core.boot.boot_session"
 login_mail_title = "New Bloomstack Account"
 welcome_email = "bloomstack_core.utils.welcome_email"
-setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
 error_report_email = "support@bloomstack.com"
 website_context = {
 	"favicon": "/assets/bloomstack_core/images/favicon.ico",
 	"splash_image": "/assets/bloomstack_core/images/splash.png"
 }
-
 
 # Includes in <head>
 # ------------------
@@ -82,11 +86,7 @@ doctype_js = {
 # ------------
 
 # before_install = "bloomstack_core.install.before_install"
-after_install = [
-	"bloomstack_core.install_events.install.configure_selling_settings",
-	"bloomstack_core.install_events.install.configure_stock_settings",
-	"bloomstack_core.install_events.install.disable_standard_reports"
-]
+# after_install = "bloomstack_core.install.after_install"
 
 # Desk Notifications
 # ------------------
