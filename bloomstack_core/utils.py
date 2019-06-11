@@ -7,7 +7,7 @@ from six import string_types
 import frappe
 from erpnext.stock.doctype.batch.batch import get_batch_qty
 from python_metrc import METRC
-
+from frappe.utils import now_datetime
 
 def welcome_email():
 	return "Welcome to Bloomstack"
@@ -166,11 +166,7 @@ def create_authorization_request(dt, dn, contact_email, contact_name=None):
 def update_odometer(dn, start=None, stop=None):
 	delivery_trip = frappe.get_doc("Delivery Trip", dn)
 	if start:
-		delivery_trip.update({"odometer_start": start})
+		delivery_trip.update({"odometer_start_value": int(start), "odometer_start_time": now_datetime()})
 	else:
-		print("+++++++=delivery_trip.odometer_start", delivery_trip.odometer_start, "stop", stop)
-		print("type(delivery_trip.odometer_start)", type(delivery_trip.odometer_start), "stop", type(stop))
-		delivery_trip.update({"odometer_stop": stop, "actual-distance-travelled": (stop - delivery_trip.odometer_start)})
-
+		delivery_trip.update({"odometer_stop_value": int(stop), "odometer_stop_time": now_datetime(), "actual_distance_travelled": int(stop) - delivery_trip.odometer_start_value})
 	delivery_trip.save()
-	print("there!!!!!!!!!!!!",)

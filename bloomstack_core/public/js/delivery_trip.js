@@ -1,56 +1,49 @@
 frappe.ui.form.on('Delivery Trip', {
-	refresh: (frm) => {
-        if (frm.doc.status == "Scheduled" && frm.doc.odometer_start != 0){
-           
+    refresh: (frm) => {
+        if (frm.doc.docstatus == 1 && frm.doc.status != "Completed" && frm.doc.odometer_start_value == 0) {
             frm.add_custom_button(__("Start"), () => {
-                console.log("yupup")
                 frappe.prompt([{
-                    "label": "Initial Reading",
-                    "fieldtype": "Float",
-                    "fieldname": "odometer_start",
+                    "label": "Odometer Start Value",
+                    "fieldtype": "Int",
+                    "fieldname": "odometer_start_value",
                     "reqd": 1
                 },
-            ],
-                function (data) {
-                    console.log("data.odometer_start", data.odometer_start, "docname", frm.docname)
-
-                    frappe.call({
-                        method: "bloomstack_core.utils.update_odometer",
-                        args: {
-                            "start": data.odometer_start,
-                            "dn": frm.docname,
-                        },
-                    })
+                ],
+                    function (data) {
+                        frappe.call({
+                            method: "bloomstack_core.utils.update_odometer",
+                            args: {
+                                "start": data.odometer_start_value,
+                                "dn": frm.docname,
+                            },
+                        });
                     },
-                __("Enter Odometer Value"));
+                    __("Enter Odometer Value"));
 
             }).addClass("btn-primary");
         }
-        else {
+        else if (frm.doc.docstatus == 1 && frm.doc.status != "Completed" && frm.doc.odometer_start_value > 0 && frm.doc.odometer_stop_value == 0) {
             frm.add_custom_button(__("Stop"), () => {
-                console.log("yupup")
                 frappe.prompt([{
-                    "label": "Final Reading",
-                    "fieldtype": "Float",
-                    "fieldname": "odometer_stop",
+                    "label": "Odometer Stop Value",
+                    "fieldtype": "Int",
+                    "fieldname": "odometer_stop_value",
                     "reqd": 1
                 },
-            ],
-                function (data) {
-                    console.log("data.odometer_stop", data.odometer_stop, "docname", frm.docname)
+                ],
+                    function (data) {
+                        frappe.call({
+                            method: "bloomstack_core.utils.update_odometer",
+                            args: {
+                                "stop": data.odometer_stop_value,
+                                "dn": frm.docname,
+                            },
 
-                    frappe.call({
-                        method: "bloomstack_core.utils.update_odometer",
-                        args: {
-                            "stop": data.odometer_stop,
-                            "dn": frm.docname,
-                        },
-                    })
+                        });
                     },
-                __("Enter Odometer Value"));
+                    __("Enter Odometer Value"));
 
             }).addClass("btn-primary");
-        };
-
+        }
     }
 });
