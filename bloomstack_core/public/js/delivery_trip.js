@@ -32,7 +32,7 @@ frappe.ui.form.on('Delivery Trip', {
                     function (data) {
                         frm.set_value('odometer_stop_value', data.odometer_stop_value);
                         frm.set_value('odometer_stop_time', frappe.datetime.now_datetime());
-                        if (data.odometer_stop_value > frm.doc.odometer_start_value && data.frappe.datetime.now_datetime() > frm.doc.odometer_start_time) {
+                        if (data.odometer_stop_value > frm.doc.odometer_start_value && frm.doc.odometer_stop_time > frm.doc.odometer_start_time) {
                             frm.set_value('actual_distance_travelled', (data.odometer_stop_value - frm.doc.odometer_start_value));
                             frm.dirty();
                             frm.save_or_update();
