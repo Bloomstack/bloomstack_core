@@ -1,0 +1,19 @@
+.bloomstack-banner {
+    display: none;
+}
+
+body.has-banner .bloomstack-banner {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #F58766;
+    color: white;
+    height: 20px;
+    text-align: center;
+}
+
+body.has-banner .content.page-container {
+    margin-bottom: 30px;
+}
