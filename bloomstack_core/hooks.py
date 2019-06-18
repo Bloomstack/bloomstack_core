@@ -54,6 +54,7 @@ doctype_js = {
 	"User": "public/js/user.js",
 	"Customer": "public/js/customer.js",
 	"Company": "public/js/company.js",
+	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Supplier": "public/js/supplier.js",
 	"Item": "public/js/item.js",
@@ -117,6 +118,13 @@ doctype_js = {
 doc_events = {
 	"Item": {
 		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
+	"Delivery Note": {
+		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
+		"before_submit": [
+			"bloomstack_core.hook_events.delivery_note.make_sales_invoice_for_delivery",
+			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
+		]
 	},
 	"Delivery Trip": {
 		"validate": [
