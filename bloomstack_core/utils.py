@@ -7,7 +7,6 @@ from six import string_types
 import frappe
 from erpnext.stock.doctype.batch.batch import get_batch_qty
 from python_metrc import METRC
-from frappe.utils import now_datetime
 
 def welcome_email():
 	return "Welcome to Bloomstack"
