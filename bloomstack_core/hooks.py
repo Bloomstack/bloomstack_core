@@ -54,6 +54,7 @@ doctype_js = {
 	"User": "public/js/user.js",
 	"Customer": "public/js/customer.js",
 	"Company": "public/js/company.js",
+	"Delivery Trip": "public/js/delivery_trip.js",
 	"Supplier": "public/js/supplier.js",
 	"Item": "public/js/item.js",
 	"Batch": "public/js/batch.js",
@@ -116,6 +117,12 @@ doctype_js = {
 doc_events = {
 	"Item": {
 		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
+	"Delivery Trip": {
+		"validate": [
+			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
+			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
+		]
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
