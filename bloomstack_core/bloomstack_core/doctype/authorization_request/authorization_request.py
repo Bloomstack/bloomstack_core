@@ -27,9 +27,9 @@ class AuthorizationRequest(Document):
 		"""
 
 		doc = frappe.get_doc(self.linked_doctype, self.linked_docname)
-		company = get_default_company()
+		company = doc.company if hasattr(doc, 'company') else get_default_company()
 
-		subject = "{0} requests your authorization on {1}".format(doc.company if doc.company else company, self.linked_doctype)
+		subject = "{0} requests your authorization on {1}".format(company, self.linked_doctype)
 		message = frappe.render_template("templates/emails/authorization_request.html", {
 			"authorization_request": self,
 		})
