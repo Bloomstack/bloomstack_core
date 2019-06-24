@@ -81,3 +81,40 @@ def log_request(endpoint, request_data, response, ref_dt=None, ref_dn=None):
 	})
 	request.insert()
 	frappe.db.commit()
+
+
+@frappe.whitelist(allow_guest=True)
+def authorize_document(sign=None, signee=None, docname=None):
+	if frappe.db.exists("Authorization Request", docname):
+		authorization_request = frappe.get_doc("Authorization Request", docname)
+		authorization_request.signature = sign
+		authorization_request.signee_name = signee
+		authorization_request.status = "Approved"
+		authorization_request.flags.ignore_permissions = True
+		authorization_request.save()
+
+		authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
+		if hasattr(authorized_doc, "is_signed") and hasattr(authorized_doc, "authorizer_signature") and hasattr(authorized_doc, "signee"):
+			if authorized_doc.is_signed == 0:
+				authorized_doc.is_signed = 1
+				authorized_doc.authorizer_signature = sign
+				authorized_doc.signee = signee
+		
+		authorized_doc.submit()
+
+
+@frappe.whitelist(allow_guest=True)
+def reject_document(docname):
+	if frappe.db.exists("Authorization Request", docname):
+		authorization_request = frappe.get_doc("Authorization Request", docname)
+		authorization_request.status = "Rejected"
+		authorization_request.save()
+
+
+@frappe.whitelist()
+def create_authorization_request(dt, dn, contact_email, contact_name=None):
+	new_authorization_request = frappe.new_doc("Authorization Request")
+	new_authorization_request.linked_doctype = dt
+	new_authorization_request.linked_docname = dn
+	new_authorization_request.authorizer_email = contact_email
+	new_authorization_request.save()
