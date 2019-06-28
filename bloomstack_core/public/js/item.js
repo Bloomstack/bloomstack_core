@@ -17,5 +17,29 @@ frappe.ui.form.on('Item', {
 				};
 			})
 		}
+	},
+
+	item_name: (frm) => {
+		frm.trigger("build_item_code");
+	},
+
+	item_group: (frm) => {
+		frm.trigger("build_item_code");
+	},
+
+	brand: (frm) => {
+		frm.trigger("build_item_code");
+	},
+
+	build_item_code: (frm) => {
+		frappe.call({
+			method: "bloomstack_core.hook_events.item.autoname_item",
+			args: { item: frm.doc },
+			callback: (r) => {
+				if (r.message) {
+					frm.set_value("item_code", r.message);
+				}
+			}
+		})
 	}
 });
