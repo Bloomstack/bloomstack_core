@@ -113,8 +113,11 @@ doctype_js = {
 # Hook on document methods and events
 
 doc_events = {
+	"Item": {
+		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
 	"Purchase Receipt": {
-		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags",
+		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
 	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
