@@ -1,7 +1,7 @@
 import frappe
 
 @frappe.whitelist(allow_guest=True)
-def issueStatusList():
+def issue_status_list():
 	"""
 	Returns an array of statuses available on the Issues doctype.
 	"""
