@@ -8,6 +8,7 @@ import frappe
 from erpnext.stock.doctype.batch.batch import get_batch_qty
 from python_metrc import METRC
 
+
 def welcome_email():
 	return "Welcome to Bloomstack"
 
@@ -140,7 +141,7 @@ def authorize_document(sign=None, signee=None, docname=None):
 				authorized_doc.is_signed = 1
 				authorized_doc.authorizer_signature = sign
 				authorized_doc.signee = signee
-		
+
 		authorized_doc.submit()
 
 
@@ -159,13 +160,3 @@ def create_authorization_request(dt, dn, contact_email, contact_name=None):
 	new_authorization_request.linked_docname = dn
 	new_authorization_request.authorizer_email = contact_email
 	new_authorization_request.save()
-
-
-@frappe.whitelist()
-def update_odometer(dn, start=None, stop=None):
-	delivery_trip = frappe.get_doc("Delivery Trip", dn)
-	if start:
-		delivery_trip.update({"odometer_start_value": int(start), "odometer_start_time": now_datetime()})
-	else:
-		delivery_trip.update({"odometer_stop_value": int(stop), "odometer_stop_time": now_datetime(), "actual_distance_travelled": int(stop) - delivery_trip.odometer_start_value})
-	delivery_trip.save()
