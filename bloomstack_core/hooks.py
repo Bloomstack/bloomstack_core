@@ -58,7 +58,8 @@ doctype_js = {
 	"Item": "public/js/item.js",
 	"Batch": "public/js/batch.js",
 	"Quotation": "public/js/quotation.js",
-	"Contract": "public/js/contract.js"
+	"Contract": "public/js/contract.js",
+	"Delivery Trip": "public/js/delivery_trip.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -121,6 +122,9 @@ doc_events = {
 	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
+	},
+	"Delivery Trip": {
+		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value"
 	}
 }
 

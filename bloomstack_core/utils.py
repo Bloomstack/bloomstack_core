@@ -141,7 +141,7 @@ def authorize_document(sign=None, signee=None, docname=None):
 				authorized_doc.is_signed = 1
 				authorized_doc.authorizer_signature = sign
 				authorized_doc.signee = signee
-		
+
 		authorized_doc.submit()
 
 
