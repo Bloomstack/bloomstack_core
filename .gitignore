@@ -3,4 +3,5 @@
 *.egg-info
 *.swp
 tags
+node_modules
 bloomstack_core/docs/current

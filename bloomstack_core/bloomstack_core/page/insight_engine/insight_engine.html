@@ -1,0 +1,146 @@
+<div class="wrapper">
+    <div class="revenue-section">
+        <div class="row">
+            <div class="col-md-4 total-monthly-revenue">
+                <div class="container">
+                    <span class="amount">{{ format_currency(total_monthly_revenue) }}</span>
+                    <span class="name">MONTHLY REVENUE</span>
+                    <span class="description">Payments received in the last 30 days</span>
+                </div>
+            </div>
+            <div class="col-md-4 total-weekly-revenue">
+                <div class="container">
+                    <span class="amount">{{ format_currency(total_weekly_revenue) }}</span>
+                    <span class="name">WEEKLY REVENUE</span>
+                    <span class="description">Payments received in the last 7 days</span>
+                </div>
+            </div>
+            <div class="col-md-4 yesterday-revenue">
+                <div class="container">
+                    <span class="amount">{{ format_currency(yesterday_revenue) }}</span>
+                    <span class="name">YESTERDAY\'S REVENUE</span>
+                    <span class="description">Payments received on {{ moment().subtract(1, "d").format("MMM D") }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 average-monthly-revenue">
+                <div class="container">
+                    <span class="amount">{{ format_currency(average_monthly_revenue) }}</span>
+                    <span class="name">AVERAGE MONTHLY REVENUE</span>
+                    <span class="description">Average of payments received in the last 30 days</span>
+                </div>
+            </div>
+            <div class="col-md-4 average-weekly-revenue">
+                <div class="container">
+                    <span class="amount">{{ format_currency(average_weekly_revenue) }}</span>
+                    <span class="name">AVERAGE WEEKLY REVENUE</span>
+                    <span class="description">Average of payments received in the last 7 days</span>
+                </div>
+            </div>
+            <div class="col-md-4 cash-on-hand">
+                <div class="container">
+                    <span class="amount">{{ format_currency(cash_on_hand) }}</span>
+                    <span class="name">CASH ON HAND</span>
+                    <span class="description">As on {{ moment().format("MMM D") }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chart-container parent-container">
+        <div class="row">
+            <div class="section-heading">
+                <p class="heading">
+                    TOP 5 PRODUCTS
+                    <span>
+                        by Revenue
+                    </span>
+                </p>
+                <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+            </div>
+            <canvas class="chart-graphics"></canvas>
+        </div>
+    </div>
+    <div class="category-product-info parent-container">
+        <div class="row">
+            <div class="col-md-6 donut-chart">
+                <div class="section-heading">
+                    <p class="heading">
+                        TOP TERRITORY
+                        <span>
+                            by Revenue
+                        </span>
+                    </p>
+                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                </div>
+                <canvas class="graphics"></canvas>
+            </div>
+            <div class="col-md-6 table-data">
+                <div class="section-heading">
+                    <p class="heading">
+                        TOP PRODUCTS
+                        <span>
+                            by Revenue
+                        </span>
+                    </p>
+                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                </div>
+                <div class="products">
+                    <table width="100%" cellpadding="10">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Products</th>
+                                <th>Revenue</th>
+                                <th>Units</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sales-partner-info parent-container">
+        <div class="row">
+            <div class="col-md-6 bar-data">
+                <div class="section-heading">
+                    <p class="heading">
+                        TOP SALES PARTNER
+                        <span>
+                            by Revenue
+                        </span>
+                    </p>
+                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                </div>
+                <canvas class="graphics"></canvas>
+            </div>
+            <div class="col-md-6 donut-chart">
+                <div class="section-heading">
+                    <p class="heading">
+                        INVOICES
+                        <!-- <span>
+                            by Revenue
+                        </span> -->
+                    </p>
+                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                </div>
+                <canvas class="graphics"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="graphical-distribution parent-container">
+        <div class="row">
+            <div class="section-heading">
+                <p class="heading">
+                    TOP 10 CUSTOMERS
+                    <span>
+                        by Revenue
+                    </span>
+                </p>
+                <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+            </div>
+            <canvas class="graphics"></canvas>
+        </div>
+    </div>
+</div>
