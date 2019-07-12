@@ -7,6 +7,7 @@ from six import string_types
 import frappe
 from erpnext.stock.doctype.batch.batch import get_batch_qty
 from python_metrc import METRC
+from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
 
 
 def welcome_email():
@@ -160,3 +161,13 @@ def create_authorization_request(dt, dn, contact_email, contact_name=None):
 	new_authorization_request.linked_docname = dn
 	new_authorization_request.authorizer_email = contact_email
 	new_authorization_request.save()
+
+
+@frappe.whitelist()
+def create_delivery_notes(source_names):
+	delivery_notes = []
+	for source_name in json.loads(source_names):
+		delivery_note = make_delivery_note(source_name)
+		delivery_note.save()
+		delivery_notes.append(delivery_note)
+	return delivery_notes
