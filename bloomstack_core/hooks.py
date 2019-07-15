@@ -130,16 +130,17 @@ doc_events = {
 		"validate": [
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
 			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
-		]
+		],
+		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value"
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
 	},
+	"Sales Invoice": {
+		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
+	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
-	},
-	"Delivery Trip": {
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value"
 	}
 }
 
