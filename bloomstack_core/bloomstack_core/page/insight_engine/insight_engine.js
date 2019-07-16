@@ -116,14 +116,16 @@ InsightEngine = class InsightEngine {
 		// Top product trends in the last week
 		let datasets = [];
 		Object.keys(this.dashboard_data.top_products_by_time).forEach((item, i) => {
-			datasets.push({
-				label: item,
-				backgroundColor: colors.rgba[i],
-				borderColor: colors.hex[i],
-				borderWidth: 1.5,
-				fill: false,
-				data: this.dashboard_data.top_products_by_time[item]
-			})
+			if(i < 5) {
+				datasets.push({
+					label: item,
+					backgroundColor: colors.rgba[i],
+					borderColor: colors.hex[i],
+					borderWidth: 1.5,
+					fill: false,
+					data: this.dashboard_data.top_products_by_time[item]
+				})
+			}
 		});
 
 		new Chart($(".chart-graphics"), {

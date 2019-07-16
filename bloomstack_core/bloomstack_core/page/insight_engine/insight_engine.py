@@ -77,7 +77,7 @@ def get_cash_on_hand():
 	return cash_on_hand
 
 
-def get_top_products(start_date, end_date, limit=5):
+def get_top_products(start_date, end_date, limit=10):
 	invoice_items_by_name = frappe.db.sql("""
 		SELECT
 			si_item.item_name AS item,
