@@ -45,6 +45,8 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 		"paid_invoices": pending_invoices.get("paid_invoices"),
 		"unpaid_invoices": pending_invoices.get("unpaid_invoices"),
 		"overdue_invoices": pending_invoices.get("overdue_invoices"),
+		"returned_invoices": pending_invoices.get("returned_invoices"),
+		"credit_invoices": pending_invoices.get("credit_invoices"),
 		"cash_on_hand": cash_on_hand
 	}
 
@@ -181,16 +183,20 @@ def get_pending_invoices(start_date, end_date):
 	invoices = get_invoices_by_field("status", start_date, end_date)
 
 	def get_invoice_totals_by_status(status):
-		return next((invoice.grand_total for invoice in invoices if invoice.status == "Paid"), 0)
+		return next((invoice.grand_total for invoice in invoices if invoice.status == status), 0)
 
 	paid_invoices = get_invoice_totals_by_status("Paid")
 	unpaid_invoices = get_invoice_totals_by_status("Unpaid")
 	overdue_invoices = get_invoice_totals_by_status("Overdue")
+	returned_invoices = get_invoice_totals_by_status("Return")
+	credit_invoices = get_invoice_totals_by_status("Credit Note Issued")
 
 	return {
 		"paid_invoices": paid_invoices,
-		"unpaid_invoices": unpaid_invoices + overdue_invoices,
-		"overdue_invoices": overdue_invoices
+		"unpaid_invoices": unpaid_invoices,
+		"overdue_invoices": overdue_invoices,
+		"returned_invoices": returned_invoices,
+		"credit_invoices": credit_invoices
 	}
 
 

@@ -242,9 +242,15 @@ InsightEngine = class InsightEngine {
 		new Chart($(".sales-partner-info .donut-chart .graphics"), {
 			type: 'doughnut',
 			data: {
-				labels: ['Paid', 'Unpaid', 'Overdue'],
+				labels: ['Paid', 'Unpaid', 'Overdue', 'Returned', 'Credit Issued'],
 				datasets: [{
-					data: [this.dashboard_data.paid_invoices, this.dashboard_data.unpaid_invoices, this.dashboard_data.overdue_invoices],
+					data: [
+						this.dashboard_data.paid_invoices,
+						this.dashboard_data.unpaid_invoices,
+						this.dashboard_data.overdue_invoices,
+						this.dashboard_data.returned_invoices,
+						this.dashboard_data.credit_invoices
+					],
 					backgroundColor: colors.rgba,
 					borderColor: colors.hex,
 					borderWidth: 1.5
