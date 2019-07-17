@@ -42,6 +42,7 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 		"top_products_by_revenue": top_products.get("by_revenue"),
 		"top_products_by_volume": top_products.get("by_volume"),
 		"top_products_by_time": top_products.get("by_time"),
+		"paid_invoices": pending_invoices.get("paid_invoices"),
 		"unpaid_invoices": pending_invoices.get("unpaid_invoices"),
 		"overdue_invoices": pending_invoices.get("overdue_invoices"),
 		"cash_on_hand": cash_on_hand
@@ -99,7 +100,7 @@ def get_top_products(start_date, end_date, limit=10):
 
 	top_products_by_revenue = sorted(invoice_items_by_name, key=lambda item: item.revenue, reverse=True)[:limit]
 	top_products_by_volume = sorted(invoice_items_by_name, key=lambda item: item.volume, reverse=True)[:limit]
-	top_products = list(map(lambda d: d.get("item"), top_products_by_revenue))
+	top_products = list(map(lambda d: d.get("item"), top_products_by_revenue))[:5]
 
 	invoice_items_by_date = frappe.db.sql("""
 		SELECT
@@ -124,7 +125,7 @@ def get_top_products(start_date, end_date, limit=10):
 	}, as_dict=True)
 
 	# Form a list of dates between the start and end dates
-	total_days = (getdate(end_date) - getdate(start_date)).days
+	total_days = date_diff(end_date, start_date)
 	date_list = [getdate(start_date) + timedelta(days=x) for x in range(total_days)]
 
 	# Form a dictionary of items and list of sales per day
@@ -133,12 +134,17 @@ def get_top_products(start_date, end_date, limit=10):
 		top_products_by_time_and_revenue[product] = {date: 0 for date in date_list}
 
 	for invoice in invoice_items_by_date:
-		top_products_by_time_and_revenue[invoice.item][invoice.date] += invoice.revenue
+		# Ensure only invoices with the requested dates get calculated
+		if top_products_by_time_and_revenue.get(invoice.item, {}).has_key(invoice.date):
+			top_products_by_time_and_revenue[invoice.item][invoice.date] += invoice.revenue
 
 	# NOTE: Doing dates.values() returns a list of values in an arbitrary order
 	# ref: https://docs.python.org/2/library/stdtypes.html#dict.items
 	# Using list-comp with a sorted dict to get the values in right order
-	top_products_by_time_and_revenue = {item: [dates.get(date) for date in sorted(dates)] for item, dates in top_products_by_time_and_revenue.items()}
+	top_products_by_time_and_revenue = {
+		item: [dates.get(date) for date in sorted(dates)]
+			for item, dates in top_products_by_time_and_revenue.items()
+	}
 
 	return {
 		"by_revenue": top_products_by_revenue,
@@ -174,10 +180,15 @@ def get_top_sales_partners(start_date, end_date, limit=5):
 def get_pending_invoices(start_date, end_date):
 	invoices = get_invoices_by_field("status", start_date, end_date)
 
-	unpaid_invoices = next((invoice.grand_total for invoice in invoices if invoice.status == "Unpaid"), 0)
-	overdue_invoices = next((invoice.grand_total for invoice in invoices if invoice.status == "Overdue"), 0)
+	def get_invoice_totals_by_status(status):
+		return next((invoice.grand_total for invoice in invoices if invoice.status == "Paid"), 0)
+
+	paid_invoices = get_invoice_totals_by_status("Paid")
+	unpaid_invoices = get_invoice_totals_by_status("Unpaid")
+	overdue_invoices = get_invoice_totals_by_status("Overdue")
 
 	return {
+		"paid_invoices": paid_invoices,
 		"unpaid_invoices": unpaid_invoices + overdue_invoices,
 		"overdue_invoices": overdue_invoices
 	}
