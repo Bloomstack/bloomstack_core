@@ -115,9 +115,8 @@
 
 .parent-container .table-data table th,
 .parent-container .table-data table td {
-    padding: 5px 10px;
+    padding: 5px 20px;
     font-size: 11px;
-    text-align: center;
 }
 
 .parent-container .table-data table th { height: 50px; }

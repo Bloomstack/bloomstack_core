@@ -242,7 +242,7 @@ InsightEngine = class InsightEngine {
 		new Chart($(".sales-partner-info .donut-chart .graphics"), {
 			type: 'doughnut',
 			data: {
-				labels: ['overdue_invoices', 'unpaid_invoices'],
+				labels: ['Total Amount Overdue', 'Total Unpaid Amount'],
 				datasets: [{
 					data: [this.dashboard_data.overdue_invoices, this.dashboard_data.unpaid_invoices],
 					backgroundColor: colors.rgba,
