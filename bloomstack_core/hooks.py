@@ -54,11 +54,15 @@ doctype_js = {
 	"User": "public/js/user.js",
 	"Customer": "public/js/customer.js",
 	"Company": "public/js/company.js",
+	"Delivery Note": "public/js/delivery_note.js",
+	"Delivery Trip": "public/js/delivery_trip.js",
 	"Supplier": "public/js/supplier.js",
 	"Item": "public/js/item.js",
 	"Batch": "public/js/batch.js",
 	"Quotation": "public/js/quotation.js",
-	"Contract": "public/js/contract.js"
+	"Contract": "public/js/contract.js",
+	"Delivery Trip": "public/js/delivery_trip.js",
+	"Packing Slip": "public/js/packing_slip.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -116,11 +120,31 @@ doc_events = {
 	"Item": {
 		"autoname": "bloomstack_core.hook_events.item.autoname"
 	},
+	"Delivery Note": {
+		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
+		"before_submit": [
+			"bloomstack_core.hook_events.delivery_note.make_sales_invoice_for_delivery",
+			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
+		]
+	},
+	"Delivery Trip": {
+		"validate": [
+			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
+			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
+		],
+		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value"
+	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
 	},
+	"Sales Invoice": {
+		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
+	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
+	},
+	"Packing Slip": {
+		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
 	}
 }
 
