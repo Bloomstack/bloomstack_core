@@ -169,5 +169,5 @@ def create_delivery_notes(source_names):
 	for source_name in json.loads(source_names):
 		delivery_note = make_delivery_note(source_name)
 		delivery_note.save()
-		delivery_notes.append(delivery_note)
+		delivery_notes.append(frappe.utils.get_link_to_form("Delivery Note", delivery_note.name))
 	return delivery_notes
