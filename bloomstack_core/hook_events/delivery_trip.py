@@ -106,15 +106,16 @@ def create_timesheet(trip, method):
 	def update_timesheet(trip):
 		employee = frappe.get_value("Driver", trip.driver, "employee")
 		timesheet = frappe.get_doc(
-			"Timesheet", {'employee': employee, 'docstatus': 0})
+			"Timesheet", {'employee': employee, 'docstatus': 0, 'time_logs.delivery_trip': trip.name})
 		for time_log in timesheet.time_logs:
-			if time_log.delivery_trip and time_log.delivery_trip==trip.name and time_log.from_time and not time_log.to_time:
+			if time_log.from_time and not time_log.to_time:
 				time_log.to_time = trip.odometer_stop_time
 				time_log.activity_type = "Driving"
 		timesheet.save()
 		timesheet.submit()
 
-	if trip.odometer_start_value and not trip.odometer_stop_value:
-		_create_timesheet(trip)
-	elif trip.odometer_stop_value:
-		update_timesheet(trip)
+	if trip.odometer_start_value:
+		if trip.odometer_stop_value:
+			update_timesheet(trip)
+		else:
+			_create_timesheet(trip)
