@@ -11,6 +11,8 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_ent
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from erpnext.accounts.party import get_due_date
 from frappe.utils import flt, nowdate, today
+from frappe.model.mapper import get_mapped_doc
+
 
 
 def generate_directions_url(delivery_trip, method):
@@ -85,3 +87,34 @@ def update_payment_due_date(sales_invoice):
 def set_vehicle_last_odometer_value(trip, method):
 	if trip.actual_distance_travelled:
 		frappe.db.set_value('Vehicle', trip.vehicle, 'last_odometer', trip.odometer_stop_value)
+
+
+def create_timesheet(trip, method):
+
+	def _create_timesheet(trip):
+		employee = frappe.get_value("Driver", trip.driver, "employee")
+		timesheet = frappe.new_doc("Timesheet")
+		timesheet.company = trip.company
+		timesheet.employee = employee
+		timesheet.append("time_logs", {
+			"from_time": trip.odometer_start_time,
+			"delivery_trip": trip.name
+
+		})
+		timesheet.save()
+
+	def update_timesheet(trip):
+		employee = frappe.get_value("Driver", trip.driver, "employee")
+		timesheet = frappe.get_doc(
+			"Timesheet", {'employee': employee, 'docstatus': 0})
+		for time_log in timesheet.time_logs:
+			if time_log.delivery_trip and time_log.delivery_trip==trip.name and time_log.from_time and not time_log.to_time:
+				time_log.to_time = trip.odometer_stop_time
+				time_log.activity_type = "Driving"
+		timesheet.save()
+		timesheet.submit()
+
+	if trip.odometer_start_value and not trip.odometer_stop_value:
+		_create_timesheet(trip)
+	elif trip.odometer_stop_value:
+		update_timesheet(trip)
