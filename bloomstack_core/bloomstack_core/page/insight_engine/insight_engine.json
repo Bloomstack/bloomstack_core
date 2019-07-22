@@ -1,0 +1,23 @@
+{
+ "content": null, 
+ "creation": "2019-07-10 15:55:16.454251", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2019-07-10 15:55:39.875772", 
+ "modified_by": "Administrator", 
+ "module": "Bloomstack Core", 
+ "name": "insight-engine", 
+ "owner": "Administrator", 
+ "page_name": "Insight Engine", 
+ "roles": [
+  {
+   "role": "Analytics"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "Insight Engine"
+}

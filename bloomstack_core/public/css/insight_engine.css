@@ -1,0 +1,149 @@
+.row { margin: 0; }
+
+.wrapper {
+    width: 100%;
+    margin: 30px auto;
+}
+
+.page-title,
+.page-actions {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.revenue-section .row { margin: 20px 0; }
+
+.revenue-section .container {
+    width: 100%;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 1px 6px #bfbdbd;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.revenue-section .row .col-md-4:first-of-type { padding-left: 0; }
+
+.revenue-section .row .col-md-4:last-of-type { padding-right: 0; }
+
+.revenue-section .container span { display: block; }
+
+.revenue-section .container .amount {
+    color: #707070;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.revenue-section .container .name {
+    margin-top: 7px;
+    color: #8c8c8c;
+    font-size: 15px;
+}
+
+.revenue-section .container .description {
+    margin-top: 7px;
+    color: #8c8c8c;
+    font-size: 10px;
+}
+
+.canvas {
+    height: 80vh;
+    width: 80vw;
+}
+
+.parent-container .row { display: flex; }
+
+.chart-container,
+.graphical-distribution {
+    border-radius: 15px;
+    box-shadow: 0 1px 6px #bfbdbd;
+}
+
+.chart-container .row,
+.graphical-distribution .row { 
+    margin: 0;
+    display: block;
+}
+
+.parent-container .row [class*="col-"] { 
+    padding: 0;
+    border-radius: 15px;
+    margin: 0 15px;
+    box-shadow: 0 1px 6px #bfbdbd;
+    flex: 1;
+}
+
+.category-product-info .row .donut-chart,
+.sales-partner-info .row .bar-data { margin-left: 0; }
+
+.category-product-info .row .table-data,
+.sales-partner-info .row .donut-chart { margin-right: 0; }
+
+.parent-container { margin: 30px 0; }
+
+.parent-container .section-heading p { margin: 0; }
+
+.parent-container .section-heading {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background: #474650;
+}
+
+.parent-container .graphics {
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.parent-container .section-heading p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.parent-container .section-heading p.heading {
+    margin: 15px 0 15px 20px;
+    display: inline-block;
+    color: #fff;
+}
+
+.parent-container .section-heading p.heading span { font-size: 12px; }
+
+.parent-container .section-heading p.duration {
+    margin: 15px 20px 15px 0;
+    float: right;
+    color: #fff;
+}
+
+.parent-container .table-data table th,
+.parent-container .table-data table td {
+    padding: 5px 20px;
+    font-size: 11px;
+}
+
+.parent-container .table-data table th { height: 50px; }
+
+.parent-container .table-data table tbody tr:last-of-type {
+    height: 50px;
+    vertical-align: top;
+}
+
+@media only screen and (max-width: 991px) {
+    .revenue-section .row { margin: 0; }
+
+    .revenue-section .col-xs-12 {
+        padding: 0;
+        margin: 15px 0;
+    }
+
+    .parent-container { margin: 15px 0; }
+
+    .parent-container .row {
+        margin: 0;
+        display: block;
+    }
+
+    .parent-container .row [class*="col-"] { margin: 15px 0; }
+}
+
+@media only screen and (max-width: 767px) {
+    .page-title { padding-left: 15px; }
+}
