@@ -120,6 +120,12 @@ doc_events = {
 	"Item": {
 		"autoname": "bloomstack_core.hook_events.item.autoname"
 	},
+	"Contract": {
+		"on_update_after_submit": [
+			"bloomstack_core.hook_events.contract.create_project_against_contract",
+			"bloomstack_core.hook_events.contract.create_order_against_contract"
+		]
+	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
