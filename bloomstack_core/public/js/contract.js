@@ -1,5 +1,8 @@
 frappe.ui.form.on("Contract", {
     refresh: (frm) => {
+        // Make "Signed" field read-only if a project is created against it
+        frm.toggle_enable("is_signed", !(frm.doc.is_signed && frm.doc.project));
+
         if (!frm.is_new() && frm.doc.docstatus === 0) {
             if (!frm.doc.customer_signature) {
                 frm.add_custom_button(__("Authorize"), () => {
