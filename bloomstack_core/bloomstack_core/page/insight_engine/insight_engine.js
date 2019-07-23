@@ -218,14 +218,14 @@ InsightEngine = class InsightEngine {
 						gridLines: { display: false },
 						barThickness: 30,
 						ticks: {
+							beginAtZero: true,
 							callback(value, index, values) {
 								return format_currency(value, null, 0);
 							}
 						}
 					}],
 					yAxes: [{
-						gridLines: { display: false },
-						ticks: { beginAtZero: true },
+						gridLines: { display: false }
 					}]
 				},
 				tooltips: {
