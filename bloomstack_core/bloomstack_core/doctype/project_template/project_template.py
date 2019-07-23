@@ -19,7 +19,7 @@ class ProjectTemplate(Document):
 				frappe.throw(_("Days to task start must be positive"))
 
 			if task.days_to_task_end and task.days_to_task_end < 0:
-				frappe.throw(_("Days to task start must be positive"))
+				frappe.throw(_("Days to task end must be positive"))
 
 			if task.days_to_task_start and task.days_to_task_end and task.days_to_task_start > task.days_to_task_end:
 				frappe.throw(_("Days to task start cannot be after days to task end"))

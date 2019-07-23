@@ -1,5 +1,7 @@
 import frappe
+from erpnext.controllers.accounts_controller import get_payment_terms
 from frappe import _
+from frappe.model.mapper import get_mapped_doc
 from frappe.utils import add_days, getdate, now
 
 
@@ -44,4 +46,26 @@ def create_project_against_contract(contract, method):
 	project.insert()
 
 	# Link the contract with the project
-	contract.project = project.name
+	contract.db_set("project", project.name)
+
+
+def create_order_against_contract(contract, method):
+	def set_missing_values(source, target):
+		target.delivery_date = frappe.db.get_value("Project", contract.project, "expected_end_date")
+		target.append("items", {
+			"item_code": source.payment_item,
+			"qty": 1,
+			"rate": frappe.db.get_value("Item", source.payment_item, "standard_rate")
+		})
+
+	if contract.party_type == "Customer":
+		sales_order = get_mapped_doc("Contract", contract.name, {
+			"Contract": {
+				"doctype": "Sales Order",
+				"field_map": {
+					"party_name": "customer"
+				}
+			}
+		}, postprocess=set_missing_values)
+		sales_order.save()
+		sales_order.submit()
