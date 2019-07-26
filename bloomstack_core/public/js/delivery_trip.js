@@ -18,9 +18,9 @@ frappe.ui.form.on('Delivery Trip', {
 					__("Enter Odometer Value"));
 				}).addClass("btn-primary");
 			} else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_stop_value == 0) {
-				frm.add_custom_button(__("Stop"), () => {
+				frm.add_custom_button(__("End"), () => {
 					frappe.prompt({
-						"label": "Odometer Stop Value",
+						"label": "Odometer End Value",
 						"fieldtype": "Int",
 						"fieldname": "odometer_stop_value",
 						"reqd": 1
