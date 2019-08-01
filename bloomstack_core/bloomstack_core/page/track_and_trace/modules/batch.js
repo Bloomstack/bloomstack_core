@@ -49,7 +49,7 @@ bloomstack.track_and_trace.modules.add("Batch", {
                         search_dn: data.search_dn,
                         image_path: null,
                         icon: "fa fa-arrow-up positive",
-                        title: "Stock Inputs",
+                        title: "Was used to manufacture",
                         fields: [],
                         parents: Object.assign({}, data.parents || {}),
                         children: r.message.map((row) => ({
@@ -84,7 +84,7 @@ bloomstack.track_and_trace.modules.add("Batch", {
                         search_dn: data.search_dn,
                         image_path: null,
                         icon: "fa fa-arrow-down negative",
-                        title: "Stock Outputs",
+                        title: "Was manufactured from",
                         fields: [],
                         parents: Object.assign({}, data.parents || {}),
                         children: r.message.map((row) => ({
