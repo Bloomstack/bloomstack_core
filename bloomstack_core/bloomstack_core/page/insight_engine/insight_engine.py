@@ -137,7 +137,7 @@ def get_top_products(start_date, end_date, limit=10):
 
 	for invoice in invoice_items_by_date:
 		# Ensure only invoices with the requested dates get calculated
-		if top_products_by_time_and_revenue.get(invoice.item, {}).has_key(invoice.date):
+		if invoice.date in top_products_by_time_and_revenue.get(invoice.item, {}):
 			top_products_by_time_and_revenue[invoice.item][invoice.date] += invoice.revenue
 
 	# NOTE: Doing dates.values() returns a list of values in an arbitrary order
