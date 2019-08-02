@@ -100,6 +100,13 @@ def get_top_products(start_date, end_date, limit=10):
 		"end_date": end_date
 	}, as_dict=True)
 
+	if not invoice_items_by_name:
+		return {
+			"by_revenue": [],
+			"by_volume": [],
+			"by_time": []
+		}
+
 	top_products_by_revenue = sorted(invoice_items_by_name, key=lambda item: item.revenue, reverse=True)[:limit]
 	top_products_by_volume = sorted(invoice_items_by_name, key=lambda item: item.volume, reverse=True)[:limit]
 	top_products = list(map(lambda d: d.get("item"), top_products_by_revenue))[:5]
