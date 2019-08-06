@@ -7,7 +7,7 @@ def create_stock_entry(packing_slip_doc, method, target_doc = None):
 		target.purpose = "Material Transfer"
 		target.company = frappe.db.get_value("Delivery Note", source.delivery_note, "company")
 		packing_warehouse = frappe.db.get_single_value("Delivery Settings", "packing_warehouse")
-		
+
 		for item in target.items:
 			if not item.t_warehouse:
 				item.t_warehouse = packing_warehouse
@@ -22,6 +22,8 @@ def create_stock_entry(packing_slip_doc, method, target_doc = None):
 		"Packing Slip Item": {
 			"doctype": "Stock Entry Detail",
 			"field_map": {
+				"serial_no": "serial_no",
+				"batch_no": "batch_no",
 				"source_warehouse": "s_warehouse",
 				"target_warehouse": "t_warehouse"
 			},
