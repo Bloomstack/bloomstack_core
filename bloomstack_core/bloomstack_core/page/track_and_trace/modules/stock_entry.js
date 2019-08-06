@@ -30,6 +30,29 @@ bloomstack.track_and_trace.modules.add("Stock Entry Detail", {
         let entry = data.data;
         data.title = `${entry.item_code}: ${entry.item_name}`;
 
+        if ( data.data.serial_no ) {
+            let serials = data.data.serial_no.split(/\\n+|,/);
+            if ( serials.length === 1 ) {
+                if ( serials[0] === data.search_dn ) {
+                    data.data.serial_no = data.search_dn;
+                }
+            } else {
+                data.data.serial_no = "MULTIPLE";
+            }
+
+            if ( serials.length > 0 ) {
+                for(let serial of serials) {
+                    data.children.push({
+                        query: true,
+                        search_dt: data.search_dt,
+                        search_dn: data.search_dn,
+                        dt: "Serial No",
+                        dn: serial
+                    })
+                }
+            }
+        }
+
         if ( data.data.batch_no ) {
             // preemptively adds a child node to be queried when this node is
             // expanded by the user.
@@ -40,12 +63,6 @@ bloomstack.track_and_trace.modules.add("Stock Entry Detail", {
                 dt: "Batch",
                 dn: data.data.batch_no
             })
-        }
-
-        if ( data.data.serial_no ) {
-            // serial_no holds a comma separated list of links.
-            // one of these should always be the dn of this node root
-            data.data.serial_no = data.search_dn;
         }
 
         // remove source warehouse from fields if not present
