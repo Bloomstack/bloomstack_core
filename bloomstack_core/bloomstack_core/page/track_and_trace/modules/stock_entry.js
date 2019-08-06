@@ -31,7 +31,7 @@ bloomstack.track_and_trace.modules.add("Stock Entry Detail", {
         data.title = `${entry.item_code}: ${entry.item_name}`;
 
         if ( data.data.serial_no ) {
-            let serials = data.data.serial_no.split(/\\n+|,/);
+            let serials = data.data.serial_no.trim().split(/\\n+|,/);
             if ( serials.length === 1 ) {
                 if ( serials[0] === data.search_dn ) {
                     data.data.serial_no = data.search_dn;
@@ -47,7 +47,7 @@ bloomstack.track_and_trace.modules.add("Stock Entry Detail", {
                         search_dt: data.search_dt,
                         search_dn: data.search_dn,
                         dt: "Serial No",
-                        dn: serial
+                        dn: serial.trim()
                     })
                 }
             }
