@@ -1,6 +1,6 @@
 $(document).ready(function() {
     if (frappe.boot.staging_server == true) {
-        $('body').append($('<div class="bloomstack-banner"></div>'));
+        $('body').append($('<div class="bloomstack-banner"><button type="button" class="btn close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> </div>'));
         // get banner ref
         let $banner = $('.bloomstack-banner');
 
