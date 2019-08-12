@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 import json
 
+from six import string_types
+
 import frappe
 from erpnext.stock.doctype.batch.batch import get_batch_qty
 from python_metrc import METRC
@@ -29,6 +31,46 @@ def login_as(user):
 		return True
 
 	return False
+
+
+def get_abbr(txt, max_length=2):
+	"""
+		Extract abbreviation from the given string as:
+			- Single-word strings abbreviate to the letters of the string, upto the max length
+			- Multi-word strings abbreviate to the initials of each word, upto the max length
+
+	Args:
+		txt (str): The string to abbreviate
+		max_length (int, optional): The max length of the abbreviation. Defaults to 2.
+
+	Returns:
+		str: The abbreviated string, in uppercase
+	"""
+
+	if not txt:
+		return
+
+	if not isinstance(txt, string_types):
+		try:
+			txt = str(txt)
+		except:
+			return
+
+	abbr = ""
+	words = txt.split(" ")
+
+	if len(words) > 1:
+		for word in words:
+			if len(abbr) >= max_length:
+				break
+
+			if word.strip():
+				abbr += word.strip()[0]
+	else:
+		abbr = txt[:max_length]
+
+	abbr = abbr.upper()
+	return abbr
 
 
 @frappe.whitelist()
@@ -81,3 +123,40 @@ def log_request(endpoint, request_data, response, ref_dt=None, ref_dn=None):
 	})
 	request.insert()
 	frappe.db.commit()
+
+
+@frappe.whitelist(allow_guest=True)
+def authorize_document(sign=None, signee=None, docname=None):
+	if frappe.db.exists("Authorization Request", docname):
+		authorization_request = frappe.get_doc("Authorization Request", docname)
+		authorization_request.signature = sign
+		authorization_request.signee_name = signee
+		authorization_request.status = "Approved"
+		authorization_request.flags.ignore_permissions = True
+		authorization_request.save()
+
+		authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
+		if hasattr(authorized_doc, "is_signed") and hasattr(authorized_doc, "authorizer_signature") and hasattr(authorized_doc, "signee"):
+			if authorized_doc.is_signed == 0:
+				authorized_doc.is_signed = 1
+				authorized_doc.authorizer_signature = sign
+				authorized_doc.signee = signee
+
+		authorized_doc.submit()
+
+
+@frappe.whitelist(allow_guest=True)
+def reject_document(docname):
+	if frappe.db.exists("Authorization Request", docname):
+		authorization_request = frappe.get_doc("Authorization Request", docname)
+		authorization_request.status = "Rejected"
+		authorization_request.save()
+
+
+@frappe.whitelist()
+def create_authorization_request(dt, dn, contact_email, contact_name=None):
+	new_authorization_request = frappe.new_doc("Authorization Request")
+	new_authorization_request.linked_doctype = dt
+	new_authorization_request.linked_docname = dn
+	new_authorization_request.authorizer_email = contact_email
+	new_authorization_request.save()

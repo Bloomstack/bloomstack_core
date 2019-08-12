@@ -1,0 +1,314 @@
+
+#track-and-trace .intro {
+    padding: 1rem 2rem;
+}
+
+#track-and-trace .results {
+    padding: 5px 18px;
+}
+
+#track-and-trace .results li,
+#track-and-trace .results ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#track-and-trace .node h2 {
+    padding: 0;
+    margin: 0 0 15px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#track-and-trace .node h2 .title {
+    flex: 1 1 auto;
+    margin-left: 5px;
+}
+
+#track-and-trace .results .node .doctype-link {
+    font-size: .7em;
+    margin-left: 10px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+#track-and-trace .node h2 > .actions {
+    flex: 0 0 auto;
+    align-self: flex-end;
+}
+
+/* field collapse chevron setup */
+#track-and-trace .node > .item > .leaf > .content h2 > .actions > .field-collapse {
+    cursor: pointer;
+}
+
+#track-and-trace .node > .item > .leaf > .content h2 > .actions > .field-collapse > .if-open {
+    display: inline-block;
+}
+
+#track-and-trace .node > .item > .leaf > .content h2 > .actions > .field-collapse > .if-closed {
+    display: none;
+}
+
+#track-and-trace .node.hide-fields > .item > .leaf > .content h2 > .actions > .field-collapse > .if-open {
+    display: none;
+}
+
+#track-and-trace .node.hide-fields > .item > .leaf > .content h2 > .actions > .field-collapse > .if-closed {
+    display: inline-block;
+}
+
+
+#track-and-trace .node {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+#track-and-trace .node > .item {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+/* Leaf container setup */
+#track-and-trace .node > .item > .leaf {
+    display: flex;
+    flex-direction:  row;
+}
+
+#track-and-trace .node > .item > .leaf:hover {
+    background-color: rgb(220, 226, 226);
+}
+
+#track-and-trace .node > .item > .leaf > .branch {
+    display: flex;
+    flex-direction: column;
+}
+
+/* node handle setup */
+#track-and-trace .node > .item > .leaf > .branch > .node-handle {
+    height: 14px;
+}
+
+#track-and-trace .node > .item > .leaf > .branch > .node-handle > i {
+    width: 16px;
+    height: 14px;
+    flex: 0 0 auto;
+}
+
+#track-and-trace .node.has-children > .item > .leaf > .content > .node-handle {
+    cursor: pointer;
+}
+
+#track-and-trace .node.open > .item > .leaf > .branch > .node-handle > i.if-open {
+    display: inline-block;
+}
+
+#track-and-trace .node > .item > .leaf > .branch > .node-handle > i.if-open {
+    display: none;
+}
+
+#track-and-trace .node.open > .item > .leaf > .branch > .node-handle > i.if-closed {
+    display: none;
+}
+
+#track-and-trace .node > .item > .leaf > .branch > .node-handle > i.if-closed {
+    display: inline-block;
+}
+
+/* Details section setup */
+#track-and-trace .details {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+#track-and-trace .node.hide-fields > .item > .leaf > .content > .details {
+    display: none;
+}
+
+/* Image is left align static flex box */
+#track-and-trace .details > img {
+    flex: 0 0 auto;
+    margin: 5px;
+    height: 80px;
+}
+
+/* field ul container is a dynamic stretch flex fox */
+#track-and-trace .details > ul {
+    flex: 1 1 auto;
+    column-count: 3;
+    margin: 0;
+    padding: 0;
+}
+
+#track-and-trace .details > ul > li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#track-and-trace .details > ul > li .field  {
+    font-weight: bold;
+}
+
+#track-and-trace .details > ul > li .value  {
+    white-space: nowrap;
+}
+
+#track-and-trace .node > .item > .leaf > .branch {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 16px;
+    flex: 0 0 auto;
+    align-items: flex-end;
+}
+
+#track-and-trace .node > .item > .leaf > .content {
+    flex: 1 1 auto;
+}
+
+/* crazy tree branching setup */
+#track-and-trace .node.has-children > .item > .leaf > .branch::after {
+    width: 16px;
+}
+
+#track-and-trace .node.has-children.open > .item > .leaf > .branch::after {
+    background-image: url('/assets/bloomstack_core/images/tree-sprite.png');
+    background-repeat: repeat-y;
+    content: '';
+    flex: 1 1 auto;
+    background-position-x: 64px;
+}
+
+#track-and-trace .node-padding {
+    display: flex;
+    flex-direction: column;
+}
+
+#track-and-trace .node.open.has-children > .item > .children > .node > .node-padding > span {
+    background-image: url('/assets/bloomstack_core/images/tree-sprite.png');
+    background-repeat: repeat-y;
+    display: block;
+    width: 16px;
+    flex: 1 1 auto;
+}
+
+#track-and-trace .node.open.has-children > .item > .children > .node.is-last > .node-padding > span:first-child {
+    flex: 0 0 auto;
+}
+
+#track-and-trace .node.open.has-children:not(.is-last) > .item > .children > .node > .node-padding > span {
+    flex: 1 1 auto;
+    background-position-x: 0;
+    background-repeat: repeat-y;
+}
+
+#track-and-trace .node.open.has-children > .item > .children > .node > .node-padding > span:first-child {
+    height: 16px;
+    background-position-x: -16px;
+    flex: 0 0 auto;
+}
+
+#track-and-trace .node.open.has-children > .item > .children > .node.is-last > .node-padding > span:first-child {
+    background-position-x: -32px;
+}
+
+#track-and-trace .node.open.has-children > .item > .children > .node > .node-padding > span:not(:first-child) {
+    background-position-x: 0px;
+}
+
+#track-and-trace .node.open.has-children > .item > .children > .node.is-last > .node-padding > span:not(:first-child) {
+    background-image: none;
+}
+
+#track-and-trace .node.open.has-children > .item > .leaf > .branch::after {
+    background-image: url('/assets/bloomstack_core/images/tree-sprite.png');
+    background-repeat: repeat-y;
+    background-position-x: 0;
+    display: block;
+    content: '';
+    width: 16px;
+    flex: 1 1 auto;
+}
+
+/* search section fixed setup, reserve search bar height to push content away from bottom
+   of search bar. */
+#track-and-trace > div:first-child {
+    height: 40px;
+}
+
+#track-and-trace #search-bar {
+    position: fixed;
+    background: #f5f7fa;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+}
+
+/* because we can't use boostrap container(due to frappe parent padding) we define
+   breakpoints for search bar manually */
+@media (min-width: 576px) {
+    #track-and-trace #search-bar {
+        max-width: 576px;
+    }
+}
+
+@media (min-width: 768px) {
+    #track-and-trace #search-bar {
+        max-width: 718px;
+    }
+}
+
+@media (min-width: 992px) {
+    #track-and-trace #search-bar {
+        max-width: 938px;
+    }
+}
+
+@media (min-width: 1200px) {
+    #track-and-trace #search-bar {
+        max-width: 1138px;
+    }
+}
+
+/* Paginator widget setup */
+#track-and-trace .paginator {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+#track-and-trace .paginator li {
+    list-style: none;
+    margin: 0 2px;
+}
+
+#track-and-trace .paginator .pagination-target {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#track-and-trace .paginator .pagination-target .list-item__content {
+    margin-right: 0;
+}
+
+#track-and-trace .paginator .pagination-target input {
+    width: 5rem;
+}
+
+#track-and-trace .positive {
+    color: #55b7b3;
+}
+
+#track-and-trace .negative {
+    color: #ce2b2b;
+}

@@ -1,0 +1,21 @@
+{
+ "add_total_row": 1, 
+ "creation": "2019-01-23 01:43:06.159270", 
+ "disable_prepared_report": 0, 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "Delta9", 
+ "modified": "2019-07-09 03:18:15.935132", 
+ "modified_by": "Administrator", 
+ "module": "Bloomstack Core", 
+ "name": "Delivered Sales", 
+ "owner": "Administrator", 
+ "prepared_report": 0, 
+ "ref_doctype": "Delivery Note", 
+ "report_name": "Delivered Sales", 
+ "report_type": "Script Report", 
+ "roles": []
+}

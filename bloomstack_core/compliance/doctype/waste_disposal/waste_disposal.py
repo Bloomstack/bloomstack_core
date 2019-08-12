@@ -18,7 +18,8 @@ class WasteDisposal(Document):
 
 @frappe.whitelist()
 def create_stock_entry_for_waste_disposal(doc):
-	doc = frappe._dict(json.loads(doc))
+	if isinstance(doc, str):
+		doc = frappe._dict(json.loads(doc))
 
 	stock_entry = get_mapped_doc("Waste Disposal", doc.name, {
 		"Waste Disposal": {
