@@ -20,8 +20,8 @@ def create_project_against_contract(contract, method):
 	for task in project_template.tasks:
 		project_tasks.append({
 			"title": task.task_name,
-			"start_date": add_days(base_date, task.days_to_task_start) if task.days_to_task_start else None,
-			"end_date": add_days(base_date, task.days_to_task_end) if task.days_to_task_end else None,
+			"start_date": add_days(base_date, task.days_to_task_start),
+			"end_date": add_days(base_date, task.days_to_task_end),
 			"task_weight": task.weight,
 			"description": task.description
 		})
@@ -55,17 +55,20 @@ def create_order_against_contract(contract, method):
 		target.append("items", {
 			"item_code": source.payment_item,
 			"qty": 1,
-			"rate": frappe.db.get_value("Item", source.payment_item, "standard_rate")
+			"rate": frappe.db.get_value("Item", source.payment_item, "standard_rate"),
+			"delivery_date": frappe.utils.getdate(now()),
+			"conversion_factor": 1
 		})
 
 	if contract.party_type == "Customer":
-		sales_order = get_mapped_doc("Contract", contract.name, {
-			"Contract": {
-				"doctype": "Sales Order",
-				"field_map": {
-					"party_name": "customer"
+		if contract.payment_item:
+			sales_order = get_mapped_doc("Contract", contract.name, {
+				"Contract": {
+					"doctype": "Sales Order",
+					"field_map": {
+						"party_name": "customer"
+					}
 				}
-			}
-		}, postprocess=set_missing_values)
-		sales_order.save()
-		sales_order.submit()
+			}, postprocess=set_missing_values)
+			sales_order.save()
+			sales_order.submit()
