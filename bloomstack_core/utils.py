@@ -136,10 +136,10 @@ def authorize_document(sign=None, signee=None, docname=None):
 		authorization_request.save()
 
 		authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
-		if hasattr(authorized_doc, "is_signed") and hasattr(authorized_doc, "authorizer_signature") and hasattr(authorized_doc, "signee"):
+		if hasattr(authorized_doc, "is_signed") and hasattr(authorized_doc, "customer_signature") and hasattr(authorized_doc, "signee"):
 			if authorized_doc.is_signed == 0:
 				authorized_doc.is_signed = 1
-				authorized_doc.authorizer_signature = sign
+				authorized_doc.customer_signature = sign
 				authorized_doc.signee = signee
 
 		authorized_doc.submit()
