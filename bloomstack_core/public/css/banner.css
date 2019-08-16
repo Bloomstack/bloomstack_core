@@ -5,22 +5,17 @@
 body.has-banner .bloomstack-banner {
     display: block;
     position: fixed;
-    -webkit-border-radius: 70px;
+    border-radius: 3rem;
     bottom: 0;
     left: 0;
     right: 0;
     background: #F58766;
     color: white;
-    height: 45px;
+    height: 5rem;
     width: 50%;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: -20px;
-    padding-top: 3px;
-    padding-right: 15px;
-}
-
-body.has-banner .content.page-container {
-    margin-bottom: 30px;
+    margin-bottom: -2.5rem;
+    padding-top: 0.2rem;
 }
