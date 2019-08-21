@@ -17,19 +17,61 @@ frappe.ui.form.on('Delivery Trip', {
 					},
 					__("Enter Odometer Value"));
 				}).addClass("btn-primary");
-			} else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_stop_value == 0) {
+			} else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_end_value == 0) {
+				frm.add_custom_button(__("pause"), () => {
+					// To pause
+				frm.remove_custom_button(__("pause"));
+				frm.add_custom_button(__("continue"), () => {
+					// To pause
+				frm.remove_custom_button(__("pause"));
+				frm.add_custom_button(__("continue"));
+				frappe.prompt({
+					"label": "Odometer Pause Value",
+					"fieldtype": "Int",
+					"fieldname": "odometer_pause_value",
+					"reqd": 1
+				},
+				(data) => {
+					if (data.odometer_pause_value > frm.doc.odometer_start_value) {
+						frm.set_value('odometer_pause_value', data.odometer_pause_value);
+						frm.dirty();
+						frm.save_or_update();
+					} else {
+						frappe.throw("The pause value cannot be lower than the start value");
+					}
+				},
+				__("Enter Odometer Value"));
+				}).addClass("btn-primary");
+				frappe.prompt({
+					"label": "Odometer Pause Value",
+					"fieldtype": "Int",
+					"fieldname": "odometer_pause_value",
+					"reqd": 1
+				},
+				(data) => {
+					if (data.odometer_pause_value > frm.doc.odometer_start_value) {
+						frm.set_value('odometer_pause_value', data.odometer_pause_value);
+						frm.dirty();
+						frm.save_or_update();
+					} else {
+						frappe.throw("The pause value cannot be lower than the start value");
+					}
+				},
+				__("Enter Odometer Value"));
+				}).addClass("btn-primary");
+
 				frm.add_custom_button(__("End"), () => {
 					frappe.prompt({
 						"label": "Odometer End Value",
 						"fieldtype": "Int",
-						"fieldname": "odometer_stop_value",
+						"fieldname": "odometer_end_value",
 						"reqd": 1
 					},
 					(data) => {
-						if (data.odometer_stop_value > frm.doc.odometer_start_value) {
-							frm.set_value('odometer_stop_value', data.odometer_stop_value);
-							frm.set_value('odometer_stop_time', frappe.datetime.now_datetime());
-							frm.set_value('actual_distance_travelled', (data.odometer_stop_value - frm.doc.odometer_start_value));
+						if (data.odometer_end_value > frm.doc.odometer_start_value) {
+							frm.set_value('odometer_end_value', data.odometer_end_value);
+							frm.set_value('odometer_end_time', frappe.datetime.now_datetime());
+							frm.set_value('actual_distance_travelled', (data.odometer_end_value - frm.doc.odometer_start_value));
 							frm.dirty();
 							frm.save_or_update();
 						} else {

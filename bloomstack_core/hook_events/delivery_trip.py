@@ -86,7 +86,7 @@ def update_payment_due_date(sales_invoice):
 
 def set_vehicle_last_odometer_value(trip, method):
 	if trip.actual_distance_travelled:
-		frappe.db.set_value('Vehicle', trip.vehicle, 'last_odometer', trip.odometer_stop_value)
+		frappe.db.set_value('Vehicle', trip.vehicle, 'last_odometer', trip.odometer_end_value)
 
 
 def create_timesheet(trip, method):
@@ -104,18 +104,22 @@ def create_timesheet(trip, method):
 		timesheet.save()
 
 	def update_timesheet(trip):
-		employee = frappe.get_value("Driver", trip.driver, "employee")
-		timesheet = frappe.get_doc(
-			"Timesheet", {'employee': employee, 'docstatus': 0, 'time_logs.delivery_trip': trip.name})
-		for time_log in timesheet.time_logs:
-			if time_log.from_time and not time_log.to_time:
-				time_log.to_time = trip.odometer_stop_time
-				time_log.activity_type = "Driving"
-		timesheet.save()
-		timesheet.submit()
+		timesheet_list = frappe.get_all("Timesheet Detail", filters={'delivery_trip': trip.name}, fields = ["parent"])
+		print("timesheet_detail", timesheet_list)
+		if timesheet_list:
+			timesheet = timesheet_list[0].get("parent")
+			print("timesheet_detail[0].get('parent')", timesheet)
+			timesheet = frappe.get_doc("Timesheet", timesheet)
+			for time_log in timesheet.time_logs:
+				if time_log.from_time and not time_log.to_time:
+					time_log.to_time = trip.odometer_end_time
+					time_log.activity_type = "Driving"
+			timesheet.save()
+			if trip.odometer_end_value:
+				timesheet.submit()
 
 	if trip.odometer_start_value:
-		if trip.odometer_stop_value:
+		if trip.odometer_end_value:
 			update_timesheet(trip)
 		else:
 			_create_timesheet(trip)
