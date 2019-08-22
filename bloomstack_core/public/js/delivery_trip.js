@@ -20,11 +20,7 @@ frappe.ui.form.on('Delivery Trip', {
 			} else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_end_value == 0) {
 				frm.add_custom_button(__("pause"), () => {
 					// To pause
-				frm.remove_custom_button(__("pause"));
-				frm.add_custom_button(__("continue"), () => {
-					// To pause
-				frm.remove_custom_button(__("pause"));
-				frm.add_custom_button(__("continue"));
+	
 				frappe.prompt({
 					"label": "Odometer Pause Value",
 					"fieldtype": "Int",
@@ -32,30 +28,40 @@ frappe.ui.form.on('Delivery Trip', {
 					"reqd": 1
 				},
 				(data) => {
-					if (data.odometer_pause_value > frm.doc.odometer_start_value) {
+					if (data.odometer_pause_value > frm.doc.odometer_start_value || data.odometer_pause_value > frm.doc.odometer_continue_value) {
 						frm.set_value('odometer_pause_value', data.odometer_pause_value);
+						frm.set_value('odometer_pause_time', frappe.datetime.now_datetime());
 						frm.dirty();
 						frm.save_or_update();
+
+						frm.remove_custom_button(__("pause"));
+						frm.add_custom_button(__("continue"), () => {
+							// To pause
+						frappe.prompt({
+							"label": "Odometer continue Value",
+							"fieldtype": "Int",
+							"fieldname": "odometer_continue_value",
+							"reqd": 1
+						},
+						(data) => {
+							if (data.odometer_continue_value > frm.doc.odometer_pause_value) {
+								frm.set_value('odometer_continue_value', data.odometer_continue_value);
+								frm.set_value('odometer_continue_time', frappe.datetime.now_datetime());
+								frm.dirty();
+								frm.save_or_update();
+							} else {
+								frappe.throw("The continue value cannot be lower than the pause value");
+							}
+						},
+						__("Enter Odometer Value"));
+						frm.remove_custom_button(__("continue"));
+						frm.add_custom_button(__("pause"));
+					
+						}).addClass("btn-primary");
 					} else {
 						frappe.throw("The pause value cannot be lower than the start value");
 					}
-				},
-				__("Enter Odometer Value"));
-				}).addClass("btn-primary");
-				frappe.prompt({
-					"label": "Odometer Pause Value",
-					"fieldtype": "Int",
-					"fieldname": "odometer_pause_value",
-					"reqd": 1
-				},
-				(data) => {
-					if (data.odometer_pause_value > frm.doc.odometer_start_value) {
-						frm.set_value('odometer_pause_value', data.odometer_pause_value);
-						frm.dirty();
-						frm.save_or_update();
-					} else {
-						frappe.throw("The pause value cannot be lower than the start value");
-					}
+
 				},
 				__("Enter Odometer Value"));
 				}).addClass("btn-primary");
