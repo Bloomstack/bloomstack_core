@@ -92,6 +92,8 @@ def set_vehicle_last_odometer_value(trip, method):
 def create_timesheet(trip, method):
 
 	def _create_timesheet(trip):
+		print("@@@@@@@@@@@@@@@@@@@@@@trip", trip)
+		print("@@@@@@@@@@@@@@@@@@@@@@trip.name", trip.name)
 		employee = frappe.get_value("Driver", trip.driver, "employee")
 		timesheet = frappe.new_doc("Timesheet")
 		timesheet.company = trip.company
@@ -102,7 +104,12 @@ def create_timesheet(trip, method):
 			"notes": "notes"
 
 		})
+		print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@timesheet name", timesheet)
+		print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@timesheet.time_logs[0].delivery_trip", timesheet.time_logs[0].delivery_trip)
+
 		timesheet.save()
+		print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@timesheet.time_logs[0].delivery_trip", timesheet.time_logs[0].delivery_trip)
+
 
 	def update_timesheet(trip):
 		timesheet_list = frappe.get_all("Timesheet Detail", filters={'delivery_trip': trip.name}, fields = ["parent"])
@@ -113,7 +120,12 @@ def create_timesheet(trip, method):
 			timesheet = frappe.get_doc("Timesheet", timesheet)
 			for time_log in timesheet.time_logs:
 				if time_log.from_time and not time_log.to_time:
-					time_log.to_time = trip.odometer_end_time if trip.odometer_end_time else trip.odometer_pause_value
+					print("To add to time")
+					if trip.odometer_end_time:
+						time_log.to_time = trip.odometer_end_time
+					elif trip.odometer_pause_value:
+						time_log.to_time = trip.odometer_pause_time
+					print("time_log.to_time", time_log.to_time)
 					time_log.activity_type = "Driving"
 					time_log.notes = "notes!!"
 				elif time_log.to_time:
@@ -127,7 +139,7 @@ def create_timesheet(trip, method):
 				timesheet.submit()
 
 	if trip.odometer_start_value:
-		if trip.odometer_end_value:
+		if trip.odometer_end_value or trip.odometer_pause_value or trip.odometer_continue_value:
 			update_timesheet(trip)
 		else:
 			_create_timesheet(trip)
