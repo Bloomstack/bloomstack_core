@@ -72,3 +72,17 @@ def create_order_against_contract(contract, method):
 			}, postprocess=set_missing_values)
 			sales_order.save()
 			sales_order.submit()
+
+
+@frappe.whitelist()
+def get_party_users(doctype, txt, searchfield, start, page_len, filters):
+	if filters.get("party_type") in ("Customer", "Supplier"):
+		party_links = frappe.get_all("Dynamic Link",
+			filters={"parenttype": "Contact",
+				"link_doctype": filters.get("party_type"),
+				"link_name": filters.get("party_name")},
+			fields=["parent"])
+
+		party_users = [frappe.db.get_value("Contact", link.parent, "user") for link in party_links]
+
+		return frappe.get_all("User", filters={"email": ["in", party_users]}, as_list=True)

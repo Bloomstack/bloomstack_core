@@ -1,5 +1,16 @@
 frappe.ui.form.on("Contract", {
     refresh: (frm) => {
+        // pull users for the set party
+        frm.set_query("party_user", (doc) => {
+            return {
+                query: "bloomstack_core.hook_events.contract.get_party_users",
+                filters: {
+                    "party_type": doc.party_type,
+                    "party_name": doc.party_name
+                }
+            }
+        });
+
         // Make "Signed" field read-only if a project is created against it
         frm.toggle_enable("is_signed", !(frm.doc.is_signed && frm.doc.project));
 
