@@ -99,41 +99,31 @@ def create_timesheet(trip, method):
 		timesheet.append("time_logs", {
 			"from_time": trip.odometer_start_time,
 			"delivery_trip": trip.name,
-			"notes": ""
-
 		})
-		print(" got start")
-
 		timesheet.save()
 
-
 	def update_timesheet(trip):
-		timesheet_list = frappe.get_all("Timesheet Detail", filters={'delivery_trip': trip.name}, fields = ["parent"])
+		timesheet_list = frappe.get_all("Timesheet Detail", filters={
+		                                'delivery_trip': trip.name}, fields=["parent"])
 		if timesheet_list:
 			timesheet = timesheet_list[0].get("parent")
 			timesheet = frappe.get_doc("Timesheet", timesheet)
 			last_timelog = timesheet.time_logs[-1]
 			if last_timelog.from_time and not last_timelog.to_time:
-				# Update Existing Row
 				if trip.odometer_end_time:
 					last_timelog.to_time = trip.odometer_end_time
-					print("========>>>", trip.odometer_end_value)
 				elif trip.odometer_pause_value:
 					last_timelog.to_time = trip.odometer_pause_time
-					print("========>>>", trip.odometer_pause_value)
 				last_timelog.activity_type = "Driving"
-				last_timelog.notes = "notes!!"
 			elif last_timelog.from_time and last_timelog.to_time:
-				# Create New Row
 				timesheet.append("time_logs", {
 					"from_time": trip.odometer_continue_time,
 					"delivery_trip": trip.name,
-					"notes": "notes"
 				})
 			timesheet.save()
 			if trip.odometer_end_value:
 				timesheet.submit()
-			
+
 	if trip.odometer_start_value:
 		if trip.odometer_end_value or trip.odometer_pause_value or trip.odometer_continue_value:
 			update_timesheet(trip)
