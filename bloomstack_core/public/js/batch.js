@@ -2,7 +2,7 @@
 
 frappe.ui.form.on('Batch', {
 	refresh: (frm) => {
-		if (frm.doc.expiry_date <= frappe.datetime.now_date()) {
+		if (frm.doc.batch_qty > 0 && frm.doc.expiry_date <= frappe.datetime.now_date()) {
 			frm.add_custom_button(__("Move to Waste"), () => {
 				frappe.prompt({
 					label: "Target Warehouse",
