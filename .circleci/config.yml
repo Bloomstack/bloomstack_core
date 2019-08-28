@@ -14,9 +14,9 @@ jobs:
           name: Trigger rundeck deploy
           command: |
             curl --request POST \
-            --url "'"$RUNDECK_JOB_URL"'" \
+            --url "$RUNDECK_JOB_URL" \
             --header 'content-type: application/json' \
-            --header 'x-rundeck-auth-token: "'"$RUNDECK_TOKEN"'" \
+            --header 'x-rundeck-auth-token: '"$RUNDECK_TOKEN"'' \
             --data '{ "options" : { "BenchName" : "frappe-demo" }}'
 
 workflows:
