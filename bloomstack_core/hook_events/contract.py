@@ -6,6 +6,9 @@ from frappe.utils import add_days, getdate, now
 
 
 def create_project_against_contract(contract, method):
+	if contract.project:
+		return
+
 	if not contract.project_template:
 		return
 
@@ -50,6 +53,12 @@ def create_project_against_contract(contract, method):
 
 
 def create_order_against_contract(contract, method):
+	if frappe.db.exists("Sales Order", {"contract": contract.name}):
+		return
+
+	if not contract.is_signed:
+		return
+
 	def set_missing_values(source, target):
 		target.delivery_date = frappe.db.get_value("Project", contract.project, "expected_end_date")
 		target.append("items", {
@@ -66,7 +75,8 @@ def create_order_against_contract(contract, method):
 				"Contract": {
 					"doctype": "Sales Order",
 					"field_map": {
-						"party_name": "customer"
+						"party_name": "customer",
+						"name": "contract"
 					}
 				}
 			}, postprocess=set_missing_values)
