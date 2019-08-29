@@ -89,7 +89,7 @@ def set_vehicle_last_odometer_value(trip, method):
 		frappe.db.set_value('Vehicle', trip.vehicle, 'last_odometer', trip.odometer_end_value)
 
 
-def create_timesheet(trip, method):
+def create_or_update_timesheet(trip, method):
 
 	def _create_timesheet(trip):
 		employee = frappe.get_value("Driver", trip.driver, "employee")
@@ -104,25 +104,35 @@ def create_timesheet(trip, method):
 		timesheet.save()
 
 	def update_timesheet(trip):
-		timesheet_list = frappe.get_all("Timesheet Detail", filters={'delivery_trip': trip.name}, fields=["parent"])
+		timesheet_list = frappe.get_all("Timesheet Detail", filters={'delivery_trip': trip.name}, fields=["parent"])   # get list of timesheets with the given delivery trip
 		if timesheet_list:
 			timesheet = timesheet_list[0].get("parent")
-			timesheet = frappe.get_doc("Timesheet", timesheet)
-			last_timelog = timesheet.time_logs[-1]
-			if last_timelog.from_time and not last_timelog.to_time:
-				if trip.odometer_end_time:
-					last_timelog.to_time = trip.odometer_end_time
-				elif trip.odometer_pause_time:
-					last_timelog.to_time = trip.odometer_pause_time
-			elif last_timelog.from_time and last_timelog.to_time:
-				timesheet.append("time_logs", {
-					"from_time": trip.odometer_continue_time,
-					"delivery_trip": trip.name,
-					"activity_type": frappe.db.get_single_value("Delivery Settings", "default_activity_type")
-				})
-			timesheet.save()
-			if trip.odometer_end_value:
-				timesheet.submit()
+			timesheet = frappe.get_doc("Timesheet", timesheet)   # get the specific timesheet
+			if len(timesheet.time_logs) > 0:
+				last_timelog = timesheet.time_logs[-1]   # get the last entry in the time_logs
+				if last_timelog.from_time and not last_timelog.to_time:
+					if trip.odometer_end_time:   #  if the trip has been ended
+						last_timelog.to_time = trip.odometer_end_time
+					elif trip.odometer_pause_time:   # if the trip has been paused
+						last_timelog.to_time = trip.odometer_pause_time
+				elif last_timelog.from_time and last_timelog.to_time:
+					activity_type = frappe.db.get_single_value("Delivery Settings", "default_activity_type")
+					if trip.odometer_pause_time and trip.odometer_end_time:   #  if the trip has been directly ended after it's been paused 
+						timesheet.append("time_logs", {
+							"from_time": trip.odometer_pause_time,
+							"to_time": trip.odometer_end_time,
+							"delivery_trip": trip.name,
+							"activity_type": activity_type
+						})
+					elif trip.odometer_continue_time:   # if the trip is continued
+						timesheet.append("time_logs", {
+							"from_time": trip.odometer_continue_time,
+							"delivery_trip": trip.name,
+							"activity_type": activity_type
+						})
+				timesheet.save()
+				if trip.odometer_end_value:
+					timesheet.submit()
 
 	if trip.odometer_start_value:
 		if trip.odometer_end_value or trip.odometer_pause_time or trip.odometer_continue_time:

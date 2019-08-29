@@ -7,15 +7,14 @@ frappe.ui.form.on('Delivery Trip', {
 			else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_end_value == 0) {  // check if the trip has been started
 				if (!frm.doc.odometer_pause_time && !frm.doc.odometer_continue_time) {  // check if the trip has been started but has never been paused yet
 					frm.trigger("pause");
-					frm.trigger("end");
 				}
 				else if (!frm.doc.odometer_pause_time || frm.doc.odometer_continue_time > frm.doc.odometer_pause_time){  // check if the trip has been continued recently
 					frm.trigger("pause");
-					frm.trigger("end");
 				}
 				else if (!frm.doc.odometer_continue_time || frm.doc.odometer_pause_time > frm.doc.odometer_continue_time){  // check if the trip has been paused recently
 					frm.trigger("continue");
 				}
+				frm.trigger("end");
 			}
 		}
 
@@ -89,8 +88,6 @@ frappe.ui.form.on('Delivery Trip', {
 				frm.set_value('odometer_continue_time', null);
 				frm.dirty();
 				frm.save_or_update();
-				frm.remove_custom_button(__("pause"));
-				frm.trigger("continue");
 			}
 		}).addClass("btn-primary");
 	},
@@ -102,8 +99,6 @@ frappe.ui.form.on('Delivery Trip', {
 					frm.set_value('odometer_pause_time', null);
 					frm.dirty();
 					frm.save_or_update();
-					frm.remove_custom_button(__("continue"));
-					frm.trigger("pause");
 				}
 			}).addClass("btn-primary");
 	},
