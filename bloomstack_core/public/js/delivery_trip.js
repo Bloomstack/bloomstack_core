@@ -108,7 +108,8 @@ frappe.ui.form.on('Delivery Trip', {
 				"label": "Odometer End Value",
 				"fieldtype": "Int",
 				"fieldname": "odometer_end_value",
-				"reqd": 1
+				"reqd": 1,
+				"default": frm.doc.odometer_start_value
 			},
 				(data) => {
 					if (data.odometer_end_value > frm.doc.odometer_start_value) {
