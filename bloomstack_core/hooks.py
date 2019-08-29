@@ -159,23 +159,12 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"bloomstack_core.tasks.all"
-# 	],
-# 	"daily": [
-# 		"bloomstack_core.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"bloomstack_core.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"bloomstack_core.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"bloomstack_core.tasks.monthly"
-# 	]
-# }
+scheduler_events = {
+	"daily": [
+		"bloomstack_core.hook_events.contract.update_status_for_contracts",
+		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
+	]
+}
 
 # Testing
 # -------
