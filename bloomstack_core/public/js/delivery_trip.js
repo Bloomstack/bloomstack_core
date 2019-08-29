@@ -82,7 +82,7 @@ frappe.ui.form.on('Delivery Trip', {
 		}).addClass("btn-primary");
 	},
 	pause: (frm) => {
-		frm.add_custom_button(__("pause"), () => {
+		frm.add_custom_button(__("Pause"), () => {
 			let pause_time = frappe.datetime.now_datetime();
 			if (pause_time > frm.doc.odometer_start_time || pause_time > frm.doc.odometer_continue_time) {
 				frm.set_value('odometer_pause_time', pause_time);
@@ -95,7 +95,7 @@ frappe.ui.form.on('Delivery Trip', {
 		}).addClass("btn-primary");
 	},
 	continue: (frm) => {
-			frm.add_custom_button(__("continue"), () => {
+			frm.add_custom_button(__("Continue"), () => {
 				let continue_time = frappe.datetime.now_datetime();
 				if (continue_time > frm.doc.odometer_pause_time) {
 					frm.set_value('odometer_continue_time', continue_time);
