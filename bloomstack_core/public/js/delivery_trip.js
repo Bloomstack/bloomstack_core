@@ -3,17 +3,18 @@ frappe.ui.form.on('Delivery Trip', {
 		if (frm.doc.docstatus == 1 && frm.doc.status != "Completed") {
 			if (frm.doc.odometer_start_value == 0) {
 				frm.trigger("start");
-			} else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_end_value == 0) {
-				if (frm.doc.odometer_pause_value > 0 || frm.doc.odometer_continue_value > 0) {
-					if (frm.doc.odometer_pause_value > frm.doc.odometer_continue_value) {
-						frm.trigger("continue");
-					} else if (frm.doc.odometer_continue_value > frm.doc.odometer_pause_value) {
-						frm.trigger("pause");
-						frm.trigger("end");
-					}
-				} else if (frm.doc.odometer_pause_value == 0 && frm.doc.odometer_continue_value == 0) {
+			}
+			else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_end_value == 0) {  // check if the trip has been started
+				if (!frm.doc.odometer_pause_time && !frm.doc.odometer_continue_time) {  //check if either pause_time or continue_time exists
 					frm.trigger("pause");
 					frm.trigger("end");
+				}
+				else if (!frm.doc.odometer_pause_time || frm.doc.odometer_continue_time > frm.doc.odometer_pause_time){
+					frm.trigger("pause");
+					frm.trigger("end");
+				}
+				else if (!frm.doc.odometer_continue_time || frm.doc.odometer_pause_time > frm.doc.odometer_continue_time){
+					frm.trigger("continue");
 				}
 			}
 		}
@@ -82,56 +83,29 @@ frappe.ui.form.on('Delivery Trip', {
 	},
 	pause: (frm) => {
 		frm.add_custom_button(__("pause"), () => {
-			frappe.prompt({
-				"label": "Odometer Pause Value",
-				"fieldtype": "Int",
-				"fieldname": "odometer_pause_value",
-				"reqd": 1
-			},
-				(data) => {
-					if (data.odometer_pause_value > frm.doc.odometer_start_value || data.odometer_pause_value > frm.doc.odometer_continue_value) {
-						frm.set_value('odometer_pause_value', data.odometer_pause_value);
-						frm.set_value('odometer_pause_time', frappe.datetime.now_datetime());
-						frm.set_value('odometer_continue_time', null);
-						frm.set_value('odometer_continue_value', null);
-						frm.dirty();
-						frm.save_or_update();
-						frm.remove_custom_button(__("pause"));
-						frm.trigger("continue");
-					} else {
-						frappe.throw("The pause value cannot be lower than the start value");
-					}
-
-				},
-				__("Enter Odometer Value"));
+			let pause_time = frappe.datetime.now_datetime();
+			if (pause_time > frm.doc.odometer_start_time || pause_time > frm.doc.odometer_continue_time) {
+				frm.set_value('odometer_pause_time', pause_time);
+				frm.set_value('odometer_continue_time', null);
+				frm.dirty();
+				frm.save_or_update();
+				frm.remove_custom_button(__("pause"));
+				frm.trigger("continue");
+			}
 		}).addClass("btn-primary");
 	},
 	continue: (frm) => {
-		if (frm.doc.odometer_pause_value > 0) {
 			frm.add_custom_button(__("continue"), () => {
-				frappe.prompt({
-					"label": "Odometer continue Value",
-					"fieldtype": "Int",
-					"fieldname": "odometer_continue_value",
-					"reqd": 1
-				},
-					(data) => {
-						if (data.odometer_continue_value > frm.doc.odometer_pause_value) {
-							frm.set_value('odometer_continue_value', data.odometer_continue_value);
-							frm.set_value('odometer_continue_time', frappe.datetime.now_datetime());
-							frm.set_value('odometer_pause_time', null);
-							frm.set_value('odometer_pause_value', null);
-							frm.dirty();
-							frm.save_or_update();
-						} else {
-							frappe.throw("The continue value cannot be lower than the pause value");
-						}
-					},
-					__("Enter Odometer Value"));
-				frm.remove_custom_button(__("continue"));
-				frm.trigger("pause");
+				let continue_time = frappe.datetime.now_datetime();
+				if (continue_time > frm.doc.odometer_pause_time) {
+					frm.set_value('odometer_continue_time', continue_time);
+					frm.set_value('odometer_pause_time', null);
+					frm.dirty();
+					frm.save_or_update();
+					frm.remove_custom_button(__("continue"));
+					frm.trigger("pause");
+				}
 			}).addClass("btn-primary");
-		}
 	},
 	end: (frm) => {
 		frm.add_custom_button(__("End"), () => {

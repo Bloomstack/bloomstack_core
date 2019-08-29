@@ -112,7 +112,7 @@ def create_timesheet(trip, method):
 			if last_timelog.from_time and not last_timelog.to_time:
 				if trip.odometer_end_time:
 					last_timelog.to_time = trip.odometer_end_time
-				elif trip.odometer_pause_value:
+				elif trip.odometer_pause_time:
 					last_timelog.to_time = trip.odometer_pause_time
 			elif last_timelog.from_time and last_timelog.to_time:
 				timesheet.append("time_logs", {
@@ -125,7 +125,7 @@ def create_timesheet(trip, method):
 				timesheet.submit()
 
 	if trip.odometer_start_value:
-		if trip.odometer_end_value or trip.odometer_pause_value or trip.odometer_continue_value:
+		if trip.odometer_end_value or trip.odometer_pause_time or trip.odometer_continue_time:
 			update_timesheet(trip)
 		else:
 			_create_timesheet(trip)
