@@ -89,53 +89,62 @@ def set_vehicle_last_odometer_value(trip, method):
 		frappe.db.set_value('Vehicle', trip.vehicle, 'last_odometer', trip.odometer_end_value)
 
 
-def create_or_update_timesheet(trip, method):
+@frappe.whitelist()
+def create_or_update_timesheet(dt, action, odometer_value=None):
+	delivery_trip = frappe.get_doc("Delivery Trip", dt)
+	time = frappe.utils.now()
 
-	def _create_timesheet(trip):
-		employee = frappe.get_value("Driver", trip.driver, "employee")
+	def get_timesheet(dt):
+		timesheet_list = frappe.get_all("Timesheet", filters={'docstatus': 0, 'delivery_trip': delivery_trip.name})
+		if timesheet_list:
+			timesheet = timesheet_list[0]
+			timesheet = frappe.get_doc("Timesheet", timesheet)
+			if len(timesheet.time_logs) > 0:
+				return timesheet
+
+	if action == "start":
+		employee = frappe.get_value("Driver", delivery_trip.driver, "employee")
 		timesheet = frappe.new_doc("Timesheet")
-		timesheet.company = trip.company
+		timesheet.company = delivery_trip.company
 		timesheet.employee = employee
+		timesheet.delivery_trip = delivery_trip.name
 		timesheet.append("time_logs", {
-			"from_time": trip.odometer_start_time,
-			"delivery_trip": trip.name,
+			"from_time": time,
 			"activity_type": frappe.db.get_single_value("Delivery Settings", "default_activity_type")
 		})
 		timesheet.save()
 
-	def update_timesheet(trip):
-		timesheet_list = frappe.get_all("Timesheet Detail", filters={'delivery_trip': trip.name}, fields=["parent"])   # get list of timesheets with the given delivery trip
-		if timesheet_list:
-			timesheet = timesheet_list[0].get("parent")
-			timesheet = frappe.get_doc("Timesheet", timesheet)   # get the specific timesheet
-			if len(timesheet.time_logs) > 0:
-				last_timelog = timesheet.time_logs[-1]   # get the last entry in the time_logs
-				if last_timelog.from_time and not last_timelog.to_time:
-					if trip.odometer_end_time:   #  if the trip has been ended
-						last_timelog.to_time = trip.odometer_end_time
-					elif trip.odometer_pause_time:   # if the trip has been paused
-						last_timelog.to_time = trip.odometer_pause_time
-				elif last_timelog.from_time and last_timelog.to_time:
-					activity_type = frappe.db.get_single_value("Delivery Settings", "default_activity_type")
-					if trip.odometer_pause_time and trip.odometer_end_time:   #  if the trip has been directly ended after it's been paused 
-						timesheet.append("time_logs", {
-							"from_time": trip.odometer_pause_time,
-							"to_time": trip.odometer_end_time,
-							"delivery_trip": trip.name,
-							"activity_type": activity_type
-						})
-					elif trip.odometer_continue_time:   # if the trip is continued
-						timesheet.append("time_logs", {
-							"from_time": trip.odometer_continue_time,
-							"delivery_trip": trip.name,
-							"activity_type": activity_type
-						})
-				timesheet.save()
-				if trip.odometer_end_value:
-					timesheet.submit()
+		frappe.db.set_value("Delivery Trip", dt, "status", "In Transit", update_modified=False) # Because we can't status as allow on submit
+		frappe.db.set_value("Delivery Trip", dt, "odometer_start_value", odometer_value, update_modified=False)
+		frappe.db.set_value("Delivery Trip", dt, "odometer_start_time", time)
+	elif action == "pause":
+		timesheet = get_timesheet(dt)
+		last_timelog = timesheet.time_logs[-1]
+		if last_timelog.from_time and not last_timelog.to_time:
+			last_timelog.to_time = time
+			timesheet.save()
 
-	if trip.odometer_start_value:
-		if trip.odometer_end_value or trip.odometer_pause_time or trip.odometer_continue_time:
-			update_timesheet(trip)
-		else:
-			_create_timesheet(trip)
+		frappe.db.set_value("Delivery Trip", dt, "status", "Paused", update_modified=False)
+
+	elif action == "continue":
+		timesheet = get_timesheet(dt)
+		last_timelog = timesheet.time_logs[-1]
+		if last_timelog.from_time and last_timelog.to_time:
+			timesheet.append("time_logs", {
+							"from_time": time,
+							"activity_type": frappe.db.get_single_value("Delivery Settings", "default_activity_type")
+						})
+			timesheet.save()
+
+		frappe.db.set_value("Delivery Trip", dt, "status", "In Transit", update_modified=False)
+
+	elif action == "end":
+		timesheet = get_timesheet(dt)
+		last_timelog = timesheet.time_logs[-1]
+		last_timelog.to_time = time
+		timesheet.save()
+		timesheet.submit()
+
+		frappe.db.set_value("Delivery Trip", dt, "status", "Completed", update_modified=False)
+		frappe.db.set_value("Delivery Trip", dt, "odometer_end_value", odometer_value, update_modified=False)
+		frappe.db.set_value("Delivery Trip", dt, "odometer_end_time", time)

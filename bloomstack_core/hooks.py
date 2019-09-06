@@ -142,7 +142,7 @@ doc_events = {
 		],
 		"on_update_after_submit": [
 			"bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
-			"bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet"
+			# "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet"
 		]
 	},
 	"Purchase Receipt": {
