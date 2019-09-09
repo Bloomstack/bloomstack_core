@@ -140,10 +140,7 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
 			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
 		],
-		"on_update_after_submit": [
-			"bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
-			# "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet"
-		]
+		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"

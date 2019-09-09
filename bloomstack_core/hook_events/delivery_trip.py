@@ -94,12 +94,12 @@ def create_or_update_timesheet(dt, action, odometer_value=None):
 	delivery_trip = frappe.get_doc("Delivery Trip", dt)
 	time = frappe.utils.now()
 
-	def get_timesheet(dt):
+	def get_timesheet():
 		timesheet_list = frappe.get_all("Timesheet", filters={'docstatus': 0, 'delivery_trip': delivery_trip.name})
 		if timesheet_list:
 			timesheet = timesheet_list[0]
 			timesheet = frappe.get_doc("Timesheet", timesheet)
-			if len(timesheet.time_logs) > 0:
+			if timesheet.time_logs:
 				return timesheet
 
 	if action == "start":
@@ -116,9 +116,9 @@ def create_or_update_timesheet(dt, action, odometer_value=None):
 
 		frappe.db.set_value("Delivery Trip", dt, "status", "In Transit", update_modified=False) # Because we can't status as allow on submit
 		frappe.db.set_value("Delivery Trip", dt, "odometer_start_value", odometer_value, update_modified=False)
-		frappe.db.set_value("Delivery Trip", dt, "odometer_start_time", time)
+		frappe.db.set_value("Delivery Trip", dt, "odometer_start_time", time, update_modified=False)
 	elif action == "pause":
-		timesheet = get_timesheet(dt)
+		timesheet = get_timesheet()
 		last_timelog = timesheet.time_logs[-1]
 		if last_timelog.from_time and not last_timelog.to_time:
 			last_timelog.to_time = time
@@ -127,7 +127,7 @@ def create_or_update_timesheet(dt, action, odometer_value=None):
 		frappe.db.set_value("Delivery Trip", dt, "status", "Paused", update_modified=False)
 
 	elif action == "continue":
-		timesheet = get_timesheet(dt)
+		timesheet = get_timesheet()
 		last_timelog = timesheet.time_logs[-1]
 		if last_timelog.from_time and last_timelog.to_time:
 			timesheet.append("time_logs", {
@@ -139,7 +139,7 @@ def create_or_update_timesheet(dt, action, odometer_value=None):
 		frappe.db.set_value("Delivery Trip", dt, "status", "In Transit", update_modified=False)
 
 	elif action == "end":
-		timesheet = get_timesheet(dt)
+		timesheet = get_timesheet()
 		last_timelog = timesheet.time_logs[-1]
 		last_timelog.to_time = time
 		timesheet.save()
@@ -147,4 +147,4 @@ def create_or_update_timesheet(dt, action, odometer_value=None):
 
 		frappe.db.set_value("Delivery Trip", dt, "status", "Completed", update_modified=False)
 		frappe.db.set_value("Delivery Trip", dt, "odometer_end_value", odometer_value, update_modified=False)
-		frappe.db.set_value("Delivery Trip", dt, "odometer_end_time", time)
+		frappe.db.set_value("Delivery Trip", dt, "odometer_end_time", time, update_modified=False)

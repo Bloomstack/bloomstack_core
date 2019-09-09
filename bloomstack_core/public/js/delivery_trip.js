@@ -60,33 +60,26 @@ frappe.ui.form.on('Delivery Trip', {
 
 	start: (frm) => {
 		frm.add_custom_button(__("Start"), () => {
-			frappe.confirm(__("Are you sure you want to start the trip?"),
-				() => {
-					frappe.prompt({
-						"label": "Odometer Start Value",
-						"fieldtype": "Int",
-						"fieldname": "odometer_start_value",
-						"reqd": 1
-					},
-						(data) => {
-							frappe.call({
-								method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
-								args: {
-									"dt": frm.docname,
-									"action": "start",
-									"odometer_value": data.odometer_start_value,
-								},
-								callback: (r) => {
-									frm.reload_doc();
-								}
-							})
+			frappe.prompt({
+				"label": "Odometer Start Value",
+				"fieldtype": "Int",
+				"fieldname": "odometer_start_value",
+				"reqd": 1
+			},
+				(data) => {
+					frappe.call({
+						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
+						args: {
+							"dt": frm.docname,
+							"action": "start",
+							"odometer_value": data.odometer_start_value,
 						},
-						__("Enter Odometer Value"));
+						callback: (r) => {
+							frm.reload_doc();
+						}
+					})
 				},
-				() => {
-					frm.reload_doc();
-				}
-			);
+				__("Enter Odometer Value"));
 		}).addClass("btn-primary");
 	},
 
@@ -138,38 +131,29 @@ frappe.ui.form.on('Delivery Trip', {
 
 	end: (frm) => {
 		frm.add_custom_button(__("End"), () => {
-			frappe.confirm(__("You're about to end the trip. Continue?"),
-				() => {
-					frappe.prompt({
-						"label": "Odometer End Value",
-						"fieldtype": "Int",
-						"fieldname": "odometer_end_value",
-						"reqd": 1,
-						"default": frm.doc.odometer_start_value
-					},
-						(data) => {
-							frappe.call({
-								method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
-								args: {
-									"dt": frm.docname,
-									"action": "end",
-									"odometer_value": data.odometer_end_value,
-								},
-								callback: (r) => {
-									frm.reload_doc();
-								}
-							})
+			frappe.prompt({
+				"label": "Odometer End Value",
+				"fieldtype": "Int",
+				"fieldname": "odometer_end_value",
+				"reqd": 1,
+				"default": frm.doc.odometer_start_value
+			},
+				(data) => {
+					frappe.call({
+						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
+						args: {
+							"dt": frm.docname,
+							"action": "end",
+							"odometer_value": data.odometer_end_value,
 						},
-						__("Enter Odometer Value"));
+						callback: (r) => {
+							frm.reload_doc();
+						}
+					})
 				},
-				() => {
-					frm.reload_doc();
-				}
-			);
-
+				__("Enter Odometer Value"));
 		}).addClass("btn-primary");
 	},
-
 });
 
 frappe.ui.form.on("Delivery Stop", {
