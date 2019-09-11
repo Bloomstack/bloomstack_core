@@ -53,18 +53,18 @@ web_include_css = [
 
 # include js in doctype views
 doctype_js = {
-	"User": "public/js/user.js",
-	"Customer": "public/js/customer.js",
+	"Batch": "public/js/batch.js",
 	"Company": "public/js/company.js",
+	"Contract": "public/js/contract.js",
+	"Customer": "public/js/customer.js",
 	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
-	"Supplier": "public/js/supplier.js",
 	"Item": "public/js/item.js",
-	"Batch": "public/js/batch.js",
+	"Packing Slip": "public/js/packing_slip.js",
 	"Quotation": "public/js/quotation.js",
-	"Contract": "public/js/contract.js",
-	"Delivery Trip": "public/js/delivery_trip.js",
-	"Packing Slip": "public/js/packing_slip.js"
+	"Supplier": "public/js/supplier.js",
+	"User": "public/js/user.js",
+	"Work Order": "public/js/work_order.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
