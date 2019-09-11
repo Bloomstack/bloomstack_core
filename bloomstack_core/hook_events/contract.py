@@ -96,3 +96,22 @@ def get_party_users(doctype, txt, searchfield, start, page_len, filters):
 		party_users = [frappe.db.get_value("Contact", link.parent, "user") for link in party_links]
 
 		return frappe.get_all("User", filters={"email": ["in", party_users]}, as_list=True)
+
+
+def update_status_for_contracts():
+	"""
+		Daily scheduler event to verify and update contract status
+	"""
+
+	contracts = frappe.get_all("Contract", filters={"docstatus": 1})
+
+	for contract in contracts:
+		contract_doc = frappe.get_doc("Contract", contract.name)
+
+		current_statuses = (contract_doc.status, contract_doc.fulfilment_status)
+
+		contract_doc.update_fulfilment_status()
+		contract_doc.update_contract_status()
+
+		if current_statuses != (contract_doc.status, contract_doc.fulfilment_status):
+			contract_doc.save()
