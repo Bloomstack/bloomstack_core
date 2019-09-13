@@ -611,8 +611,9 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; font-family: Lato, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;">
                         
-<br>
-You are requested to authorize a document.</br></br>
+Dear {{authorization_request.authorizer_name}},
+							<br><br>
+You are requested to authorize a {{authorization_request.linked_doctype}}.<br>
                         </td>
                     </tr>
                 </tbody></table>
@@ -635,7 +636,7 @@ You are requested to authorize a document.</br></br>
                     <tbody>
                         <tr>
                             <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 18px;"> </br>
-                                <a class="mcnButton " title="View Document" href="{{ authorization_request.request_link }}" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">View Document</a>
+                                <a class="mcnButton " title="View Document" href="{{ authorization_request.request_link }}" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">View {{authorization_request.linked_doctype}}</a>
                             </td>
                         </tr>
                     </tbody>
