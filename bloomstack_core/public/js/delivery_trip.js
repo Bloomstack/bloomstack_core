@@ -3,21 +3,20 @@ frappe.ui.form.on('Delivery Trip', {
 		if (frm.doc.docstatus == 1 && frm.doc.status != "Completed") {
 			if (frm.doc.status == "Scheduled") {
 				frm.trigger("start");
-			}
-			else if (frm.doc.status == "In Transit") {
+			} else if (frm.doc.status == "In Transit") {
 				frm.trigger("pause");
-			}
-			else if (frm.doc.status == "Paused") {
+				frm.trigger("end");
+			} else if (frm.doc.status == "Paused") {
 				frm.trigger("continue");
+				frm.trigger("end");
 			}
-			frm.trigger("end");
 		}
 
 		frappe.db.get_value("Google Maps Settings", { name: "Google Maps Settings" }, "enabled", (r) => {
 			if (r.enabled == 0) {
 				// Hide entire Map section if Google Maps is disabled
-				let wrapper = frm.fields_dict.sb_map.wrapper
-				wrapper.hide()
+				let wrapper = frm.fields_dict.sb_map.wrapper;
+				wrapper.hide();
 			} else {
 				// Inject Google Maps data into map embed field
 				let wrapper = frm.fields_dict.map_html.$wrapper;
@@ -70,7 +69,7 @@ frappe.ui.form.on('Delivery Trip', {
 					frappe.call({
 						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
 						args: {
-							"dt": frm.docname,
+							"trip": frm.doc.name,
 							"action": "start",
 							"odometer_value": data.odometer_start_value,
 						},
@@ -90,7 +89,7 @@ frappe.ui.form.on('Delivery Trip', {
 					frappe.call({
 						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
 						args: {
-							"dt": frm.docname,
+							"trip": frm.doc.name,
 							"action": "pause"
 						},
 						callback: (r) => {
@@ -113,7 +112,7 @@ frappe.ui.form.on('Delivery Trip', {
 					frappe.call({
 						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
 						args: {
-							"dt": frm.docname,
+							"trip": frm.doc.name,
 							"action": "continue"
 						},
 						callback: (r) => {
@@ -142,7 +141,7 @@ frappe.ui.form.on('Delivery Trip', {
 					frappe.call({
 						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
 						args: {
-							"dt": frm.docname,
+							"trip": frm.doc.name,
 							"action": "end",
 							"odometer_value": data.odometer_end_value,
 						},
