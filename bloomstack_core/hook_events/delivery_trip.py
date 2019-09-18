@@ -95,12 +95,9 @@ def create_or_update_timesheet(trip, action, odometer_value=None):
 	time = frappe.utils.now()
 
 	def get_timesheet():
-		timesheet_list = frappe.get_all("Timesheet Detail",
-			filters={'docstatus': 0, 'delivery_trip': delivery_trip.name},
-			fields=["distinct(parent)"])
-
+		timesheet_list = frappe.get_all("Timesheet", filters={'docstatus': 0, 'delivery_trip': delivery_trip.name})
 		if timesheet_list:
-			return frappe.get_doc("Timesheet", timesheet_list[0].parent)
+			return frappe.get_doc("Timesheet", timesheet_list[0].name)
 
 	if action == "start":
 		employee = frappe.get_value("Driver", delivery_trip.driver, "employee")
@@ -158,3 +155,6 @@ def create_or_update_timesheet(trip, action, odometer_value=None):
 		frappe.db.set_value("Delivery Trip", trip, "status", "Completed", update_modified=False)
 		frappe.db.set_value("Delivery Trip", trip, "odometer_end_value", odometer_value, update_modified=False)
 		frappe.db.set_value("Delivery Trip", trip, "odometer_end_time", time, update_modified=False)
+
+		start_value = frappe.db.get_value("Delivery Trip", trip, "odometer_start_value")
+		frappe.db.set_value("Delivery Trip", trip, "actual_distance_travelled", flt(odometer_value) - start_value, update_modified=False)
