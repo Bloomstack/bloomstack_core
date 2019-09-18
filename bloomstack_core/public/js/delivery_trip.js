@@ -59,26 +59,34 @@ frappe.ui.form.on('Delivery Trip', {
 
 	start: (frm) => {
 		frm.add_custom_button(__("Start"), () => {
-			frappe.prompt({
-				"label": "Odometer Start Value",
-				"fieldtype": "Int",
-				"fieldname": "odometer_start_value",
-				"reqd": 1
-			},
-				(data) => {
-					frappe.call({
-						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
-						args: {
-							"trip": frm.doc.name,
-							"action": "start",
-							"odometer_value": data.odometer_start_value,
+			frappe.db.get_value("Delivery Settings", {"name": "Delivery Settings"}, "default_activity_type")
+				.then((r) => {
+					if (!r.default_activity_type) {
+						frappe.throw(__("Please set a default activity type in Delivery Settings to time this trip."));
+						return;
+					} else {
+						frappe.prompt({
+							"label": "Odometer Start Value",
+							"fieldtype": "Int",
+							"fieldname": "odometer_start_value",
+							"reqd": 1
 						},
-						callback: (r) => {
-							frm.reload_doc();
-						}
-					})
-				},
-				__("Enter Odometer Value"));
+							(data) => {
+								frappe.call({
+									method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
+									args: {
+										"trip": frm.doc.name,
+										"action": "start",
+										"odometer_value": data.odometer_start_value,
+									},
+									callback: (r) => {
+										frm.reload_doc();
+									}
+								})
+							},
+							__("Enter Odometer Value"));
+					}
+				})
 		}).addClass("btn-primary");
 	},
 
