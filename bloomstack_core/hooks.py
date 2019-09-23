@@ -66,7 +66,11 @@ doctype_js = {
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
 }
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+
+doctype_list_js = {
+	"Delivery Trip": "public/js/delivery_trip_list.js"
+}
+
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -140,7 +144,7 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
 			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
 		],
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value"
+		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"

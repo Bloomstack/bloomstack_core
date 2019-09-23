@@ -1,51 +1,22 @@
 frappe.ui.form.on('Delivery Trip', {
 	refresh: (frm) => {
 		if (frm.doc.docstatus == 1 && frm.doc.status != "Completed") {
-			if (frm.doc.odometer_start_value == 0) {
-				frm.add_custom_button(__("Start"), () => {
-					frappe.prompt({
-						"label": "Odometer Start Value",
-						"fieldtype": "Int",
-						"fieldname": "odometer_start_value",
-						"reqd": 1
-					},
-					(data) => {
-						frm.set_value('odometer_start_value', data.odometer_start_value);
-						frm.set_value('odometer_start_time', frappe.datetime.now_datetime());
-						frm.dirty();
-						frm.save_or_update();
-					},
-					__("Enter Odometer Value"));
-				}).addClass("btn-primary");
-			} else if (frm.doc.odometer_start_value > 0 && frm.doc.odometer_stop_value == 0) {
-				frm.add_custom_button(__("Stop"), () => {
-					frappe.prompt({
-						"label": "Odometer Stop Value",
-						"fieldtype": "Int",
-						"fieldname": "odometer_stop_value",
-						"reqd": 1
-					},
-					(data) => {
-						if (data.odometer_stop_value > frm.doc.odometer_start_value) {
-							frm.set_value('odometer_stop_value', data.odometer_stop_value);
-							frm.set_value('odometer_stop_time', frappe.datetime.now_datetime());
-							frm.set_value('actual_distance_travelled', (data.odometer_stop_value - frm.doc.odometer_start_value));
-							frm.dirty();
-							frm.save_or_update();
-						} else {
-							frappe.throw("The stop value cannot be lower than the start value");
-						}
-					},
-					__("Enter Odometer Value"));
-				}).addClass("btn-primary");
+			if (frm.doc.status == "Scheduled") {
+				frm.trigger("start");
+			} else if (frm.doc.status == "In Transit") {
+				frm.trigger("pause");
+				frm.trigger("end");
+			} else if (frm.doc.status == "Paused") {
+				frm.trigger("continue");
+				frm.trigger("end");
 			}
 		}
 
 		frappe.db.get_value("Google Maps Settings", { name: "Google Maps Settings" }, "enabled", (r) => {
 			if (r.enabled == 0) {
 				// Hide entire Map section if Google Maps is disabled
-				let wrapper = frm.fields_dict.sb_map.wrapper
-				wrapper.hide()
+				let wrapper = frm.fields_dict.sb_map.wrapper;
+				wrapper.hide();
 			} else {
 				// Inject Google Maps data into map embed field
 				let wrapper = frm.fields_dict.map_html.$wrapper;
@@ -84,7 +55,112 @@ frappe.ui.form.on('Delivery Trip', {
 		// force-dirty to allow the form to be saved or updated
 		frm.dirty();
 		frm.save_or_update();
-	}
+	},
+
+	start: (frm) => {
+		frm.add_custom_button(__("Start"), () => {
+			frappe.db.get_value("Delivery Settings", {"name": "Delivery Settings"}, "default_activity_type")
+				.then((r) => {
+					if (!r.default_activity_type) {
+						frappe.throw(__("Please set a default activity type in Delivery Settings to time this trip."));
+						return;
+					} else {
+						frappe.prompt({
+							"label": "Odometer Start Value",
+							"fieldtype": "Int",
+							"fieldname": "odometer_start_value",
+							"reqd": 1
+						},
+							(data) => {
+								frappe.call({
+									method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
+									args: {
+										"trip": frm.doc.name,
+										"action": "start",
+										"odometer_value": data.odometer_start_value,
+									},
+									callback: (r) => {
+										frm.reload_doc();
+									}
+								})
+							},
+							__("Enter Odometer Value"));
+					}
+				})
+		}).addClass("btn-primary");
+	},
+
+	pause: (frm) => {
+		frm.add_custom_button(__("Pause"), () => {
+			frappe.confirm(__("Are you sure you want to pause the trip?"),
+				() => {
+					frappe.call({
+						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
+						args: {
+							"trip": frm.doc.name,
+							"action": "pause"
+						},
+						callback: (r) => {
+							frm.reload_doc();
+						}
+					})
+				},
+				() => {
+					frm.reload_doc();
+				}
+			);
+
+		}).addClass("btn-primary");
+	},
+
+	continue: (frm) => {
+		frm.add_custom_button(__("Continue"), () => {
+			frappe.confirm(__("Are you sure you want to continue the trip?"),
+				() => {
+					frappe.call({
+						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
+						args: {
+							"trip": frm.doc.name,
+							"action": "continue"
+						},
+						callback: (r) => {
+							frm.reload_doc();
+						}
+					})
+				},
+				() => {
+					frm.reload_doc();
+				}
+			);
+
+		}).addClass("btn-primary");
+	},
+
+	end: (frm) => {
+		frm.add_custom_button(__("End"), () => {
+			frappe.prompt({
+				"label": "Odometer End Value",
+				"fieldtype": "Int",
+				"fieldname": "odometer_end_value",
+				"reqd": 1,
+				"default": frm.doc.odometer_start_value
+			},
+				(data) => {
+					frappe.call({
+						method: "bloomstack_core.hook_events.delivery_trip.create_or_update_timesheet",
+						args: {
+							"trip": frm.doc.name,
+							"action": "end",
+							"odometer_value": data.odometer_end_value,
+						},
+						callback: (r) => {
+							frm.reload_doc();
+						}
+					})
+				},
+				__("Enter Odometer Value"));
+		}).addClass("btn-primary");
+	},
 });
 
 frappe.ui.form.on("Delivery Stop", {
