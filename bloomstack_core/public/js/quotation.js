@@ -16,7 +16,8 @@ frappe.ui.form.on('Quotation', {
 							"label": "Contact Person",
 							"fieldtype": "Data",
 							"fieldname": "contact_person",
-							"default": frm.doc.contact_person
+							"default": frm.doc.contact_person,
+							"reqd": 1
 						}
 					],
 					function (data) {

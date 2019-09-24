@@ -29,7 +29,8 @@ frappe.ui.form.on("Contract", {
                         "label": "Contact Person",
                         "fieldtype": "Data",
                         "fieldname": "contact_person",
-                        "default": frm.doc.party_name
+                        "default": frm.doc.party_name,
+                        "reqd": 1
                     }
                 ],
                 function (data) {
