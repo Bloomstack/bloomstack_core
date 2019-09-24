@@ -13,7 +13,7 @@ services:
         - chmod +x ./setup/install.sh
         - ./setup/install.sh
       build:
-        - chmod +x ./.tugboat/build.sh
-        - ./.tugboat/build.sh
+        - chmod +x ./setup/build.sh
+        - ./setup/build.sh
   redis:
     image: tugboatqa/redis:4.0.9
