@@ -61,7 +61,7 @@ frappe.ui.form.on('Delivery Trip', {
 		frm.add_custom_button(__("Start"), () => {
 			frappe.db.get_value("Delivery Settings", {"name": "Delivery Settings"}, "default_activity_type")
 				.then((r) => {
-					if (!r.default_activity_type) {
+					if (!r.message.default_activity_type) {
 						frappe.throw(__("Please set a default activity type in Delivery Settings to time this trip."));
 						return;
 					} else {
