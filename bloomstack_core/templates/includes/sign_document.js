@@ -27,7 +27,7 @@ $(document).ready(function () {
         }
     });
 
- function reject_document() {
+    $("#rejectDocument").on("click", function () {
         $(".user-signature").hide();
         frappe.call({
             method: "bloomstack_core.utils.reject_document",
@@ -39,5 +39,5 @@ $(document).ready(function () {
                 frappe.msgprint(__("The document has been rejected by you!"));
             }
         })
-    }
+    });
 });
