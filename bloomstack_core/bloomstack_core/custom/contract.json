@@ -335,10 +335,10 @@
    "in_standard_filter": 0,
    "insert_after": "sb_signature",
    "label": "Customer Signature",
-   "modified": "2019-07-09 02:57:45.266126",
+   "modified": "2019-07-10 02:57:45.266126",
    "modified_by": "Administrator",
    "name": "Contract-customer_signature",
-   "no_copy": 0,
+   "no_copy": 1,
    "options": null,
    "owner": "Administrator",
    "parent": null,
@@ -585,7 +585,7 @@
    "doctype_or_field": "DocField",
    "field_name": "is_signed",
    "idx": 0,
-   "modified": "2019-08-28 02:45:59.513542",
+   "modified": "2019-08-29 02:45:59.513542",
    "modified_by": "Administrator",
    "name": "Contract-is_signed-print_hide",
    "owner": "Administrator",
@@ -594,7 +594,8 @@
    "parenttype": null,
    "property": "print_hide",
    "property_type": "Check",
-   "value": "1"
+   "value": "1",
+   "no_copy": "1"
   }
  ],
  "sync_on_migrate": 1
