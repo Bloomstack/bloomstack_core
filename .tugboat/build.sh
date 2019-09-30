@@ -26,9 +26,14 @@ su frappe -c "printf '\n$TUGBOAT_GITHUB_REPO' >> ./sites/apps.txt"
 su frappe -c "./env/bin/pip install -e ./apps/$TUGBOAT_GITHUB_REPO"
 su frappe -c "bench install-app $TUGBOAT_GITHUB_REPO"
 
-# Get Bloomstack Demo and Core Apps and install them
+# Get Bloomstack Demo, Bloombase apps and install them
 su frappe -c "bench get-app git@github.com:DigiThinkIT/bloomstack_demo.git"
 su frappe -c "bench install-app bloomstack_demo"
+
+su frappe -c "bench get-app git@github.com:DigiThinkIT/bloombase-frappe.git"
+su frappe -c "bench install-app bloombase"
+
+su frappe -c "bench set-config google_maps_key $GOOGLE_MAPS_KEY"
 
 # For regenerating cache
 su frappe -c "bench clear-cache"

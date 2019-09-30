@@ -1,0 +1,21 @@
+.bloomstack-banner {
+    display: none;
+}
+
+body.has-banner .bloomstack-banner {
+    display: block;
+    position: fixed;
+    border-radius: 3rem;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #F58766;
+    color: white;
+    height: 5rem;
+    width: 50%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: -2.5rem;
+    padding-top: 0.2rem;
+}

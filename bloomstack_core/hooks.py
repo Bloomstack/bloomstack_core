@@ -32,12 +32,14 @@ website_context = {
 # include js, css files in header of desk.html
 app_include_js = [
 	"/assets/bloomstack_core/js/conf.js",
-	"/assets/bloomstack_core/js/query_report.js"
+	"/assets/bloomstack_core/js/query_report.js",
+	"/assets/bloomstack_core/js/banner.js",
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
 	"/assets/bloomstack_core/css/trees.css",
-	"/assets/bloomstack_core/css/mobile-fixes.css"
+	"/assets/bloomstack_core/css/mobile-fixes.css",
+	"/assets/bloomstack_core/css/banner.css",
 ]
 
 # include js, css files in header of web template
@@ -51,20 +53,24 @@ web_include_css = [
 
 # include js in doctype views
 doctype_js = {
-	"User": "public/js/user.js",
-	"Customer": "public/js/customer.js",
+	"Batch": "public/js/batch.js",
 	"Company": "public/js/company.js",
+	"Contract": "public/js/contract.js",
+	"Customer": "public/js/customer.js",
 	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
-	"Supplier": "public/js/supplier.js",
 	"Item": "public/js/item.js",
-	"Batch": "public/js/batch.js",
+	"Packing Slip": "public/js/packing_slip.js",
 	"Quotation": "public/js/quotation.js",
-	"Contract": "public/js/contract.js",
-	"Delivery Trip": "public/js/delivery_trip.js",
-	"Packing Slip": "public/js/packing_slip.js"
+	"Supplier": "public/js/supplier.js",
+	"User": "public/js/user.js",
+	"Work Order": "public/js/work_order.js"
 }
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+
+doctype_list_js = {
+	"Delivery Trip": "public/js/delivery_trip_list.js"
+}
+
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -138,7 +144,7 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
 			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
 		],
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value"
+		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
@@ -157,23 +163,12 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"bloomstack_core.tasks.all"
-# 	],
-# 	"daily": [
-# 		"bloomstack_core.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"bloomstack_core.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"bloomstack_core.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"bloomstack_core.tasks.monthly"
-# 	]
-# }
+scheduler_events = {
+	"daily": [
+		"bloomstack_core.hook_events.contract.update_status_for_contracts",
+		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
+	]
+}
 
 # Testing
 # -------
