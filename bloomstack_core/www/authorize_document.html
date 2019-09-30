@@ -196,13 +196,14 @@ table td div {
     border: none;
 }
 .actions{
+	flex-direction: column;
     text-align: center;
     display: flex;
     justify-content: space-between;
     padding: 0 18px 0 0; 
 }
 .actions .btn-primary {
-    align-self: flex-start;
+	margin-bottom: 20px;
 }
 .actions .btn-danger {
     align-self: flex-end;
@@ -210,6 +211,10 @@ table td div {
 }
 .actions .btn-danger:hover {
     background-color: #989191;
+}
+.actions a {
+	align-self: center;
+	padding: 10px 40px;
 }
 #signee {
     border-radius: 3px;
@@ -249,8 +254,8 @@ table td div {
         Signature:<br><br>
         <div id="signature"></div> <br><br>
         <div class="actions">
-			<a class="btn btn-primary" id="approveDocument">Approve</a> <br /><br /><br />
-			<a href="#" id="rejectDocument">Reject {{doc.doctype}}</a>
+			<a class="btn btn-primary" id="approveDocument">Approve</a>
+			<a href="#" id="rejectDocument">Reject</a>
         </div>
     </div>
 
