@@ -235,6 +235,9 @@ table td div {
 {% if error %}
 {{ error }}
 {% else %}
+<meta id="doctype" data-name={{doc.doctype}}>
+<meta id="docname" data-name={{doc.name}}>
+
 <div class="row">
     <div class="col-lg-7">
         <h3 class="title">{{company}} has requested you to authorize a {{doc.doctype}}</h3> <br>

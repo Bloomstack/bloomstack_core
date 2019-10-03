@@ -17,6 +17,10 @@ $(document).ready(function () {
                 },
                 freeze: true,
                 callback: (r) => {
+                    window.open('/api/method/frappe.utils.print_format.download_pdf?' +
+							'doctype=' + encodeURIComponent($('#doctype').data().name) +
+							'&name=' + encodeURIComponent($('#docname').data().name) +
+                            '&format=' + encodeURIComponent(""), "_self");
                     frappe.msgprint(__("The document has been approved by you!"));
                 }
             });
