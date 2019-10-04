@@ -110,6 +110,16 @@ $(document).on("page-change", () => {
 	})
 })
 
+frappe.form.link_formatters['Item'] = function (value, doc) {
+	if (doc && doc.item_name && doc.item_name !== value) {
+		return value
+			? doc.item_name + ': ' + value
+			: doc.item_name;
+	} else {
+		return value;
+	}
+}
+
 bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
 	// only one of these roles is allowed to use these feature
 	if (frappe.user.has_role(["Administrator", "Can Login As", "System Manager"])) {
