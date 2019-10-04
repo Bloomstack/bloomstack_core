@@ -46,7 +46,7 @@ def create_project_against_contract(contract, method):
 		"customer": contract.party_name if contract.party_type == "Customer" else None,
 		"tasks": project_tasks
 	})
-	project.insert()
+	project.insert(ignore_permissions=True)
 
 	# Link the contract with the project
 	contract.db_set("project", project.name)
@@ -114,4 +114,4 @@ def update_status_for_contracts():
 		contract_doc.update_contract_status()
 
 		if current_statuses != (contract_doc.status, contract_doc.fulfilment_status):
-			contract_doc.save()
+			contract_doc.save(ignore_permissions=True)
