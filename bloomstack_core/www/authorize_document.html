@@ -229,14 +229,16 @@ table td div {
 	float:left;
 	clear:left;
 }
+.signed-doc-actions{
+	display: none;
+}
+
 </style>
 {% endblock %}
 {% block page_content %}
 {% if error %}
 {{ error }}
 {% else %}
-<meta id="doctype" data-name={{doc.doctype}}>
-<meta id="docname" data-name={{doc.name}}>
 
 <div class="row">
     <div class="col-lg-7">
@@ -245,22 +247,32 @@ table td div {
 </div>
 
 <div class="row">
-    <div class="col-lg-7">
+    <div class="col-lg-7 contract">
         {{ print_doc }}
     </div>
 <div class="col-lg-1">
 
 </div>
-    <div class="col-lg-4 user-signature">
-        Your Name: <br><br>
-        <input type="text" id="signee" value="" required/> </br></br></br>
-        Signature:<br><br>
-        <div id="signature"></div> <br><br>
-        <div class="actions">
-			<a class="btn btn-primary" id="approveDocument">Approve</a>
-			<a href="#" id="rejectDocument">Reject</a>
-        </div>
-    </div>
+
+<div class="col-lg-4 ">
+	
+		<div class="signed-doc-actions">
+				<a class="btn btn-primary" id="printBtn" href='/printview?doctype={{ doc.doctype}}&name={{ doc.name }}&format={{ Web Contract }}' target="_blank" rel="noopener noreferrer">Print</a>
+				<a class="btn btn-primary" id="downloadBtn">Download</a>
+			</div>
+
+			<div class="user-signature">
+	Your Name: <br><br>
+	<input type="text" id="signee" value="" required /> </br></br></br>
+	Signature:<br><br>
+	<div id="signature"></div> <br><br>
+	<div class="actions">
+		<a class="btn btn-primary" id="approveDocument">Approve</a>
+		<a href="#" id="rejectDocument">Reject</a>
+	</div>
+
+
+</div>
 
 </div>
 {% endif %}
