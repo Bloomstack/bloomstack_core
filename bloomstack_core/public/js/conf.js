@@ -110,6 +110,9 @@ $(document).on("page-change", () => {
 	})
 })
 
+// replace Item link field label throughout the system from
+// "item_code: item_name" to "item_name: item_code";
+// original definition in ERPNext's utils.js file
 frappe.form.link_formatters['Item'] = function (value, doc) {
 	if (doc && doc.item_name && doc.item_name !== value) {
 		return value
