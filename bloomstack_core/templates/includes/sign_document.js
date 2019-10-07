@@ -40,9 +40,6 @@ $(document).ready(function () {
         }
     });
 
-    $("#printBtn").on("click", function () {
-        console.log("print format", '{{print_format}}');
-    });
     $("#rejectDocument").on("click", function () {
         $(".user-signature").hide();
         frappe.call({

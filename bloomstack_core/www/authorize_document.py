@@ -35,6 +35,4 @@ def custom_print_doc(auth_req_docname):
 
     print_doc = frappe.get_print(auth_req.linked_doctype, auth_req.linked_docname, "Web Contract")
     custom = print_doc[print_doc.find('<body>') + len('<body>'):len(print_doc) - len('</body>')]
-    print("print_doc", print_doc)
-    print("custom", custom)
     return custom

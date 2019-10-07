@@ -127,7 +127,9 @@ def log_request(endpoint, request_data, response, ref_dt=None, ref_dn=None):
 
 @frappe.whitelist(allow_guest=True)
 def authorize_document(sign=None, signee=None, docname=None):
+	print("reached the func")
 	if frappe.db.exists("Authorization Request", docname):
+		print("auth req exists")
 		authorization_request = frappe.get_doc("Authorization Request", docname)
 		authorization_request.signature = sign
 		authorization_request.signee_name = signee
@@ -144,6 +146,15 @@ def authorize_document(sign=None, signee=None, docname=None):
 				authorized_doc.signed_on = frappe.utils.now()
 
 		authorized_doc.submit()
+
+		def email_signed_doc():
+			recipients=[authorization_request.authorizer_email]
+			subject = authorized_doc.name
+			message = "Find the copy of the contract you signed in the attachment"
+			attachments = [frappe.attach_print(authorization_request.linked_doctype, authorization_request.linked_docname, print_format="Web Contract")]
+			frappe.sendmail(recipients=recipients, attachments=attachments, subject=subject, message=message)
+
+		email_signed_doc()
 
 
 @frappe.whitelist(allow_guest=True)
