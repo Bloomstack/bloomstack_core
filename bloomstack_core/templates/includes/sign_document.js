@@ -29,26 +29,8 @@ $(document).ready(function () {
 							$(".contract").html(r.message);
                             $(".contract").show();
                             $(".signed-doc-actions").show();
-                            // $(".signed-doc-actions").css('visibility', 'visible');
-                            // $(".signed-doc-actions").style.visibility = 'visible';
-                            // $(".signed-doc-actions").removeClass("hidden").addClass("shown");
-                            // $(".signed-doc-actions").toggleClass('hidden')
-							// $(".contract").html(r.message);
 						}
 					})
-                    // console.log("doctype", $('#doctype').data().name);
-                    // console.log("docname", $('#docname').data().name);
-                    // console.log("doctype", $('#doctype').data());
-                    // console.log("docname", $('#docname').data());
-                    // window.open('/api/method/frappe.utils.print_format.download_pdf?' +
-					// 		'doctype=' + encodeURIComponent($('#doctype').data("dt")) +
-					// 		'&name=' + encodeURIComponent($('#docname').data("name")) +
-                    //         '&format=' + encodeURIComponent(""), "_self");
-                    // // frappe.msgprint(__("The document has been approved by you!"));
-
-                    // console.log("$('#doctype').data('dt')", $('#doctype').data("dt"));
-                    // console.log("$('#docname').data('name')", $('#docname').data("name"));
-                   
                 }
             });
         }
@@ -59,9 +41,7 @@ $(document).ready(function () {
     });
 
     $("#printBtn").on("click", function () {
-        <a class='text-muted small' href='/printview?doctype={{ doc.doctype}}&name={{ doc.name }}
-        {%- if print_format -%}&format={{ Web Contract }}{%- endif -%}' target="_blank" rel="noopener noreferrer">
-        <i class='fa fa-print'></i> {{ _('Print') }}</a>
+        console.log("print format", '{{print_format}}');
     });
     $("#rejectDocument").on("click", function () {
         $(".user-signature").hide();

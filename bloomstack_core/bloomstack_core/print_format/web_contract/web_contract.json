@@ -1,0 +1,22 @@
+{
+ "align_labels_right": 1, 
+ "creation": "2019-10-04 02:15:55.214647", 
+ "custom_format": 0, 
+ "disabled": 0, 
+ "doc_type": "Contract", 
+ "docstatus": 0, 
+ "doctype": "Print Format", 
+ "font": "Default", 
+ "format_data": "[{\"fieldname\": \"print_heading_template\", \"fieldtype\": \"Custom HTML\", \"options\": \"<div class=\\\"print-heading\\\">\\t\\t\\t\\t<h2>Contract<br><small>{{ doc.name }}</small>\\t\\t\\t\\t</h2></div>\"}, {\"fieldtype\": \"Section Break\", \"label\": \"\"}, {\"fieldtype\": \"Column Break\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"party_name\", \"label\": \"Party Name\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Contract Period\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"start_date\", \"label\": \"Start Date\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"end_date\", \"label\": \"End Date\"}, {\"print_hide\": 0, \"fieldname\": \"project\", \"label\": \"Project\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Contract Details\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"contract_terms\", \"label\": \"Contract Terms\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Fulfilment Details\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"fulfilment_deadline\", \"label\": \"Fulfilment Deadline\"}, {\"visible_columns\": [{\"print_hide\": 0, \"fieldname\": \"fulfilled\", \"print_width\": \"\"}, {\"print_hide\": 0, \"fieldname\": \"requirement\", \"print_width\": \"\"}, {\"print_hide\": 0, \"fieldname\": \"notes\", \"print_width\": \"\"}], \"print_hide\": 0, \"fieldname\": \"fulfilment_terms\", \"label\": \"Fulfilment Terms\"}, {\"fieldtype\": \"Section Break\", \"label\": \"References\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"document_type\", \"label\": \"Document Type\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"document_name\", \"label\": \"Document Name\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Signature\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"customer_signature\", \"label\": \"Customer Signature\"}, {\"fieldtype\": \"Section Break\", \"label\": \"Signee Details\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"signee\", \"label\": \"Signee\"}, {\"print_hide\": 0, \"fieldname\": \"signed_on\", \"label\": \"Signed On\"}, {\"fieldtype\": \"Column Break\"}, {\"print_hide\": 0, \"fieldname\": \"ip_address\", \"label\": \"IP Address\"}]", 
+ "idx": 0, 
+ "line_breaks": 1, 
+ "modified": "2019-10-07 00:50:50.508008", 
+ "modified_by": "Administrator", 
+ "module": "Bloomstack Core", 
+ "name": "Web Contract", 
+ "owner": "Administrator", 
+ "print_format_builder": 1, 
+ "print_format_type": "Server", 
+ "show_section_headings": 1, 
+ "standard": "Yes"
+}
