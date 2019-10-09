@@ -6,6 +6,7 @@ from six import string_types
 
 import frappe
 from erpnext.stock.doctype.batch.batch import get_batch_qty
+from erpnext import get_default_company
 from python_metrc import METRC
 
 
@@ -127,9 +128,7 @@ def log_request(endpoint, request_data, response, ref_dt=None, ref_dn=None):
 
 @frappe.whitelist(allow_guest=True)
 def authorize_document(sign=None, signee=None, docname=None):
-	print("reached the func")
 	if frappe.db.exists("Authorization Request", docname):
-		print("auth req exists")
 		authorization_request = frappe.get_doc("Authorization Request", docname)
 		authorization_request.signature = sign
 		authorization_request.signee_name = signee
@@ -148,10 +147,12 @@ def authorize_document(sign=None, signee=None, docname=None):
 		authorized_doc.submit()
 
 		def email_signed_doc():
-			recipients=[authorization_request.authorizer_email]
-			subject = authorized_doc.name
-			message = "Find the copy of the contract you signed in the attachment"
-			attachments = [frappe.attach_print(authorization_request.linked_doctype, authorization_request.linked_docname, print_format="Web Contract")]
+			recipients = [authorization_request.authorizer_email]
+			company = authorized_doc.company if hasattr(authorized_doc, 'company') else get_default_company()
+			subject = company + " " + authorized_doc.name
+			message = "Find the copy of the {0} you signed with {1} in the attachment below.".format(authorized_doc.doctype, company)
+			print_format = "Web Contract" if authorized_doc.doctype == 'Contract' else "Standard"
+			attachments = [frappe.attach_print(authorized_doc.doctype, authorized_doc.name, print_format=print_format)]
 			frappe.sendmail(recipients=recipients, attachments=attachments, subject=subject, message=message)
 
 		email_signed_doc()
