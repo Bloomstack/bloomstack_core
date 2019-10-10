@@ -25,10 +25,12 @@ $(document).ready(function () {
 							auth_req_docname: "{{ auth_req_docname }}"
 						},
 						callback: (r) => {
-							$(".title").html("The {{doc.doctype}} has been signed and has been emailed to you!");
+							$(".title").html("The {{doc.doctype}} has been signed and has been emailed to you at {{authorizer_email}}");
 							$(".contract").html(r.message);
 							$(".contract").show();
+							$(".actions").hide();
 							$(".signed-doc-actions").show();
+							
 						}
 					})
 				}

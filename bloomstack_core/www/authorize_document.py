@@ -27,10 +27,12 @@ def get_context(context):
     context.doc = frappe.get_doc(auth_req.linked_doctype, auth_req.linked_docname)
     context.company = context.doc.company if hasattr(context.doc, 'company') else get_default_company()
     context.auth_req_docname = docname
-
-
-@frappe.whitelist()
+    context.authorizer_email = auth_req.authorizer_email
+    context.print_url = "/{0}/{1}?format={2}&key={3}&trigger_print=1".format(auth_req.linked_doctype, auth_req.linked_docname, "Standard", context.doc.get_signature())
+    
+@frappe.whitelist(allow_guest = True)
 def custom_print_doc(auth_req_docname):
+    frappe.local.flags.ignore_print_permissions = True
     auth_req = frappe.get_doc("Authorization Request", auth_req_docname)
     print_format = "Web Contract" if auth_req.linked_doctype == 'Contract' else "Standard"
     print_doc = frappe.get_print(auth_req.linked_doctype, auth_req.linked_docname, print_format)
