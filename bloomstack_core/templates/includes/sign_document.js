@@ -25,7 +25,7 @@ $(document).ready(function () {
 							auth_req_docname: "{{ auth_req_docname }}"
 						},
 						callback: (r) => {
-							$(".title").html("You have signed the below {{doc.doctype}}! The signed document has been emailed to you!");
+							$(".title").html("The {{doc.doctype}} has been signed and has been emailed to you!");
 							$(".contract").html(r.message);
 							$(".contract").show();
 							$(".signed-doc-actions").show();
