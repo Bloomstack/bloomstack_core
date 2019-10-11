@@ -38,7 +38,7 @@ $(document).ready(function () {
 		}
 		else {
 
-			frappe.throw(__("Please put your name and signature!"));
+			frappe.throw(__("Please put your name and signature."));
 		}
 	});
 

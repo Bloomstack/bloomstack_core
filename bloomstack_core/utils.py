@@ -132,7 +132,10 @@ def email_authorized_doc(authorization_request_name):
 	recipients = [authorization_request.authorizer_email]
 	company = authorized_doc.company if hasattr(authorized_doc, 'company') else get_default_company()
 	subject = "Your signed {0} with {1}".format(authorized_doc.doctype, company)
-	message = "Find the copy of the {0} you signed with {1} in the attachment below.".format(authorized_doc.doctype, company)
+	message = frappe.render_template("templates/emails/authorization_request.html", {
+			"authorization_request": authorization_request,
+			"company": company
+		})
 	print_format = "Web Contract" if authorized_doc.doctype == 'Contract' else "Standard"
 	attachments = [frappe.attach_print(authorized_doc.doctype, authorized_doc.name, print_format=print_format)]
 	frappe.sendmail(recipients=recipients, attachments=attachments, subject=subject, message=message)
