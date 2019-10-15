@@ -199,14 +199,9 @@
 
 	.btn {
 		border-radius: 20px;
-		padding-left: 3rem;
-		padding-right: 3rem;
-		border: none;
 	}
 
 	.actions {
-		flex-direction: column;
-		text-align: center;
 		display: flex;
 		justify-content: space-between;
 		padding: 0 18px 0 0;
@@ -226,7 +221,6 @@
 	}
 
 	.actions a {
-		align-self: center;
 		padding: 10px 40px;
 	}
 
@@ -242,12 +236,30 @@
 	}
 
 	#rejectDocument {
-		float: left;
-		clear: left;
+		padding-left: inherit;
 	}
-
+	a#rejectDocument {
+		align-self: end;
+    color: indianred;
+	padding-right: 0px;
+	}
 	.signed-doc-actions {
 		display: none;
+	}
+	.actions li {
+		display: inline-flex;
+		padding: inherit;
+	}
+	#printBtn {
+	color: rgb(120, 184, 152);
+    align-self: baseline;
+    border-color: gray;
+    padding-left: 2em;
+	border-color: rgb(120, 184, 152);
+	}
+	#approveDocument{
+		padding-left: 2em;
+		padding-right: 2em;
 	}
 </style>
 {% endblock %}
@@ -273,7 +285,7 @@
 	<div class="col-lg-4 ">
 
 		<div class="signed-doc-actions">
-			<a class="btn btn-primary" id="printBtn"
+			<a class="btn btn-primary" id="printDownload"
 				href="{{ print_url }}"
 				target="_blank" rel="noopener noreferrer">Print</a>
 		</div>
@@ -283,11 +295,11 @@
 			<input type="text" id="signee" value="" required /> </br></br></br>
 			Signature:<br><br>
 			<div id="signature"></div> <br><br>
-			<div class="actions">
-				<a class="btn btn-primary" id="approveDocument">Approve</a>
-				<a class="btn btn-primary" href="{{ print_url }}" target="_blank" rel="noopener noreferrer">Print</a>
-				<a href="#" id="rejectDocument">Reject</a>
-			</div>
+			<ul class="actions">
+				<li><a class="btn btn-outline-danger" href="#" id="rejectDocument">Reject</a></li>
+				<li><a class="btn" href="{{ print_url }}" target="_blank" rel="noopener noreferrer" id="printBtn">Print</a></li>
+				<li><a class="btn btn-primary" id="approveDocument">Approve</a></li>
+			</ul>
 		</div>
 
 	</div>
