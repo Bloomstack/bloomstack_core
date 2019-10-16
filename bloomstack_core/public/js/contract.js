@@ -51,6 +51,17 @@ frappe.ui.form.on("Contract", {
         }
     },
 
+    setup: (frm) => {
+        frm.set_query("payment_item", (doc) => {
+            return {
+                filters: {
+                    "is_sales_item": 1,
+                    "is_stock_item": 0
+                }
+            }
+        });
+    },
+
     payment_terms_template: (frm) => {
         if (frm.doc.payment_terms_template) {
             frappe.model.with_doc("Payment Terms Template", frm.doc.payment_terms_template, function () {
