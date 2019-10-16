@@ -6,9 +6,9 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
+		var printBtn = jQuery('.printBtn').clone();
 		if ($sigdiv.jSignature('getData', 'native').length != 0 && signee) {   // proceed only if user has put signature and signee name.
 			$(".user-signature").hide();
-			$(".contract").hide();
 
 			frappe.call({
 				method: "bloomstack_core.utils.authorize_document",
@@ -28,8 +28,7 @@ $(document).ready(function () {
 							$(".title").html("The {{doc.doctype}} has been signed and has been emailed to you at {{authorizer_email}}");
 							$(".contract").html(r.message);
 							$(".contract").show();
-							$(".actions").hide();
-							$(".signed-doc-actions").show();
+							printBtn.appendTo('.col-lg-4');
 							
 						}
 					})

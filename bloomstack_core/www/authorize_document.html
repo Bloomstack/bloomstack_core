@@ -194,7 +194,7 @@
 	}
 
 	#signature {
-		margin-left: -25px;
+		display: contents;
 	}
 
 	.btn {
@@ -254,12 +254,15 @@
 	color: rgb(120, 184, 152);
     align-self: baseline;
     border-color: gray;
-    padding-left: 2em;
+    text-align: center;
 	border-color: rgb(120, 184, 152);
 	}
 	#approveDocument{
 		padding-left: 2em;
 		padding-right: 2em;
+	}
+	#signeeName {
+		text-align: center;
 	}
 </style>
 {% endblock %}
@@ -284,21 +287,17 @@
 
 	<div class="col-lg-4 ">
 
-		<div class="signed-doc-actions">
-			<a class="btn btn-primary" id="printDownload"
-				href="{{ print_url }}"
-				target="_blank" rel="noopener noreferrer">Print</a>
-		</div>
 
 		<div class="user-signature">
-			Your Name: <br><br>
-			<input type="text" id="signee" value="" required /> </br></br></br>
+		</br>
+			Your Name: </br></br></br>
+			<div id="signeeName"><input type="text" id="signee" value="" required /></div> </br></br>
 			Signature:<br><br>
 			<div id="signature"></div> <br><br>
 			<ul class="actions">
-				<li><a class="btn btn-outline-danger" href="#" id="rejectDocument">Reject</a></li>
-				<li><a class="btn" href="{{ print_url }}" target="_blank" rel="noopener noreferrer" id="printBtn">Print</a></li>
-				<li><a class="btn btn-primary" id="approveDocument">Approve</a></li>
+				<li><a class="btn btn-outline-danger" href="#" id="rejectDocument"><span class="glyphicon glyphicon-remove"></span> Reject</a></li>
+				<li><a class="btn printBtn" href="{{ print_url }}" target="_blank" rel="noopener noreferrer" id="printBtn"><span class="glyphicon glyphicon-print"></span> Print</a></li>
+				<li><a class="btn btn-primary" id="approveDocument"><span class="glyphicon glyphicon-ok"></span> Approve</a></li>
 			</ul>
 		</div>
 
