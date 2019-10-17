@@ -115,3 +115,22 @@ def update_status_for_contracts():
 
 		if current_statuses != (contract_doc.status, contract_doc.fulfilment_status):
 			contract_doc.save(ignore_permissions=True)
+
+
+def get_data(data):
+	return frappe._dict({
+		'fieldname': 'contract',
+		'non_standard_fieldnames': {
+			'Auto Repeat': 'reference_document',
+		},
+		'transactions': [
+			{
+				'label': _('Sales Order'),
+				'items': ['Sales Order']
+			},
+			{
+				'label': _('Project'),
+				'items': ['Project']
+			},
+		]
+	})
