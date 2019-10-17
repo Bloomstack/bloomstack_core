@@ -44,7 +44,8 @@ def create_project_against_contract(contract, method):
 		"expected_start_date": expected_start_date,
 		"expected_end_date": expected_end_date,
 		"customer": contract.party_name if contract.party_type == "Customer" else None,
-		"tasks": project_tasks
+		"tasks": project_tasks,
+		"contract": contract.name
 	})
 	project.insert(ignore_permissions=True)
 
@@ -76,12 +77,20 @@ def create_order_against_contract(contract, method):
 					"doctype": "Sales Order",
 					"field_map": {
 						"party_name": "customer",
-						"name": "contract"
+						"name": "contract",
+						"project": "project"
 					}
 				}
 			}, postprocess=set_missing_values)
 			sales_order.save()
 			sales_order.submit()
+
+	# Link the sales order to the contract
+	contract.db_set("sales_order", sales_order.name)
+
+	# Link the sales order with the project
+	frappe.db.set_value('Project', contract.project, 'sales_order', sales_order.name)
+
 
 
 @frappe.whitelist()
