@@ -82,6 +82,8 @@ def create_order_against_contract(contract, method):
 			}, postprocess=set_missing_values)
 			sales_order.save()
 			sales_order.submit()
+	frappe.db.set_value("Project", contract.project, "sales_order", sales_order.name)
+	
 
 
 @frappe.whitelist()
@@ -120,17 +122,10 @@ def update_status_for_contracts():
 def get_data(data):
 	return frappe._dict({
 		'fieldname': 'contract',
-		'non_standard_fieldnames': {
-			'Auto Repeat': 'reference_document',
-		},
 		'transactions': [
 			{
-				'label': _('Sales Order'),
+				'label': _('Sales'),
 				'items': ['Sales Order']
-			},
-			{
-				'label': _('Project'),
-				'items': ['Project']
-			},
+			}
 		]
 	})
