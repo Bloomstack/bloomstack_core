@@ -220,6 +220,11 @@ table td div {
     padding: 10px 40px;
 }
 
+.actions li {
+    display: inline-flex;
+    padding: inherit;
+}
+
 #signee {
     border-radius: 3px;
     border: 1px solid #8e8e8e;
@@ -231,32 +236,33 @@ table td div {
     font-size: 24px;
 }
 
-#rejectDocument {
-    padding-left: inherit;
-}
-a#rejectDocument {
-    align-self: end;
-color: indianred;
-padding-right: 0px;
-}
-.signed-doc-actions {
-    display: none;
-}
-.actions li {
-    display: inline-flex;
-    padding: inherit;
-}
-#printBtn {
-color: rgb(120, 184, 152);
-align-self: baseline;
-border-color: gray;
-text-align: center;
-border-color: rgb(120, 184, 152);
-}
-#approveDocument{
+#approveDocument {
     padding-left: 2em;
     padding-right: 2em;
 }
+
+#rejectDocument {
+    padding-left: inherit;
+}
+
+a#rejectDocument {
+    align-self: end;
+    color: indianred;
+    padding-right: 0px;
+}
+
+.signed-doc-actions {
+    display: none;
+}
+
+#printBtn {
+    color: rgb(120, 184, 152);
+    align-self: baseline;
+    border-color: gray;
+    text-align: center;
+    border-color: rgb(120, 184, 152);
+}
+
 #signeeName {
     text-align: center;
 }

@@ -6,16 +6,16 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
-		var printBtn = jQuery('.printBtn').clone();
-		if ($sigdiv.jSignature('getData', 'native').length != 0 && signee) {   // proceed only if user has put signature and signee name.
-			$(".user-signature").hide();
 
+		// proceed only if user has put signature and signee name.
+		if (signee && $sigdiv.jSignature('getData', 'native').length != 0) {
+			$(".user-signature").hide();
 			frappe.call({
 				method: "bloomstack_core.utils.authorize_document",
 				args: {
 					sign: sign,
 					signee: signee,
-					docname: "{{ auth_req_docname }}",
+					docname: "{{ auth_req_docname }}"
 				},
 				freeze: true,
 				callback: (r) => {
@@ -25,19 +25,17 @@ $(document).ready(function () {
 							auth_req_docname: "{{ auth_req_docname }}"
 						},
 						callback: (r) => {
-							$(".title").html("The {{doc.doctype}} has been signed and has been emailed to you at {{authorizer_email}}");
+							frappe.msgprint(__("The {{ doc.doctype }} has been signed and emailed to you at {{ authorizer_email }}"));
+							$(".title").empty();
 							$(".contract").html(r.message);
 							$(".contract").show();
-							printBtn.appendTo('.col-lg-4');
-							
 						}
 					})
 				}
 			});
 		}
 		else {
-
-			frappe.throw(__("Please put your name and signature."));
+			frappe.throw(__("Please enter your name and signature"));
 		}
 	});
 
@@ -46,11 +44,11 @@ $(document).ready(function () {
 		frappe.call({
 			method: "bloomstack_core.utils.reject_document",
 			args: {
-				docname: "{{ auth_req_docname }}",
+				docname: "{{ auth_req_docname }}"
 			},
 			freeze: true,
 			callback: (r) => {
-				frappe.msgprint(__("The document has been rejected by you!"));
+				frappe.msgprint(__("The {{ doc.doctype }} has been rejected"));
 			}
 		})
 	});
