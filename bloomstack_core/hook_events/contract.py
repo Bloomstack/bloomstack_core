@@ -79,7 +79,8 @@ def create_order_against_contract(contract, method):
 						"name": "contract"
 					}
 				}
-			}, postprocess=set_missing_values)
+			}, postprocess=set_missing_values, ignore_permissions=True)
+			sales_order.flags.ignore_permissions = True
 			sales_order.save()
 			sales_order.submit()
 

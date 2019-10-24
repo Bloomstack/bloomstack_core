@@ -6,6 +6,7 @@ from six import string_types
 
 import frappe
 from erpnext.stock.doctype.batch.batch import get_batch_qty
+from erpnext import get_default_company
 from python_metrc import METRC
 
 
@@ -125,6 +126,21 @@ def log_request(endpoint, request_data, response, ref_dt=None, ref_dn=None):
 	frappe.db.commit()
 
 
+def email_authorized_doc(authorization_request_name):
+	authorization_request = frappe.get_doc("Authorization Request", authorization_request_name)
+	authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
+	recipients = [authorization_request.authorizer_email]
+	company = authorized_doc.company if hasattr(authorized_doc, 'company') else get_default_company()
+	subject = "Your signed {0} with {1}".format(authorized_doc.doctype, company)
+	message = frappe.render_template("templates/emails/authorization_request.html", {
+			"authorization_request": authorization_request,
+			"company": company
+		})
+	print_format = "Web Contract" if authorized_doc.doctype == 'Contract' else "Standard"
+	attachments = [frappe.attach_print(authorized_doc.doctype, authorized_doc.name, print_format=print_format)]
+	frappe.sendmail(recipients=recipients, attachments=attachments, subject=subject, message=message)
+
+
 @frappe.whitelist(allow_guest=True)
 def authorize_document(sign=None, signee=None, docname=None):
 	if frappe.db.exists("Authorization Request", docname):
@@ -142,8 +158,11 @@ def authorize_document(sign=None, signee=None, docname=None):
 				authorized_doc.customer_signature = sign
 				authorized_doc.signee = signee
 				authorized_doc.signed_on = frappe.utils.now()
-
+				
+		authorized_doc.flags.ignore_permissions = True
 		authorized_doc.submit()
+
+		email_authorized_doc(docname)
 
 
 @frappe.whitelist(allow_guest=True)
