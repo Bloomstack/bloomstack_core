@@ -98,7 +98,7 @@ doctype_list_js = {
 # ------------
 
 # before_install = "bloomstack_core.install.before_install"
-# after_install = "bloomstack_core.install.after_install"
+after_install = "bloomstack_core.install_events.auth.after_install"
 
 # Desk Notifications
 # ------------------
