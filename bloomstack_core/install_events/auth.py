@@ -48,7 +48,7 @@ def register_client():
 	response = requests.post(url, headers=headers, data=json.dumps(data))
 
 	if not response.ok:
-		frappe.throw(_("There was a server error while trying to create the site."), exc=ClientRegistrationError)
+		frappe.throw(_("There was a server error while trying to create the site"), exc=ClientRegistrationError)
 
 	client_info = json.loads(response.content)
 	return client_info
@@ -93,4 +93,20 @@ def create_social_login_keys(client_info):
 
 
 def create_oauth_client(client_info):
-	pass
+	scopes = " ".join(client_info.get("allowedScopes"))
+	redirect_uris = client_info.get("redirectUris")
+
+	if not redirect_uris:
+		return
+
+	oauth_client = frappe.new_doc("OAuth Client")
+	oauth_client.update({
+		"client_id": client_info.get("clientId"),
+		"client_secret": client_info.get("clientSecret"),
+		"app_name": frappe.local.conf.get("company_name"),
+		"skip_authorization": True,
+		"scopes": str(scopes),
+		"redirect_uris": str("\n".join(redirect_uris)),
+		"default_redirect_uri": redirect_uris[0]
+	})
+	oauth_client.insert()
