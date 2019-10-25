@@ -28,7 +28,7 @@ def after_install():
 	auth_client_info = register_auth_client()
 	create_social_login_keys(auth_client_info)
 	create_oauth_client(auth_client_info)
-	frappe_client_info = register_frappe_client(auth_client_info)
+	register_frappe_client(auth_client_info)
 
 
 def register_auth_client():
@@ -102,10 +102,6 @@ def create_social_login_keys(client_info):
 
 def create_oauth_client(client_info):
 	scopes = " ".join(client_info.get("allowedScopes"))
-	redirect_uris = client_info.get("redirectUris")
-
-	if not redirect_uris:
-		return
 
 	oauth_client = frappe.new_doc("OAuth Client")
 	oauth_client.update({
@@ -114,8 +110,8 @@ def create_oauth_client(client_info):
 		"app_name": frappe.local.conf.get("company_name"),
 		"skip_authorization": True,
 		"scopes": str(scopes),
-		"redirect_uris": str("\n".join(redirect_uris)),
-		"default_redirect_uri": redirect_uris[0]
+		"redirect_uris": frappe.local.conf.get("frappe_server") + "/frappe/callback",
+		"default_redirect_uri": frappe.local.conf.get("frappe_server") + "/frappe/callback"
 	})
 	oauth_client.insert()
 
@@ -146,6 +142,3 @@ def register_frappe_client(client_info):
 
 	if not response.ok:
 		frappe.throw(_("There was a server error while trying to create the site"), exc=FrappeClientRegistrationError)
-
-	client_info = response.json()
-	return client_info
