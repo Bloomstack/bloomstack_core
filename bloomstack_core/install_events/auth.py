@@ -8,7 +8,6 @@ from frappe.utils import get_url
 
 FRAPPE_SITE_BASE_URL = get_url()
 FRAPPE_AUTHORIZE_URL = "/api/method/frappe.integrations.oauth2.authorize"
-FRAPPE_REDIRECT_URL = "/api/method/frappe.www.login.login_via_frappe"
 FRAPPE_ACCESS_TOKEN_URL = "/api/method/frappe.integrations.oauth2.get_token"
 FRAPPE_PROFILE_URL = "/api/method/frappe.integrations.oauth2.openid_profile"
 FRAPPE_REVOKATION_URL = "/api/method/frappe.integrations.oauth2.revoke_token"
@@ -86,18 +85,10 @@ def create_social_login_keys(client_info):
 
 	# create a login key for Frappe, disabled by default
 	frappe_social_login_key = frappe.new_doc("Social Login Key")
-	frappe_social_login_key.update({
-		"enable_social_login": False,
-		"provider_name": "Frappe",
-		"client_id": None,
-		"client_secret": None,
-		"base_url": FRAPPE_SITE_BASE_URL,
-		"authorize_url": FRAPPE_AUTHORIZE_URL,
-		"redirect_url": FRAPPE_REDIRECT_URL,
-		"access_token_url": FRAPPE_ACCESS_TOKEN_URL,
-		"api_endpoint": FRAPPE_PROFILE_URL,
-		"auth_url_data": json.dumps({"scope": "openid", "response_type": "code"})
-	})
+	frappe_social_login_key.get_social_login_provider("Frappe", initialize=True)
+	frappe_social_login_key.enable_social_login = False
+	frappe_social_login_key.custom_base_url = False
+	frappe_social_login_key.base_url = FRAPPE_SITE_BASE_URL
 	frappe_social_login_key.insert()
 
 
