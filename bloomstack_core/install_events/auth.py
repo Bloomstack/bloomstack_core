@@ -23,7 +23,7 @@ def after_install():
 
 
 def register_client():
-	site = frappe.local.site
+	site = get_url()
 	base_url = frappe.local.conf.get("auth_server")
 	company_name = frappe.local.conf.get("company_name")
 	redirect_uri = frappe.local.conf.get("oauth_login_redirect_uri")
@@ -50,7 +50,7 @@ def register_client():
 	if not response.ok:
 		frappe.throw(_("There was a server error while trying to create the site"), exc=ClientRegistrationError)
 
-	client_info = json.loads(response.content)
+	client_info = response.json()
 	return client_info
 
 
