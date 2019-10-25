@@ -141,6 +141,20 @@ def email_authorized_doc(authorization_request_name):
 	frappe.sendmail(recipients=recipients, attachments=attachments, subject=subject, message=message)
 
 
+@frappe.whitelist()
+def create_contract_from_quotation(source_name, target_doc=None):
+	existing_contract = frappe.db.exists("Contract", {"document_type": "Quotation", "document_name": source_name})
+	if existing_contract:
+		contract_link = frappe.utils.get_link_to_form("Contract", existing_contract)
+		frappe.throw("A Contract already exists for this Quotation at {0}".format(contract_link))
+
+	contract = frappe.new_doc("Contract")
+	contract.party_name = frappe.db.get_value("Quotation", source_name, "party_name")
+	contract.document_type = "Quotation"
+	contract.document_name = source_name
+	return contract
+
+
 @frappe.whitelist(allow_guest=True)
 def authorize_document(sign=None, signee=None, docname=None):
 	if frappe.db.exists("Authorization Request", docname):
@@ -158,7 +172,7 @@ def authorize_document(sign=None, signee=None, docname=None):
 				authorized_doc.customer_signature = sign
 				authorized_doc.signee = signee
 				authorized_doc.signed_on = frappe.utils.now()
-				
+
 		authorized_doc.flags.ignore_permissions = True
 		authorized_doc.submit()
 
