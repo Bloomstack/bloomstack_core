@@ -6,8 +6,16 @@ import frappe
 from frappe import _
 from frappe.utils import get_url
 
+FRAPPE_SITE_BASE_URL = get_url()
+FRAPPE_AUTHORIZE_URL = "/api/method/frappe.integrations.oauth2.authorize"
+FRAPPE_REDIRECT_URL = "/api/method/frappe.www.login.login_via_frappe"
+FRAPPE_ACCESS_TOKEN_URL = "/api/method/frappe.integrations.oauth2.get_token"
+FRAPPE_PROFILE_URL = "/api/method/frappe.integrations.oauth2.openid_profile"
+FRAPPE_REVOKATION_URL = "/api/method/frappe.integrations.oauth2.revoke_token"
 
-class ClientRegistrationError(frappe.ValidationError): pass
+
+class AuthClientRegistrationError(frappe.ValidationError): pass
+class FrappeClientRegistrationError(frappe.ValidationError): pass
 
 
 def after_install():
@@ -17,21 +25,21 @@ def after_install():
 		and an OAuth client for the company.
 	"""
 
-	client_info = register_client()
-	create_social_login_keys(client_info)
-	create_oauth_client(client_info)
+	auth_client_info = register_auth_client()
+	create_social_login_keys(auth_client_info)
+	create_oauth_client(auth_client_info)
+	frappe_client_info = register_frappe_client(auth_client_info)
 
 
-def register_client():
-	site = get_url()
-	base_url = frappe.local.conf.get("auth_server")
+def register_auth_client():
+	auth_base_url = frappe.local.conf.get("auth_server")
 	company_name = frappe.local.conf.get("company_name")
 	redirect_uri = frappe.local.conf.get("oauth_login_redirect_uri")
 
-	redirect_uris = [site + redirect_uri]
+	redirect_uris = [FRAPPE_SITE_BASE_URL + redirect_uri]
 	scopes = ["openid", "roles", "email", "profile"]
 
-	url = base_url + "/client/v1/create"
+	url = auth_base_url + "/client/v1/create"
 	headers = {
 		'Authorization': 'Bearer <token>',
 		'Content-Type': 'application/json'
@@ -48,7 +56,7 @@ def register_client():
 	response = requests.post(url, headers=headers, data=json.dumps(data))
 
 	if not response.ok:
-		frappe.throw(_("There was a server error while trying to create the site"), exc=ClientRegistrationError)
+		frappe.throw(_("There was a server error while trying to create the site"), exc=AuthClientRegistrationError)
 
 	client_info = response.json()
 	return client_info
@@ -82,11 +90,11 @@ def create_social_login_keys(client_info):
 		"provider_name": "Frappe",
 		"client_id": None,
 		"client_secret": None,
-		"base_url": get_url(),
-		"authorize_url": "/api/method/frappe.integrations.oauth2.authorize",
-		"redirect_url": "/api/method/frappe.www.login.login_via_frappe",
-		"access_token_url": "/api/method/frappe.integrations.oauth2.get_token",
-		"api_endpoint": "/api/method/frappe.integrations.oauth2.openid_profile",
+		"base_url": FRAPPE_SITE_BASE_URL,
+		"authorize_url": FRAPPE_AUTHORIZE_URL,
+		"redirect_url": FRAPPE_REDIRECT_URL,
+		"access_token_url": FRAPPE_ACCESS_TOKEN_URL,
+		"api_endpoint": FRAPPE_PROFILE_URL,
 		"auth_url_data": json.dumps({"scope": "openid", "response_type": "code"})
 	})
 	frappe_social_login_key.insert()
@@ -110,3 +118,34 @@ def create_oauth_client(client_info):
 		"default_redirect_uri": redirect_uris[0]
 	})
 	oauth_client.insert()
+
+
+def register_frappe_client(client_info):
+	scopes = client_info.get("allowedScopes")
+	frappe_base_url = frappe.local.conf.get("frappe_server")
+	company_name = frappe.local.conf.get("company_name")
+
+	url = frappe_base_url + "/frappe/v1/connect_client"
+	headers = {
+		'Authorization': 'Bearer <token>',
+		'Content-Type': 'application/json'
+	}
+	data = {
+		"name": company_name,
+		"clientId": client_info.get("clientId"),
+		"clientSecret": client_info.get("clientSecret"),
+		"authServerURL": FRAPPE_SITE_BASE_URL,
+		"profileURL": FRAPPE_SITE_BASE_URL + FRAPPE_PROFILE_URL,
+		"tokenURL": FRAPPE_SITE_BASE_URL + FRAPPE_ACCESS_TOKEN_URL,
+		"authorizationURL": FRAPPE_SITE_BASE_URL + FRAPPE_AUTHORIZE_URL,
+		"revocationURL": FRAPPE_SITE_BASE_URL + FRAPPE_REVOKATION_URL,
+		"scope": scopes
+	}
+
+	response = requests.post(url, headers=headers, data=json.dumps(data))
+
+	if not response.ok:
+		frappe.throw(_("There was a server error while trying to create the site"), exc=FrappeClientRegistrationError)
+
+	client_info = response.json()
+	return client_info
