@@ -27,8 +27,9 @@ def after_install():
 
 	auth_client_info = register_auth_client()
 	create_social_login_keys(auth_client_info)
-	create_oauth_client(auth_client_info)
-	register_frappe_client(auth_client_info)
+
+	oauth_client_info = create_oauth_client()
+	register_frappe_client(oauth_client_info)
 
 
 def register_auth_client():
@@ -100,24 +101,20 @@ def create_social_login_keys(client_info):
 	frappe_social_login_key.insert()
 
 
-def create_oauth_client(client_info):
-	scopes = " ".join(client_info.get("allowedScopes"))
-
+def create_oauth_client():
 	oauth_client = frappe.new_doc("OAuth Client")
 	oauth_client.update({
-		"client_id": client_info.get("clientId"),
-		"client_secret": client_info.get("clientSecret"),
 		"app_name": frappe.local.conf.get("company_name"),
 		"skip_authorization": True,
-		"scopes": str(scopes),
+		"scopes": "all openid",
 		"redirect_uris": frappe.local.conf.get("frappe_server") + "/frappe/callback",
 		"default_redirect_uri": frappe.local.conf.get("frappe_server") + "/frappe/callback"
 	})
 	oauth_client.insert()
+	return oauth_client
 
 
 def register_frappe_client(client_info):
-	scopes = client_info.get("allowedScopes")
 	frappe_base_url = frappe.local.conf.get("frappe_server")
 	company_name = frappe.local.conf.get("company_name")
 
@@ -128,14 +125,14 @@ def register_frappe_client(client_info):
 	}
 	data = {
 		"name": company_name,
-		"clientId": client_info.get("clientId"),
-		"clientSecret": client_info.get("clientSecret"),
+		"clientId": client_info.client_id,
+		"clientSecret": client_info.client_secret,
 		"authServerURL": FRAPPE_SITE_BASE_URL,
 		"profileURL": FRAPPE_SITE_BASE_URL + FRAPPE_PROFILE_URL,
 		"tokenURL": FRAPPE_SITE_BASE_URL + FRAPPE_ACCESS_TOKEN_URL,
 		"authorizationURL": FRAPPE_SITE_BASE_URL + FRAPPE_AUTHORIZE_URL,
 		"revocationURL": FRAPPE_SITE_BASE_URL + FRAPPE_REVOKATION_URL,
-		"scope": scopes
+		"scope": client_info.scopes.split(" ")
 	}
 
 	response = requests.post(url, headers=headers, data=json.dumps(data))
