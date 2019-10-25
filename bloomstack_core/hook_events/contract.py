@@ -82,8 +82,6 @@ def create_order_against_contract(contract, method):
 			}, postprocess=set_missing_values)
 			sales_order.save()
 			sales_order.submit()
-	frappe.db.set_value("Project", contract.project, "sales_order", sales_order.name)
-
 
 
 @frappe.whitelist()
