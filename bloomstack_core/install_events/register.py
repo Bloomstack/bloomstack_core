@@ -3,11 +3,9 @@ import json
 import requests
 
 import frappe
-from erpnext import get_default_company
 from frappe import _
 from frappe.utils import get_url
 
-COMPANY_NAME = get_default_company()
 FRAPPE_SITE_BASE_URL = get_url()
 FRAPPE_AUTHORIZE_ENDPOINT = "/api/method/frappe.integrations.oauth2.authorize"
 FRAPPE_ACCESS_TOKEN_ENDPOINT = "/api/method/frappe.integrations.oauth2.get_token"
@@ -19,21 +17,20 @@ class AuthClientRegistrationError(frappe.ValidationError): pass
 class FrappeClientRegistrationError(frappe.ValidationError): pass
 
 
-def after_install():
+def setup_bloomstack_instance(args=None):
 	"""
-		After the site is successfully created, we register the company on
-		Bloomstack's authentication servers, and create login integrations
-		and an OAuth client for the company.
+		After the site is successfully created, we register Bloomstack login
+		integrations and create an OAuth client for the company.
 	"""
 
-	auth_client_info = register_auth_client()
-	create_social_login_keys(auth_client_info)
+	auth_client_info = register_auth_client(args)
+	create_social_login_keys(args, auth_client_info)
 
-	oauth_client_info = create_oauth_client()
-	register_frappe_client(oauth_client_info)
+	oauth_client_info = create_oauth_client(args)
+	register_frappe_client(args, oauth_client_info)
 
 
-def register_auth_client():
+def register_auth_client(args):
 	auth_base_url = frappe.local.conf.get("auth_server")
 	redirect_uri = frappe.local.conf.get("oauth_login_redirect_uri")
 	redirect_uris = [FRAPPE_SITE_BASE_URL + redirect_uri]
@@ -45,7 +42,7 @@ def register_auth_client():
 		'Content-Type': 'application/json'
 	}
 	data = {
-		"name": COMPANY_NAME,
+		"name": args.company_name,
 		"isTrusted": "0",
 		"autoApprove": True,
 		"redirectUris": redirect_uris,
@@ -62,7 +59,7 @@ def register_auth_client():
 	return client_info
 
 
-def create_social_login_keys(client_info):
+def create_social_login_keys(args, client_info):
 	# create a login key for Bloomstack, enabled by default
 	scopes = " ".join(client_info.get("allowedScopes"))
 	response_type = "code"
@@ -92,10 +89,10 @@ def create_social_login_keys(client_info):
 	frappe_social_login_key.insert()
 
 
-def create_oauth_client():
+def create_oauth_client(args):
 	oauth_client = frappe.new_doc("OAuth Client")
 	oauth_client.update({
-		"app_name": get_default_company(),
+		"app_name": args.company_name,
 		"skip_authorization": True,
 		"scopes": "all openid",
 		"redirect_uris": frappe.local.conf.get("frappe_server") + "/frappe/callback",
@@ -105,7 +102,7 @@ def create_oauth_client():
 	return oauth_client
 
 
-def register_frappe_client(client_info):
+def register_frappe_client(args, client_info):
 	frappe_base_url = frappe.local.conf.get("frappe_server")
 
 	url = frappe_base_url + "/frappe/v1/connect_client"
@@ -114,7 +111,7 @@ def register_frappe_client(client_info):
 		'Content-Type': 'application/json'
 	}
 	data = {
-		"name": COMPANY_NAME,
+		"name": args.company_name,
 		"clientId": client_info.client_id,
 		"clientSecret": client_info.client_secret,
 		"authServerURL": FRAPPE_SITE_BASE_URL,

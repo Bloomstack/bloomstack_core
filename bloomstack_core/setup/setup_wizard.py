@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 
 import frappe
+from bloomstack_core.install_events.register import setup_bloomstack_instance
 from frappe import _
 
 
@@ -36,6 +37,17 @@ def disable_standard_reports(args):
 
 def get_setup_stages(args=None):
 	stages = [
+		{
+			'status': _('Registering company on Bloomstack'),
+			'fail_msg': _('Failed to register company'),
+			'tasks': [
+				{
+					'fn': setup_bloomstack_instance,
+					'args': args,
+					'fail_msg': _("Failed to register company")
+				}
+			]
+		},
 		{
 			'status': _('Configuring Bloomstack settings'),
 			'fail_msg': _('Failed to configure Bloomstack settings'),
