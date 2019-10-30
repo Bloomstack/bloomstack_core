@@ -3,14 +3,16 @@ import json
 import requests
 
 import frappe
+from erpnext import get_default_company
 from frappe import _
 from frappe.utils import get_url
 
+COMPANY_NAME = get_default_company()
 FRAPPE_SITE_BASE_URL = get_url()
-FRAPPE_AUTHORIZE_URL = "/api/method/frappe.integrations.oauth2.authorize"
-FRAPPE_ACCESS_TOKEN_URL = "/api/method/frappe.integrations.oauth2.get_token"
-FRAPPE_PROFILE_URL = "/api/method/frappe.integrations.oauth2.openid_profile"
-FRAPPE_REVOKATION_URL = "/api/method/frappe.integrations.oauth2.revoke_token"
+FRAPPE_AUTHORIZE_ENDPOINT = "/api/method/frappe.integrations.oauth2.authorize"
+FRAPPE_ACCESS_TOKEN_ENDPOINT = "/api/method/frappe.integrations.oauth2.get_token"
+FRAPPE_PROFILE_ENDPOINT = "/api/method/frappe.integrations.oauth2.openid_profile"
+FRAPPE_REVOKATION_ENDPOINT = "/api/method/frappe.integrations.oauth2.revoke_token"
 
 
 class AuthClientRegistrationError(frappe.ValidationError): pass
@@ -33,9 +35,7 @@ def after_install():
 
 def register_auth_client():
 	auth_base_url = frappe.local.conf.get("auth_server")
-	company_name = frappe.local.conf.get("company_name")
 	redirect_uri = frappe.local.conf.get("oauth_login_redirect_uri")
-
 	redirect_uris = [FRAPPE_SITE_BASE_URL + redirect_uri]
 	scopes = ["openid", "roles", "email", "profile"]
 
@@ -45,7 +45,7 @@ def register_auth_client():
 		'Content-Type': 'application/json'
 	}
 	data = {
-		"name": company_name,
+		"name": COMPANY_NAME,
 		"isTrusted": "0",
 		"autoApprove": True,
 		"redirectUris": redirect_uris,
@@ -95,7 +95,7 @@ def create_social_login_keys(client_info):
 def create_oauth_client():
 	oauth_client = frappe.new_doc("OAuth Client")
 	oauth_client.update({
-		"app_name": frappe.local.conf.get("company_name"),
+		"app_name": get_default_company(),
 		"skip_authorization": True,
 		"scopes": "all openid",
 		"redirect_uris": frappe.local.conf.get("frappe_server") + "/frappe/callback",
@@ -107,7 +107,6 @@ def create_oauth_client():
 
 def register_frappe_client(client_info):
 	frappe_base_url = frappe.local.conf.get("frappe_server")
-	company_name = frappe.local.conf.get("company_name")
 
 	url = frappe_base_url + "/frappe/v1/connect_client"
 	headers = {
@@ -115,14 +114,14 @@ def register_frappe_client(client_info):
 		'Content-Type': 'application/json'
 	}
 	data = {
-		"name": company_name,
+		"name": COMPANY_NAME,
 		"clientId": client_info.client_id,
 		"clientSecret": client_info.client_secret,
 		"authServerURL": FRAPPE_SITE_BASE_URL,
-		"profileURL": FRAPPE_SITE_BASE_URL + FRAPPE_PROFILE_URL,
-		"tokenURL": FRAPPE_SITE_BASE_URL + FRAPPE_ACCESS_TOKEN_URL,
-		"authorizationURL": FRAPPE_SITE_BASE_URL + FRAPPE_AUTHORIZE_URL,
-		"revocationURL": FRAPPE_SITE_BASE_URL + FRAPPE_REVOKATION_URL,
+		"profileURL": FRAPPE_SITE_BASE_URL + FRAPPE_PROFILE_ENDPOINT,
+		"tokenURL": FRAPPE_SITE_BASE_URL + FRAPPE_ACCESS_TOKEN_ENDPOINT,
+		"authorizationURL": FRAPPE_SITE_BASE_URL + FRAPPE_AUTHORIZE_ENDPOINT,
+		"revocationURL": FRAPPE_SITE_BASE_URL + FRAPPE_REVOKATION_ENDPOINT,
 		"scope": client_info.scopes.split(" ")
 	}
 
