@@ -108,7 +108,7 @@ override_doctype_dashboards = {
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "bloomstack_core.notifications.get_notification_config"
+notification_config = "bloomstack_core.notifications.get_notification_config"
 
 # Permissions
 # -----------
