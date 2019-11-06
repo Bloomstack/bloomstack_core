@@ -8,5 +8,4 @@ def get_notification_config():
     notifications = {"for_doctype":{}}
     for config in setting.as_dict().configuration:
         notifications["for_doctype"][config.filter_doctype] = json.loads(config.filter)
-
     return notifications
