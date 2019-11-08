@@ -11,25 +11,16 @@ from frappe.model.document import Document
 
 class NotificationBadgesSettings(Document):
 	def validate(self):
-		if self.configuration:
-			for i in self.as_dict().configuration:
-				invalid_filter_rows = self.validate_filter_json(i)
-
-			if invalid_filter_rows:
-				invalid_rows = ",".join(str(e) for e in invalid_filter_rows)
-				frappe.throw(_("The json format for filter is invalid in row(s) " + invalid_rows))
+		for config in self.configuration:
+			self.validate_filter_json(config)
+			self.validate_filter_attributes(config)
 
 	def validate_filter_json(self, row):
-		invalid_filter_rows = []
-		if frappe.utils.html_utils.is_json(row.filter):
-			self.validate_filter_attributes(row)
-		else:
-			invalid_filter_rows.append(self.as_dict().configuration.index(row)+1)
-		return invalid_filter_rows
+		if not frappe.utils.html_utils.is_json(row.filter):
+			frappe.throw(_("Row {0}: The filter's JSON format is invalid".format(row.idx)))
 
 	def validate_filter_attributes(self, row):
-		filter = json.loads(row.filter)
-		for key in filter.keys():
-			if not hasattr(frappe.get_meta(row.filter_doctype), key):
-				frappe.throw(_("The Filter in row '{0}' is invalid").format(
-					self.as_dict().configuration.index(row)+1))
+		notification_filter = json.loads(row.filter)
+		for attr in notification_filter:
+			if not hasattr(frappe.get_meta(row.filter_doctype), attr):
+				frappe.throw(_("Row {0}: '{1}' is not a valid attribute in {2}").format(row.idx, attr, row.filter_doctype))
