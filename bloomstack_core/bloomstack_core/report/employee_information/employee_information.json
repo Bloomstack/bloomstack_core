@@ -8,7 +8,7 @@
  "idx": 3, 
  "is_standard": "Yes", 
  "json": "{\"filters\":[],\"fields\":[[\"name\",\"Employee\"],[\"employee_name\",\"Employee\"],[\"image\",\"Employee\"],[\"status\",\"Employee\"],[\"department\",\"Employee\"],[\"designation\",\"Employee\"],[\"reports_to\",\"Employee\"],[\"branch\",\"Employee\"],[\"kra\",\"Employee\"],[\"cell_number\",\"Employee\"],[\"company_email\",\"Employee\"],[\"docstatus\",\"Employee\"]],\"order_by\":\"`tabEmployee`.`modified` desc\",\"page_length\":20,\"column_widths\":{\"name\":180,\"employee_name\":86,\"image\":55,\"status\":57,\"department\":101,\"designation\":89,\"reports_to\":182,\"branch\":60,\"kra\":194,\"cell_number\":58,\"company_email\":158}}", 
- "modified": "2019-11-12 03:41:51.623482", 
+ "modified": "2019-11-12 03:49:35.652442", 
  "modified_by": "Administrator", 
  "module": "Bloomstack Core", 
  "name": "Employee Information", 
@@ -23,6 +23,9 @@
   }, 
   {
    "role": "HR Manager"
+  }, 
+  {
+   "role": "Employee"
   }
  ]
 }
