@@ -38,8 +38,16 @@ frappe.ui.form.on('Quotation', {
 					},
 					__("Send Authorization Request"))
 				}).addClass("btn-primary");
-
 			}
+		}
+
+		if (!frm.is_new() && frm.doc.docstatus === 1) {
+			frm.add_custom_button(__("Contract"), () => {
+				frappe.model.open_mapped_doc({
+					method: "bloomstack_core.utils.create_contract_from_quotation",
+					frm: frm
+				});
+			}, __("Make"));
 		}
 	},
 

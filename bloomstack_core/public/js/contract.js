@@ -11,9 +11,6 @@ frappe.ui.form.on("Contract", {
             }
         });
 
-        // Make "Signed" field read-only if a project is created against it
-        frm.toggle_enable("is_signed", !(frm.doc.is_signed && frm.doc.project));
-
         if (frm.doc.docstatus === 1 && !frm.doc.customer_signature) {
             frm.add_custom_button(__("Authorize"), () => {
                 frappe.prompt([
@@ -51,20 +48,6 @@ frappe.ui.form.on("Contract", {
                 },
                 __("Send Authorization Request"))
             }).addClass("btn-primary");
-        }
-    },
-
-    payment_terms_template: (frm) => {
-        if (frm.doc.payment_terms_template) {
-            frappe.model.with_doc("Payment Terms Template", frm.doc.payment_terms_template, function () {
-                var tabletransfer = frappe.model.get_doc("Payment Terms Template", frm.doc.payment_terms_template);
-
-                frm.doc.payment_terms = [];
-                $.each(tabletransfer.terms, function (index, row) {
-                    frm.add_child("payment_terms", row);
-                    frm.refresh_field("payment_terms");
-                });
-            });
         }
     }
 });

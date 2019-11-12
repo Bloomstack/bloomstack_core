@@ -1,5 +1,5 @@
 import frappe
-from erpnext.controllers.accounts_controller import get_payment_terms
+from erpnext.selling.doctype.quotation.quotation import make_sales_order
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import add_days, getdate, now
@@ -46,7 +46,7 @@ def create_project_against_contract(contract, method):
 		"customer": contract.party_name if contract.party_type == "Customer" else None,
 		"tasks": project_tasks
 	})
-	project.insert()
+	project.insert(ignore_permissions=True)
 
 	# Link the contract with the project
 	contract.db_set("project", project.name)
@@ -59,29 +59,13 @@ def create_order_against_contract(contract, method):
 	if not contract.is_signed:
 		return
 
-	def set_missing_values(source, target):
-		target.delivery_date = frappe.db.get_value("Project", contract.project, "expected_end_date")
-		target.append("items", {
-			"item_code": source.payment_item,
-			"qty": 1,
-			"rate": frappe.db.get_value("Item", source.payment_item, "standard_rate"),
-			"delivery_date": frappe.utils.getdate(now()),
-			"conversion_factor": 1
-		})
-
-	if contract.party_type == "Customer":
-		if contract.payment_item:
-			sales_order = get_mapped_doc("Contract", contract.name, {
-				"Contract": {
-					"doctype": "Sales Order",
-					"field_map": {
-						"party_name": "customer",
-						"name": "contract"
-					}
-				}
-			}, postprocess=set_missing_values)
-			sales_order.save()
-			sales_order.submit()
+	if contract.document_type == "Quotation" and contract.document_name:
+		sales_order = make_sales_order(contract.document_name)
+		sales_order.contract = contract.name
+		sales_order.project = contract.project
+		sales_order.delivery_date = frappe.db.get_value("Project", contract.project, "expected_end_date")
+		sales_order.save()
+		sales_order.submit()
 
 
 @frappe.whitelist()
@@ -114,4 +98,23 @@ def update_status_for_contracts():
 		contract_doc.update_contract_status()
 
 		if current_statuses != (contract_doc.status, contract_doc.fulfilment_status):
-			contract_doc.save()
+			contract_doc.save(ignore_permissions=True)
+
+
+def get_data(data):
+	return frappe._dict({
+		'fieldname': 'contract',
+		'internal_links': {
+			'Project': 'project'
+		},
+		'transactions': [
+			{
+				'label': _('Sales'),
+				'items': ['Sales Order']
+			},
+			{
+				'label': _('Projects'),
+				'items': ['Project']
+			}
+		]
+	})

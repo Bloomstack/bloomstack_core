@@ -71,6 +71,10 @@ doctype_list_js = {
 	"Delivery Trip": "public/js/delivery_trip_list.js"
 }
 
+override_doctype_dashboards = {
+	"Contract": "bloomstack_core.hook_events.contract.get_data",
+}
+
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
