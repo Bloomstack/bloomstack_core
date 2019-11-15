@@ -7,7 +7,7 @@ import frappe
 from frappe import _
 import json
 from frappe.model.document import Document
-
+from frappe.utils.html_utils import is_json
 
 class NotificationBadgesSettings(Document):
 	def validate(self):
@@ -16,7 +16,7 @@ class NotificationBadgesSettings(Document):
 			self.validate_filter_attributes(config)
 
 	def validate_filter_json(self, row):
-		if not frappe.utils.html_utils.is_json(row.filter):
+		if not is_json(row.filter):
 			frappe.throw(_("Row {0}: The filter's JSON format is invalid".format(row.idx)))
 
 	def validate_filter_attributes(self, row):
