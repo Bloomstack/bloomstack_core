@@ -3,17 +3,22 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
+
+import json
+
 import frappe
 from frappe import _
-import json
 from frappe.model.document import Document
 from frappe.utils.html_utils import is_json
+
 
 class NotificationBadgesSettings(Document):
 	def validate(self):
 		for config in self.configuration:
 			self.validate_filter_json(config)
 			self.validate_filter_attributes(config)
+
+		frappe.clear_cache()
 
 	def validate_filter_json(self, row):
 		if not is_json(row.filter):
