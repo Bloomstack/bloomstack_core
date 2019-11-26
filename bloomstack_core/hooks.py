@@ -158,9 +158,6 @@ doc_events = {
 	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
-	},
-	"Packing Slip": {
-		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
 	}
 }
 
