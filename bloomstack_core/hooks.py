@@ -60,7 +60,6 @@ doctype_js = {
 	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Item": "public/js/item.js",
-	"Packing Slip": "public/js/packing_slip.js",
 	"Quotation": "public/js/quotation.js",
 	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
