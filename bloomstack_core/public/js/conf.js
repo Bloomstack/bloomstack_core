@@ -115,6 +115,13 @@ $(document).on("page-change", () => {
 // original definition in ERPNext's utils.js file
 frappe.form.link_formatters['Item'] = function (value, doc) {
 	if (doc && doc.item_name && doc.item_name !== value) {
+		const item_codes = $("[data-fieldname='item_code']");
+		for (const item_code of item_codes) {
+			if (item_code.textContent == "Item Code") {
+				item_code.textContent = "Item";
+			}
+		}
+
 		return value
 			? doc.item_name + ': ' + value
 			: doc.item_name;
