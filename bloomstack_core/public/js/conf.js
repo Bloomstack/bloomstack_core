@@ -117,8 +117,8 @@ frappe.form.link_formatters['Item'] = function (value, doc) {
 	if (doc && doc.item_name && doc.item_name !== value) {
 		const item_codes = $("[data-fieldname='item_code']");
 		for (const item_code of item_codes) {
-			if (item_code.textContent == "Item Code") {
-				item_code.textContent = "Item";
+			if (item_code.textContent == "Item Code" || /^<div/.test(item_code.innerHTML) == false) {
+				item_code.textContent = "DeeJay";
 			}
 		}
 
