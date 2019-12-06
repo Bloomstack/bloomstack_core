@@ -161,6 +161,9 @@ doc_events = {
 	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
+	"Employee Onboarding": {
+		"on_submit": "bloomstack_core.hook_events.employee_onboarding.send_emails_to_assigned_users"
 	}
 }
 
