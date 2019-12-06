@@ -20,11 +20,5 @@ frappe.ui.form.on('Driver', {
 				}	
 			});
 		}
-	},
-
-	validate: function(frm) {
-		if(!frm.doc.user_id) {
-			frappe.msgprint(__("The driver will not be able to log in without a User ID"));
-		}
 	}
 });
