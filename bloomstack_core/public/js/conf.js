@@ -80,18 +80,30 @@ $(document).bind('toolbar_setup', () => {
 });
 
 $(document).on("page-change", () => {
-	let cur_route = frappe.get_route();
-	let doc_type = "";
+	const [view, doc_type, doc_name] = frappe.get_route();
 
-	// Only display articles for DocTypes
-	if (cur_route && ["Form", "List", "Tree"].includes(cur_route[0])) {
-		doc_type = cur_route[1];
+	bloomstack_core.get_growth_guide_articles(doc_type);
+	bloomstack_core.update_item_column_label(view, doc_type);
+})
+
+// replace Item link field label throughout the system from
+// "item_code: item_name" to "item_name: item_code";
+// original definition in ERPNext's utils.js file
+frappe.form.link_formatters['Item'] = (value, doc) => {
+	if (doc && doc.item_name && doc.item_name !== value) {
+		return value
+			? doc.item_name + ': ' + value
+			: doc.item_name;
+	} else {
+		return value;
 	}
+}
 
+bloomstack_core.get_growth_guide_articles = (doc_type) => {
 	frappe.call({
 		method: "bloomstack_core.config.docs.get_growth_guide_articles",
 		args: {
-			"doc_type": doc_type
+			"doc_type": doc_type || ""
 		},
 		callback: (r) => {
 			if (!r.exc) {
@@ -108,22 +120,19 @@ $(document).on("page-change", () => {
 			}
 		}
 	})
-})
+}
 
-// replace Item link field label throughout the system from
-// "item_code: item_name" to "item_name: item_code";
-// original definition in ERPNext's utils.js file
-frappe.form.link_formatters['Item'] = function (value, doc) {
-	if (doc && doc.item_name && doc.item_name !== value) {
-		return value
-			? doc.item_name + ': ' + value
-			: doc.item_name;
-	} else {
-		return value;
+bloomstack_core.update_item_column_label = (view, doc_type) => {
+	if (view == "Form" && doc_type) {
+		frappe.ui.form.on(doc_type, {
+			onload_post_render: (frm) => {
+				update_link_column_label(frm, "Item", "Item");
+			}
+		});
 	}
 }
 
-bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
+bloomstack_core.add_login_as_button = (frm, label, user, submenu) => {
 	// only one of these roles is allowed to use these feature
 	if (frappe.user.has_role(["Administrator", "Can Login As", "System Manager"])) {
 		frappe.call({
@@ -132,7 +141,7 @@ bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
 				doctype: "User",
 				name: user,
 			},
-			callback: function (data) {
+			callback: (data) => {
 				const user_doc = data.message;
 				// only administrator can login as system user
 				if (!frappe.user.has_role("Administrator") && user_doc && user_doc.user_type == "System User") {
@@ -140,12 +149,12 @@ bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
 				}
 
 				if (user_doc) {
-					frm.add_custom_button(label, function () {
+					frm.add_custom_button(label, () => {
 						frappe.call({
 							method: "bloomstack_core.utils.login_as",
 							args: { user: user },
 							freeze: true,
-							callback: function (data) {
+							callback: (data) => {
 								window.location = "/desk";
 							}
 						})
@@ -153,5 +162,23 @@ bloomstack_core.add_login_as_button = function (frm, label, user, submenu) {
 				}
 			}
 		})
+	}
+}
+
+function update_link_column_label(frm, link_doctype, label) {
+	const table_doctypes = frappe.meta.get_table_fields(frm.doc.doctype)
+		.filter(df => frappe.meta.get_linked_fields(df.options).includes(link_doctype))
+		.map(df => df.options);
+
+	for (let cdt of table_doctypes) {
+		let cdt_obj = frm.grids.find(dt => dt.grid.doctype == cdt);
+		let visible_columns = cdt_obj.grid.visible_columns;
+
+		for (let [column, column_length] of visible_columns) {
+			if (column.fieldtype == "Link" && column.options == link_doctype) {
+				let column_obj = cdt_obj.$wrapper.find(".grid-heading-row").find(`[data-fieldname=${column.fieldname}]`);
+				column_obj.text(label);
+			}
+		}
 	}
 }
