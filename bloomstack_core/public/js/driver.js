@@ -2,16 +2,6 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Driver', {
-	setup: function(frm) {
-		frm.set_query('transporter', function(){
-			return {
-				filters: {
-					'is_transporter': 1
-				}
-			};
-		});
-	},
-	
 	user_id: function(frm) {
 		if(frm.doc.user_id) {
 			frappe.db.get_value("Employee", {"user_id": frm.doc.user_id}, "name", (r) => {

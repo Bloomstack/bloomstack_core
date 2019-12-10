@@ -1,7 +1,7 @@
 import frappe
 
 
-def update_driver(employee, method):
+def update_driver_employee(employee, method):
 	if method == "validate":
 		user_id = employee.user_id
 		if user_id:

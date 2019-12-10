@@ -152,7 +152,7 @@ doc_events = {
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
 	"Employee": {
-		"validate": "bloomstack_core.hook_events.employee.update_driver"
+		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
