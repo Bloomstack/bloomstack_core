@@ -59,6 +59,7 @@ doctype_js = {
 	"Customer": "public/js/customer.js",
 	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
+	"Driver": "public/js/driver.js",
 	"Item": "public/js/item.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Quotation": "public/js/quotation.js",
@@ -108,7 +109,7 @@ override_doctype_dashboards = {
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "bloomstack_core.notifications.get_notification_config"
+notification_config = "bloomstack_core.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -149,6 +150,9 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
 		],
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
+	},
+	"Employee": {
+		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
