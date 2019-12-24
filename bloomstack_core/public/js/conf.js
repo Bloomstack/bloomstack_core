@@ -174,10 +174,12 @@ function update_link_column_label(frm, link_doctype, label) {
 		let cdt_obj = frm.grids.find(dt => dt.grid.doctype == cdt);
 		let visible_columns = cdt_obj.grid.visible_columns;
 
-		for (let [column, column_length] of visible_columns) {
-			if (column.fieldtype == "Link" && column.options == link_doctype) {
-				let column_obj = cdt_obj.$wrapper.find(".grid-heading-row").find(`[data-fieldname=${column.fieldname}]`);
-				column_obj.text(label);
+		if (visible_columns) {
+			for (let [column, column_length] of visible_columns) {
+				if (column.fieldtype == "Link" && column.options == link_doctype) {
+					let column_obj = cdt_obj.$wrapper.find(".grid-heading-row").find(`[data-fieldname=${column.fieldname}]`);
+					column_obj.text(label);
+				}
 			}
 		}
 	}
