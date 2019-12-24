@@ -173,7 +173,6 @@ doc_events = {
 
 scheduler_events = {
 	"daily": [
-		"bloomstack_core.hook_events.contract.update_status_for_contracts",
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	]
 }
