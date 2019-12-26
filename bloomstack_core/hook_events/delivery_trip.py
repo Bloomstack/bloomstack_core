@@ -17,7 +17,7 @@ from frappe.model.mapper import get_mapped_doc
 
 def generate_directions_url(delivery_trip, method):
 	if method == "validate":
-		if not frappe.db.get_single_value("Google Maps Settings", "enabled"):
+		if not frappe.db.get_single_value("Google Settings", "enable"):
 			return
 
 		if delivery_trip.delivery_stops:
@@ -29,7 +29,7 @@ def generate_directions_url(delivery_trip, method):
 			route_list = route_list[0]
 
 			context = {
-				"key": frappe.db.get_single_value("Google Maps Settings", "client_key"),
+				"key": frappe.db.get_single_value("Google Settings", "api_key"),
 				"origin": quote(route_list[0], safe=''),
 				"destination": quote(route_list[-1], safe=''),
 				"waypoints": quote('|'.join(route_list[1:-1]), safe='')
