@@ -12,8 +12,8 @@ frappe.ui.form.on('Delivery Trip', {
 			}
 		}
 
-		frappe.db.get_value("Google Maps Settings", { name: "Google Maps Settings" }, "enabled", (r) => {
-			if (r.enabled == 0) {
+		frappe.db.get_value("Google Settings", { name: "Google Settings" }, "enable", (r) => {
+			if (r.enable == 0) {
 				// Hide entire Map section if Google Maps is disabled
 				let wrapper = frm.fields_dict.sb_map.wrapper;
 				wrapper.hide();
