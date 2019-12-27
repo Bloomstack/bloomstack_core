@@ -51,14 +51,6 @@ def link_invoice_against_trip(delivery_trip, method):
 def make_payment_entry(payment_amount, sales_invoice, delivery_trip):
 	payment_entry = get_payment_entry("Sales Invoice", sales_invoice, party_amount=flt(payment_amount))
 	payment_entry.paid_amount = payment_amount
-
-	territory = frappe.db.get_value("Sales Invoice", sales_invoice, "territory")
-	mode_of_payment = frappe.db.get_value("Territory", territory, "mode_of_payment") or "Cash"
-
-	payment_entry.mode_of_payment = mode_of_payment
-	account = get_bank_cash_account(payment_entry.mode_of_payment, payment_entry.company)
-	if account:
-		payment_entry.paid_to = account.get("account")
 	payment_entry.reference_date = today()
 	payment_entry.reference_no = delivery_trip
 	payment_entry.flags.ignore_permissions = True

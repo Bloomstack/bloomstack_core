@@ -63,6 +63,7 @@ doctype_js = {
 	"Item": "public/js/item.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Quotation": "public/js/quotation.js",
+	"Sales Order": "public/js/sales_order.js",
 	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
@@ -132,6 +133,7 @@ doc_events = {
 		"autoname": "bloomstack_core.hook_events.item.autoname"
 	},
 	"Contract": {
+		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
 			"bloomstack_core.hook_events.contract.create_project_against_contract",
 			"bloomstack_core.hook_events.contract.create_order_against_contract"

@@ -3,6 +3,12 @@ from erpnext.selling.doctype.quotation.quotation import make_sales_order
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import add_days, getdate, now
+from frappe.utils.jinja import render_template
+
+
+def generate_contract_terms_display(contract, method):
+	if contract.contract_terms:
+		contract.contract_terms_display = render_template(contract.contract_terms, {"doc": contract.as_dict()})
 
 
 def create_project_against_contract(contract, method):
