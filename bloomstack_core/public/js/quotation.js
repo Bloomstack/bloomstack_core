@@ -47,7 +47,7 @@ frappe.ui.form.on('Quotation', {
 					method: "bloomstack_core.utils.create_contract_from_quotation",
 					frm: frm
 				});
-			}, __("Make"));
+			}, __("Create"));
 		}
 	},
 
