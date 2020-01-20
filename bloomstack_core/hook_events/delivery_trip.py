@@ -14,10 +14,12 @@ from frappe.utils import flt, nowdate, today
 from frappe.model.mapper import get_mapped_doc
 
 
-
 def generate_directions_url(delivery_trip, method):
 	if method == "validate":
 		if not frappe.db.get_single_value("Google Settings", "enable"):
+			return
+
+		if not delivery_trip.driver_address:
 			return
 
 		if delivery_trip.delivery_stops:
