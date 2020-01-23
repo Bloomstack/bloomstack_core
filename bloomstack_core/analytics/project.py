@@ -1,26 +1,51 @@
 import json
 
 import frappe
+from frappe.utils import get_gravatar_url, get_url_to_form
+
 
 @frappe.whitelist()
-def get_projects_details():
-    '''Get all projects details'''
-    # return  frappe.db.get_all("Project", fields=['*'])
-    projects = []
+def get_project_details():
+	'''Get all projects details'''
 
-    data = frappe.db.get_all("Project", fields=["*"])
+	project_data = []
+	projects = frappe.db.get_all("Project", fields=["name", "priority", "percent_complete", "_assign"])
 
-    for project in data:
-        open_task = frappe.db.count('Task', filters={"project":project.name,"status":"open"})
-        closed_task = frappe.db.count('Task', filters={"project":project.name,"status":"completed"})
-        assigned = frappe.db.get_list("ToDo", filters={"reference_type":"Project","reference_name":project.name}, fields=["*"])
-        projects.append({
-            "name": project.name,
-            "openTask": open_task,
-            "closedTasks": closed_task,
-            "percentCompleted": project.percent_complete,
-            "priority": project.priority,
-            "assignd":assigned
-        })
+	for project in projects:
+		project_users = []
 
-    return projects
+		total_tasks = frappe.db.count("Task", filters={"project": project.name})
+		closed_tasks = frappe.db.count("Task", filters={"project": project.name, "status": "Completed"})
+		assigned_users = json.loads(project._assign)
+
+		for assignee in assigned_users:
+			full_name = frappe.db.get_value("User", assignee, "full_name")
+			assignee_tasks = frappe.get_list("Task",
+				filters={"_assign": ["like", "%{}%".format(assignee)]},
+				fields=["name", "status"])
+
+			user_data = {
+				"name": assignee,
+				"label": full_name,
+				"avatar": get_gravatar_url(assignee),
+				"tasks": []
+			}
+
+			for task in assignee_tasks:
+				user_data["tasks"].append({
+					"url": get_url_to_form("Task", task.name),
+					"status": task.status
+				})
+
+			project_users.append(user_data)
+
+		project_data.append({
+			"name": project.name,
+			"totalTasks": total_tasks,
+			"closedTasks": closed_tasks,
+			"percentCompleted": project.percent_complete,
+			"priority": project.priority,
+			"assigned": project_users
+		})
+
+	return project_data
