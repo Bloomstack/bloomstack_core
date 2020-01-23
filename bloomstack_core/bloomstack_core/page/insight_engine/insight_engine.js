@@ -113,29 +113,24 @@ InsightEngine = class InsightEngine {
 			]
 		}
 
-		// Top product trends in the last week
-		let datasets = [];
-		Object.keys(this.dashboard_data.top_products_by_time).forEach((item, i) => {
-			if(i < 5) {
-				datasets.push({
-					label: item,
-					backgroundColor: colors.rgba[i],
-					borderColor: colors.hex[i],
-					borderWidth: 1.5,
-					fill: false,
-					data: this.dashboard_data.top_products_by_time[item]
-				})
-			}
-		});
+		// Weekly sales trends in the last week
+		let startDate = moment().subtract(30, 'days');
+		let stopDate = moment().subtract(1, 'day');
 
 		new Chart($(".chart-graphics"), {
 			type: 'line',
 			data: {
-				labels: this.getDateRangeAsArray(),
-				datasets: datasets
+				labels: this.getDateRangeAsArray(startDate, stopDate),
+				datasets: [{
+					data: this.dashboard_data.total_sales_by_day.map(elem => elem.revenue),
+					backgroundColor: colors.rgba[0],
+					borderColor: colors.hex[0],
+					borderWidth: 1.5,
+					fill: false
+				}]
 			},
 			options: {
-				legend: { position: 'bottom' },
+				legend: { display: false },
 				layout: { padding: 30 },
 				scales: {
 					xAxes: [{
@@ -186,16 +181,43 @@ InsightEngine = class InsightEngine {
 		});
 
 		// Top products
-		this.dashboard_data.top_products_by_revenue.map((data, i) => {
-			let row = `
-				<tr>
-					<td> ${ (i+1) } </td>
-					<td> ${ data.item } </td>
-					<td> ${ format_currency(data.revenue) } </td>
-					<td> ${ data.volume } </td>
-				</tr>
-			`;
-			$('.table-data tbody').append(row);
+		new Chart($(".table-data .graphics"), {
+			type: 'horizontalBar',
+			data: {
+				labels: this.dashboard_data.top_products_by_revenue.map(elem => elem.item),
+				datasets: [{
+					data: this.dashboard_data.top_products_by_revenue.map(elem => elem.revenue),
+					backgroundColor: colors.rgba[3],
+					borderColor: colors.hex[3],
+					borderWidth: 1.5
+				}]
+			},
+			options: {
+				legend: { display: false },
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						gridLines: { display: false },
+						barThickness: 30,
+						ticks: {
+							beginAtZero: true,
+							callback(value, index, values) {
+								return format_currency(value, null, 0);
+							}
+						}
+					}],
+					yAxes: [{
+						gridLines: { display: false }
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label(tooltipItem, data) {
+							return format_currency(tooltipItem.value);
+						}
+					}
+				}
+			}
 		});
 
 		// Top sales partners
@@ -270,14 +292,14 @@ InsightEngine = class InsightEngine {
 		});
 
 		// Top customers
-		new Chart($(".graphical-distribution .graphics"), {
+		new Chart($(".graphical-distribution .bar-data .graphics"), {
 			type: 'horizontalBar',
 			data: {
 				labels: this.dashboard_data.top_customers_by_revenue.map(elem => elem.customer),
 				datasets: [{
 					data: this.dashboard_data.top_customers_by_revenue.map(elem => elem.grand_total),
-					backgroundColor: colors.rgba,
-					borderColor: colors.hex,
+					backgroundColor: colors.rgba[3],
+					borderColor: colors.hex[3],
 					borderWidth: 1.5
 				}]
 			},
@@ -297,6 +319,136 @@ InsightEngine = class InsightEngine {
 					}],
 					yAxes: [{
 						gridLines: { display: false }
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label(tooltipItem, data) {
+							return format_currency(tooltipItem.value);
+						}
+					}
+				}
+			}
+		});
+
+		// Top sales by customer groups
+		new Chart($(".graphical-distribution .donut-chart .graphics"), {
+			type: 'horizontalBar',
+			data: {
+				labels: this.dashboard_data.top_customer_groups_by_revenue.map(elem => elem.customer_group),
+				datasets: [{
+					data: this.dashboard_data.top_customer_groups_by_revenue.map(elem => elem.grand_total),
+					backgroundColor: colors.rgba[3],
+					borderColor: colors.hex[3],
+					borderWidth: 1.5
+				}]
+			},
+			options: {
+				legend: { display: false },
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						gridLines: { display: false },
+						barThickness: 30,
+						ticks: {
+							beginAtZero: true,
+							callback(value, index, values) {
+								return format_currency(value, null, 0);
+							}
+						}
+					}],
+					yAxes: [{
+						gridLines: { display: false }
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label(tooltipItem, data) {
+							return format_currency(tooltipItem.value);
+						}
+					}
+				}
+			}
+		});
+
+		// New customer vs total customer count by month
+		new Chart($(".customer-distribution .count-data .graphics"), {
+			type: 'bar',
+			data: {
+				labels: this.dashboard_data.total_customers_by_month.map(elem => elem.month),
+				datasets: [
+					{
+						label: "New Customers",
+						data: this.dashboard_data.new_customers_by_month.map(elem => elem.count),
+						backgroundColor: colors.rgba[2],
+						borderColor: colors.hex[2],
+						borderWidth: 1.5
+					},
+					{
+						label: "Total Customers",
+						data: this.dashboard_data.total_customers_by_month.map(elem => elem.count),
+						backgroundColor: colors.rgba[3],
+						borderColor: colors.hex[3],
+						borderWidth: 1.5
+					}
+				]
+			},
+			options: {
+				legend: { position: 'bottom' },
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						gridLines: { display: false }
+					}],
+					yAxes: [{
+						gridLines: { display: false },
+						barThickness: 30,
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
+			}
+		});
+
+		// New customer vs total customer sales by month
+		new Chart($(".customer-distribution .sales-data .graphics"), {
+			type: 'bar',
+			data: {
+				labels: this.dashboard_data.total_customer_sales_by_month.map(elem => elem.month),
+				datasets: [
+					{
+						label: "New Customers",
+						data: this.dashboard_data.new_customer_sales_by_month.map(elem => elem.revenue),
+						backgroundColor: colors.rgba[2],
+						borderColor: colors.hex[2],
+						borderWidth: 1.5
+					},
+					{
+						label: "Total Customers",
+						data: this.dashboard_data.total_customer_sales_by_month.map(elem => elem.revenue),
+						backgroundColor: colors.rgba[3],
+						borderColor: colors.hex[3],
+						borderWidth: 1.5
+					}
+				]
+			},
+			options: {
+				legend: { position: 'bottom' },
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						gridLines: { display: false }
+					}],
+					yAxes: [{
+						gridLines: { display: false },
+						barThickness: 30,
+						ticks: {
+							beginAtZero: true,
+							callback(value, index, values) {
+								return format_currency(value, null, 0);
+							}
+						}
 					}]
 				},
 				tooltips: {

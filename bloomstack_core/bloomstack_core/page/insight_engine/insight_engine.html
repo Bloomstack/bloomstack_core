@@ -17,9 +17,9 @@
             </div>
             <div class="col-md-4 col-xs-12 yesterday-revenue">
                 <div class="container">
-                    <span class="amount">{{ format_currency(yesterday_revenue) }}</span>
-                    <span class="name">YESTERDAY\'S REVENUE</span>
-                    <span class="description">Payments received on {{ moment().subtract(1, "d").format("MMM D") }}</span>
+                    <span class="amount">{{ format_number(order_conversion_rate) }}%</span>
+                    <span class="name">BOOK-TO-BILL RATIO</span>
+                    <span class="description">% conversion rate for lifetime orders</span>
                 </div>
             </div>
         </div>
@@ -38,6 +38,29 @@
                     <span class="description">Average of payments received in the last 7 days</span>
                 </div>
             </div>
+            <div class="col-md-4 col-xs-12 average-monthly-revenue">
+                <div class="container">
+                    <span class="amount">{{ total_invoices }}</span>
+                    <span class="name">TOTAL INVOICES</span>
+                    <span class="description">Raised from the start of business</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-xs-12 average-weekly-revenue">
+                <div class="container">
+                    <span class="amount">{{ format_number(total_items_sold, null, 0) }}</span>
+                    <span class="name">ITEMS SOLD</span>
+                    <span class="description">Sold from the start of business</span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 cash-on-hand">
+                <div class="container">
+                    <span class="amount">{{ total_skus }}</span>
+                    <span class="name">TOTAL PRODUCTS</span>
+                    <span class="description">Number of products being sold</span>
+                </div>
+            </div>
             <div class="col-md-4 col-xs-12 cash-on-hand">
                 <div class="container">
                     <span class="amount">{{ format_currency(cash_on_hand) }}</span>
@@ -51,12 +74,12 @@
         <div class="row">
             <div class="section-heading">
                 <p class="heading">
-                    TOP 5 PRODUCTS
+                    TOTAL SALES
                     <span>
-                        by Revenue
+                        by Day
                     </span>
                 </p>
-                <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                <p class="duration">{{ moment().subtract(30, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
             </div>
             <canvas class="chart-graphics"></canvas>
         </div>
@@ -85,19 +108,7 @@
                     </p>
                     <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
                 </div>
-                <div class="products">
-                    <table width="100%" cellpadding="10">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Products</th>
-                                <th>Revenue</th>
-                                <th>Units</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+                <canvas class="graphics"></canvas>
             </div>
         </div>
     </div>
@@ -131,16 +142,58 @@
     </div>
     <div class="graphical-distribution parent-container">
         <div class="row">
-            <div class="section-heading">
-                <p class="heading">
-                    TOP 10 CUSTOMERS
-                    <span>
-                        by Revenue
-                    </span>
-                </p>
-                <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+            <div class="col-md-6 col-xs-12 bar-data">
+                <div class="section-heading">
+                    <p class="heading">
+                        TOP 10 CUSTOMERS
+                        <span>
+                            by Revenue
+                        </span>
+                    </p>
+                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}
+                    </p>
+                </div>
+                <canvas class="graphics"></canvas>
             </div>
-            <canvas class="graphics"></canvas>
+            <div class="col-md-6 col-xs-12 donut-chart">
+                <div class="section-heading">
+                    <p class="heading">
+                        TOTAL SALES
+                        <span>
+                            by Customer Group
+                        </span>
+                    </p>
+                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}
+                    </p>
+                </div>
+                <canvas class="graphics"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="customer-distribution parent-container">
+        <div class="row">
+            <div class="col-md-6 col-xs-12 count-data">
+                <div class="section-heading">
+                    <p class="heading">
+                        NEW CUSTOMER COUNT
+                        <span>
+                            by Month
+                        </span>
+                    </p>
+                </div>
+                <canvas class="graphics"></canvas>
+            </div>
+            <div class="col-md-6 col-xs-12 sales-data">
+                <div class="section-heading">
+                    <p class="heading">
+                        NEW CUSTOMER SALES
+                        <span>
+                            by Month
+                        </span>
+                    </p>
+                </div>
+                <canvas class="graphics"></canvas>
+            </div>
         </div>
     </div>
 </div>

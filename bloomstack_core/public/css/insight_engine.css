@@ -53,19 +53,17 @@
 
 .parent-container .row { display: flex; }
 
-.chart-container,
-.graphical-distribution {
+.chart-container {
     border-radius: 15px;
     box-shadow: 0 1px 6px #bfbdbd;
 }
 
-.chart-container .row,
-.graphical-distribution .row { 
+.chart-container .row {
     margin: 0;
     display: block;
 }
 
-.parent-container .row [class*="col-"] { 
+.parent-container .row [class*="col-"] {
     padding: 0;
     border-radius: 15px;
     margin: 0 15px;
@@ -74,10 +72,14 @@
 }
 
 .category-product-info .row .donut-chart,
-.sales-partner-info .row .bar-data { margin-left: 0; }
+.sales-partner-info .row .bar-data,
+.graphical-distribution .row .bar-data,
+.customer-distribution .row .count-data { margin-left: 0; }
 
 .category-product-info .row .table-data,
-.sales-partner-info .row .donut-chart { margin-right: 0; }
+.sales-partner-info .row .donut-chart,
+.graphical-distribution .row .donut-chart,
+.customer-distribution .row .sales-data { margin-right: 0; }
 
 .parent-container { margin: 30px 0; }
 
