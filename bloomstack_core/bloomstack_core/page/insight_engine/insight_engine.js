@@ -1,19 +1,19 @@
 {% include "bloomstack_core/bloomstack_core/page/insight_engine/insight_engine.html" %}
 
 frappe.pages['insight-engine'].on_page_load = function(wrapper) {
-	var page = frappe.ui.make_app_page({
-		parent: wrapper,
-		title: 'Dashboard',
-		single_column: true
-	});
-
 	wrapper.insight_engine = new InsightEngine(wrapper);
 }
 
 
-InsightEngine = class InsightEngine {
-	constructor(wrapper) {
-		this.setup(wrapper);
+class InsightEngine {
+	constructor(parent) {
+		frappe.ui.make_app_page({
+			parent: parent,
+			title: 'Dashboard',
+			single_column: true
+		});
+
+		this.setup(parent);
 		const assets = [
 			'assets/js/chart.js',
 			'assets/bloomstack_core/css/insight_engine.css'
@@ -24,11 +24,20 @@ InsightEngine = class InsightEngine {
 		});
 	}
 
-	setup(wrapper) {
+	setup(parent) {
 		let me = this;
+
+		let startDateControl = parent.page.add_date("Start Date", frappe.datetime.month_start())
+			.change(() => { me.make() })
+		let endDateControl = parent.page.add_date("End Date", frappe.datetime.now_datetime())
+			.change(() => { me.make() })
+
 		this.elements = {
-			parent: $(wrapper).find(".layout-main"),
-			refresh_btn: wrapper.page.set_primary_action(__("Refresh All"), () => { me.make() }, "fa fa-refresh"),
+			page: parent.page,
+			start_date: startDateControl,
+			end_date: endDateControl,
+			parent: $(parent).find(".layout-main"),
+			refresh_btn: parent.page.set_primary_action(__("Refresh All"), () => { me.make() }, "fa fa-refresh"),
 		};
 
 		this.elements.no_data = $('<div class="alert alert-warning">' + __("No Data") + '</div>')
@@ -46,9 +55,15 @@ InsightEngine = class InsightEngine {
 		let me = this;
 		await frappe.call({
 			method: "bloomstack_core.bloomstack_core.page.insight_engine.insight_engine.get_insight_engine_dashboards",
+			args: {
+				start_date: me.elements.start_date.val(),
+				end_date: me.elements.end_date.val(),
+			},
 			callback: (r) => {
 				if (!r.exc && r.message) {
-					me.dashboard_data = r.message;
+					me.dashboardData = r.message;
+					me.dashboardData.startDate = me.elements.start_date.val();
+					me.dashboardData.endDate = me.elements.end_date.val();
 				} else {
 					me.elements.no_data.toggle(true);
 				}
@@ -56,24 +71,32 @@ InsightEngine = class InsightEngine {
 		});
 	}
 
-	getDateRangeAsArray(startDate, stopDate) {
+	getDateRangeAsArray(startDate, endDate) {
 		let dateArray = [];
 
-		// Default the dashboard input dates to a week
-		startDate = moment(startDate || moment().subtract(7, 'days'));
-		stopDate = moment(stopDate || moment().subtract(1, 'day'));
+		// Default the dashboard input dates to the selected date range
+		startDate = moment(startDate || this.dashboardData.startDate);
+		endDate = moment(endDate || this.dashboardData.endDate);
 
-		while (startDate <= stopDate) {
-			dateArray.push(moment(startDate).format('MMM D'))
-			startDate = moment(startDate).add(1, 'day');
+		const dateFormat = startDate.year() != endDate.year() ? 'MMM D Y' : 'MMM D';
+
+		while (startDate <= endDate) {
+			dateArray.push(startDate.format(dateFormat));
+			startDate = startDate.add(1, 'day');
 		}
 
 		return dateArray;
 	}
 
 	renderPage() {
-		let html = frappe.render_template("insight_engine", this.dashboard_data)
-		this.elements.parent.html(html);
+		let html = frappe.render_template("insight_engine", this.dashboardData);
+		let wrapper = this.elements.parent.find(".wrapper");
+
+		if (wrapper.length) {
+			wrapper.html(html);
+		} else {
+			this.elements.parent.append(html);
+		}
 	}
 
 	renderCharts() {
@@ -113,16 +136,24 @@ InsightEngine = class InsightEngine {
 			]
 		}
 
-		// Weekly sales trends in the last week
-		let startDate = moment().subtract(30, 'days');
-		let stopDate = moment().subtract(1, 'day');
+		// Daily sales trends in the last 30 days
+		let period = 'day';
+		let data = [];
 
-		new Chart($(".chart-graphics"), {
+		if (period == 'day') {
+			data = this.dashboardData.total_sales_by_day;
+		} else if (period == 'week') {
+			data = this.dashboardData.total_sales_by_week;
+		} else if (period == 'month') {
+			data = this.dashboardData.total_sales_by_month;
+		}
+
+		new Chart($(".chart-container .chart-graphics"), {
 			type: 'line',
 			data: {
-				labels: this.getDateRangeAsArray(startDate, stopDate),
+				labels: this.getDateRangeAsArray(this.dashboardData.startDate, this.dashboardData.endDate),
 				datasets: [{
-					data: this.dashboard_data.total_sales_by_day.map(elem => elem.revenue),
+					data: data.map(elem => elem.revenue),
 					backgroundColor: colors.rgba[0],
 					borderColor: colors.hex[0],
 					borderWidth: 1.5,
@@ -134,7 +165,10 @@ InsightEngine = class InsightEngine {
 				layout: { padding: 30 },
 				scales: {
 					xAxes: [{
-						gridLines: { display: false }
+						type: 'time',
+						time: { minUnit: period },
+						gridLines: { display: false },
+						distribution: 'series'
 					}],
 					yAxes: [{
 						gridLines: { display: false },
@@ -156,12 +190,12 @@ InsightEngine = class InsightEngine {
 		});
 
 		// Sales by territories
-		new Chart($(".category-product-info .donut-chart .graphics"), {
+		new Chart($(".category-product-info .left-chart .graphics"), {
 			type: 'doughnut',
 			data: {
-				labels: this.dashboard_data.top_territories_by_revenue.map(elem => elem.territory),
+				labels: this.dashboardData.top_territories_by_revenue.map(elem => elem.territory),
 				datasets: [{
-					data: this.dashboard_data.top_territories_by_revenue.map(elem => elem.grand_total),
+					data: this.dashboardData.top_territories_by_revenue.map(elem => elem.grand_total),
 					backgroundColor: colors.rgba,
 					borderColor: colors.hex,
 					borderWidth: 1.5
@@ -181,12 +215,12 @@ InsightEngine = class InsightEngine {
 		});
 
 		// Top products
-		new Chart($(".table-data .graphics"), {
+		new Chart($(".category-product-info .right-chart .graphics"), {
 			type: 'horizontalBar',
 			data: {
-				labels: this.dashboard_data.top_products_by_revenue.map(elem => elem.item),
+				labels: this.dashboardData.top_products_by_revenue.map(elem => elem.item),
 				datasets: [{
-					data: this.dashboard_data.top_products_by_revenue.map(elem => elem.revenue),
+					data: this.dashboardData.top_products_by_revenue.map(elem => elem.revenue),
 					backgroundColor: colors.rgba[3],
 					borderColor: colors.hex[3],
 					borderWidth: 1.5
@@ -221,12 +255,12 @@ InsightEngine = class InsightEngine {
 		});
 
 		// Top sales partners
-		new Chart($(".bar-data .graphics"), {
+		new Chart($(".sales-partner-info .left-chart .graphics"), {
 			type: 'horizontalBar',
 			data: {
-				labels: this.dashboard_data.top_sales_partners_by_revenue.map(elem => elem.sales_partner),
+				labels: this.dashboardData.top_sales_partners_by_revenue.map(elem => elem.sales_partner),
 				datasets: [{
-					data: this.dashboard_data.top_sales_partners_by_revenue.map(elem => elem.grand_total),
+					data: this.dashboardData.top_sales_partners_by_revenue.map(elem => elem.grand_total),
 					backgroundColor: colors.rgba,
 					borderColor: colors.hex,
 					borderWidth: 1.5
@@ -260,18 +294,18 @@ InsightEngine = class InsightEngine {
 			}
 		});
 
-		// 2nd donut
-		new Chart($(".sales-partner-info .donut-chart .graphics"), {
+		// All invoice breakdown by status
+		new Chart($(".sales-partner-info .right-chart .graphics"), {
 			type: 'doughnut',
 			data: {
 				labels: ['Paid', 'Unpaid', 'Overdue', 'Returned', 'Credit Issued'],
 				datasets: [{
 					data: [
-						this.dashboard_data.paid_invoices,
-						this.dashboard_data.unpaid_invoices,
-						this.dashboard_data.overdue_invoices,
-						this.dashboard_data.returned_invoices,
-						this.dashboard_data.credit_invoices
+						this.dashboardData.paid_invoices,
+						this.dashboardData.unpaid_invoices,
+						this.dashboardData.overdue_invoices,
+						this.dashboardData.returned_invoices,
+						this.dashboardData.credit_invoices
 					],
 					backgroundColor: colors.rgba,
 					borderColor: colors.hex,
@@ -292,12 +326,12 @@ InsightEngine = class InsightEngine {
 		});
 
 		// Top customers
-		new Chart($(".graphical-distribution .bar-data .graphics"), {
+		new Chart($(".graphical-distribution .left-chart .graphics"), {
 			type: 'horizontalBar',
 			data: {
-				labels: this.dashboard_data.top_customers_by_revenue.map(elem => elem.customer),
+				labels: this.dashboardData.top_customers_by_revenue.map(elem => elem.customer),
 				datasets: [{
-					data: this.dashboard_data.top_customers_by_revenue.map(elem => elem.grand_total),
+					data: this.dashboardData.top_customers_by_revenue.map(elem => elem.grand_total),
 					backgroundColor: colors.rgba[3],
 					borderColor: colors.hex[3],
 					borderWidth: 1.5
@@ -332,12 +366,12 @@ InsightEngine = class InsightEngine {
 		});
 
 		// Top sales by customer groups
-		new Chart($(".graphical-distribution .donut-chart .graphics"), {
+		new Chart($(".graphical-distribution .right-chart .graphics"), {
 			type: 'horizontalBar',
 			data: {
-				labels: this.dashboard_data.top_customer_groups_by_revenue.map(elem => elem.customer_group),
+				labels: this.dashboardData.top_customer_groups_by_revenue.map(elem => elem.customer_group),
 				datasets: [{
-					data: this.dashboard_data.top_customer_groups_by_revenue.map(elem => elem.grand_total),
+					data: this.dashboardData.top_customer_groups_by_revenue.map(elem => elem.grand_total),
 					backgroundColor: colors.rgba[3],
 					borderColor: colors.hex[3],
 					borderWidth: 1.5
@@ -372,21 +406,21 @@ InsightEngine = class InsightEngine {
 		});
 
 		// New customer vs total customer count by month
-		new Chart($(".customer-distribution .count-data .graphics"), {
+		new Chart($(".customer-distribution .left-chart .graphics"), {
 			type: 'bar',
 			data: {
-				labels: this.dashboard_data.total_customers_by_month.map(elem => elem.month),
+				labels: this.dashboardData.total_customers_by_month.map(elem => elem.month),
 				datasets: [
 					{
 						label: "New Customers",
-						data: this.dashboard_data.new_customers_by_month.map(elem => elem.count),
+						data: this.dashboardData.new_customers_by_month.map(elem => elem.count),
 						backgroundColor: colors.rgba[2],
 						borderColor: colors.hex[2],
 						borderWidth: 1.5
 					},
 					{
 						label: "Total Customers",
-						data: this.dashboard_data.total_customers_by_month.map(elem => elem.count),
+						data: this.dashboardData.total_customers_by_month.map(elem => elem.count),
 						backgroundColor: colors.rgba[3],
 						borderColor: colors.hex[3],
 						borderWidth: 1.5
@@ -412,21 +446,21 @@ InsightEngine = class InsightEngine {
 		});
 
 		// New customer vs total customer sales by month
-		new Chart($(".customer-distribution .sales-data .graphics"), {
+		new Chart($(".customer-distribution .right-chart .graphics"), {
 			type: 'bar',
 			data: {
-				labels: this.dashboard_data.total_customer_sales_by_month.map(elem => elem.month),
+				labels: this.dashboardData.total_customer_sales_by_month.map(elem => elem.month),
 				datasets: [
 					{
 						label: "New Customers",
-						data: this.dashboard_data.new_customer_sales_by_month.map(elem => elem.revenue),
+						data: this.dashboardData.new_customer_sales_by_month.map(elem => elem.revenue),
 						backgroundColor: colors.rgba[2],
 						borderColor: colors.hex[2],
 						borderWidth: 1.5
 					},
 					{
 						label: "Total Customers",
-						data: this.dashboard_data.total_customer_sales_by_month.map(elem => elem.revenue),
+						data: this.dashboardData.total_customer_sales_by_month.map(elem => elem.revenue),
 						backgroundColor: colors.rgba[3],
 						borderColor: colors.hex[3],
 						borderWidth: 1.5

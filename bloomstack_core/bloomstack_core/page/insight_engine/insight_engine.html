@@ -79,14 +79,14 @@
                         by Day
                     </span>
                 </p>
-                <p class="duration">{{ moment().subtract(30, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                <p class="period"></p>
             </div>
             <canvas class="chart-graphics"></canvas>
         </div>
     </div>
     <div class="category-product-info parent-container">
         <div class="row">
-            <div class="col-md-6 col-xs-12 donut-chart">
+            <div class="col-md-6 col-xs-12 left-chart">
                 <div class="section-heading">
                     <p class="heading">
                         TOP TERRITORY
@@ -94,11 +94,11 @@
                             by Revenue
                         </span>
                     </p>
-                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                    <p class="period"></p>
                 </div>
                 <canvas class="graphics"></canvas>
             </div>
-            <div class="col-md-6 col-xs-12 table-data">
+            <div class="col-md-6 col-xs-12 right-chart">
                 <div class="section-heading">
                     <p class="heading">
                         TOP PRODUCTS
@@ -106,7 +106,7 @@
                             by Revenue
                         </span>
                     </p>
-                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                    <p class="period"></p>
                 </div>
                 <canvas class="graphics"></canvas>
             </div>
@@ -114,7 +114,7 @@
     </div>
     <div class="sales-partner-info parent-container">
         <div class="row">
-            <div class="col-md-6 col-xs-12 bar-data">
+            <div class="col-md-6 col-xs-12 left-chart">
                 <div class="section-heading">
                     <p class="heading">
                         TOP SALES PARTNER
@@ -122,11 +122,11 @@
                             by Revenue
                         </span>
                     </p>
-                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                    <p class="period"></p>
                 </div>
                 <canvas class="graphics"></canvas>
             </div>
-            <div class="col-md-6 col-xs-12 donut-chart">
+            <div class="col-md-6 col-xs-12 right-chart">
                 <div class="section-heading">
                     <p class="heading">
                         INVOICES
@@ -134,7 +134,7 @@
                             by Status
                         </span>
                     </p>
-                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}</p>
+                    <p class="period"></p>
                 </div>
                 <canvas class="graphics"></canvas>
             </div>
@@ -142,7 +142,7 @@
     </div>
     <div class="graphical-distribution parent-container">
         <div class="row">
-            <div class="col-md-6 col-xs-12 bar-data">
+            <div class="col-md-6 col-xs-12 left-chart">
                 <div class="section-heading">
                     <p class="heading">
                         TOP 10 CUSTOMERS
@@ -150,12 +150,11 @@
                             by Revenue
                         </span>
                     </p>
-                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}
-                    </p>
+                    <p class="period"></p>
                 </div>
                 <canvas class="graphics"></canvas>
             </div>
-            <div class="col-md-6 col-xs-12 donut-chart">
+            <div class="col-md-6 col-xs-12 right-chart">
                 <div class="section-heading">
                     <p class="heading">
                         TOTAL SALES
@@ -163,8 +162,7 @@
                             by Customer Group
                         </span>
                     </p>
-                    <p class="duration">{{ moment().subtract(7, "d").format("MMM D") }} - {{ moment().subtract(1, "d").format("MMM D") }}
-                    </p>
+                    <p class="period"></p>
                 </div>
                 <canvas class="graphics"></canvas>
             </div>
@@ -172,7 +170,7 @@
     </div>
     <div class="customer-distribution parent-container">
         <div class="row">
-            <div class="col-md-6 col-xs-12 count-data">
+            <div class="col-md-6 col-xs-12 left-chart">
                 <div class="section-heading">
                     <p class="heading">
                         NEW CUSTOMER COUNT
@@ -183,7 +181,7 @@
                 </div>
                 <canvas class="graphics"></canvas>
             </div>
-            <div class="col-md-6 col-xs-12 sales-data">
+            <div class="col-md-6 col-xs-12 right-chart">
                 <div class="section-heading">
                     <p class="heading">
                         NEW CUSTOMER SALES
