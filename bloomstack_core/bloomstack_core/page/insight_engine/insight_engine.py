@@ -18,18 +18,18 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 	if not start_date:
 		start_date = last_week
 
-	date_range = (start_date, end_date)
+	date_range = (getdate(start_date), getdate(end_date))
 
 	new_customer_details = get_new_customer_details()
 	yesterdays_revenue = get_revenue_by_date(yesterday)
-	weekly_revenue = get_revenue_by_date_range(*date_range)
-	monthly_revenue = get_revenue_by_date_range(last_month, end_date)
+	weekly_revenue = get_revenue_by_date_range(last_week, today)
+	monthly_revenue = get_revenue_by_date_range(last_month, today)
 	top_products = get_top_products(*date_range)
 	top_customers = get_top_customers(*date_range)
 	top_customer_groups = get_top_customer_groups(*date_range)
 	top_territories = get_top_territories(*date_range)
 	top_sales_partners = get_top_sales_partners(*date_range)
-	total_sales = get_sales_by_date_range(last_month, end_date)
+	total_sales = get_sales_by_date_range(*date_range)
 	pending_invoices = get_pending_invoices(*date_range)
 	cash_on_hand = get_cash_on_hand()
 	order_conversion_rate = get_order_conversion_rate()

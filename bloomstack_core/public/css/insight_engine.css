@@ -71,15 +71,9 @@
     flex: 1;
 }
 
-.category-product-info .row .donut-chart,
-.sales-partner-info .row .bar-data,
-.graphical-distribution .row .bar-data,
-.customer-distribution .row .count-data { margin-left: 0; }
+.parent-container .row .left-chart { margin-left: 0; }
 
-.category-product-info .row .table-data,
-.sales-partner-info .row .donut-chart,
-.graphical-distribution .row .donut-chart,
-.customer-distribution .row .sales-data { margin-right: 0; }
+.parent-container .row .right-chart { margin-right: 0; }
 
 .parent-container { margin: 30px 0; }
 
@@ -109,7 +103,7 @@
 
 .parent-container .section-heading p.heading span { font-size: 12px; }
 
-.parent-container .section-heading p.duration {
+.parent-container .section-heading p.period {
     margin: 15px 20px 15px 0;
     float: right;
     color: #fff;
