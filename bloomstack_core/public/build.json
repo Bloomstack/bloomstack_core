@@ -1,5 +1,6 @@
 {
 	"js/chart.js": [
-		"node_modules/chart.js/dist/Chart.min.js"
+		"node_modules/chart.js/dist/Chart.min.js",
+		"node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"
 	]
 }
