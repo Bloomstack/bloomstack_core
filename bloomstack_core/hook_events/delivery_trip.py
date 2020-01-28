@@ -50,11 +50,11 @@ def link_invoice_against_trip(delivery_trip, method):
 
 
 @frappe.whitelist()
-def make_payment_entry(payment_amount, sales_invoice, delivery_trip):
+def make_payment_entry(payment_amount, sales_invoice):
 	payment_entry = get_payment_entry("Sales Invoice", sales_invoice, party_amount=flt(payment_amount))
 	payment_entry.paid_amount = payment_amount
 	payment_entry.reference_date = today()
-	payment_entry.reference_no = delivery_trip
+	payment_entry.reference_no = sales_invoice
 	payment_entry.flags.ignore_permissions = True
 	payment_entry.save()
 

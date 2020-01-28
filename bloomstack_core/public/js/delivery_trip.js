@@ -207,8 +207,7 @@ frappe.ui.form.on("Delivery Stop", {
 					method: "bloomstack_core.hook_events.delivery_trip.make_payment_entry",
 					args: {
 						"payment_amount": data.payment_amount,
-						"sales_invoice": row.sales_invoice,
-						"delivery_trip": frm.doc.name
+						"sales_invoice": row.sales_invoice
 					},
 					callback: function (r) {
 						if (!r.exc) {
