@@ -10,8 +10,8 @@ import frappe
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from erpnext.accounts.party import get_due_date
-from frappe.utils import flt, nowdate, today
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import flt, nowdate, today
 
 
 def generate_directions_url(delivery_trip, method):
@@ -81,6 +81,12 @@ def update_payment_due_date(sales_invoice):
 def set_vehicle_last_odometer_value(trip, method):
 	if trip.actual_distance_travelled:
 		frappe.db.set_value('Vehicle', trip.vehicle, 'last_odometer', trip.odometer_end_value)
+
+
+@frappe.whitelist()
+def get_address_display(address):
+	address_details = frappe.db.get_value("Address", address, "*", as_dict=True)
+	return frappe.render_template("erpnext/regional/united_states/address_template.html", address_details)
 
 
 @frappe.whitelist()
