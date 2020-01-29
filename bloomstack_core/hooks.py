@@ -153,6 +153,9 @@ doc_events = {
 		],
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
+	"Driver": {
+		"validate": "bloomstack_core.hook_events.driver.get_employee_from_user"
+	},
 	"Employee": {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
