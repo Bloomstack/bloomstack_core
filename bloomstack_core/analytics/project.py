@@ -16,7 +16,7 @@ def get_project_details():
 
 		total_tasks = frappe.db.count("Task", filters={"project": project.name})
 		closed_tasks = frappe.db.count("Task", filters={"project": project.name, "status": "Completed"})
-		assigned_users = json.loads(project._assign)
+		assigned_users = json.loads(project._assign) if project._assign else []
 
 		for assignee in assigned_users:
 			full_name = frappe.db.get_value("User", assignee, "full_name")
