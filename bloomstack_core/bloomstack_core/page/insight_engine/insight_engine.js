@@ -100,6 +100,10 @@ class InsightEngine {
 	}
 
 	renderCharts() {
+		// set global datalabel defaults
+		Chart.defaults.global.plugins.datalabels.anchor = 'end';
+		Chart.defaults.global.plugins.datalabels.align = 'end';
+
 		const opacity = 0.6;
 		const colors = {
 			hex: [
@@ -179,6 +183,11 @@ class InsightEngine {
 						}
 					}]
 				},
+				plugins: {
+					datalabels: {
+						display: false
+					}
+				},
 				tooltips: {
 					callbacks: {
 						label(tooltipItem, data) {
@@ -204,6 +213,13 @@ class InsightEngine {
 			options: {
 				layout: { padding: 30 },
 				legend: { position: 'left' },
+				plugins: {
+					datalabels: {
+						formatter(value, context) {
+							return format_currency(value, null, 0);
+						}
+					}
+				},
 				tooltips: {
 					callbacks: {
 						label(tooltipItem, data) {
@@ -243,6 +259,13 @@ class InsightEngine {
 					yAxes: [{
 						gridLines: { display: false }
 					}]
+				},
+				plugins: {
+					datalabels: {
+						formatter(value, context) {
+							return format_currency(value, null, 0);
+						}
+					}
 				},
 				tooltips: {
 					callbacks: {
@@ -284,6 +307,13 @@ class InsightEngine {
 						gridLines: { display: false }
 					}]
 				},
+				plugins: {
+					datalabels: {
+						formatter(value, context) {
+							return format_currency(value, null, 0);
+						}
+					}
+				},
 				tooltips: {
 					callbacks: {
 						label(tooltipItem, data) {
@@ -315,6 +345,11 @@ class InsightEngine {
 			options: {
 				layout: { padding: 30 },
 				legend: { position: 'left' },
+				plugins: {
+					datalabels: {
+						display: false
+					}
+				},
 				tooltips: {
 					callbacks: {
 						label(tooltipItem, data) {
@@ -355,6 +390,13 @@ class InsightEngine {
 						gridLines: { display: false }
 					}]
 				},
+				plugins: {
+					datalabels: {
+						formatter(value, context) {
+							return format_currency(value, null, 0);
+						}
+					}
+				},
 				tooltips: {
 					callbacks: {
 						label(tooltipItem, data) {
@@ -394,6 +436,13 @@ class InsightEngine {
 					yAxes: [{
 						gridLines: { display: false }
 					}]
+				},
+				plugins: {
+					datalabels: {
+						formatter(value, context) {
+							return format_currency(value, null, 0);
+						}
+					}
 				},
 				tooltips: {
 					callbacks: {
@@ -484,6 +533,13 @@ class InsightEngine {
 							}
 						}
 					}]
+				},
+				plugins: {
+					datalabels: {
+						formatter(value, context) {
+							return format_currency(value, null, 0);
+						}
+					}
 				},
 				tooltips: {
 					callbacks: {
