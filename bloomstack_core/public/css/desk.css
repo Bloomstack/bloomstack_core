@@ -1,0 +1,7 @@
+#page-desktop {
+    background-image: url("/assets/bloomstack_core/images/desk.png");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
