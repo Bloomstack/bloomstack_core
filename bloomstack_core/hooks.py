@@ -189,8 +189,10 @@ doc_events = {
 
 scheduler_events = {
 	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
-	]
+		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract",
+		"bloomstack_core.bloomstack_core.doctype.compliance_info.send_alert_for_license_expiry"
+	],
+
 }
 
 # Testing
