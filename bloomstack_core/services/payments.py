@@ -4,7 +4,7 @@ from erpnext.stock.doctype.delivery_note.delivery_note import make_sales_return
 
 
 @frappe.whitelist()
-def make_payment(amount, delivery_note, sales_invoice=None, returned_items=None):
+def collect(amount, delivery_note, sales_invoice=None, returned_items=None):
 	"""
 	Make a Payment Entry for the received amount against a delivery.
 
