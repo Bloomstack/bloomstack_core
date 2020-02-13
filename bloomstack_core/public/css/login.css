@@ -1,8 +1,8 @@
 .login-content.page-card {
 	max-width: 360px;
+	padding: 15px;
 	border: 0;
 	border-radius: 0;
-	padding: 15px;
 	margin: 30px auto 0;
 	background-color: #fff;
 	box-shadow: none;
@@ -22,16 +22,16 @@
 }
 
 .login-content.page-card .toggle-password {
-  top:12px;
+  top: 12px;
 }
 
 .login-content.page-card .btn {
 	padding: 10px;
 	border-radius: 25px;
 	margin-top: 10px;
+  background-color: #57b4aa;
 	font-size: 16px;
   font-weight: 600;
-  background-color: #57b4aa;
   text-transform: uppercase;
 }
 
