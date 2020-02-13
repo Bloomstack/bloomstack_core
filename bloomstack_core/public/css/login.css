@@ -9,8 +9,9 @@
 }
 
 .login-content.page-card .page-card-head {
-    text-align: center;
     border-bottom: 0;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 .login-content.page-card .form-signin .form-control {
@@ -31,6 +32,7 @@
     font-size: 16px;
     font-weight: 600;
     background-color: #57b4aa;
+    text-transform: uppercase;
 }
 
 .login-content.page-card .btn:hover {
@@ -44,7 +46,7 @@
     margin-top: 0;
 }
 
-.page_content .form-footer a {
+.page_content .form-footer .social-logins a {
     font-size: 16px;
     display: inline-block;
     padding: 10px;
@@ -54,7 +56,13 @@
     font-weight: normal;
     width: 100%;
     text-decoration: none;
+    text-transform: uppercase;
     margin: 0;
+}
+
+.page_content .indicator.blue::before, 
+.page_content .indicator-right.blue::after {
+    background-color: #fff;
 }
 
 .page_content .form-footer h6 {
