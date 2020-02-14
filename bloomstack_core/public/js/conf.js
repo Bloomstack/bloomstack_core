@@ -24,7 +24,7 @@ $(document).bind('toolbar_setup', () => {
 		.insertAfter($help_menu)
 
 	// replace Report Issue menu item
-	const $report_issue_menu_item = $(`<li><a href="https://staging-support.bloomstack.io/" target="_blank">${__('Contact Support')}</a></li>`)
+	const $report_issue_menu_item = $(`<li><a href="https://corp.bloomstack.com/issues" target="_blank">${__('Contact Support')}</a></li>`)
 		// .click(report_issue)
 		.insertAfter($bcc_site);
 
