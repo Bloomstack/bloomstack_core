@@ -46,7 +46,8 @@ app_include_css = [
 # include js, css files in header of web template
 web_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/login.css"
+	"/assets/bloomstack_core/css/login.css",
+	"/assets/bloomstack_core/css/custom_webform.css"
 ]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
