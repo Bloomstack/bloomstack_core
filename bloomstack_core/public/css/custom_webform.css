@@ -57,8 +57,9 @@
 #page-issues .web-form-wrapper div[data-fieldname = "status"] .control-value.like-disabled-input {
     max-width: 250px;
     padding: 6px 10px;
-    border: 1px solid #000;
+    border: 1px solid #ebebe4;
     border-radius: 0.25rem;
+    background-color: #ebebe4;
 }
 
 #page-issues .web-form-wrapper div[data-fieldname = "priority"] .input-with-feedback.form-control.bold {
