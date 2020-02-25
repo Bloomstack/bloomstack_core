@@ -47,7 +47,7 @@ app_include_css = [
 web_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
 	"/assets/bloomstack_core/css/login.css",
-	"/assets/bloomstack_core/css/custom_webform.css"
+	"/assets/bloomstack_core/css/webform.css"
 ]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
