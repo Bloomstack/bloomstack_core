@@ -1,2 +1,3 @@
 bloomstack_core.patches.v0_0_1.set_driver_user_id
 bloomstack_core.patches.v0_0_1.disable_quick_entry
+bloomstack_core.patches.v0_0_1.add_default_license_expiry_email_template
