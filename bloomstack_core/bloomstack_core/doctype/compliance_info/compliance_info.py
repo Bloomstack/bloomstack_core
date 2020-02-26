@@ -35,6 +35,6 @@ def send_reminder(email_id, company):
 
 def  get_advance_expiry_date(expiry_date):
 	"""
-		return diffenernce between current date and expiry date
+		return difference between current date and expiry date
 	"""
 	return date_diff(expiry_date, getdate())
