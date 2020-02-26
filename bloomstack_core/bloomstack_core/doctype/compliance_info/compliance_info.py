@@ -4,6 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe import _
 from frappe.utils import getdate, date_diff
 from frappe.model.document import Document
 
@@ -30,8 +31,16 @@ def send_reminder(email_id, company):
 	"""
 		send email to the compnaies for license expiry
 	"""
-	message = frappe.render_template("foundation/templates/emails/license_expiry_reminder.md", {'title': company.entity })
-	frappe.sendmail(recipients=email_id, subject="About liecnse Expiry", message=message)
+	license_expiry_email_template = frappe.db.get_single_value("Compliance Settings", "license_expiry_email_template")
+	if license_expiry_email_template:
+		email_template = frappe.get_doc("Email Template", license_expiry_email_template)
+		subject = frappe.render_template(email_template.subject, company)
+		message = frappe.render_template(email_template.response, company)
+	else:
+		subject = _("License Expiry Alert")
+		message = "Entity license {0} will expire on {1}".format(company.license_number, company.license_expiry_date)
+
+		frappe.sendmail(recipients=email_id, subject=subject, message=message)
 
 def  get_advance_expiry_date(expiry_date):
 	"""

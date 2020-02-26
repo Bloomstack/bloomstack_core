@@ -14,9 +14,11 @@
   "cb_metrc",
   "metrc_vendor_key",
   "metrc_user_key",
-  "section_break_10",
+  "license_expiry_section_section",
   "license_expiry_reminder_before_days",
-  "send_email_interval_of_days"
+  "send_email_interval_of_days",
+  "license_expiry_section_column",
+  "license_expiry_email_template"
  ],
  "fields": [
   {
@@ -75,18 +77,29 @@
    "label": "License Expiry Reminder Before Days"
   },
   {
-   "fieldname": "section_break_10",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "send_email_interval_of_days",
    "fieldtype": "Int",
    "label": "Send Email Interval of Days"
+  },
+  {
+   "fieldname": "license_expiry_section_section",
+   "fieldtype": "Section Break",
+   "label": "License Expiry Section"
+  },
+  {
+   "fieldname": "license_expiry_section_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "license_expiry_email_template",
+   "fieldtype": "Link",
+   "label": "License Expiry Email Template",
+   "options": "Email Template"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-02-13 01:36:22.588950",
+ "modified": "2020-02-25 20:50:46.753871",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Settings",
