@@ -17,20 +17,26 @@ def send_alert_for_license_expiry():
 	for company in frappe.get_all("Compliance Info", fields=['license_number', 'license_expiry_date', 'entity', 'entity_type']):
 		before_days = frappe.db.get_single_value("Compliance Settings", "license_expiry_reminder_before_days")
 		interval_of = frappe.db.get_single_value("Compliance Settings", "send_email_interval_of_days")
+		if company.entity_type == "Company":
+			email_id = frappe.db.get_value(company.entity_type, company.entity, ['email'])
 		for alternative_days in range(before_days, 1, interval_of):
 			if get_advance_expiry_date(company.license_expiry_date) == alternative_days:
-				email_id = frappe.db.get_value(company.entity_type, company.entity, ['email_id'])
-				send_reminder(company.entity, email_id)
+				entity_email_id = frappe.db.get_value(company.entity_type, company.entity, ['email_id', 'send_license_expiry_alert'])
+				print("entity_email_id", entity_email_id.send_license_expiry_alert)
+				if entity_email_id.send_license_expiry_alert:
+					send_reminder(entity_email_id.email_id, company)
+				send_reminder(email_id, company)
 
-def send_reminder(company, email_id):
+def send_reminder(email_id, company):
 	"""
 		send email to the compnaies for license expiry
 	"""
-	message = frappe.render_template("foundation/templates/emails/license_expiry_reminder.md", {'title': company})
+	message = frappe.render_template("foundation/templates/emails/license_expiry_reminder.md", {'title': company.entity })
 	frappe.sendmail(recipients=email_id, subject="About liecnse Expiry", message=message)
 
 def  get_advance_expiry_date(expiry_date):
 	"""
 		return diffenernce between current date and expiry date
 	"""
+	print(date_diff(expiry_date, getdate()))
 	return date_diff(expiry_date, getdate())
