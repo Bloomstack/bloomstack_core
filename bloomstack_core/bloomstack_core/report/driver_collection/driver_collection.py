@@ -25,7 +25,7 @@ def get_collections(date_range, driver, show_individual_stops=False):
 		"docstatus": 1
 	}
 	if driver:
-		filters["driver"]: driver
+		filters["driver"] = driver
 
 	delivery_trips = frappe.get_all("Delivery Trip", filters=filters)
 
