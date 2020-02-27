@@ -19,12 +19,13 @@ def execute(filters=None):
 
 def get_collections(date_range, driver, show_individual_stops=False):
 	data = []
+
 	filters = {
 		"departure_time": ["between", date_range],
 		"docstatus": 1
 	}
 	if driver:
-		filters["driver"] = driver
+		filters["driver"]: driver
 
 	delivery_trips = frappe.get_all("Delivery Trip", filters=filters)
 
@@ -38,12 +39,10 @@ def get_collections(date_range, driver, show_individual_stops=False):
 			if stop.delivery_note:
 				# Base amounts
 				discount_stop_amount = promotional_stop_amount = 0.0
-				is_promotional_delivery = frappe.db.get_value(
-					"Delivery Note", stop.delivery_note, "new_order_type") == "Promotional"
+				is_promotional_delivery = frappe.db.get_value("Delivery Note", stop.delivery_note, "new_order_type") == "Promotional"
 
 				if stop.grand_total == 0:
-					discount_stop_amount = frappe.db.get_value(
-						"Delivery Note", stop.delivery_note, "discount_amount")
+					discount_stop_amount = frappe.db.get_value("Delivery Note", stop.delivery_note, "discount_amount")
 
 				if is_promotional_delivery:
 					promotional_stop_amount = discount_stop_amount
@@ -53,23 +52,20 @@ def get_collections(date_range, driver, show_individual_stops=False):
 				delivery_stop_amount = stop.grand_total + promotional_stop_amount
 
 				amount_under_terms = get_amount_under_terms(stop.sales_invoice)
-				tax_stop_amount = get_tax_amount(
-					stop.sales_invoice) if stop.sales_invoice else 0.0
+				tax_stop_amount = get_tax_amount(stop.sales_invoice) if stop.sales_invoice else 0.0
 
 				# Paid amounts
-				unprocessed_stop_amount = get_paid_amount(
-					stop.sales_invoice, stop.delivery_note, docstatus=0)
-				processed_stop_amount = get_paid_amount(
-					stop.sales_invoice, stop.delivery_note, docstatus=1)
+				unprocessed_stop_amount = get_paid_amount(stop.sales_invoice, stop.delivery_note, docstatus=0)
+				processed_stop_amount = get_paid_amount(stop.sales_invoice, stop.delivery_note, docstatus=1)
 				paid_stop_amount = unprocessed_stop_amount + processed_stop_amount
 
 				# Returned amounts
 				returned_stop_amount = abs(frappe.db.get_value("Delivery Note",
-															   {"docstatus": 1, "return_against": stop.delivery_note, "issue_credit_note": 0},
-															   "sum(grand_total)") or 0)
+					{"docstatus": 1, "return_against": stop.delivery_note, "issue_credit_note": 0},
+					"sum(grand_total)") or 0)
 				cancelled_stop_amount = abs(frappe.db.get_value("Delivery Note",
-																{"docstatus": 1, "return_against": stop.delivery_note, "issue_credit_note": 1},
-																"sum(grand_total)") or 0)
+					{"docstatus": 1, "return_against": stop.delivery_note, "issue_credit_note": 1},
+					"sum(grand_total)") or 0)
 
 				if driver or show_individual_stops:
 					# Append individual driver collections
@@ -152,13 +148,11 @@ def get_amount_under_terms(invoice):
 
 
 def get_tax_amount(invoice):
-	tax_accounts = [account.name for account in frappe.get_all(
-		"Account", filters={"account_type": "Tax"})]
+	tax_accounts = [account.name for account in frappe.get_all("Account", filters={"account_type": "Tax"})]
 
 	tax_amounts = frappe.get_all("Sales Taxes and Charges",
-								 filters={"parent": invoice,
-										  "account_head": ["IN", tax_accounts]},
-								 fields=["tax_amount"])
+		filters={"parent": invoice, "account_head": ["IN", tax_accounts]},
+		fields=["tax_amount"])
 
 	tax_amount = sum([tax.tax_amount for tax in tax_amounts if tax.tax_amount])
 
@@ -173,21 +167,18 @@ def get_paid_amount(sales_invoice, delivery_note, docstatus):
 		invoices = [sales_invoice]
 	elif delivery_note:
 		dn_items = frappe.get_all("Delivery Note Item",
-								  filters={"parent": delivery_note},
-								  fields=["distinct(against_sales_invoice)"])
+			filters={"parent": delivery_note},
+			fields=["distinct(against_sales_invoice)"])
 
-		invoices = [
-			item.against_sales_invoice for item in dn_items if item.against_sales_invoice]
+		invoices = [item.against_sales_invoice for item in dn_items if item.against_sales_invoice]
 
 	for invoice in invoices:
 		payments = frappe.get_all("Payment Entry Reference",
-								  filters={"reference_name": invoice,
-										   "docstatus": docstatus},
-								  fields=["distinct(parent)"])
+			filters={"reference_name": invoice, "docstatus": docstatus},
+			fields=["distinct(parent)"])
 
 		for payment in payments:
-			paid_amount += frappe.db.get_value("Payment Entry",
-											   payment.parent, "paid_amount") or 0.0
+			paid_amount += frappe.db.get_value("Payment Entry", payment.parent, "paid_amount") or 0.0
 
 	return paid_amount
 
