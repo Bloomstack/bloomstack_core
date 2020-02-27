@@ -22,5 +22,5 @@ def execute():
 		}).insert(ignore_permissions=True)
 
 	compliance_settings = frappe.get_doc("Compliance Settings")
-    compliance_settings.license_expiry_email_template = _("License Expiry Alert")
+	compliance_settings.license_expiry_email_template = _("License Expiry Alert")
 	compliance_settings.save()
