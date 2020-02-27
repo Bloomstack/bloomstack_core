@@ -7,9 +7,9 @@ from frappe import _
 
 def execute():
 	frappe.reload_doc("email", "doctype", "email_template")
-	frappe.reload_doc("Bloomstack Core", "doctype", "Compliance Settings")
+	frappe.reload_doc("bloomstack_core", "doctype", "compliance_settings")
 
-	if not frappe.db.exists("Email Template", _("License Expiry Alert")):
+	if not frappe.db.exists("Email Template", "License Expiry Alert"):
 		base_path = frappe.get_app_path("bloomstack_core", "templates", "emails")
 		response = frappe.read_file(os.path.join(base_path, "license_expiry_reminder.html"))
 

@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 
 import frappe
 from bloomstack_core.utils import get_metrc
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils.background_jobs import enqueue
 from frappe.utils.nestedset import get_root_of
@@ -27,6 +28,16 @@ METRC_UOMS = {
 
 
 class ComplianceSettings(Document):
+	def validate(self):
+		self.validate_reminder_days()
+
+	def validate_reminder_days(self):
+		if self.license_expiry_reminder_before_days < 0:
+			frappe.throw(_("License Expiry Reminder Before Days cannot be negative"))
+
+		if self.send_email_interval_of_days < 0:
+			frappe.throw(_("Send Email Interval of Days cannot be negative"))
+
 	def sync_data(self):
 		enqueue(pull_metrc_item_categories)
 		enqueue(pull_metrc_uoms)
