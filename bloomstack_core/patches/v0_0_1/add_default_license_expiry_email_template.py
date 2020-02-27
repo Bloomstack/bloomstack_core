@@ -11,7 +11,7 @@ def execute():
 
 	if not frappe.db.exists("Email Template", _("License Expiry Alert")):
 		base_path = frappe.get_app_path("bloomstack_core", "templates", "emails")
-		response = frappe.read_file(os.path.join(base_path, "license_expiry_reminder.md"))
+		response = frappe.read_file(os.path.join(base_path, "license_expiry_reminder.html"))
 
 		frappe.get_doc({
 			"doctype": "Email Template",
