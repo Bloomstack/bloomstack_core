@@ -195,3 +195,11 @@ def create_authorization_request(dt, dn, contact_email, contact_name):
 	new_authorization_request.authorizer_email = contact_email
 	new_authorization_request.authorizer_name = contact_name
 	new_authorization_request.save()
+
+
+@frappe.whitelist()
+def get_doctype_status_options(doctype):
+	from erpnext.controllers.status_updater import status_map
+	doctype_status_map = status_map.get(doctype, [])
+	doctype_status_options = [status[0] for status in doctype_status_map]
+	return doctype_status_options
