@@ -19,7 +19,7 @@
  "is_standard": 1,
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2020-02-25 00:07:03.082418",
+ "modified": "2020-02-27 21:27:44.004649",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "issues",
@@ -47,20 +47,6 @@
    "options": "Open\nReplied\nHold\nClosed",
    "read_only": 1,
    "reqd": 0,
-   "show_in_filter": 0
-  },
-  {
-   "allow_read_on_all_link_options": 0,
-   "default": "Medium",
-   "fieldname": "priority",
-   "fieldtype": "Link",
-   "hidden": 0,
-   "label": "Priority",
-   "max_length": 0,
-   "max_value": 0,
-   "options": "Issue Priority",
-   "read_only": 0,
-   "reqd": 1,
    "show_in_filter": 0
   },
   {
