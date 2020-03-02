@@ -4,7 +4,7 @@ from frappe.model.mapper import get_mapped_doc
 
 def create_stock_entry(packing_slip_doc, method, target_doc = None):
 	def set_missing_values(source, target):
-		target.purpose = "Material Transfer"
+		target.stock_entry_type = "Material Transfer"
 		target.company = frappe.db.get_value("Delivery Note", source.delivery_note, "company")
 		packing_warehouse = frappe.db.get_single_value("Delivery Settings", "packing_warehouse")
 
