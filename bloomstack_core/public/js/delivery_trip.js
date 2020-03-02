@@ -163,7 +163,7 @@ frappe.ui.form.on('Delivery Trip', {
 	},
 
 	before_submit: function (frm) {
-		frm.toggle_reqd(["driver","driver_address"],1)
+		frm.toggle_reqd(["driver", "driver_address"], 1)
 	},
 });
 
