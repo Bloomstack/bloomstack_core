@@ -51,6 +51,12 @@ web_include_css = [
 ]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
+# include js, css files in header of web form
+webform_include_js = {
+	"Issue": "public/js/issues.js"
+}
+# webform_include_css = {"doctype": "public/css/doctype.css"}
+
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
