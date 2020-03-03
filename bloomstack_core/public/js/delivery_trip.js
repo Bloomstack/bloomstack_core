@@ -59,7 +59,7 @@ frappe.ui.form.on('Delivery Trip', {
 
 	start: (frm) => {
 		frm.add_custom_button(__("Start"), () => {
-			frappe.db.get_value("Delivery Settings", {"name": "Delivery Settings"}, "default_activity_type")
+			frappe.db.get_value("Delivery Settings", { "name": "Delivery Settings" }, "default_activity_type")
 				.then((r) => {
 					if (!r.message.default_activity_type) {
 						frappe.throw(__("Please set a default activity type in Delivery Settings to time this trip."));
@@ -161,6 +161,10 @@ frappe.ui.form.on('Delivery Trip', {
 				__("Enter Odometer Value"));
 		}).addClass("btn-primary");
 	},
+
+	before_submit: function (frm) {
+		frm.toggle_reqd(["driver", "driver_address"], 1)
+	},
 });
 
 frappe.ui.form.on("Delivery Stop", {
@@ -188,37 +192,37 @@ frappe.ui.form.on("Delivery Stop", {
 			"fieldname": "payment_amount",
 			"reqd": 1
 		},
-		function (data) {
-			if (data.payment_amount === 0) {
-				frappe.confirm(
-					__("Are you sure you want to complete this delivery without a payment?"),
-					() => {
-						frappe.model.set_value(cdt, cdn, "visited", true);
-						frappe.model.set_value(cdt, cdn, "paid_amount", 0);
-						frm.trigger("force_save_or_update");
-					}
-				);
-			} else {
-				frappe.call({
-					method: "bloomstack_core.hook_events.delivery_trip.make_payment_entry",
-					args: {
-						"payment_amount": data.payment_amount,
-						"sales_invoice": row.sales_invoice
-					},
-					callback: function (r) {
-						if (!r.exc) {
-							frappe.msgprint(__(`Payment Entry ${r.message} created.`));
+			function (data) {
+				if (data.payment_amount === 0) {
+					frappe.confirm(
+						__("Are you sure you want to complete this delivery without a payment?"),
+						() => {
 							frappe.model.set_value(cdt, cdn, "visited", true);
-							frappe.model.set_value(cdt, cdn, "paid_amount", data.payment_amount);
+							frappe.model.set_value(cdt, cdn, "paid_amount", 0);
 							frm.trigger("force_save_or_update");
 						}
-					}
-				})
-			}
-		},
-		__("Make Payment Entry"));
+					);
+				} else {
+					frappe.call({
+						method: "bloomstack_core.hook_events.delivery_trip.make_payment_entry",
+						args: {
+							"payment_amount": data.payment_amount,
+							"sales_invoice": row.sales_invoice
+						},
+						callback: function (r) {
+							if (!r.exc) {
+								frappe.msgprint(__(`Payment Entry ${r.message} created.`));
+								frappe.model.set_value(cdt, cdn, "visited", true);
+								frappe.model.set_value(cdt, cdn, "paid_amount", data.payment_amount);
+								frm.trigger("force_save_or_update");
+							}
+						}
+					})
+				}
+			},
+			__("Make Payment Entry"));
 
-		dialog.$wrapper.on("shown.bs.modal", function() {
+		dialog.$wrapper.on("shown.bs.modal", function () {
 			if (frappe.is_mobile()) {
 				dialog.$wrapper.find($('input[data-fieldtype="Currency"]')).attr('type', 'number');
 			}
