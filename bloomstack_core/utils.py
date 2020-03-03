@@ -83,7 +83,7 @@ def move_expired_batches(source_name, target_doc=None):
 	uom = frappe.db.get_value("Item", item, "stock_uom")
 
 	stock_entry = frappe.new_doc("Stock Entry")
-	stock_entry.purpose = "Material Transfer"
+	stock_entry.stock_entry_type = "Material Transfer"
 
 	for batch in batch_details:
 		if batch.get("qty") > 0:
