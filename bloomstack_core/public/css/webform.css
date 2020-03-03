@@ -54,7 +54,7 @@
     display: inline-block;
 }
 
-#page-issues .web-form-wrapper div[data-fieldname = "status"] .control-value.like-disabled-input {
+#page-issues .web-form-wrapper .control-value.like-disabled-input {
     max-width: 250px;
     padding: 6px 10px;
     border: 1px solid #ebebe4;
