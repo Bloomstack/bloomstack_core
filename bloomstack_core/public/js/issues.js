@@ -1,10 +1,22 @@
 frappe.ready(function () {
 	frappe.web_form.events.on('after_load', () => {
+		// Hiding customer and priority fields
+		frappe.web_form.set_df_property('customer', 'hidden', 1);
+		frappe.web_form.set_df_property('priority', 'hidden', 1);
+
+		// To check whether new or edited
+		if (!frappe.web_form.is_new) {
+			frappe.web_form.set_df_property('subject', 'read_only', 1);
+			frappe.web_form.set_df_property('description', 'read_only', 1);
+			$('.web-form-actions .btn-primary, .web-form-footer .btn-primary').hide();
+		}
+
 		frappe.web_form.on('status', (field, value) => {
 			if (value === 'Closed') {
 				$('.web-form-actions .btn-danger').remove();
-				frappe.web_form.add_button("Reopen", "danger", () => {
+				frappe.web_form.add_button("Reopen", "secondary", () => {
 					var d = new frappe.ui.Dialog({
+						'title': 'Enter reason',
 						'fields': [{
 							'fieldname': 'comment',
 							'fieldtype': 'Text',
@@ -20,7 +32,8 @@ frappe.ready(function () {
 							$("#comment-form [name='comment_email']").val(frappe.user_id);
 							$("#comment-form [name='comment']").append(data.comment);
 							$('#submit-comment').click();
-							frappe.web_form.set_value('status', "Open");
+							frappe.web_form.doc.status = 'Open';
+							frappe.web_form.save();
 						}
 					});
 					d.show();
@@ -28,7 +41,10 @@ frappe.ready(function () {
 			} else {
 				$('.web-form-actions .btn-danger').remove();
 				frappe.web_form.add_button("Close", "danger", () => {
-					frappe.web_form.set_value('status', "Closed");
+					frappe.confirm(__("Are you sure you want to close this task?"), function () {
+						frappe.web_form.doc.status = 'Closed';
+						frappe.web_form.save();
+					})
 				});
 			}
 		});
