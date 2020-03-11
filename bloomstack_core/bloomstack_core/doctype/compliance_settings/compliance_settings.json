@@ -72,11 +72,13 @@
    "label": "User Key"
   },
   {
+   "default": "0",
    "fieldname": "license_expiry_reminder_before_days",
    "fieldtype": "Int",
    "label": "License Expiry Reminder Before Days"
   },
   {
+   "default": "0",
    "fieldname": "send_email_interval_of_days",
    "fieldtype": "Int",
    "label": "Send Email Interval of Days"
@@ -99,8 +101,8 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-02-25 20:50:46.753871",
- "modified_by": "Administrator",
+ "modified": "2020-03-10 20:43:39.536059",
+ "modified_by": "vishal@gmail.com",
  "module": "Bloomstack Core",
  "name": "Compliance Settings",
  "owner": "Administrator",

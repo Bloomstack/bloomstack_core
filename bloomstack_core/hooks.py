@@ -118,7 +118,7 @@ override_doctype_dashboards = {
 # ------------
 
 # before_install = "bloomstack_core.install.before_install"
-# after_install = "bloomstack_core.install.after_install"
+after_install = "bloomstack_core.install.after_install"
 
 # Desk Notifications
 # ------------------
