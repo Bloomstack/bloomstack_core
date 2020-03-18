@@ -5,6 +5,7 @@ bloomstack.track_and_trace.modules.add("Batch", {
         { field: "item", label: "Item" },
         { field: "manufacturing_date", label: "Manufacturing Date", fieldtype: "Date" },
         { field: "supplier", label: "Supplier" },
+        { field: "package_tag", label: "Package Tag" },
     ],
 
     icon: "fa fa-th-large",
