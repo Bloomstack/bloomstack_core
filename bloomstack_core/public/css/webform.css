@@ -1,16 +1,16 @@
-#page-issues table thead {
+table thead {
   background-color: #4f5261 !important;
   color: #fff !important;
   font-family: "Lato", sans-serif;
   font-size: 15px;
 }
 
-#page-issues table tbody {
+table tbody {
   font-family: "Lato", sans-serif;
   font-size: 14px;
 }
 
-#page-issues table tr input[type="checkbox"] {
+table tr input[type="checkbox"] {
   padding: 7px;
   border: 1px solid #8d99a6;
   border-radius: 3px;
@@ -21,12 +21,12 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
 }
 
-#page-issues table tr input[type="checkbox"]:active,
-#page-issues table tr input[type="checkbox"]:checked:active {
+table tr input[type="checkbox"]:active,
+table tr input[type="checkbox"]:checked:active {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-#page-issues table tr input[type="checkbox"]:checked:after {
+table tr input[type="checkbox"]:checked:after {
   content: "\2714";
   position: absolute;
   top: 0px;
@@ -36,53 +36,53 @@
   font-weight: bolder;
 }
 
-#page-issues .page-header h2 {
+.page-header h2 {
   margin-bottom: 0;
   font-size: 20px;
 }
 
-#page-issues .web-form-actions button,
-#page-issues .web-form-footer button {
+.web-form-actions button,
+.web-form-footer button {
   padding: 5px 25px;
   font-size: 15px;
 }
 
-#page-issues .web-form-actions button.btn-secondary {
+.web-form-actions button.btn-secondary {
 	color: #fff;
 }
 
-#page-issues .web-form-wrapper div[data-fieldname="status"],
-#page-issues .web-form-wrapper div[data-fieldname="priority"] {
+.web-form-wrapper div[data-fieldname="status"],
+.web-form-wrapper div[data-fieldname="priority"] {
   width: 30%;
   margin-right: 50px;
   display: inline-block;
 }
 
-#page-issues .web-form-wrapper .control-value.like-disabled-input {
+.web-form-wrapper .control-value.like-disabled-input {
   padding: 6px 10px;
   border: 1px solid #ebebe4;
   border-radius: 0.25rem;
   background-color: #ebebe4;
 }
 
-#page-issues .web-form-wrapper div[data-fieldname="priority"] .input-with-feedback.form-control.bold {
+.web-form-wrapper div[data-fieldname="priority"] .input-with-feedback.form-control.bold {
   max-width: 250px;
   padding: 10px;
   border: 1px solid #000;
 }
 
-#page-issues .form-control:focus {
+.form-control:focus {
   box-shadow: none;
 }
 
-#page-issues #awesomplete_list_1 {
+#awesomplete_list_1 {
   max-width: 400px;
   width: 400px;
   min-width: 0 !important;
 }
 
-#page-issues .web-form-wrapper div[data-fieldname="attachment"] .control-input-wrapper button.btn-attach,
-#page-issues .comment-form-wrapper a.add-comment {
+.web-form-wrapper div[data-fieldname="attachment"] .control-input-wrapper button.btn-attach,
+.comment-form-wrapper a.add-comment {
   width: 30%;
   padding: 10px;
   border-radius: 0.25rem;
