@@ -35,7 +35,7 @@ def create_stock_entry_for_waste_disposal(doc):
 		}
 	})
 
-	stock_entry.purpose = "Material Issue"
+	stock_entry.stock_entry_type = "Material Issue"
 	stock_entry.save()
 	stock_entry.submit()
 

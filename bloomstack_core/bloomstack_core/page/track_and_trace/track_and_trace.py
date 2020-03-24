@@ -10,15 +10,18 @@ def search(text, start=0, limit=10):
     sql = """
     WITH search AS (
         SELECT * FROM (
-            SELECT 'Serial No' as doctype, name as docname FROM `tabSerial No`
+            SELECT 'Serial No' as doctype, name as docname, serial_no as searchfield FROM `tabSerial No`
             UNION
-            SELECT 'Batch' as doctype, name as docname FROM `tabBatch`
+            SELECT 'Batch' as doctype, name as docname, concat(batch_id, '.', package_tag) as searchfield FROM `tabBatch`
+            UNION
+            SELECT parenttype as doctype, parent as docname, package_tag as searchfield FROM `tabStock Entry Detail`
         ) q
         WHERE
-            q.docname LIKE %(text)s
+            q.docname LIKE %(text)s OR q.searchfield LIKE %(text)s
     )
-    SELECT 
-        *,
+    SELECT
+        doctype,
+        docname,
         (SELECT COUNT(0) FROM search) as total_rows
     FROM search
     ORDER BY

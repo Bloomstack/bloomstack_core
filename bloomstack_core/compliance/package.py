@@ -5,7 +5,7 @@ from frappe import _
 
 def create_package(stock_entry, method):
 	# TODO: Handle non-manufacture Stock Entries for intermediate packages
-	if stock_entry.purpose != "Manufacture":
+	if stock_entry.stock_entry_type != "Manufacture":
 		return
 
 	metrc = get_metrc()
@@ -23,7 +23,7 @@ def create_package(stock_entry, method):
 
 def adjust_package(stock_entry, method):
 	# TODO: Handle non-manufacture Stock Entries for intermediate packages
-	if stock_entry.purpose != "Manufacture":
+	if stock_entry.stock_entry_type != "Manufacture":
 		return
 
 

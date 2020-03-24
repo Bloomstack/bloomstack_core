@@ -46,9 +46,16 @@ app_include_css = [
 # include js, css files in header of web template
 web_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/login.css"
+	"/assets/bloomstack_core/css/login.css",
+	"/assets/bloomstack_core/css/webform.css"
 ]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
+
+# include js, css files in header of web form
+webform_include_js = {
+	"Issue": "public/js/issues.js"
+}
+# webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
@@ -66,6 +73,7 @@ doctype_js = {
 	"Packing Slip": "public/js/packing_slip.js",
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
+	"Stock Entry": "public/js/stock_entry.js",
 	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"

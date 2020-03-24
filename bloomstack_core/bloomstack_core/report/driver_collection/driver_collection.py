@@ -22,9 +22,10 @@ def get_collections(date_range, driver, show_individual_stops=False):
 
 	filters = {
 		"departure_time": ["between", date_range],
-		"driver": driver,
 		"docstatus": 1
 	}
+	if driver:
+		filters["driver"] = driver
 
 	delivery_trips = frappe.get_all("Delivery Trip", filters=filters)
 
