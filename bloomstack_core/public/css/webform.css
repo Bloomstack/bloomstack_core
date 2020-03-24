@@ -1,16 +1,16 @@
-table thead {
+div[data-doctype="Web Form"] table thead {
   background-color: #4f5261 !important;
   color: #fff !important;
   font-family: "Lato", sans-serif;
   font-size: 15px;
 }
 
-table tbody {
+div[data-doctype="Web Form"] table tbody {
   font-family: "Lato", sans-serif;
   font-size: 14px;
 }
 
-table tr input[type="checkbox"] {
+div[data-doctype="Web Form"] table tr input[type="checkbox"] {
   padding: 7px;
   border: 1px solid #8d99a6;
   border-radius: 3px;
@@ -21,12 +21,12 @@ table tr input[type="checkbox"] {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
 }
 
-table tr input[type="checkbox"]:active,
-table tr input[type="checkbox"]:checked:active {
+div[data-doctype="Web Form"] table tr input[type="checkbox"]:active,
+div[data-doctype="Web Form"] table tr input[type="checkbox"]:checked:active {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-table tr input[type="checkbox"]:checked:after {
+div[data-doctype="Web Form"] table tr input[type="checkbox"]:checked:after {
   content: "\2714";
   position: absolute;
   top: 0px;
