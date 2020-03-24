@@ -88,5 +88,6 @@ div[data-doctype="Web Form"] table tr input[type="checkbox"]:checked:after {
   border-radius: 0.25rem;
   background: #8e8e8e;
   color: #fff;
+  cursor: pointer;
   text-transform: uppercase;
 }
