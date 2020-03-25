@@ -37,7 +37,7 @@ frappe.ready(function () {
 			} else {
 				$('.web-form-actions .btn-danger').remove();
 				frappe.web_form.add_button("Close", "danger", () => {
-					frappe.confirm(__("Are you sure you want to close this task?"), function () {
+					frappe.confirm(__("Are you sure you want to close this issue?"), function () {
 						frappe.web_form.doc.status = 'Closed';
 						frappe.web_form.save();
 					})

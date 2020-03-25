@@ -22,18 +22,8 @@ def create_project_against_contract(contract, method):
 		return
 
 	# Get the tasks for the project
-	project_tasks = []
 	base_date = getdate(now())
 	project_template = frappe.get_doc("Project Template", contract.project_template)
-
-	for task in project_template.tasks:
-		project_tasks.append({
-			"title": task.task_name,
-			"start_date": add_days(base_date, task.days_to_task_start),
-			"end_date": add_days(base_date, task.days_to_task_end),
-			"task_weight": task.weight,
-			"description": task.description
-		})
 
 	# Get project and party details
 	project_name = "{} - {}".format(contract.party_name, project_template.template_name)
@@ -50,9 +40,23 @@ def create_project_against_contract(contract, method):
 		"expected_start_date": expected_start_date,
 		"expected_end_date": expected_end_date,
 		"customer": contract.party_name if contract.party_type == "Customer" else None,
-		"tasks": project_tasks
 	})
+
 	project.insert(ignore_permissions=True)
+
+	for task in project_template.tasks:
+		task = frappe.new_doc("Task")
+		tasks.append({
+			"subject": task.task_name,
+			"start_date": add_days(base_date, task.days_to_task_start),
+			"end_date": add_days(base_date, task.days_to_task_end),
+			"task_weight": task.weight,
+			"description": task.description,
+			"project" : project.name
+		})
+
+	task.insert(ignore_permissions=True)
+
 
 	# Link the contract with the project
 	contract.db_set("project", project.name)
