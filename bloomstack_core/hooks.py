@@ -75,7 +75,8 @@ doctype_js = {
 	"Stock Entry": "public/js/stock_entry.js",
 	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
-	"Work Order": "public/js/work_order.js"
+	"Work Order": "public/js/work_order.js",
+	"Lead": "public/js/lead.js"
 }
 
 doctype_list_js = {
@@ -132,7 +133,6 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
-
 # Document Events
 # ---------------
 # Hook on document methods and events
@@ -143,6 +143,8 @@ doc_events = {
 		"on_update_after_submit": [
 			"bloomstack_core.hook_events.contract.create_project_against_contract",
 			"bloomstack_core.hook_events.contract.create_order_against_contract"
+			"bloomstack_core.hook_events.lead.customer_exists"
+			#need to write path
 		]
 	},
 	"Delivery Note": {
