@@ -143,8 +143,6 @@ doc_events = {
 		"on_update_after_submit": [
 			"bloomstack_core.hook_events.contract.create_project_against_contract",
 			"bloomstack_core.hook_events.contract.create_order_against_contract"
-			"bloomstack_core.hook_events.lead.customer_exists"
-			#need to write path
 		]
 	},
 	"Delivery Note": {
