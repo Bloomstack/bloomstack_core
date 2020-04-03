@@ -97,22 +97,12 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.update_item_in_cart(item_code, field, value, batch_no);
 				},
 				on_numpad: (value) => {
-					if (value == __('Order')) {
-							frappe.confirm(__("Create a sales order for {0} items with Total Amount {1}?",[this.frm.doc.total_qty,this.frm.doc.grand_total]),
-							() => {
-								const transaction_date = new Date(this.frm.doc.transaction_date);
-								const date = new Date(transaction_date.setDate(transaction_date.getDate() + 7));
-								this.frm.doc.items = this.frm.doc.items.filter(item => {
-									console.log(date)
-									item.delivery_date = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
-									return item;
-								})
-								this.submit_sales_order();
-							},
-							() => {
+					if (value == Order) {
+						this.frm.doc.items.forEach((item) => {
+							item.delivery_date = frappe.datetime.add_days(this.frm.doc.transaction_date, 7);
+						})
 
-							}
-						);
+						this.submit_sales_order();
 					}
 				},
 				on_select_change: () => {
@@ -338,7 +328,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	submit_sales_order() {
-		console.log(this.frm)
 		this.frm.savesubmit()
 			.then((r) => {
 				if (r && r.doc) {
@@ -449,7 +438,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	set_form_action() {
-		if(this.frm.doc.docstatus == 1 || (this.frm.doc.allow_print_before_pay == 1&&this.frm.doc.items.length>0)){
+		if(this.frm.doc.docstatus == 1 || this.frm.doc.items.length > 0) {
 			this.page.set_secondary_action(__("Print"), async() => {
 				if(this.frm.doc.docstatus != 1 ){
 					await this.frm.save();
@@ -457,6 +446,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				this.frm.print_preview.printit(true);
 			});
 		}
+
 		if(this.frm.doc.items.length == 0){
 			this.page.clear_secondary_action();
 		}
@@ -789,9 +779,9 @@ class SalesOrderCart {
 						<div class="taxes-and-totals">
 							${this.get_taxes_and_totals()}
 						</div>
-						<div class="discount-amount">`+
-						(!this.frm.allow_edit_discount ? `` : `${this.get_discount_amount()}`)+
-						`</div>
+						<div class="discount-amount">
+							${this.get_discount_amount()}
+						</div>
 						<div class="grand-total">
 							${this.get_grand_total()}
 						</div>
@@ -1002,9 +992,10 @@ class SalesOrderCart {
 
 
 	make_numpad() {
+		let order_class = {
+			Order: 'brand-primary'
+		};
 
-		var pay_class = {}
-		pay_class[__('Order')]='brand-primary'
 		this.numpad = new NumberPad({
 			button_array: [
 				[1, 2, 3, Qty],
@@ -1012,15 +1003,13 @@ class SalesOrderCart {
 				[7, 8, 9, Rate],
 				[Del, 0, '.', Order]
 			],
-			add_class: pay_class,
+			add_class: order_class,
 			disable_highlight: [Qty, Disc, Rate, Order],
 			reset_btns: [Qty, Disc, Rate, Order],
 			del_btn: Del,
 			disable_btns: this.disable_numpad_control(),
 			wrapper: this.wrapper.find('.number-pad-container'),
 			onclick: (btn_value) => {
-				// on click
-
 				if (!this.selected_item && btn_value !== Order) {
 					frappe.show_alert({
 						indicator: 'red',
@@ -1028,6 +1017,7 @@ class SalesOrderCart {
 					});
 					return;
 				}
+
 				if ([Qty, Disc, Rate].includes(btn_value)) {
 					this.set_input_active(btn_value);
 				} else if (btn_value !== Order) {
@@ -1386,4 +1376,3 @@ class NumberPad {
 		this.wrapper.find('.num-col').removeClass('active');
 	}
 }
-
