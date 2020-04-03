@@ -1,0 +1,39 @@
+{
+ "content": null,
+ "creation": "2020-03-30 12:22:24.120459",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2020-03-30 12:22:24.120459",
+ "modified_by": "Administrator",
+ "module": "Bloomstack Core",
+ "name": "order-desk",
+ "owner": "Administrator",
+ "page_name": "Order Desk",
+ "restrict_to_domain": "Retail",
+ "roles": [
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Stock Manager"
+  },
+  {
+   "role": "Stock User"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Order Desk"
+}

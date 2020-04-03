@@ -40,7 +40,8 @@ app_include_css = [
 	"/assets/bloomstack_core/css/trees.css",
 	"/assets/bloomstack_core/css/mobile-fixes.css",
 	"/assets/bloomstack_core/css/banner.css",
-	"/assets/bloomstack_core/css/desk.css"
+	"/assets/bloomstack_core/css/desk.css",
+	"/assets/bloomstack_core/css/order_desk.css"
 ]
 
 # include js, css files in header of web template
