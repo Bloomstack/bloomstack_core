@@ -13,3 +13,11 @@ def execute():
 		else:
 			frappe.db.set_value("Lead", lead.name, "account_opened_date", result.creation)
 
+
+	customers = frappe.get_all("Customer", fields=["opening_date", "lead_name"])
+
+	for customer in customers:
+		if customer.lead_name:
+			doc = frappe.get_doc("Lead", customer.lead_name)
+			doc.account_opening_date = customer.opening_date
+			doc.save()
