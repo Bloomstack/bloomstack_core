@@ -70,14 +70,14 @@ doctype_js = {
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
 	"Item": "public/js/item.js",
+	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
 	"Stock Entry": "public/js/stock_entry.js",
 	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
-	"Work Order": "public/js/work_order.js",
-	"Lead": "public/js/lead.js"
+	"Work Order": "public/js/work_order.js"
 }
 
 doctype_list_js = {
