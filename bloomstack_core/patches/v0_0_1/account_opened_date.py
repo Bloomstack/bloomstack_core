@@ -7,6 +7,9 @@ def execute():
 	leads = frappe.get_all("Lead", fields=["name", "creation"])
 
 	for lead in leads:
-		creation = frappe.db.get_value("Customer", {"lead_name": lead.name}, "creation")
-		if creation:
-			frappe.db.set_value("Lead", lead.name, "account_opened_date", creation)
+		result = frappe.db.get_value("Customer", {"lead_name": lead.name}, ["creation","opening_date"], as_dict=True)
+		if result.opening_date:
+			frappe.db.set_value("Lead", lead.name, "account_opened_date", result.opening_date)
+		else:
+			frappe.db.set_value("Lead", lead.name, "account_opened_date", result.creation)
+
