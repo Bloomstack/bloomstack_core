@@ -1,0 +1,77 @@
+body {
+  background: url('assets/bloomstack_core/images/desk_background.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: sans-serif;
+}
+
+.page-head {
+  display: none;
+}
+
+.layout-main-section-wrapper {
+  margin: 0;
+}
+
+.layout-main-section {
+  border: 0;
+}
+
+.wrapper {
+  max-width: 1200px;
+}
+
+.subsets {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.cards {
+  width: 75px;
+  margin: 20px;
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+}
+
+.cards img {
+  width: 100%;
+}
+
+.cards span {
+  margin: 5px auto 0;
+  display: block;
+  color: #fff;
+  font-size: 14px;
+}
+
+.favourites {
+  background: rgba(128, 128, 128,0.4);
+  border-radius: 30px;
+  padding: 20px 50px;
+  display: none;
+}
+
+.favourites i {
+  display: inline-block;
+  background-color: #f58767;
+  width: 100%;
+  font-size: 80px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.row {
+  transition: .3s all ease;
+}
+
+.view_more {
+  text-align: center;
+}
+
+
+@media screen and (max-width: 992px) {
+  .more_link {
+    display: block;
+    margin: 0 auto;
+  }
+}
