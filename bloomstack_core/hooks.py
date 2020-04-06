@@ -178,6 +178,9 @@ doc_events = {
 	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
+	"Customer": {
+		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
 	}
 }
 
