@@ -1,22 +1,26 @@
-body {
-  background: url('assets/bloomstack_core/images/desk_background.png') no-repeat center center fixed;
+body[data-route="bloomstack_desk"] {
+  background: url('assets/bloomstack_core/images/desk.png') no-repeat center center fixed;
   background-size: cover;
   font-family: sans-serif;
 }
 
-.page-head {
+body[data-route="bloomstack_desk"] .page-head {
   display: none;
 }
 
-.layout-main-section-wrapper {
+body[data-route="bloomstack_desk"] .layout-main-section-wrapper {
   margin: 0;
 }
 
-.layout-main-section {
+body[data-route="bloomstack_desk"] .layout-main-section {
   border: 0;
 }
 
-.wrapper {
+body[data-route="bloomstack_desk"] .row {
+  margin: 0;
+}
+
+body[data-route="bloomstack_desk"] .wrapper {
   max-width: 1200px;
 }
 
@@ -26,11 +30,13 @@ body {
 }
 
 .cards {
-  width: 75px;
-  margin: 20px;
+  width: 65px;
+  margin: 30px;
+  margin-left: 0;
   display: inline-block;
   vertical-align: top;
   cursor: pointer;
+  text-align: center;
 }
 
 .cards img {
@@ -46,8 +52,8 @@ body {
 
 .favourites {
   background: rgba(128, 128, 128,0.4);
-  border-radius: 30px;
-  padding: 20px 50px;
+  border-radius: 50px;
+  padding: 20px;
   display: none;
 }
 
@@ -55,23 +61,40 @@ body {
   display: inline-block;
   background-color: #f58767;
   width: 100%;
-  font-size: 80px;
+  font-size: 25px;
+  padding: 20px;
   border-radius: 10px;
   color: #fff;
-}
-
-.row {
-  transition: .3s all ease;
 }
 
 .view_more {
   text-align: center;
 }
 
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+  .cards {
+    width: 50px;
+  }
+  .favourites i {
+    padding: 14px 20px;
+  }
+}
 
 @media screen and (max-width: 992px) {
-  .more_link {
-    display: block;
-    margin: 0 auto;
+  body[data-route="bloomstack_desk"] .wrapper {
+    max-width: 500px;
+    margin: 0 auto
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .cards {
+    width: 50px;
+  }
+  .favourites {
+    padding: 20px 20px;
+  }
+  .favourites i {
+    padding: 14px 20px;
   }
 }

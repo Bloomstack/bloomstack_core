@@ -40,7 +40,6 @@ class Desk {
 	
 		let html = frappe.render_template("bloomstack_desk");
 		let wrapper = this.elements.parent.find(".wrapper");
-		console.log('called');
 		if (wrapper.length) {
 			wrapper.html(html);
 		} else {
@@ -51,10 +50,9 @@ class Desk {
 	animate() {
 		$(document).ready(function () {
 			$( ".module_name" ).click(function() {
-				console.log($(this));
 				let parent_box = $(this).closest('.row');
-				parent_box.siblings().find('.favourites').slideUp(1000,'swing');
-				parent_box.find('.favourites').slideToggle(1000, 'swing');
+				parent_box.siblings().find('.favourites').slideUp(500,'swing');
+				parent_box.find('.favourites').slideToggle(500, 'swing');
 			});
 		});
 	}
