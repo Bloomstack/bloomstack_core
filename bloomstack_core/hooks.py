@@ -144,6 +144,9 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
+	"Item": {
+		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
 	"Contract": {
 		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
