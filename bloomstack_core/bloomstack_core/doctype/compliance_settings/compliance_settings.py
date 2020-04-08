@@ -32,10 +32,10 @@ class ComplianceSettings(Document):
 		self.validate_reminder_days()
 
 	def validate_reminder_days(self):
-		if self.license_expiry_reminder_before_days < 0:
+		if self.license_expiry_reminder_before_days and (self.license_expiry_reminder_before_days < 0):
 			frappe.throw(_("License Expiry Reminder Before Days cannot be negative"))
 
-		if self.send_email_interval_of_days < 0:
+		if self.send_email_interval_of_days and (self.send_email_interval_of_days < 0):
 			frappe.throw(_("Send Email Interval of Days cannot be negative"))
 
 	def sync_data(self):

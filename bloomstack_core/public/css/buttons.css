@@ -1,11 +1,31 @@
 .btn-primary, 
-.btn-primary:active, .btn-primary.active {
+.btn-primary:active, 
+.btn-primary.active,
+.btn-primary.disabled, 
+.btn-primary[disabled], 
+fieldset[disabled] .btn-primary, 
+.btn-primary.disabled:hover, 
+.btn-primary[disabled]:hover, 
+fieldset[disabled] .btn-primary:hover, 
+.btn-primary.disabled:focus, 
+.btn-primary[disabled]:focus, 
+fieldset[disabled] .btn-primary:focus, 
+.btn-primary.disabled.focus, 
+.btn-primary[disabled].focus, 
+fieldset[disabled] .btn-primary.focus, 
+.btn-primary.disabled:active, 
+.btn-primary[disabled]:active, 
+fieldset[disabled] .btn-primary:active, 
+.btn-primary.disabled.active, 
+.btn-primary[disabled].active, 
+fieldset[disabled] .btn-primary.active {
   background-color: #80bd9e;
   border-color: #80bd9e;
 }
 
 .btn-primary:hover, 
-.btn-primary:focus, .btn-primary.focus,
+.btn-primary:focus, 
+.btn-primary.focus,
 .open > .dropdown-toggle.btn-primary {
   background-color: #64ab88;
   border-color: #64ab88;

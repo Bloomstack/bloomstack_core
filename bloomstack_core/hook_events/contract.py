@@ -22,18 +22,8 @@ def create_project_against_contract(contract, method):
 		return
 
 	# Get the tasks for the project
-	project_tasks = []
 	base_date = getdate(now())
 	project_template = frappe.get_doc("Project Template", contract.project_template)
-
-	for task in project_template.tasks:
-		project_tasks.append({
-			"title": task.task_name,
-			"start_date": add_days(base_date, task.days_to_task_start),
-			"end_date": add_days(base_date, task.days_to_task_end),
-			"task_weight": task.weight,
-			"description": task.description
-		})
 
 	# Get project and party details
 	project_name = "{} - {}".format(contract.party_name, project_template.template_name)
@@ -41,18 +31,41 @@ def create_project_against_contract(contract, method):
 		count = len(frappe.get_all("Project", filters={"name": ["like", "%{}%".format(project_name)]}))
 		project_name = "{} - {}".format(project_name, count)
 
-	expected_start_date = min([task.get("start_date") for task in project_tasks if task.get("start_date")])
-	expected_end_date = max([task.get("end_date") for task in project_tasks if task.get("end_date")])
-
 	project = frappe.new_doc("Project")
 	project.update({
 		"project_name": project_name,
-		"expected_start_date": expected_start_date,
-		"expected_end_date": expected_end_date,
 		"customer": contract.party_name if contract.party_type == "Customer" else None,
-		"tasks": project_tasks
 	})
+
 	project.insert(ignore_permissions=True)
+
+	project_dates = []
+	project_name = project.name
+	for task in project_template.tasks:
+		project_task = frappe.new_doc("Task")
+		start_date = add_days(base_date, task.days_to_task_start)
+		end_date = add_days(base_date, task.days_to_task_end)
+		project_task.update({
+			"subject": task.task_name,
+			"start_date": start_date,
+			"end_date": end_date,
+			"task_weight": task.weight,
+			"description": task.description,
+			"project": project_name
+		})
+		project_task.insert(ignore_permissions=True)
+		project_dates.extend([start_date, end_date])
+
+	expected_start_date = min(project_dates)
+	expected_end_date = max(project_dates)
+
+	project.update({
+		"expected_start_date": expected_start_date,
+		"expected_end_date": expected_end_date
+	})
+
+	project.save(ignore_permissions=True)
+
 
 	# Link the contract with the project
 	contract.db_set("project", project.name)

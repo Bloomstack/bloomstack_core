@@ -40,14 +40,14 @@ app_include_css = [
 	"/assets/bloomstack_core/css/trees.css",
 	"/assets/bloomstack_core/css/mobile-fixes.css",
 	"/assets/bloomstack_core/css/banner.css",
-	"/assets/bloomstack_core/css/desk.css"
+	"/assets/bloomstack_core/css/desk.css",
+	"/assets/bloomstack_core/css/order_desk.css"
 ]
 
 # include js, css files in header of web template
 web_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/login.css",
-	"/assets/bloomstack_core/css/webform.css"
+	"/assets/bloomstack_core/css/login.css"
 ]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
@@ -71,8 +71,13 @@ doctype_js = {
 	"Driver": "public/js/driver.js",
 	"Item": "public/js/item.js",
 	"Packing Slip": "public/js/packing_slip.js",
+	"Purchase Invoice": "public/js/purchase_invoice.js",
+	"Purchase Receipt": "public/js/purchase_receipt.js",
+	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
+	"Sales Invoice": "public/js/sales_invoice.js",
 	"Sales Order": "public/js/sales_order.js",
+	"Stock Entry": "public/js/stock_entry.js",
 	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
@@ -113,7 +118,7 @@ override_doctype_dashboards = {
 # ------------
 
 # before_install = "bloomstack_core.install.before_install"
-# after_install = "bloomstack_core.install.after_install"
+after_install = "bloomstack_core.install.after_install"
 
 # Desk Notifications
 # ------------------

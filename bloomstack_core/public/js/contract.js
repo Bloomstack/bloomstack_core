@@ -49,5 +49,12 @@ frappe.ui.form.on("Contract", {
                 __("Send Authorization Request"))
             }).addClass("btn-primary");
         }
-    }
+    },
+
+    before_submit: (frm) => {
+        if(!frm.doc.signee_company) {
+            frm.scroll_to_field('signee_company');
+            frappe.throw("Please sign the contract before submiting it.")
+        }
+	},
 });
