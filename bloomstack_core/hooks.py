@@ -70,6 +70,7 @@ doctype_js = {
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
 	"Item": "public/js/item.js",
+	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Purchase Invoice": "public/js/purchase_invoice.js",
 	"Purchase Receipt": "public/js/purchase_receipt.js",
@@ -143,6 +144,9 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
+	"Item": {
+		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
 	"Contract": {
 		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
@@ -181,6 +185,9 @@ doc_events = {
 	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
+	"Customer": {
+		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
 	}
 }
 
