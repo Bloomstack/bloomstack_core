@@ -6,7 +6,7 @@ from frappe.utils import date_diff, getdate
 
 def send_license_expiry_reminder():
 	"""
-		Sends alerts about companies whose licenses are about to expire
+		Send alerts about companies whose licenses are about to expire
 	"""
 
 	company_email = frappe.db.get_value("Company", get_default_company(), "email")
@@ -15,17 +15,19 @@ def send_license_expiry_reminder():
 	if not all([company_email, days_before_license_expiry]):
 		return
 
-	for entity in frappe.get_all("Compliance Info", fields=['license_number', 'license_expiry_date', 'entity', 'entity_type']):
-		if date_diff(getdate(), entity.license_expiry_date) == days_before_license_expiry:
-			entity_email, is_send_enabled = frappe.db.get_value(entity.entity_type, entity.entity, ['email_id', 'send_license_expiry_reminder'])
+	entities = frappe.get_all("Compliance Info", fields=['license_number', 'license_expiry_date', 'entity', 'entity_type'])
 
-			# Send out the license expiry reminder to the license holder
-			if is_send_enabled:
+	for entity in entities:
+		entity_email, is_send_enabled = frappe.db.get_value(entity.entity_type, entity.entity, ['email_id', 'send_license_expiry_reminder'])
+
+		if is_send_enabled:
+			if date_diff(getdate(), entity.license_expiry_date) == days_before_license_expiry:
+				# Send out the license expiry reminder to the license holder
 				_send_reminder(entity_email, entity)
 
-			# Send out the license expiry reminder to the company
-			if entity.entity_type != "Company":
-				_send_reminder(company_email, entity)
+				# Send out the license expiry reminder to the company
+				if entity.entity_type != "Company":
+					_send_reminder(company_email, entity)
 
 
 def _send_reminder(email_id, entity):
@@ -36,7 +38,7 @@ def _send_reminder(email_id, entity):
 		subject = frappe.render_template(email_template.subject, entity)
 		message = frappe.render_template(email_template.response, entity)
 	else:
-		subject = _("License Expiry Alert")
-		message = "License number {0} will expire on {1}".format(entity.license_number, entity.license_expiry_date)
+		subject = _("Cannabis License Expiry Alert")
+		message = "The license number {0} will expire on {1}".format(entity.license_number, entity.license_expiry_date)
 
 	frappe.sendmail(recipients=email_id, subject=subject, message=message)
