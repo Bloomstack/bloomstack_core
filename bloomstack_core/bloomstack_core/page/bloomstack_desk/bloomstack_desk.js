@@ -6,14 +6,14 @@ frappe.pages['bloomstack_desk'].on_page_load = function(wrapper) {
 	// 	title: 'None',
 	// 	single_column: true
 	// });
-	wrapper.desk = new Desk(wrapper);
+	wrapper.bloomstackdesk = new BloomstackDesk(wrapper);
 }
 
-class Desk {
+class BloomstackDesk {
 	constructor(parent) {
 		frappe.ui.make_app_page({
 			parent: parent,
-			title: 'Desk',
+			title: 'Bloomstack Desk',
 			single_column: true
 		});
 		const assets = [

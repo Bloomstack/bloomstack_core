@@ -20,16 +20,16 @@ body[data-route="bloomstack_desk"] .row {
   margin: 0;
 }
 
-body[data-route="bloomstack_desk"] .wrapper {
+.wrapper.bloomdesk_wrapper {
   max-width: 1200px;
 }
 
-.subsets {
+.bloomdesk_wrapper .subsets {
   display: inline-block;
   vertical-align: top;
 }
 
-.cards {
+.bloomdesk_wrapper .cards {
   width: 65px;
   margin: 30px;
   margin-left: 0;
@@ -39,25 +39,25 @@ body[data-route="bloomstack_desk"] .wrapper {
   text-align: center;
 }
 
-.cards img {
+.bloomdesk_wrapper .cards img {
   width: 100%;
 }
 
-.cards span {
+.bloomdesk_wrapper .cards span {
   margin: 5px auto 0;
   display: block;
   color: #fff;
   font-size: 14px;
 }
 
-.favourites {
+.bloomdesk_wrapper .favourites {
   background: rgba(128, 128, 128,0.4);
   border-radius: 50px;
   padding: 20px;
   display: none;
 }
 
-.favourites i {
+.bloomdesk_wrapper .favourites i {
   display: inline-block;
   background-color: #f58767;
   width: 100%;
@@ -67,34 +67,34 @@ body[data-route="bloomstack_desk"] .wrapper {
   color: #fff;
 }
 
-.view_more {
+.bloomdesk_wrapper .view_more {
   text-align: center;
 }
 
 @media screen and (max-width: 1199px) and (min-width: 992px) {
-  .cards {
+  .bloomdesk_wrapper .cards {
     width: 50px;
   }
-  .favourites i {
+  .bloomdesk_wrapper .favourites i {
     padding: 14px 20px;
   }
 }
 
 @media screen and (max-width: 992px) {
-  body[data-route="bloomstack_desk"] .wrapper {
+  .bloomdesk_wrapper.wrapper {
     max-width: 500px;
     margin: 0 auto
   }
 }
 
 @media screen and (max-width: 500px) {
-  .cards {
+  .bloomdesk_wrapper .cards {
     width: 50px;
   }
-  .favourites {
+  .bloomdesk_wrapper .favourites {
     padding: 20px 20px;
   }
-  .favourites i {
+  .bloomdesk_wrapper .favourites i {
     padding: 14px 20px;
   }
 }
