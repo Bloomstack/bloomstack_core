@@ -8,6 +8,7 @@ import frappe
 from bloomstack_core.utils import get_metrc
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import cint
 from frappe.utils.background_jobs import enqueue
 from frappe.utils.nestedset import get_root_of
 
@@ -32,11 +33,8 @@ class ComplianceSettings(Document):
 		self.validate_reminder_days()
 
 	def validate_reminder_days(self):
-		if self.license_expiry_reminder_before_days and (self.license_expiry_reminder_before_days < 0):
-			frappe.throw(_("License Expiry Reminder Before Days cannot be negative"))
-
-		if self.send_email_interval_of_days and (self.send_email_interval_of_days < 0):
-			frappe.throw(_("Send Email Interval of Days cannot be negative"))
+		if cint(self.days_before_license_expiry) < 0:
+			frappe.throw(_("Number of Days Before License Expiry cannot be negative"))
 
 	def sync_data(self):
 		enqueue(pull_metrc_item_categories)

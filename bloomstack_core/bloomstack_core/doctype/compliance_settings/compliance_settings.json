@@ -15,8 +15,7 @@
   "metrc_vendor_key",
   "metrc_user_key",
   "license_expiry_section_section",
-  "license_expiry_reminder_before_days",
-  "send_email_interval_of_days",
+  "days_before_license_expiry",
   "license_expiry_section_column",
   "license_expiry_email_template"
  ],
@@ -72,21 +71,9 @@
    "label": "User Key"
   },
   {
-   "default": "0",
-   "fieldname": "license_expiry_reminder_before_days",
-   "fieldtype": "Int",
-   "label": "License Expiry Reminder Before Days"
-  },
-  {
-   "default": "0",
-   "fieldname": "send_email_interval_of_days",
-   "fieldtype": "Int",
-   "label": "Send Email Interval of Days"
-  },
-  {
    "fieldname": "license_expiry_section_section",
    "fieldtype": "Section Break",
-   "label": "License Expiry Section"
+   "label": "License Expiry Notification"
   },
   {
    "fieldname": "license_expiry_section_column",
@@ -97,11 +84,18 @@
    "fieldtype": "Link",
    "label": "License Expiry Email Template",
    "options": "Email Template"
+  },
+  {
+   "default": "30",
+   "description": "The system will notify users when a cannabis license is about to expire. Defaults to 30 days.",
+   "fieldname": "days_before_license_expiry",
+   "fieldtype": "Int",
+   "label": "Number of Days Before License Expiry"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-04-05 21:38:34.833344",
+ "modified": "2020-04-08 04:59:38.056528",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Settings",
