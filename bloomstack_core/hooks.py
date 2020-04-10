@@ -85,7 +85,8 @@ doctype_js = {
 }
 
 doctype_list_js = {
-	"Delivery Trip": "public/js/delivery_trip_list.js"
+	"Delivery Trip": "public/js/delivery_trip_list.js",
+	"Sales Order": "public/js/sales_order_list.js"
 }
 
 override_doctype_dashboards = {
