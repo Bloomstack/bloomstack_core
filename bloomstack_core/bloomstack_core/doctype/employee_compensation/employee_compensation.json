@@ -1,0 +1,184 @@
+{
+ "actions": [],
+ "autoname": "HR-EMP-COM-.YY.-.MM.-.#####",
+ "creation": "2020-04-14 00:11:17.598970",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "ec_sb_1",
+  "injury_type",
+  "date_of_injury",
+  "injury_description",
+  "ec_cb_1",
+  "first_aid",
+  "first_aid_date",
+  "ec_sb_2",
+  "employee_compemsation_claim",
+  "osha_refrence",
+  "ec_cb_2",
+  "absence_eligibility_type",
+  "missed_days_from_work",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ec_sb_1",
+   "fieldtype": "Section Break",
+   "label": "Injury Information"
+  },
+  {
+   "fieldname": "injury_type",
+   "fieldtype": "Select",
+   "label": "Injury Type",
+   "options": "\nIndustrial\nNon-Industrial"
+  },
+  {
+   "fieldname": "date_of_injury",
+   "fieldtype": "Date",
+   "label": "Date of Injury"
+  },
+  {
+   "fieldname": "injury_description",
+   "fieldtype": "Long Text",
+   "label": "Injury Description"
+  },
+  {
+   "fieldname": "ec_cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "first_aid",
+   "fieldtype": "Select",
+   "label": "First Aid",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "first_aid_date",
+   "fieldtype": "Date",
+   "label": "First Aid Date"
+  },
+  {
+   "fieldname": "ec_sb_2",
+   "fieldtype": "Section Break",
+   "label": "Employee Compensation Claim Section"
+  },
+  {
+   "fieldname": "employee_compemsation_claim",
+   "fieldtype": "Select",
+   "label": "Employee Compemsation Claim",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "osha_refrence",
+   "fieldtype": "Attach",
+   "label": "OSHA 300 Form Refrence"
+  },
+  {
+   "fieldname": "ec_cb_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "absence_eligibility_type",
+   "fieldtype": "Select",
+   "label": "Absence Eligibility Type",
+   "options": "\nFMLA\nCFRA PDL\nOther"
+  },
+  {
+   "fieldname": "missed_days_from_work",
+   "fieldtype": "Data",
+   "label": " Missed Days from work"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Compensation",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2020-04-14 01:18:21.323952",
+ "modified_by": "Administrator",
+ "module": "Bloomstack Core",
+ "name": "Employee Compensation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
