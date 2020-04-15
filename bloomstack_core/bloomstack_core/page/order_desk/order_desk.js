@@ -94,7 +94,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.frm.set_value('customer', customer);
 				},
 				on_order_type_change: (order_type) => {
-					this.frm.set_value('new_order_type', order_type)
+					this.frm.set_value('order_type', order_type)
 
 					if (order_type == 'Sample') {
 						this.frm.set_value('additional_discount_percentage', 100);
@@ -980,10 +980,10 @@ class SalesOrderCart {
 			df: {
 				fieldtype: 'Select',
 				label: 'Order Type',
-				fieldname: 'new_order_type',
-				options: this.frm.get_field("new_order_type").df.options,
+				fieldname: 'order_type',
+				options: this.frm.get_field("order_type").df.options,
 				reqd: 1,
-				default: this.frm.doc.new_order_type,
+				default: this.frm.doc.order_type,
 				onchange: () => {
 					this.events.on_order_type_change(this.order_type_field.get_value());
 				}
