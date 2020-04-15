@@ -35,7 +35,7 @@
    "modified_by": "Administrator",
    "name": "Delivery Note-order_type",
    "no_copy": 0,
-   "options": "\nSales\nPromotional\nSample\nPAD\nWarranty\nConsignment\nReplenishment",
+   "options": "\nSales\nMaintenance\nShopping Cart\nPromotional\nSample\nPAD\nWarranty\nConsignment\nReplenishment",
    "owner": "Administrator",
    "parent": null,
    "parentfield": null,
