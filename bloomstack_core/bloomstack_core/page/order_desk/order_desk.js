@@ -687,6 +687,7 @@ class OrderDeskItems {
 
 	get_item_html(item) {
 		const price_list_rate = format_currency(item.price_list_rate, this.currency);
+		const item_qty_display = item.actual_qty > 0 ? `Stock: ${item.actual_qty} ${item.stock_uom}` : "Out of Stock"
 		const { item_code, item_name, item_image} = item;
 		const item_title = item_name || item_code;
 
@@ -713,6 +714,9 @@ class OrderDeskItems {
 						</div>
 						<span class="price-info">
 							${price_list_rate}
+						</span>
+						<span class="price-info">
+							${item_qty_display}
 						</span>
 					</a>
 				</div>
@@ -1109,7 +1113,7 @@ class SalesOrderCart {
 
 		return `
 			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
-				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.actual_qty}">
+				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.actual_qty} ${item.stock_uom}">
 				<div class="item-name list-item__content list-item__content--flex-1.5 ellipsis">
 					${item.item_name}
 				</div>
