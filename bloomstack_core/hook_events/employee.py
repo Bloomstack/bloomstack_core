@@ -1,4 +1,7 @@
+from __future__ import unicode_literals
+
 import frappe
+from frappe import _
 
 
 def update_driver_employee(employee, method):
@@ -11,3 +14,11 @@ def update_driver_employee(employee, method):
 
 		if driver:
 			frappe.db.set_value("Driver", driver, "employee", employee.name if user_id else None)
+
+
+def get_data(data):
+	for transaction in data.transactions:
+		if transaction.get("label") == "Benefit":
+			transaction.get("items", []).append("Employee Compensation")
+
+	return data
