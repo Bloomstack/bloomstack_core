@@ -7,19 +7,23 @@
  "engine": "InnoDB",
  "field_order": [
   "employee",
+  "ec_cb_1",
   "employee_name",
   "ec_sb_1",
   "injury_type",
-  "date_of_injury",
   "injury_description",
-  "ec_cb_1",
-  "first_aid",
-  "first_aid_date",
-  "ec_sb_2",
-  "employee_compemsation_claim",
-  "osha_refrence",
   "ec_cb_2",
-  "absence_eligibility_type",
+  "date_of_injury",
+  "ec_sb_2",
+  "first_aid",
+  "ec_cb_3",
+  "first_aid_date",
+  "ec_sb_3",
+  "employee_compensation",
+  "osha_form_reference",
+  "ec_cb_4",
+  "leave_of_absence_type",
+  "other_leave_of_absence_type",
   "missed_days_from_work",
   "amended_from"
  ],
@@ -64,10 +68,10 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "0",
    "fieldname": "first_aid",
-   "fieldtype": "Select",
-   "label": "First Aid",
-   "options": "\nYes\nNo"
+   "fieldtype": "Check",
+   "label": "First Aid"
   },
   {
    "fieldname": "first_aid_date",
@@ -77,33 +81,16 @@
   {
    "fieldname": "ec_sb_2",
    "fieldtype": "Section Break",
-   "label": "Employee Compensation Claim Section"
-  },
-  {
-   "fieldname": "employee_compemsation_claim",
-   "fieldtype": "Select",
-   "label": "Employee Compemsation Claim",
-   "options": "\nYes\nNo"
-  },
-  {
-   "fieldname": "osha_refrence",
-   "fieldtype": "Attach",
-   "label": "OSHA 300 Form Refrence"
+   "label": "First Aid Information"
   },
   {
    "fieldname": "ec_cb_2",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "absence_eligibility_type",
-   "fieldtype": "Select",
-   "label": "Absence Eligibility Type",
-   "options": "\nFMLA\nCFRA PDL\nOther"
-  },
-  {
    "fieldname": "missed_days_from_work",
-   "fieldtype": "Data",
-   "label": " Missed Days from work"
+   "fieldtype": "Int",
+   "label": "Missed Days from Work"
   },
   {
    "fieldname": "amended_from",
@@ -113,11 +100,47 @@
    "options": "Employee Compensation",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "ec_cb_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ec_sb_3",
+   "fieldtype": "Section Break",
+   "label": "Compensation Claim Information"
+  },
+  {
+   "fieldname": "ec_cb_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "employee_compensation",
+   "fieldtype": "Check",
+   "label": "Employee Compensation"
+  },
+  {
+   "fieldname": "osha_form_reference",
+   "fieldtype": "Attach",
+   "label": "OSHA Form 300 Reference"
+  },
+  {
+   "fieldname": "leave_of_absence_type",
+   "fieldtype": "Select",
+   "label": "Leave of Absence Type",
+   "options": "\nFMLA\nCFRA PDL\nOther"
+  },
+  {
+   "depends_on": "eval:doc.leave_of_absence_type === \"Other\"",
+   "fieldname": "other_leave_of_absence_type",
+   "fieldtype": "Data",
+   "label": "Other Leave of Absence  Type"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-04-14 01:18:21.323952",
+ "modified": "2020-04-14 22:53:50.047603",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Employee Compensation",
