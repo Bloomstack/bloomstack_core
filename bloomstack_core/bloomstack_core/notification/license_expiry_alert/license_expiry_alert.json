@@ -1,0 +1,27 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2020-04-15 03:24:50.882869",
+ "date_changed": "license_expiry_date",
+ "days_in_advance": 10,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Compliance Info",
+ "enabled": 1,
+ "event": "Days Before",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<p>\n    Hello {{ entity }},<br>\n\n    Your cannabis license ({{ license_number }}) will expire on {{ license_expiry_date }}<br>\n\n    Thanks, Bloomstack\n</p>",
+ "modified": "2020-04-15 03:28:39.662561",
+ "modified_by": "Administrator",
+ "module": "Bloomstack Core",
+ "name": "License Expiry Alert",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "email_by_document_field": "owner",
+   "email_by_role": "Auditor"
+  }
+ ],
+ "subject": "License Expiry Alert!"
+}
