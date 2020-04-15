@@ -4,16 +4,13 @@
 frappe.ui.form.on('Employee Compensation', {
 	validate: function(frm) {
 		if (frm.doc.date_of_injury > frappe.datetime.get_today()) {
-			frappe.msgprint(__("You can not select future date in Date of Injury"));
-			frappe.validated = false;
+			frappe.throw(__("You cannot select a future date for Date of Injury"));
 		}
 		if (frm.doc.first_aid_date > frappe.datetime.get_today()) {
-			frappe.msgprint(__("You can not select future date in first Aid"));
-			frappe.validated = false;
+			frappe.throw(__("You cannot select a future date for First Aid Date"));
 		}
 		if (frm.doc.first_aid_date < frm.doc.date_of_injury) {
-			frappe.msgprint(__("You can not select first aid date less than Injury Date"));
-			frappe.validated = false;
+			frappe.throw(__("The First Aid date cannot be before the Date of Injury"));
 		}
 	}
 });
