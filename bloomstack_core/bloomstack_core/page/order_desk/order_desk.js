@@ -93,6 +93,21 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				on_customer_change: (customer) => {
 					this.frm.set_value('customer', customer);
 				},
+				on_order_type_change: (order_type) => {
+					this.frm.set_value('new_order_type', order_type)
+
+					if (order_type == 'Sample') {
+						this.frm.set_value('additional_discount_percentage', 100);
+						this.frm.doc.items.forEach(item => {
+							this.items.events.update_cart(item.item_code, "discount_percentage", 100);
+						})
+					} else if (order_type == 'Sales') {
+						this.frm.set_value('additional_discount_percentage', 0);
+						this.frm.doc.items.forEach(item => {
+							this.items.events.update_cart(item.item_code, "discount_percentage", 0);
+						})
+					}
+				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
 				},
@@ -438,7 +453,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	set_form_action() {
-		if(this.frm.doc.docstatus == 1 || this.frm.doc.items.length > 0) {
+		if(this.frm.doc.docstatus == 1) {
 			this.page.set_secondary_action(__("Print"), async() => {
 				if(this.frm.doc.docstatus != 1 ){
 					await this.frm.save();
@@ -760,6 +775,7 @@ class SalesOrderCart {
 		this.make_dom();
 		this.make_customer_field();
 		this.make_numpad();
+		this.make_order_type_field();
 	}
 
 	make_dom() {
@@ -957,6 +973,24 @@ class SalesOrderCart {
 		});
 		this.$qty_total.find('.quantity-total').text(total_item_qty);
 		// hiiremovethis this.frm.set_value("pos_total_qty",total_item_qty);
+	}
+
+	make_order_type_field() {
+		this.order_type_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Select',
+				label: 'Order Type',
+				fieldname: 'new_order_type',
+				options: this.frm.get_field("new_order_type").df.options,
+				reqd: 1,
+				default: this.frm.doc.new_order_type,
+				onchange: () => {
+					this.events.on_order_type_change(this.order_type_field.get_value());
+				}
+			},
+			parent: this.wrapper.find('.customer-field'),
+			render_input: true
+		});
 	}
 
 	make_customer_field() {
