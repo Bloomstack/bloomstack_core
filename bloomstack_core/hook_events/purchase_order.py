@@ -1,23 +1,13 @@
-# -*- coding: utf-8 -*-
-# Copyright (c) 2019, Bloom Stack and contributors
-# For license information, please see license.txt
-
-from __future__ import unicode_literals
-
 import frappe
 import json
 from frappe.utils import get_url
 
 
-def set_invoice_status(sales_invoice, method):
-	sales_invoice.set_status()
-	sales_invoice.set_indicator()
-
 @frappe.whitelist()
 def get_contact(name, doctype):
 	out = frappe._dict()
 
-	customer_name = frappe.db.get_value(doctype, name, ['Customer'])
+	supplier_name = frappe.db.get_value(doctype, name, ['Supplier'])
 
 	contact_persons = frappe.db.sql(
 		"""
@@ -26,10 +16,10 @@ def get_contact(name, doctype):
 			FROM
 				`tabDynamic Link` dl
 			WHERE
-				dl.link_doctype="Customer"
+				dl.link_doctype="Supplier"
 				AND dl.link_name=%s
 				AND dl.parenttype = "Contact"
-		""", (customer_name), as_dict=1)
+		""", (supplier_name), as_dict=1)
 
 	if contact_persons:
 		for out.contact_person in contact_persons:
