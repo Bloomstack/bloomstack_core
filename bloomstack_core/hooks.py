@@ -40,14 +40,14 @@ app_include_css = [
 	"/assets/bloomstack_core/css/trees.css",
 	"/assets/bloomstack_core/css/mobile-fixes.css",
 	"/assets/bloomstack_core/css/banner.css",
-	"/assets/bloomstack_core/css/desk.css"
+	"/assets/bloomstack_core/css/desk.css",
+	"/assets/bloomstack_core/css/order_desk.css"
 ]
 
 # include js, css files in header of web template
 web_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/login.css",
-	"/assets/bloomstack_core/css/webform.css"
+	"/assets/bloomstack_core/css/login.css"
 ]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
@@ -70,8 +70,13 @@ doctype_js = {
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
 	"Item": "public/js/item.js",
+	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
+	"Purchase Invoice": "public/js/purchase_invoice.js",
+	"Purchase Receipt": "public/js/purchase_receipt.js",
+	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
+	"Sales Invoice": "public/js/sales_invoice.js",
 	"Sales Order": "public/js/sales_order.js",
 	"Stock Entry": "public/js/stock_entry.js",
 	"Supplier": "public/js/supplier.js",
@@ -85,6 +90,7 @@ doctype_list_js = {
 
 override_doctype_dashboards = {
 	"Contract": "bloomstack_core.hook_events.contract.get_data",
+	"Employee": "bloomstack_core.hook_events.employee.get_data",
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -139,6 +145,9 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
+	"Item": {
+		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
 	"Contract": {
 		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
@@ -177,6 +186,9 @@ doc_events = {
 	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
+	"Customer": {
+		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
 	}
 }
 
