@@ -18,7 +18,7 @@ frappe.listview_settings['Sales Order'] = {
                     args: { "doctype": doctype, "name": selected_docs[0].name, "contact_field": "Customer" },
                     callback: function (r) {
                         frappe.call({
-                            method: "bloomstack_core.hook_events.sales_order.get_attach_link",
+                            method: "bloomstack_core.utils.get_attach_link",
                             args: { docs: selected_docs, doctype: doctype },
                             callback: function (res) {
                                 new frappe.views.CommunicationComposer({
