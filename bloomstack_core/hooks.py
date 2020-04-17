@@ -189,7 +189,10 @@ doc_events = {
 	},
 	"Customer": {
 		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
-	}
+	},
+	('Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
+		'validate': ['bloomstack_core.hook_events.utils.validate_license_expiry']
+	},
 }
 
 # Scheduled Tasks
