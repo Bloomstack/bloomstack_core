@@ -14,4 +14,3 @@ def create_sales_invoice_against_contract():
 	for order in sales_orders:
 		sales_invoice = make_sales_invoice(order.name)
 		sales_invoice.save()
-
