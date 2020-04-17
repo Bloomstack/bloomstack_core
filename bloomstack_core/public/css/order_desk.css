@@ -5,3 +5,16 @@
   text-align: center;
   background-color: #4f5261;
 }
+
+body[data-route="order-desk"] .list-item.list-item--head {
+  background-color: #4f5261;
+}
+
+body[data-route="order-desk"] .list-item.list-item--head .text-muted {
+  color: #fff!important;
+}
+
+body[data-route="order-desk"] .quantity.list-item__content.text-right span button {
+  background-color: #4f5261;
+  color: #fff;
+}
