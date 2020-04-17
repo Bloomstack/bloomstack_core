@@ -25,10 +25,7 @@ frappe.listview_settings['Sales Order'].onload =
                                     subject: `${frappe.sys_defaults.company} - ${doctype} links`,
                                     recipients: r.message ? r.message.email_id : null,
                                     message: res.message,
-                                    doc: {
-                                        doctype: doctype,
-                                        name: frappe.session.user
-                                    }
+                                    doc: {}
                                 })
                             }
                         })
