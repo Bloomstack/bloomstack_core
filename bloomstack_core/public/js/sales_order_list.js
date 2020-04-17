@@ -14,8 +14,8 @@ frappe.listview_settings['Sales Order'] = {
                     }
                 };
                 frappe.call({
-                    method: "bloomstack_core.hook_events.sales_order.get_contact",
-                    args: { "name": selected_docs[0].name, doctype: doctype },
+                    method: "bloomstack_core.utils.get_contact",
+                    args: { "doctype": doctype, "name": selected_docs[0].name, "contact_field": "Customer" },
                     callback: function (r) {
                         frappe.call({
                             method: "bloomstack_core.hook_events.sales_order.get_attach_link",
