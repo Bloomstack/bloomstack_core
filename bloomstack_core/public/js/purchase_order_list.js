@@ -1,5 +1,5 @@
-frappe.listview_settings['Purchase Order'] = {
-    onload: function (doclist) {
+frappe.listview_settings['Purchase Order'].onload =
+    function (doclist) {
         const action = () => {
             const selected_docs = doclist.get_checked_items();
             const doctype = doclist.doctype;
@@ -15,15 +15,15 @@ frappe.listview_settings['Purchase Order'] = {
                 };
                 frappe.call({
                     method: "bloomstack_core.utils.get_contact",
-                    args: { "doctype": doctype, "name": selected_docs[0].name, "contact_field": "Supplier" },
+                    args: { "doctype": doctype, "name": selected_docs[0].name, "contact_field": "supplier" },
                     callback: function (r) {
                         frappe.call({
-                            method: "bloomstack_core.utils.get_attach_link",
-                            args: { docs: selected_docs, doctype: doctype },
+                            method: "bloomstack_core.utils.get_document_links",
+                            args: { "doctype": doctype, "docs": selected_docs },
                             callback: function (res) {
                                 new frappe.views.CommunicationComposer({
-                                    subject: frappe.sys_defaults.company + " " + doctype + " links",
-                                    recipients: r.message ? r.message.contact_person.email_id : null,
+                                    subject: `${frappe.sys_defaults.company} - ${doctype} links`,
+                                    recipients: r.message ? r.message.email_id : null,
                                     message: res.message,
                                     doc: {
                                         doctype: doctype,
@@ -38,4 +38,4 @@ frappe.listview_settings['Purchase Order'] = {
         }
         doclist.page.add_actions_menu_item(__('Email'), action, true);
     }
-}
+

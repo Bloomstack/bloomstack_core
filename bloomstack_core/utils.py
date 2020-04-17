@@ -199,12 +199,8 @@ def create_authorization_request(dt, dn, contact_email, contact_name):
 
 @frappe.whitelist()
 def get_contact(doctype, name, contact_field):
-	out = frappe._dict()
 
-	if contact_field == "Supplier":
-		contact_field_name = frappe.db.get_value(doctype, name, 'supplier')
-	elif contact_field == "Customer":
-		contact_field_name = frappe.db.get_value(doctype, name, 'customer')
+	contact = frappe.db.get_value(doctype, name, contact_field)
 
 	contact_persons = frappe.db.sql(
 		"""
@@ -216,20 +212,20 @@ def get_contact(doctype, name, contact_field):
 				dl.link_doctype=%s
 				AND dl.link_name=%s
 				AND dl.parenttype = "Contact"
-		""", (contact_field, contact_field_name), as_dict=1)
+		""", (frappe.unscrub(contact_field), contact), as_dict=1)
 
 	if contact_persons:
-		for out.contact_person in contact_persons:
-			out.contact_person.email_id = frappe.db.get_value("Contact", out.contact_person.parent, ["email_id"])
-			if out.contact_person.is_primary_contact:
-				return out
+		for contact_person in contact_persons:
+			contact_person.email_id = frappe.db.get_value("Contact", contact_person.parent, ["email_id"])
+			if contact_person.is_primary_contact:
+				return contact_person
 
-		out.contact_person = contact_persons[0]
+		contact_person = contact_persons[0]
 
-		return out
+		return contact_person
 
 @frappe.whitelist()
-def get_attach_link(docs, doctype):
+def get_document_links(doctype, docs):
 	docs = json.loads(docs)
 	print_format = "print_format"
 	links = []
