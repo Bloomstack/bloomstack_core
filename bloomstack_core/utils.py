@@ -200,7 +200,7 @@ def create_authorization_request(dt, dn, contact_email, contact_name):
 @frappe.whitelist()
 def get_contact(doctype, name, contact_field):
 	out = frappe._dict()
-	print("+========================================================", doctype, name, contact_field)
+
 	if contact_field == "Supplier":
 		contact_field_name = frappe.db.get_value(doctype, name, 'supplier')
 	elif contact_field == "Customer":
