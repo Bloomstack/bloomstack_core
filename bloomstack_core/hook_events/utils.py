@@ -11,8 +11,8 @@ def validate_license_expiry(doc, method):
 
 
 @frappe.whitelist()
-def validate_entity_license(doctype, name):
-	license_record = frappe.db.get_value(doctype, name, "license")
+def validate_entity_license(party_type, party_name):
+	license_record = frappe.db.get_value(party_type, party_name, "license")
 
 	if not license_record:
 		return
@@ -22,4 +22,4 @@ def validate_entity_license(doctype, name):
 
 	if license_expiry_date and license_expiry_date < getdate(nowdate()):
 		frappe.throw(_("{0}'s license number {1} has expired on {2}").format(
-			frappe.bold(name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
+			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
