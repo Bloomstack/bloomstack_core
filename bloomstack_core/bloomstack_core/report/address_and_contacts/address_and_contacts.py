@@ -52,8 +52,7 @@ def get_columns(filters):
 	if party_type in ("Customer", "Supplier"):
 		columns.extend([
 			"License Type",
-			"License Number",
-			"Seller Permit"
+			"License Number"
 		])
 
 	columns.extend([
@@ -126,17 +125,18 @@ def get_party_addresses_and_contact(party_type, party, party_group):
 
 	# Add a row for each party address and contact, along with party details
 	for party, details in iteritems(party_details):
-		territory = sales_partner = license_type = license_number = seller_permit = None
+		territory = sales_partner = license_type = license_number = None
 
 		if party_type == "Customer":
 			territory = frappe.db.get_value(party_type, party, "territory")
 			sales_partner = frappe.db.get_value(party_type, party, "default_sales_partner")
 
 		if party_type in ("Customer", "Supplier"):
-			if frappe.db.exists("Compliance Info", {"entity_type": party_type, "entity": party}):
-				license_type, license_number, seller_permit = frappe.db.get_value("Compliance Info",
-					{"entity_type": party_type, "entity": party},
-					["license_type", "license_number", "seller_permit"])
+			license_record = frappe.db.get_value(party_type, party, "license")
+
+			if frappe.db.exists("Compliance Info", license_record):
+				license_type, license_number = frappe.db.get_value(
+					"Compliance Info", license_record, ["license_type", "license_number"])
 
 		# If no addresses and contacts exist, add a single row to display the party
 		addresses = details.get("address", [])
@@ -151,7 +151,7 @@ def get_party_addresses_and_contact(party_type, party, party_group):
 				result.extend([territory, sales_partner])
 
 			if party_type in ("Customer", "Supplier"):
-				result.extend([license_type, license_number, seller_permit])
+				result.extend([license_type, license_number])
 
 			address = addresses[idx] if idx < len(addresses) else add_blank_columns_for("Address")
 			contact = contacts[idx] if idx < len(contacts) else add_blank_columns_for("Contact")
