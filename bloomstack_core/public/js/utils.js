@@ -6,7 +6,8 @@ $(document).on('app_ready', function() {
 					frappe.call({
 						method: "bloomstack_core.hook_events.utils.validate_entity_license",
 						args: {
-							'entity': frm.doc.supplier
+							party_type: "Supplier",
+							party_name: frm.doc.supplier
 						}
 					});
 				}
@@ -21,7 +22,8 @@ $(document).on('app_ready', function() {
 					frappe.call({
 						method: "bloomstack_core.hook_events.utils.validate_entity_license",
 						args: {
-							'entity': frm.doc.customer
+							party_type: "Customer",
+							party_name: frm.doc.customer
 						}
 					})
 				}
