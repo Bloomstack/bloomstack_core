@@ -1,40 +1,24 @@
 {
  "actions": [],
  "allow_import": 1,
+ "autoname": "field:license_number",
  "creation": "2019-04-26 02:55:33.798894",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "entity_type",
-  "cb_entity",
-  "entity",
+  "status",
   "sb_info",
-  "license_type",
+  "license_issuer",
   "license_number",
-  "use_type",
-  "cb_compliance",
+  "license_type",
+  "license_category",
   "license_expiry_date",
-  "seller_permit",
-  "tax_id"
+  "cb_compliance",
+  "legal_name",
+  "county",
+  "city"
  ],
  "fields": [
-  {
-   "fieldname": "entity_type",
-   "fieldtype": "Select",
-   "label": "Entity Type",
-   "options": "Customer\nCompany\nSupplier",
-   "reqd": 1
-  },
-  {
-   "fieldname": "cb_entity",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "entity",
-   "fieldtype": "Dynamic Link",
-   "label": "Entity",
-   "options": "entity_type"
-  },
   {
    "fieldname": "sb_info",
    "fieldtype": "Section Break",
@@ -49,37 +33,64 @@
   {
    "fieldname": "license_number",
    "fieldtype": "Data",
+   "in_global_search": 1,
    "in_list_view": 1,
-   "label": "License Number"
-  },
-  {
-   "fieldname": "use_type",
-   "fieldtype": "Data",
-   "label": "Use Type"
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "License Number",
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "cb_compliance",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "seller_permit",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Seller Permit"
-  },
-  {
-   "fieldname": "tax_id",
-   "fieldtype": "Data",
-   "label": "Tax ID"
-  },
-  {
    "fieldname": "license_expiry_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "License Expiry Date"
+  },
+  {
+   "fieldname": "license_issuer",
+   "fieldtype": "Select",
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "License Issuer",
+   "options": "\nCDFA\nCDPH\nBCC"
+  },
+  {
+   "fieldname": "county",
+   "fieldtype": "Data",
+   "label": "County"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fieldname": "license_category",
+   "fieldtype": "Data",
+   "label": "License Category"
+  },
+  {
+   "fieldname": "legal_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Legal Name"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nAbout to Expire\nActive\nCanceled\nDelinquent\nExpired\nExpired - Pending Renewal\nFamily Support Suspension\nFTB Suspension\nInactive\nMilitary - License Inactive\nRevoked\nSurrendered\nSuspended"
   }
  ],
  "links": [],
- "modified": "2020-04-15 03:20:09.456428",
+ "modified": "2020-04-18 04:22:35.358533",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Info",
@@ -96,10 +107,46 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1
   }
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
- "title_field": "entity",
+ "title_field": "license_number",
  "track_changes": 1
 }

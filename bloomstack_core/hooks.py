@@ -64,9 +64,7 @@ webform_include_js = {
 # include js in doctype views
 doctype_js = {
 	"Batch": "public/js/batch.js",
-	"Company": "public/js/company.js",
 	"Contract": "public/js/contract.js",
-	"Customer": "public/js/customer.js",
 	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
@@ -80,7 +78,6 @@ doctype_js = {
 	"Sales Invoice": "public/js/sales_invoice.js",
 	"Sales Order": "public/js/sales_order.js",
 	"Stock Entry": "public/js/stock_entry.js",
-	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
 }
