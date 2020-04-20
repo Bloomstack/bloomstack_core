@@ -157,6 +157,9 @@ doc_events = {
 			"bloomstack_core.hook_events.contract.create_order_against_contract"
 		]
 	},
+	"Customer": {
+		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
+	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
@@ -177,6 +180,9 @@ doc_events = {
 	"Employee": {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
+	"Packing Slip": {
+		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
 	},
@@ -186,15 +192,12 @@ doc_events = {
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
 	},
-	"Packing Slip": {
-		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
-	},
-	"Customer": {
-		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
+	"User": {
+		"after_insert": "bloomstack_core.bloomtrace.user.create_bloomtrace_client_user"
 	},
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': ['bloomstack_core.hook_events.utils.validate_license_expiry']
-	},
+	}
 }
 
 # Scheduled Tasks
