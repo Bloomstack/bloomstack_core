@@ -3,6 +3,10 @@ frappe.ui.form.on("Lead", {
 		frm.set_query("region", { "is_group": 1 });
 	},
 
+	refresh: (frm) => {
+		frm.set_df_property("designation", "label", "Title");
+	},
+
 	onload: (frm) => {
 		frm.set_query("territory", () => {
 			if (frm.doc.region) {
