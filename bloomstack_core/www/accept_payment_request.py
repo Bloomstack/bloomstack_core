@@ -17,6 +17,9 @@ def get_context(context):
 	context.payment_gateway_list = shopping_cart_settings.gateways
 	context.enabled_checkout = shopping_cart_settings.enable_checkout
 
+	if not context.enabled_checkout:
+		context.error = "Please enable checkout to continue."
+
 	# setup document context
 	context.doc = frappe.get_doc(doctype, name)
 
