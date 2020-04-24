@@ -193,7 +193,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			// a case, no point showing the dialog
 			const show_dialog = item.has_serial_no || item.has_batch_no;
 
-			if (show_dialog && field == 'qty' && ((!item.batch_no && item.has_batch_no) ||
+			if (value && show_dialog && field == 'qty' && ((!item.batch_no && item.has_batch_no) ||
 				(item.has_serial_no) || (item.actual_batch_qty != item.actual_qty)) ) {
 				this.select_batch_and_serial_no(item);
 			} else {
@@ -266,12 +266,17 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	on_qty_change(item) {
+		if(item.has_batch_no && !item.batch_no){
+			this.on_close(item)
+			return;
+		}
 		frappe.run_serially([
 			() => this.update_cart_data(item),
 		]);
 	}
 
 	post_qty_change(item) {
+		this.frm.cscript._calculate_taxes_and_totals()
 		this.cart.update_taxes_and_totals();
 		this.cart.update_grand_total();
 		this.cart.update_qty_total();
@@ -304,9 +309,10 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	on_close(item) {
-		if (!this.cart.exists(item.item_code, item.batch_no) && item.qty) {
+		if (item.qty == 0 || (item.has_batch_no && item.batch_no)) {
 			frappe.model.clear_doc(item.doctype, item.name);
 		}
+		this.post_qty_change(item)
 	}
 
 	update_cart_data(item) {
@@ -338,8 +344,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					frappe.model.clear_doc(item.doctype, item.name);
 				}
 			})
-
-		return Promise.resolve();
 	}
 
 	submit_sales_order() {
@@ -575,7 +579,7 @@ class OrderDeskItems {
 				},
 				get_query: () => {
 					return {
-						query: 'erpnext.selling.page.point_of_sale.point_of_sale.item_group_query'
+						query: 'bloomstack_core.bloomstack_core.page.order_desk.order_desk.item_group_query'
 					};
 				}
 			},
@@ -703,7 +707,7 @@ class OrderDeskItems {
 	get_item_html(item) {
 		const price_list_rate = format_currency(item.price_list_rate, this.currency);
 		const item_qty_display = item.actual_qty > 0 ? `Stock: ${item.actual_qty} ${item.stock_uom}` : "Out of Stock"
-		const { item_code, item_name, item_image} = item;
+		const { item_code, item_name, item_image,item_group} = item;
 		const item_title = item_name || item_code;
 
 		const template = `
@@ -711,7 +715,11 @@ class OrderDeskItems {
 				<div class="image-view-header">
 					<div>
 						<a class="grey list-id" data-name="${item_code}" title="${item_title}">
-							${item_title}
+							${item_title},
+							<br>
+							<span style="font-size: large">
+								${item_group}
+							<span>
 						</a>
 					</div>
 				</div>
@@ -745,7 +753,7 @@ class OrderDeskItems {
 		const price_list = this.frm.doc.selling_price_list;
 		return new Promise(res => {
 			frappe.call({
-				method: "erpnext.selling.page.point_of_sale.point_of_sale.get_items",
+				method: "bloomstack_core.bloomstack_core.page.order_desk.order_desk.get_items",
 				freeze: true,
 				args: {
 					start,
