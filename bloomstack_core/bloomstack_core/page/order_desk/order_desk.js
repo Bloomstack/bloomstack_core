@@ -287,9 +287,15 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	select_batch_and_serial_no(row) {
 		frappe.dom.unfreeze();
 
-		erpnext.show_serial_batch_selector(this.frm, row, () => {
+		erpnext.show_serial_batch_selector(this.frm, row, (success) => {
+			const updated_item = this.frm.doc.items.find(item => item.name === success.name)
+			if(updated_item){
+				this.update_item_in_frm(updated_item)
+			}else{
+				this.frm.add_child('items',success)
+			}
 			this.frm.doc.items.forEach(item => {
-				this.update_item_in_frm(item, 'qty', item.qty)
+				this.update_item_in_frm(item)
 					.then(() => {
 						// update cart
 						frappe.run_serially([
@@ -309,7 +315,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	on_close(item) {
-		if (item.qty == 0 || (item.has_batch_no && item.batch_no)) {
+		if (item.qty == 0 || (item.has_batch_no && !item.batch_no)) {
 			frappe.model.clear_doc(item.doctype, item.name);
 		}
 		this.post_qty_change(item)

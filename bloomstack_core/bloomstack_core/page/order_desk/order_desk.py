@@ -136,3 +136,35 @@ def search_serial_or_batch_or_barcode_number(search_value):
 		return batch_no[0]
 
 	return {}
+
+def get_conditions(item_code, serial_no, batch_no, barcode):
+	if serial_no or batch_no or barcode:
+		return "name = {0}".format(frappe.db.escape(item_code))
+
+	return """(name like {item_code}
+		or item_name like {item_code})""".format(item_code = frappe.db.escape('%' + item_code + '%'))
+
+def get_item_group_condition(pos_profile):
+	cond = "and 1=1"
+	item_groups = get_item_groups(pos_profile)
+	if item_groups:
+		cond = "and item_group in (%s)"%(', '.join(['%s']*len(item_groups)))
+
+	return cond % tuple(item_groups)
+
+def item_group_query(doctype, txt, searchfield, start, page_len, filters):
+	item_groups = []
+	cond = "1=1"
+	pos_profile= filters.get('pos_profile')
+
+	if pos_profile:
+		item_groups = get_item_groups(pos_profile)
+
+		if item_groups:
+			cond = "name in (%s)"%(', '.join(['%s']*len(item_groups)))
+			cond = cond % tuple(item_groups)
+
+	return frappe.db.sql(""" select distinct name from `tabItem Group`
+			where {condition} and (name like %(txt)s) limit {start}, {page_len}"""
+		.format(condition = cond, start=start, page_len= page_len),
+			{'txt': '%%%s%%' % txt})
