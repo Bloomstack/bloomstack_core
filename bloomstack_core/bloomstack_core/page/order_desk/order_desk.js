@@ -579,9 +579,7 @@ class OrderDeskItems {
 				default: me.parent_item_group,
 				onchange: () => {
 					const item_group = this.item_group_field.get_value();
-					if (item_group) {
-						this.filter_items({ item_group: item_group });
-					}
+					this.filter_items({ item_group });
 				},
 				get_query: () => {
 					return {
