@@ -25,6 +25,7 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 	weekly_revenue = get_revenue_by_date_range(last_week, today)
 	monthly_revenue = get_revenue_by_date_range(last_month, today)
 	top_products = get_top_products(*date_range)
+	total_upsell_sales = get_total_upsell_sales(*date_range)
 	top_customers = get_top_customers(*date_range)
 	top_customer_groups = get_top_customer_groups(*date_range)
 	top_territories = get_top_territories(*date_range)
@@ -55,9 +56,6 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 		"top_products_by_revenue": top_products.get("revenue"),
 		"top_products_by_volume": top_products.get("by_volume"),
 		"top_products_by_time": top_products.get("by_time"),
-		"total_sales_by_day": total_sales.get("daily"),
-		"total_sales_by_week": total_sales.get("weekly"),
-		"total_sales_by_month": total_sales.get("monthly"),
 		"total_invoices": total_invoices,
 		"paid_invoices": pending_invoices.get("paid_invoices"),
 		"unpaid_invoices": pending_invoices.get("unpaid_invoices"),
@@ -67,7 +65,17 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 		"cash_on_hand": cash_on_hand,
 		"order_conversion_rate": order_conversion_rate,
 		"total_skus": total_skus,
-		"total_items_sold": total_items_sold
+		"total_items_sold": total_items_sold,
+		# split total sales by different time periods
+		"total_sales_by_day": total_sales.get("daily"),
+		"total_sales_by_week": total_sales.get("weekly"),
+		"total_sales_by_month": total_sales.get("monthly"),
+		"total_sales_by_year": total_sales.get("yearly"),
+		# split upsold sales by different time periods
+		"total_upsell_sales_by_day": total_upsell_sales.get("daily"),
+		"total_upsell_sales_by_week": total_upsell_sales.get("weekly"),
+		"total_upsell_sales_by_month": total_upsell_sales.get("monthly"),
+		"total_upsell_sales_by_year": total_upsell_sales.get("yearly")
 	}
 
 
@@ -210,24 +218,27 @@ def get_sales_by_date_range(start_date, end_date):
 		SELECT
 			SUM(grand_total) AS revenue,
 			SUM(total_qty) AS volume,
-			{0}(posting_date) AS period
+			{0}(posting_date) AS period,
+			YEAR(posting_date) AS year
 		FROM
 			`tabSales Invoice`
 		WHERE
 			docstatus = 1
 				AND posting_date BETWEEN %(start_date)s AND %(end_date)s
 		GROUP BY
-			{0}(posting_date)
+			YEAR(posting_date), {0}(posting_date) ASC
 	"""
 
 	daily_sales = frappe.db.sql(query.format("DATE"), {"start_date": start_date, "end_date": end_date}, as_dict=True)
 	weekly_sales = frappe.db.sql(query.format("WEEK"), {"start_date": start_date, "end_date": end_date}, as_dict=True)
 	monthly_sales = frappe.db.sql(query.format("MONTH"), {"start_date": start_date, "end_date": end_date}, as_dict=True)
+	yearly_sales = frappe.db.sql(query.format("YEAR"), {"start_date": start_date, "end_date": end_date}, as_dict=True)
 
 	return {
 		"daily": daily_sales,
 		"weekly": weekly_sales,
-		"monthly": monthly_sales
+		"monthly": monthly_sales,
+		"yearly": yearly_sales
 	}
 
 
@@ -313,6 +324,46 @@ def get_top_products(start_date, end_date, limit=10):
 	}
 
 
+def get_total_upsell_sales(start_date, end_date):
+	invoices_with_base_items = frappe.get_all("Sales Invoice",
+		filters=[
+			["Sales Invoice", "docstatus", "=", 1],
+			["Sales Invoice", "posting_date", "between", [start_date, end_date]],
+			["Sales Invoice Item", "item_group", "in", ["Custom", "Universal"]]
+		],
+		distinct=True)
+	invoices_with_base_items = [invoice.name for invoice in invoices_with_base_items]
+
+	query = """
+		SELECT
+			SUM(si_item.amount) AS revenue,
+			SUM(si_item.qty) AS volume,
+			{0}(si.posting_date) AS period,
+			YEAR(si.posting_date) AS year
+		FROM
+			`tabSales Invoice` si
+				JOIN `tabSales Invoice Item` si_item
+					ON si_item.parent = si.name
+		WHERE
+			si.name IN ({1})
+				AND si_item.item_group NOT IN ("Custom", "Demo", "IEMs", "Full Retail", "Universal")
+		GROUP BY
+			YEAR(si.posting_date), {0}(si.posting_date) ASC
+	"""
+
+	daily_sales = frappe.db.sql(query.format("DATE", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
+	weekly_sales = frappe.db.sql(query.format("WEEK", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
+	monthly_sales = frappe.db.sql(query.format("MONTH", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
+	yearly_sales = frappe.db.sql(query.format("YEAR", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
+
+	return {
+		"daily": daily_sales,
+		"weekly": weekly_sales,
+		"monthly": monthly_sales,
+		"yearly": yearly_sales
+	}
+
+
 def get_top_customers(start_date, end_date, limit=10):
 	customers = get_invoices_by_field("customer", start_date, end_date)
 
@@ -329,8 +380,10 @@ def get_top_customer_groups(start_date, end_date, limit=10):
 	}
 
 
-def get_top_territories(start_date, end_date, limit=5):
+def get_top_territories(start_date, end_date, limit=9):
 	territories = get_invoices_by_field("territory", start_date, end_date)
+	territories = [territory for territory in territories
+		if frappe.db.get_value("Territory", territory.territory, "is_group") and territory.territory != "All Territories"]
 
 	return {
 		"revenue": sorted(territories, key=lambda customer: customer.grand_total, reverse=True)[:limit]
@@ -339,6 +392,7 @@ def get_top_territories(start_date, end_date, limit=5):
 
 def get_top_sales_partners(start_date, end_date, limit=5):
 	sales_partners = get_invoices_by_field("sales_partner", start_date, end_date)
+	sales_partners = [sales_partner for sales_partner in sales_partners if sales_partner.sales_partner]
 
 	return {
 		"revenue": sorted(sales_partners, key=lambda partner: partner.grand_total, reverse=True)[:limit]
