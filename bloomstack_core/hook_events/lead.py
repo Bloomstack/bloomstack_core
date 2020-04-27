@@ -17,12 +17,10 @@ def filter_territory(doctype, txt, searchfield, start, page_len, filters):
 		fields=["name"],
 		as_list=1)
 
-def rearrange_lead_dashboard():
+def rearrange_standard_fields():
 	"""Rearrange standard field in lead doctype"""
-
-	frappe.db.sql("""UPDATE `tabDocField` SET idx=2 WHERE fieldname='territory' and parent='Lead'""")
-	frappe.db.sql("""UPDATE `tabDocField` SET idx=3 WHERE fieldname='address_html' and parent='Lead'""")
-	frappe.db.sql("""UPDATE `tabDocField` SET idx=4 WHERE fieldname='contact_by' and parent='Lead'""")
-	frappe.db.sql("""UPDATE `tabDocField` SET idx=7 WHERE fieldname='contact_html' and parent='Lead'""")
-	
-	
+	count = 1
+	for df in frappe.get_meta("Lead").get("fields"):
+		if df.fieldname in ["territory", "address_html", "contact_html", "contact_by"]:
+			count= count + 1
+			frappe.db.sql("""UPDATE `tabDocField` SET idx={0} WHERE fieldname=%s and parent='Lead' """.format(count), df.fieldname, as_dict=True)
