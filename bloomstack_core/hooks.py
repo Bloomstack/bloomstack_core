@@ -206,6 +206,8 @@ scheduler_events = {
 	]
 }
 
+after_migrate = ['bloomstack_core.hook_events.lead.rearrange_lead_dashboard']
+
 # Testing
 # -------
 
