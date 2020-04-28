@@ -27,6 +27,7 @@ def validate_entity_license(party_type, party_name):
 def validate_cultivation_tax(doc, method):
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt"):
 		items = []
+		cultivated_tax = 0
 		for d in doc.get("items"):
 
 			cultivated_item = frappe.db.sql("""select enable_cultivation_tax,
@@ -35,11 +36,23 @@ def validate_cultivation_tax(doc, method):
 
 			if not cultivated_item.enable_cultivation_tax:
 				return
-			# else:
-			# 	# calculate_cultivation_tax()
+			else:
+				ounce_qty = convert_ounce(d.stock_qty)
+				if cultivated_item.cultivation_tax_type == "Dry Flower"
+					cultivated_tax = cultivated_tax +  ounce_qty * 9.65
+				if cultivated_item.cultivation_tax_type == "Dry Leaf"
+					cultivated_tax =  cultivated_tax + ounce_qty * 2.87
+				if cultivated_item.cultivation_tax_type == "Fresh Plant"
+					cultivated_tax = cultivated_tax + ounce_qty * 1.35
+				# calculate_cultivation_tax()
 
 			items.append(cstr(d.item_code))
 
 # def check_cultivation_tax(item_code, docname):
 	# pass
 	
+def convert_ounce(qty):
+	"convert grams to ounce"
+
+	g_to_oz_value = 28.35
+	return qty/g_to_oz_value
