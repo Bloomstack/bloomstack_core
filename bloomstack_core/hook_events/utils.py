@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
 from frappe.utils import getdate, nowdate
+from frappe.utils import cstr
 
 
 def validate_license_expiry(doc, method):
@@ -31,18 +32,18 @@ def validate_cultivation_tax(doc, method):
 		for d in doc.get("items"):
 
 			cultivated_item = frappe.db.sql("""select enable_cultivation_tax,
-				cultivation_tax_type from `tabComplaince Item` where item_code=%s""",
+				cultivation_tax_type from `tabCompliance Item` where item_code=%s""",
 				d.item_code, as_dict=1)[0]
 
 			if not cultivated_item.enable_cultivation_tax:
 				return
 			else:
 				ounce_qty = convert_ounce(d.stock_qty)
-				if cultivated_item.cultivation_tax_type == "Dry Flower"
+				if cultivated_item.cultivation_tax_type == "Dry Flower":
 					cultivated_tax = cultivated_tax +  ounce_qty * 9.65
-				if cultivated_item.cultivation_tax_type == "Dry Leaf"
+				if cultivated_item.cultivation_tax_type == "Dry Leaf":
 					cultivated_tax =  cultivated_tax + ounce_qty * 2.87
-				if cultivated_item.cultivation_tax_type == "Fresh Plant"
+				if cultivated_item.cultivation_tax_type == "Fresh Plant":
 					cultivated_tax = cultivated_tax + ounce_qty * 1.35
 				# calculate_cultivation_tax()
 
