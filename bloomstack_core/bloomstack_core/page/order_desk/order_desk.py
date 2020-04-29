@@ -3,20 +3,14 @@
 
 from __future__ import unicode_literals
 import json
-from six import string_types
 import frappe
-from frappe.utils import cint, nowdate
+from frappe.utils import nowdate
 from frappe.utils.nestedset import get_root_of
 
 
 @frappe.whitelist()
-def get_items(start, page_length, price_list, item_group, search_value="", pos_profile=None):
+def get_items(start, page_length, price_list, item_group, search_value=""	):
 	data = dict()
-	warehouse = ""
-	display_items_in_stock = 0
-
-	if pos_profile:
-		warehouse, display_items_in_stock = frappe.db.get_value('POS Profile', pos_profile, ['warehouse', 'display_items_in_stock'])
 
 	if not frappe.db.exists('Item Group', item_group):
 		item_group = get_root_of('Item Group')
@@ -37,10 +31,16 @@ def get_items(start, page_length, price_list, item_group, search_value="", pos_p
 
 	result = []
 
-	items_data = frappe.db.sql(""" SELECT name as item_code,
-			item_name, image as item_image, idx as idx,is_stock_item, item_group
+	items_data = frappe.db.sql(""" SELECT
+			item.name as item_code,
+			item.item_name as item_name,
+			item.image as item_image,
+			item.idx as idx,
+			item.is_stock_item as is_stock_item,
+			item.item_group as item_group,
+			item.has_batch_no as has_batch_no
 		FROM
-			`tabItem`
+			`tabItem` item
 		WHERE
 			disabled = 0 and has_variants = 0 and is_sales_item = 1
 			and item_group in (select name from `tabItem Group` where lft >= {lft} and rgt <= {rgt})
@@ -57,33 +57,35 @@ def get_items(start, page_length, price_list, item_group, search_value="", pos_p
 			fields = ["item_code", "price_list_rate", "currency"],
 			filters = {'price_list': price_list, 'item_code': ['in', items]})
 
-		item_prices, bin_data = {}, {}
+		item_warehouse_list = frappe.get_all("Item Default",
+			fields = ["parent", "default_warehouse"],
+			filters = {'parent': ['in', items]})
+
+		warehouses = {}
+		for warehouse in item_warehouse_list:
+			warehouses[warehouse.parent] = warehouse.default_warehouse
+
+		item_prices = {}
 		for d in item_prices_data:
 			item_prices[d.item_code] = d
 
-
-		if display_items_in_stock:
-			filters = {'actual_qty': [">", 0], 'item_code': ['in', items]}
-
-			if warehouse:
-				filters['warehouse'] = warehouse
-
-			bin_data = frappe._dict(
-				frappe.get_all("Bin", fields = ["item_code", "sum(actual_qty) as actual_qty"],
-				filters = filters, group_by = "item_code")
-			)
-
+		# update below get stock from Bin with a group query & joins to optimize performance.
 		for item in items_data:
 			row = {}
+			actual_qty = 0
+
+			actual_qty =  frappe.get_all('Bin', fields=['sum(actual_qty) as actual_qty'],
+				filters={ 'item_code' : item.item_code, 'warehouse': warehouses.get(item.item_code) }
+			)[0].get("actual_qty")
 
 			row.update(item)
 			item_price = item_prices.get(item.item_code) or {}
 			row.update({
 				'price_list_rate': item_price.get('price_list_rate'),
 				'currency': item_price.get('currency'),
-				'actual_qty': bin_data.get('actual_qty')
+				'default_warehouse': warehouses.get(item.item_code),
+				'actual_qty': actual_qty
 			})
-
 			result.append(row)
 
 	res = {

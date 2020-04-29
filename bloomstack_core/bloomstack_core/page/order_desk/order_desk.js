@@ -131,7 +131,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		});
 
 		frappe.ui.form.on('Sales Order', 'selling_price_list', (frm) => {
-			if(this.items) {
+			if(this.items.items && !this.items.items.length) {
 				this.items.reset_items();
 			}
 		})
@@ -164,11 +164,23 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					if(!this.frm.doc.customer) {
 						frappe.throw(__('Please select a customer'));
 					}
-					this.update_item_in_cart(item, field, value);
-					this.cart && this.cart.unselect_all();
+					// check and warn user if a batch item is our of stock.
+					const item_details = this.cart.events.get_item_details(item);
+
+					if(item_details.actual_qty || !item_details.has_batch_no){
+						this.update_item_in_cart(item, field, value);
+						this.cart && this.cart.unselect_all();
+					}else{
+						frappe.confirm(__(`Batch Item ${item_details.item_name} is out of stock, sure you want to add it to cart?`),
+							() => {
+							this.update_item_in_cart(item, field, value);
+							this.cart && this.cart.unselect_all();
+							},
+							() => {}
+							);
+					}}
 				}
-			}
-		});
+			});
 	}
 
 	update_item_in_cart(item_code, field='qty', value=1, batch_no) {
@@ -756,19 +768,19 @@ class OrderDeskItems {
 	get_items({start = 0, page_length = 40, search_value='', item_group=this.parent_item_group}={}) {
 		const price_list = this.frm.doc.selling_price_list;
 		return new Promise(res => {
-			frappe.call({
-				method: "bloomstack_core.bloomstack_core.page.order_desk.order_desk.get_items",
-				freeze: true,
-				args: {
-					start,
-					page_length,
-					price_list,
-					item_group,
-					search_value
-				}
-			}).then(r => {
-				res(r.message);
-			});
+					frappe.call({
+						method: "bloomstack_core.bloomstack_core.page.order_desk.order_desk.get_items",
+						freeze: true,
+						args: {
+							start,
+							page_length,
+							price_list,
+							item_group,
+							search_value
+						}
+					}).then(r => {
+						res(r.message);
+					});
 		});
 	}
 }
