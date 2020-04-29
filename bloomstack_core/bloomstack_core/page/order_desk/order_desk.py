@@ -33,6 +33,7 @@ def get_items(start, page_length, price_list, item_group, search_value=""	):
 
 	items_data = frappe.db.sql(""" SELECT
 			item.name as item_code,
+			item.stock_uom as stock_uom,
 			item.item_name as item_name,
 			item.image as item_image,
 			item.idx as idx,
