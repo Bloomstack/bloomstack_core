@@ -29,10 +29,10 @@ def validate_entity_license(party_type, party_name):
 def validate_cultivation_tax(doc, method):
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt", "Sales Order", "Sales Invoice", "Delivery_note"):
 
-		# if customer is distributor then calculate cultivation tax.
-		customer_group = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['customer_group'])
-		if not customer_group == "Distributor":
-			return 
+		# # if customer is distributor then calculate cultivation tax.
+		# customer_group = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['customer_group'])
+		# if not customer_group == "Distributor":
+		# 	return 
 
 		items = []
 		cultivated_tax = 0
@@ -55,8 +55,7 @@ def validate_cultivation_tax(doc, method):
 				# calculate_cultivation_tax()
 
 			items.append(cstr(d.item_code))
-		print("=======================culivation_tax============================", cultivated_tax)
-
+	
 		row = doc.append('taxes', {})
 		row.category = 'Total'
 		row.charge_type = "On Item Quantity"
@@ -70,7 +69,38 @@ def validate_cultivation_tax(doc, method):
 	# pass
 
 def validate_excise_tax(doc, method):
-	pass
+	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery_note"):
+
+		# if customer is distributor then calculate cultivation tax.
+		# customer_group = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['customer_group'])
+		# if not customer_group == "Distributor":
+		# 	return 
+
+		items = []
+		excise_tax = 0
+		shipping_charges = 500
+		for d in doc.get("items"):
+
+			excise_item = frappe.db.sql("""select enable_cultivation_tax,
+				cultivation_tax_type from `tabCompliance Item` where item_code=%s""",
+				d.item_code, as_dict=1)[0]
+
+			if not excise_item.enable_cultivation_tax:
+				return
+			else:
+				total_shipping_charges = ((shipping_charges/doc.net_total) * d.price_list_rate)
+				excise_tax = excise_tax + ((d.amount * 27) / 100) + total_shipping_charges
+			items.append(cstr(d.item_code))
+
+		row = doc.append('taxes', {})
+		row.category = 'Total'
+		row.charge_type = "On Net Total"
+		row.add_deduct_tax = "Add"
+		row.description = "Excise Tax"
+		row.account_head = "Cannabis Excise Tax - HF"
+		row.tax_amount = excise_tax
+		row.total = doc.total + excise_tax
+
 
 
 	
