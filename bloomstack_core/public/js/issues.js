@@ -1,9 +1,5 @@
 frappe.ready(function () {
 	frappe.web_form.events.on('after_load', () => {
-		// Hiding customer and priority fields
-		frappe.web_form.set_df_property('customer', 'hidden', 1);
-		frappe.web_form.set_df_property('priority', 'hidden', 1);
-
 		// To check whether new or edited
 		if (!frappe.web_form.is_new) {
 			frappe.web_form.set_df_property('subject', 'read_only', 1);
@@ -41,7 +37,7 @@ frappe.ready(function () {
 			} else {
 				$('.web-form-actions .btn-danger').remove();
 				frappe.web_form.add_button("Close", "danger", () => {
-					frappe.confirm(__("Are you sure you want to close this task?"), function () {
+					frappe.confirm(__("Are you sure you want to close this Issue?"), function () {
 						frappe.web_form.doc.status = 'Closed';
 						frappe.web_form.save();
 					})

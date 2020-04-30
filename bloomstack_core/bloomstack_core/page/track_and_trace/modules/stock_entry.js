@@ -18,15 +18,16 @@ bloomstack.track_and_trace.modules.add("Stock Entry Detail", {
         { field: "qty", label: "Qty" },
         { field: "stock_uom", label: "UOM" },
         { field: "batch_no", label: "Batch No" },
-        { field: "serial_no", label: "Serial No" }
+        { field: "serial_no", label: "Serial No" },
+        { field: "package_tag", label: "UID Number" }
     ],
-    
+
     icon: "fa fa-archive",
 
     has_route: false,
 
     format(data) {
-        
+
         let entry = data.data;
         data.title = `${entry.item_code}: ${entry.item_name}`;
 

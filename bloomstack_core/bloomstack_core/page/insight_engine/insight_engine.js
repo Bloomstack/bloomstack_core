@@ -27,7 +27,8 @@ class InsightEngine {
 	setup(parent) {
 		let me = this;
 
-		let startDateControl = parent.page.add_date("Start Date", frappe.datetime.month_start())
+		// set default start date to last year start
+		let startDateControl = parent.page.add_date("Start Date", moment().subtract(1, "year").startOf("year").format())
 			.change(() => { me.make() })
 		let endDateControl = parent.page.add_date("End Date", frappe.datetime.now_datetime())
 			.change(() => { me.make() })
@@ -71,18 +72,25 @@ class InsightEngine {
 		});
 	}
 
-	getDateRangeAsArray(startDate, endDate) {
+	getDateRangeAsArray(startDate, endDate, period) {
 		let dateArray = [];
 
 		// Default the dashboard input dates to the selected date range
 		startDate = moment(startDate || this.dashboardData.startDate);
 		endDate = moment(endDate || this.dashboardData.endDate);
 
-		const dateFormat = startDate.year() != endDate.year() ? 'MMM D Y' : 'MMM D';
+		let dateFormat;
+		if (period === "year") {
+			dateFormat = "Y";
+		} else if (period === "month") {
+			dateFormat = startDate.year() != endDate.year() ? 'MMM Y' : 'MMM';
+		} else {
+			dateFormat = startDate.year() != endDate.year() ? 'MMM D Y' : 'MMM D';
+		}
 
 		while (startDate <= endDate) {
 			dateArray.push(startDate.format(dateFormat));
-			startDate = startDate.add(1, 'day');
+			startDate = startDate.add(1, period);
 		}
 
 		return dateArray;
@@ -104,6 +112,8 @@ class InsightEngine {
 		Chart.defaults.global.plugins.datalabels.anchor = 'end';
 		Chart.defaults.global.plugins.datalabels.align = 'end';
 
+		const currentYear = moment().year();
+		const lastYear = moment().subtract(1, "year").year();
 		const opacity = 0.6;
 		const colors = {
 			hex: [
@@ -140,24 +150,271 @@ class InsightEngine {
 			]
 		}
 
+		// split list of sales revenue by year
+		let currentYearRevenue = this.dashboardData.total_sales_by_month.filter(elem => elem.year == currentYear).map(elem => elem.revenue)
+		let lastYearRevenue = this.dashboardData.total_sales_by_month.filter(elem => elem.year == lastYear).map(elem => elem.revenue)
+
+		let currentYearCumulativeRevenue = currentYearRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], [])
+		let lastYearCumulativeRevenue = lastYearRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], [])
+
+		// MTD revenue vs last year
+		new Chart($(".total-revenue .left-chart .graphics"), {
+			type: 'line',
+			data: {
+				labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
+				datasets: [
+					{
+						label: currentYear,
+						data: currentYearRevenue,
+						backgroundColor: colors.rgba[0],
+						borderColor: colors.hex[0],
+						borderWidth: 1.5,
+						fill: false
+					},
+					{
+						label: lastYear,
+						data: lastYearRevenue,
+						backgroundColor: colors.rgba[1],
+						borderColor: colors.hex[1],
+						borderWidth: 1.5,
+						fill: false
+					}
+				]
+			},
+			options: {
+				legend: {
+					display: true,
+					position: 'bottom'
+				},
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						type: 'category',
+						time: { minUnit: "month" },
+						gridLines: { display: false },
+						distribution: 'series'
+					}],
+					yAxes: [{
+						gridLines: { display: false },
+						ticks: {
+							callback(value, index, values) {
+								return format_currency(value, null, 0);
+							}
+						}
+					}]
+				},
+				plugins: {
+					datalabels: {
+						display: false
+					}
+				},
+				tooltips: {
+					callbacks: {
+						label(tooltipItem, data) {
+							return format_currency(tooltipItem.value);
+						}
+					}
+				}
+			}
+		});
+
+		// YTD revenue vs last year
+		new Chart($(".total-revenue .right-chart .graphics"), {
+			type: 'line',
+			data: {
+				labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
+				datasets: [
+					{
+						label: currentYear,
+						data: currentYearCumulativeRevenue,
+						backgroundColor: colors.rgba[0],
+						borderColor: colors.hex[0],
+						borderWidth: 1.5,
+						fill: false
+					},
+					{
+						label: lastYear,
+						data: lastYearCumulativeRevenue,
+						backgroundColor: colors.rgba[1],
+						borderColor: colors.hex[1],
+						borderWidth: 1.5,
+						fill: false
+					}
+				]
+			},
+			options: {
+				legend: {
+					display: true,
+					position: 'bottom'
+				},
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						type: 'category',
+						time: { minUnit: "month" },
+						gridLines: { display: false },
+						distribution: 'series'
+					}],
+					yAxes: [{
+						gridLines: { display: false },
+						ticks: {
+							callback(value, index, values) {
+								return format_currency(value, null, 0);
+							}
+						}
+					}]
+				},
+				plugins: {
+					datalabels: {
+						display: false
+					}
+				},
+				tooltips: {
+					callbacks: {
+						label(tooltipItem, data) {
+							return format_currency(tooltipItem.value);
+						}
+					}
+				}
+			}
+		});
+
+		// split list of upsell revenue by year
+		let currentYearUpsellRevenue = this.dashboardData.total_upsell_sales_by_month.filter(elem => elem.year == currentYear).map(elem => elem.revenue)
+		let lastYearUpsellRevenue = this.dashboardData.total_upsell_sales_by_month.filter(elem => elem.year == lastYear).map(elem => elem.revenue)
+
+		let currentYearCumulativeUpsellRevenue = currentYearUpsellRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], [])
+		let lastYearCumulativeUpsellRevenue = lastYearUpsellRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], [])
+
+		// MTD Sales Partner upsell vs last year
+		new Chart($(".total-upsell-revenue .left-chart .graphics"), {
+			type: 'line',
+			data: {
+				labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
+				datasets: [
+					{
+						label: currentYear,
+						data: currentYearUpsellRevenue,
+						backgroundColor: colors.rgba[0],
+						borderColor: colors.hex[0],
+						borderWidth: 1.5,
+						fill: false
+					},
+					{
+						label: lastYear,
+						data: lastYearUpsellRevenue,
+						backgroundColor: colors.rgba[1],
+						borderColor: colors.hex[1],
+						borderWidth: 1.5,
+						fill: false
+					}
+				]
+			},
+			options: {
+				legend: {
+					display: true,
+					position: 'bottom'
+				},
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						type: 'category',
+						time: { minUnit: "month" },
+						gridLines: { display: false },
+						distribution: 'series'
+					}],
+					yAxes: [{
+						gridLines: { display: false },
+						ticks: {
+							callback(value, index, values) {
+								return format_currency(value, null, 0);
+							}
+						}
+					}]
+				},
+				plugins: {
+					datalabels: {
+						display: false
+					}
+				},
+				tooltips: {
+					callbacks: {
+						label(tooltipItem, data) {
+							return format_currency(tooltipItem.value);
+						}
+					}
+				}
+			}
+		});
+
+		// YTD Sales Partner upsell vs last year
+		new Chart($(".total-upsell-revenue .right-chart .graphics"), {
+			type: 'line',
+			data: {
+				labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
+				datasets: [
+					{
+						label: currentYear,
+						data: currentYearCumulativeUpsellRevenue,
+						backgroundColor: colors.rgba[0],
+						borderColor: colors.hex[0],
+						borderWidth: 1.5,
+						fill: false
+					},
+					{
+						label: lastYear,
+						data: lastYearCumulativeUpsellRevenue,
+						backgroundColor: colors.rgba[1],
+						borderColor: colors.hex[1],
+						borderWidth: 1.5,
+						fill: false
+					}
+				]
+			},
+			options: {
+				legend: {
+					display: true,
+					position: 'bottom'
+				},
+				layout: { padding: 30 },
+				scales: {
+					xAxes: [{
+						type: 'category',
+						time: { minUnit: "month" },
+						gridLines: { display: false },
+						distribution: 'series'
+					}],
+					yAxes: [{
+						gridLines: { display: false },
+						ticks: {
+							callback(value, index, values) {
+								return format_currency(value, null, 0);
+							}
+						}
+					}]
+				},
+				plugins: {
+					datalabels: {
+						display: false
+					}
+				},
+				tooltips: {
+					callbacks: {
+						label(tooltipItem, data) {
+							return format_currency(tooltipItem.value);
+						}
+					}
+				}
+			}
+		});
+
 		// Daily sales trends in the last 30 days
-		let period = 'day';
-		let data = [];
-
-		if (period == 'day') {
-			data = this.dashboardData.total_sales_by_day;
-		} else if (period == 'week') {
-			data = this.dashboardData.total_sales_by_week;
-		} else if (period == 'month') {
-			data = this.dashboardData.total_sales_by_month;
-		}
-
 		new Chart($(".chart-container .chart-graphics"), {
 			type: 'line',
 			data: {
-				labels: this.getDateRangeAsArray(this.dashboardData.startDate, this.dashboardData.endDate),
+				labels: this.getDateRangeAsArray(this.dashboardData.startDate, this.dashboardData.endDate, "week"),
 				datasets: [{
-					data: data.map(elem => elem.revenue),
+					data: this.dashboardData.total_sales_by_week.map(elem => elem.revenue),
 					backgroundColor: colors.rgba[0],
 					borderColor: colors.hex[0],
 					borderWidth: 1.5,
@@ -170,7 +427,7 @@ class InsightEngine {
 				scales: {
 					xAxes: [{
 						type: 'time',
-						time: { minUnit: period },
+						time: { minUnit: "month" },
 						gridLines: { display: false },
 						distribution: 'series'
 					}],
@@ -215,9 +472,7 @@ class InsightEngine {
 				legend: { position: 'left' },
 				plugins: {
 					datalabels: {
-						formatter(value, context) {
-							return format_currency(value, null, 0);
-						}
+						display: false
 					}
 				},
 				tooltips: {
@@ -262,9 +517,7 @@ class InsightEngine {
 				},
 				plugins: {
 					datalabels: {
-						formatter(value, context) {
-							return format_currency(value, null, 0);
-						}
+						display: false
 					}
 				},
 				tooltips: {
@@ -309,9 +562,7 @@ class InsightEngine {
 				},
 				plugins: {
 					datalabels: {
-						formatter(value, context) {
-							return format_currency(value, null, 0);
-						}
+						display: false
 					}
 				},
 				tooltips: {
@@ -362,13 +613,13 @@ class InsightEngine {
 
 		// Top customers
 		new Chart($(".graphical-distribution .left-chart .graphics"), {
-			type: 'horizontalBar',
+			type: 'bar',
 			data: {
 				labels: this.dashboardData.top_customers_by_revenue.map(elem => elem.customer),
 				datasets: [{
 					data: this.dashboardData.top_customers_by_revenue.map(elem => elem.grand_total),
-					backgroundColor: colors.rgba[3],
-					borderColor: colors.hex[3],
+					backgroundColor: colors.rgba[2],
+					borderColor: colors.hex[2],
 					borderWidth: 1.5
 				}]
 			},
@@ -377,6 +628,9 @@ class InsightEngine {
 				layout: { padding: 30 },
 				scales: {
 					xAxes: [{
+						gridLines: { display: false }
+					}],
+					yAxes: [{
 						gridLines: { display: false },
 						barThickness: 30,
 						ticks: {
@@ -385,16 +639,11 @@ class InsightEngine {
 								return format_currency(value, null, 0);
 							}
 						}
-					}],
-					yAxes: [{
-						gridLines: { display: false }
 					}]
 				},
 				plugins: {
 					datalabels: {
-						formatter(value, context) {
-							return format_currency(value, null, 0);
-						}
+						display: false
 					}
 				},
 				tooltips: {
@@ -409,7 +658,7 @@ class InsightEngine {
 
 		// Top sales by customer groups
 		new Chart($(".graphical-distribution .right-chart .graphics"), {
-			type: 'horizontalBar',
+			type: 'bar',
 			data: {
 				labels: this.dashboardData.top_customer_groups_by_revenue.map(elem => elem.customer_group),
 				datasets: [{
@@ -424,6 +673,9 @@ class InsightEngine {
 				layout: { padding: 30 },
 				scales: {
 					xAxes: [{
+						gridLines: { display: false }
+					}],
+					yAxes: [{
 						gridLines: { display: false },
 						barThickness: 30,
 						ticks: {
@@ -432,16 +684,11 @@ class InsightEngine {
 								return format_currency(value, null, 0);
 							}
 						}
-					}],
-					yAxes: [{
-						gridLines: { display: false }
 					}]
 				},
 				plugins: {
 					datalabels: {
-						formatter(value, context) {
-							return format_currency(value, null, 0);
-						}
+						display: false
 					}
 				},
 				tooltips: {
@@ -455,100 +702,100 @@ class InsightEngine {
 		});
 
 		// New customer vs total customer count by month
-		new Chart($(".customer-distribution .left-chart .graphics"), {
-			type: 'bar',
-			data: {
-				labels: this.dashboardData.total_customers_by_month.map(elem => elem.month),
-				datasets: [
-					{
-						label: "New Customers",
-						data: this.dashboardData.new_customers_by_month.map(elem => elem.count),
-						backgroundColor: colors.rgba[2],
-						borderColor: colors.hex[2],
-						borderWidth: 1.5
-					},
-					{
-						label: "Total Customers",
-						data: this.dashboardData.total_customers_by_month.map(elem => elem.count),
-						backgroundColor: colors.rgba[3],
-						borderColor: colors.hex[3],
-						borderWidth: 1.5
-					}
-				]
-			},
-			options: {
-				legend: { position: 'bottom' },
-				layout: { padding: 30 },
-				scales: {
-					xAxes: [{
-						gridLines: { display: false }
-					}],
-					yAxes: [{
-						gridLines: { display: false },
-						barThickness: 30,
-						ticks: {
-							beginAtZero: true
-						}
-					}]
-				}
-			}
-		});
+		// new Chart($(".customer-distribution .left-chart .graphics"), {
+		// 	type: 'bar',
+		// 	data: {
+		// 		labels: this.dashboardData.total_customers_by_month.map(elem => elem.month),
+		// 		datasets: [
+		// 			{
+		// 				label: "New Customers",
+		// 				data: this.dashboardData.new_customers_by_month.map(elem => elem.count),
+		// 				backgroundColor: colors.rgba[2],
+		// 				borderColor: colors.hex[2],
+		// 				borderWidth: 1.5
+		// 			},
+		// 			{
+		// 				label: "Total Customers",
+		// 				data: this.dashboardData.total_customers_by_month.map(elem => elem.count),
+		// 				backgroundColor: colors.rgba[3],
+		// 				borderColor: colors.hex[3],
+		// 				borderWidth: 1.5
+		// 			}
+		// 		]
+		// 	},
+		// 	options: {
+		// 		legend: { position: 'bottom' },
+		// 		layout: { padding: 30 },
+		// 		scales: {
+		// 			xAxes: [{
+		// 				gridLines: { display: false }
+		// 			}],
+		// 			yAxes: [{
+		// 				gridLines: { display: false },
+		// 				barThickness: 30,
+		// 				ticks: {
+		// 					beginAtZero: true
+		// 				}
+		// 			}]
+		// 		}
+		// 	}
+		// });
 
 		// New customer vs total customer sales by month
-		new Chart($(".customer-distribution .right-chart .graphics"), {
-			type: 'bar',
-			data: {
-				labels: this.dashboardData.total_customer_sales_by_month.map(elem => elem.month),
-				datasets: [
-					{
-						label: "New Customers",
-						data: this.dashboardData.new_customer_sales_by_month.map(elem => elem.revenue),
-						backgroundColor: colors.rgba[2],
-						borderColor: colors.hex[2],
-						borderWidth: 1.5
-					},
-					{
-						label: "Total Customers",
-						data: this.dashboardData.total_customer_sales_by_month.map(elem => elem.revenue),
-						backgroundColor: colors.rgba[3],
-						borderColor: colors.hex[3],
-						borderWidth: 1.5
-					}
-				]
-			},
-			options: {
-				legend: { position: 'bottom' },
-				layout: { padding: 30 },
-				scales: {
-					xAxes: [{
-						gridLines: { display: false }
-					}],
-					yAxes: [{
-						gridLines: { display: false },
-						barThickness: 30,
-						ticks: {
-							beginAtZero: true,
-							callback(value, index, values) {
-								return format_currency(value, null, 0);
-							}
-						}
-					}]
-				},
-				plugins: {
-					datalabels: {
-						formatter(value, context) {
-							return format_currency(value, null, 0);
-						}
-					}
-				},
-				tooltips: {
-					callbacks: {
-						label(tooltipItem, data) {
-							return format_currency(tooltipItem.value);
-						}
-					}
-				}
-			}
-		});
+		// new Chart($(".customer-distribution .right-chart .graphics"), {
+		// 	type: 'bar',
+		// 	data: {
+		// 		labels: this.dashboardData.total_customer_sales_by_month.map(elem => elem.month),
+		// 		datasets: [
+		// 			{
+		// 				label: "New Customers",
+		// 				data: this.dashboardData.new_customer_sales_by_month.map(elem => elem.revenue),
+		// 				backgroundColor: colors.rgba[2],
+		// 				borderColor: colors.hex[2],
+		// 				borderWidth: 1.5
+		// 			},
+		// 			{
+		// 				label: "Total Customers",
+		// 				data: this.dashboardData.total_customer_sales_by_month.map(elem => elem.revenue),
+		// 				backgroundColor: colors.rgba[3],
+		// 				borderColor: colors.hex[3],
+		// 				borderWidth: 1.5
+		// 			}
+		// 		]
+		// 	},
+		// 	options: {
+		// 		legend: { position: 'bottom' },
+		// 		layout: { padding: 30 },
+		// 		scales: {
+		// 			xAxes: [{
+		// 				gridLines: { display: false }
+		// 			}],
+		// 			yAxes: [{
+		// 				gridLines: { display: false },
+		// 				barThickness: 30,
+		// 				ticks: {
+		// 					beginAtZero: true,
+		// 					callback(value, index, values) {
+		// 						return format_currency(value, null, 0);
+		// 					}
+		// 				}
+		// 			}]
+		// 		},
+		// 		plugins: {
+		// 			datalabels: {
+		// 				formatter(value, context) {
+		// 					return format_currency(value, null, 0);
+		// 				}
+		// 			}
+		// 		},
+		// 		tooltips: {
+		// 			callbacks: {
+		// 				label(tooltipItem, data) {
+		// 					return format_currency(tooltipItem.value);
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// });
 	}
 }

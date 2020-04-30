@@ -4,15 +4,13 @@ import frappe
 from bloomstack_core.utils import get_abbr
 from erpnext import get_default_company
 from erpnext.accounts.utils import get_company_default
-
+from frappe.utils import cstr
 
 @frappe.whitelist()
 def autoname_item(item):
 	item = frappe._dict(json.loads(item))
-	item_code = autoname(item)
-
+	item_code = autoname(item)	
 	return item_code
-
 
 def autoname(item, method=None):
 	"""
@@ -23,6 +21,9 @@ def autoname(item, method=None):
 			d = abbreviated Item Name; all caps.
 			e = variant ID number; has to be incremented.
 	"""
+
+	if not frappe.db.get_single_value("Stock Settings", "autoname_item"):
+		return
 
 	# Get abbreviations
 	company_abbr = get_company_default(get_default_company(), "abbr")
@@ -36,10 +37,12 @@ def autoname(item, method=None):
 
 	# Get count
 	count = len(frappe.get_all("Item", filters={"name": ["like", "%{}%".format(item_code)]}))
-	count = "{:04d}".format(count + 1)
 
+	if count > 0:
+		item_code = "-".join([item_code, cstr(count+1)])
+	
 	# Set item document name
-	item_code = "-".join([item_code, count])
 	item.name = item.item_code = item_code
 
-	return item_code
+	if not method:
+		return item.item_code
