@@ -29,13 +29,17 @@ def validate_entity_license(party_type, party_name):
 def validate_cultivation_tax(doc, method):
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt", "Sales Order", "Sales Invoice", "Delivery_note"):
 
-		# # if customer is distributor then calculate cultivation tax.
-		# customer_group = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['customer_group'])
-		# if not customer_group == "Distributor":
-		# 	return 
-
-		items = []
+		# if customer is distributor then calculate cultivation tax.
+		customer_group = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['customer_group'])
+		if not customer_group == "Distributor" and doc.doctype in ("Sales Order", "Sales Invoice", "Delivery_note"):
+			return 
+		
 		cultivated_tax = 0
+		cultivated_tax_account = ""
+		cannabis_account_heads = get_account_heads(doc.company)
+		for account_head in cannabis_account_heads:
+			cultivated_tax_account = account_head.get("cultivation_tax_account")
+
 		for d in doc.get("items"):
 
 			cultivated_item = frappe.db.sql("""select enable_cultivation_tax,
@@ -53,15 +57,15 @@ def validate_cultivation_tax(doc, method):
 				if cultivated_item.cultivation_tax_type == "Fresh Plant":
 					cultivated_tax = cultivated_tax + ounce_qty * 1.35
 				# calculate_cultivation_tax()
-
-			items.append(cstr(d.item_code))
-	
+		
+		cannabis_account_heads = get_account_heads(doc.company)
+		print("=======================cannabis_account_heads=======================",cannabis_account_heads)
 		row = doc.append('taxes', {})
 		row.category = 'Total'
 		row.charge_type = "On Item Quantity"
 		row.add_deduct_tax = "Deduct"
 		row.description = "Cultivation Tax"
-		row.account_head = "Cultivation Tax - Dried Flower - HF"
+		row.account_head = cultivated_tax_account
 		row.tax_amount = cultivated_tax
 		row.total = doc.total - cultivated_tax
 
@@ -71,14 +75,25 @@ def validate_cultivation_tax(doc, method):
 def validate_excise_tax(doc, method):
 	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery_note"):
 
-		# if customer is distributor then calculate cultivation tax.
-		# customer_group = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['customer_group'])
-		# if not customer_group == "Distributor":
-		# 	return 
+		# if customer is distributor then dont calculate excise tax.
+		customer_group = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['customer_group'])
+		if customer_group == "Distributor":
+			return 
 
-		items = []
 		excise_tax = 0
-		shipping_charges = 500
+		shipping_charges = 0
+		excise_tax_account = ""
+		shipping_account = ""
+
+		cannabis_account_heads = get_account_heads(doc.company)
+		for account_head in cannabis_account_heads:
+			excise_tax_account = account_head.get("excise_tax_account")
+			shipping_account = account_head.get("shipping_charges_account")
+			
+		for tax in doc.get("taxes"):
+			if tax.account_head == shipping_account:
+				shipping_charges = tax.amount
+
 		for d in doc.get("items"):
 
 			excise_item = frappe.db.sql("""select enable_cultivation_tax,
@@ -90,19 +105,28 @@ def validate_excise_tax(doc, method):
 			else:
 				total_shipping_charges = ((shipping_charges/doc.net_total) * d.price_list_rate)
 				excise_tax = excise_tax + ((d.amount * 27) / 100) + total_shipping_charges
-			items.append(cstr(d.item_code))
 
 		row = doc.append('taxes', {})
 		row.category = 'Total'
 		row.charge_type = "On Net Total"
 		row.add_deduct_tax = "Add"
 		row.description = "Excise Tax"
-		row.account_head = "Cannabis Excise Tax - HF"
+		row.account_head = excise_tax_account
 		row.tax_amount = excise_tax
 		row.total = doc.total + excise_tax
 
 
+def get_account_heads(company):
+	account_heads =  frappe.get_all("CDFTA Cannabis Taxation Account",
+		fields=["cultivation_tax_account", "excise_tax_account", "sales_tax_account", "shipping_charges_account"],
+		filters={
+			"company":company
+		})
 
+	if account_heads:
+		return account_heads
+	else:
+		frappe.throw(_("Please set Cannabis Tax account heads in Compliance Settings for Compnay {0}".format(company)))
 	
 def convert_to_ounce(item_code, uom, qty):
 	"convert any unit into ounce"
