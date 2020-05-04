@@ -56,21 +56,16 @@ def validate_cultivation_tax(doc, method):
 					cultivated_tax =  cultivated_tax + ounce_qty * 2.87
 				if cultivated_item.cultivation_tax_type == "Fresh Plant":
 					cultivated_tax = cultivated_tax + ounce_qty * 1.35
-				# calculate_cultivation_tax()
 		
 		cannabis_account_heads = get_account_heads(doc.company)
-		print("=======================cannabis_account_heads=======================",cannabis_account_heads)
 		row = doc.append('taxes', {})
 		row.category = 'Total'
-		row.charge_type = "On Item Quantity"
+		row.charge_type = "Actual"
 		row.add_deduct_tax = "Deduct"
 		row.description = "Cultivation Tax"
 		row.account_head = cultivated_tax_account
 		row.tax_amount = cultivated_tax
 		row.total = doc.total - cultivated_tax
-
-# def check_cultivation_tax(item_code, docname):
-	# pass
 
 def validate_excise_tax(doc, method):
 	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery_note"):
