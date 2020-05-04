@@ -57,7 +57,6 @@ def validate_cultivation_tax(doc, method):
 				if cultivated_item.cultivation_tax_type == "Fresh Plant":
 					cultivated_tax = cultivated_tax + ounce_qty * 1.35
 		
-		cannabis_account_heads = get_account_heads(doc.company)
 		row = doc.append('taxes', {})
 		row.category = 'Total'
 		row.charge_type = "Actual"
