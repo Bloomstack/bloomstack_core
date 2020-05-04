@@ -197,6 +197,10 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				value = item[field] + flt(value);
 			}
 
+			if(field === 'rate' && item){
+				this.frm.doc.ignore_pricing_rule = 1
+			}
+
 			if(field === 'serial_no') {
 				value = item.serial_no + '\n'+ value;
 			}
