@@ -57,11 +57,11 @@ def calculate_cultivation_tax(doc, license_type, cultivation_tax_account):
 			return
 
 		ounce_qty = convert_to_ounce(item.name, item.weight_uom, item.total_weight)
-		if compliance_item.cultivation_tax_type == "Dry Flower":
-			cultivation_tax = cultivation_tax +  ounce_qty * 9.65
-		if compliance_item.cultivation_tax_type == "Dry Leaf":
+		if compliance_item[0].cultivation_tax_type == "Dry Flower":
+			cultivation_tax = cultivation_tax + ounce_qty * 9.65
+		if compliance_item[0].cultivation_tax_type == "Dry Leaf":
 			cultivation_tax =  cultivation_tax + ounce_qty * 2.87
-		if compliance_item.cultivation_tax_type == "Fresh Plant":
+		if compliance_item[0].cultivation_tax_type == "Fresh Plant":
 			cultivation_tax = cultivation_tax + ounce_qty * 1.35
 
 	cultivation_tax_row = {
