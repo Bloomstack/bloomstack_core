@@ -13,9 +13,7 @@
   "metrc_sync_data",
   "cb_metrc",
   "metrc_vendor_key",
-  "metrc_user_key",
-  "sb_cdtfa_account_settings",
-  "cannabis_tax_account"
+  "metrc_user_key"
  ],
  "fields": [
   {
@@ -67,21 +65,11 @@
    "fieldtype": "Password",
    "in_list_view": 1,
    "label": "User Key"
-  },
-  {
-   "fieldname": "sb_cdtfa_account_settings",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "cannabis_tax_account",
-   "fieldtype": "Table",
-   "label": "Cannabis Tax Account",
-   "options": "CDFTA Cannabis Taxation Account"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-04-28 21:46:59.365473",
+ "modified": "2020-05-05 02:24:25.877691",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Settings",

@@ -199,13 +199,8 @@ doc_events = {
 		'validate': ['bloomstack_core.hook_events.utils.validate_license_expiry']
 	},
 	('Purchase Invoice', 'Purchase Order','Purchase Recipt', 'Sales Order', 'Sales Invoice', 'Delivery_note'): {
-		'validate': ['bloomstack_core.hook_events.utils.validate_cultivation_tax',
-		'bloomstack_core.hook_events.utils.validate_excise_tax']
+		'validate': ['bloomstack_core.hook_events.utils.validate_cannabis_tax']
 	},
-	('Sales Order', 'Sales Invoice', 'Delivery_note'): {
-		'validate': ['bloomstack_core.hook_events.utils.validate_excise_tax']
-	},
-
 }
 
 # Scheduled Tasks
