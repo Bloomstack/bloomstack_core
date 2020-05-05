@@ -198,7 +198,7 @@ doc_events = {
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': ['bloomstack_core.hook_events.utils.validate_license_expiry']
 	},
-	('Purchase Invoice', 'Purchase Order','Purchase Recipt', 'Sales Order', 'Sales Invoice', 'Delivery_note'): {
+	('Purchase Invoice', 'Purchase Order','Purchase Receipt', 'Sales Order', 'Sales Invoice', 'Delivery Note'): {
 		'validate': ['bloomstack_core.hook_events.utils.validate_cannabis_tax']
 	},
 }

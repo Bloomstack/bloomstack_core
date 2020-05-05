@@ -1,7 +1,6 @@
 import frappe
 from frappe import _
 from frappe.utils import getdate, nowdate
-from frappe.utils import cstr
 from erpnext.stock.doctype.item.item import get_uom_conv_factor
 
 
@@ -27,9 +26,9 @@ def validate_entity_license(party_type, party_name):
 			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
 
 def validate_cannabis_tax(doc, method):
-	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt", "Sales Order", "Sales Invoice", "Delivery_note"):
-		customer_license = frappe.db.get_value("Customer", filters= {"name": doc.customer}, fieldname=['license'])
-		license_type = frappe.db.get_value("Compliance Info", filters={"name":customer_license}, fieldname=["license_type"])
+	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt", "Sales Order", "Sales Invoice", "Delivery Note"):
+		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
+		license_type = frappe.db.get_value("Compliance Info", customer_license, "license_type")
 
 		cultivation_tax_account = frappe.db.get_value("Company", doc.company, "default_cultivation_tax_account")
 		if not cultivation_tax_account:
@@ -43,7 +42,7 @@ def validate_cannabis_tax(doc, method):
 
 def calculate_cultivation_tax(doc, license_type, cultivation_tax_account):
 	# if customer is distributor then calculate cultivation tax.
-	if not license_type == "Distributor" and doc.doctype in ("Sales Order", "Sales Invoice", "Delivery_note"):
+	if not license_type == "Distributor" and doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
 		return 
 
 	cultivation_tax = 0
@@ -51,24 +50,19 @@ def calculate_cultivation_tax(doc, license_type, cultivation_tax_account):
 	for item in doc.get("items"):
 
 		compliance_item = frappe.get_all('Compliance Item',
-			filters={'item_code': item.item_code},
+			filters={'item_code': item.item_code, 'enable_cultivation_tax': 1 },
 			fields=['enable_cultivation_tax','cultivation_tax_type'])
 
 		if not compliance_item:
 			return
-		else:
-			compliance_item = compliance_item[0]
 
-		if not compliance_item.enable_cultivation_tax:
-			return
-		else:
-			ounce_qty = convert_to_ounce(item.name, item.weight_uom, item.total_weight)
-			if compliance_item.cultivation_tax_type == "Dry Flower":
-				cultivation_tax = cultivation_tax +  ounce_qty * 9.65
-			if compliance_item.cultivation_tax_type == "Dry Leaf":
-				cultivation_tax =  cultivation_tax + ounce_qty * 2.87
-			if compliance_item.cultivation_tax_type == "Fresh Plant":
-				cultivation_tax = cultivation_tax + ounce_qty * 1.35
+		ounce_qty = convert_to_ounce(item.name, item.weight_uom, item.total_weight)
+		if compliance_item.cultivation_tax_type == "Dry Flower":
+			cultivation_tax = cultivation_tax +  ounce_qty * 9.65
+		if compliance_item.cultivation_tax_type == "Dry Leaf":
+			cultivation_tax =  cultivation_tax + ounce_qty * 2.87
+		if compliance_item.cultivation_tax_type == "Fresh Plant":
+			cultivation_tax = cultivation_tax + ounce_qty * 1.35
 
 	cultivation_tax_row = {
 		'category':'Total',
@@ -77,8 +71,9 @@ def calculate_cultivation_tax(doc, license_type, cultivation_tax_account):
 		'description': 'Cultivation Tax',
 		'account_head': cultivation_tax_account,
 		'tax_amount': cultivation_tax,
-		'total': doc.total-cultivation_tax
+		'total': doc.total - cultivation_tax
 		}
+
 	doc.append('taxes', cultivation_tax_row)
 	doc.calculate_taxes_and_totals()
 
@@ -102,19 +97,14 @@ def calculate_excise_tax(doc, license_type, excise_tax_account, shipping_account
 		for item in doc.get("items"):
 
 			compliance_item = frappe.get_all('Compliance Item',
-				filters={'item_code': item.item_code},
+				filters={'item_code': item.item_code, 'enable_cultivation_tax': 1 },
 				fields=['enable_cultivation_tax','cultivation_tax_type'])
 
 			if not compliance_item:
 				return
-			else:
-				compliance_item = compliance_item[0]
 
-			if not compliance_item.enable_cultivation_tax:
-				return
-			else:
-				total_shipping_charges = ((shipping_charges/doc.net_total) * item.price_list_rate)
-				excise_tax = excise_tax + ((item.amount * 27) / 100) + total_shipping_charges
+			total_shipping_charges = ((shipping_charges/doc.net_total) * item.price_list_rate)
+			excise_tax = excise_tax + ((item.amount * 27) / 100) + total_shipping_charges
 
 		exicse_tax_row = {
 			'category':'Total',
