@@ -34,9 +34,7 @@ def validate_cannabis_tax(doc, method):
 		# calculate cultivation tax for buying cycle and if customer is distributor then caclulate for selling cycle
 		cultivation_tax_row = calculate_cultivation_tax(doc, cultivation_tax_account)
 		if cultivation_tax_row:
-			doc.append('taxes', cultivation_tax_row)
-			# make sure all total and taxes modified accroding to above tax.
-			doc.calculate_taxes_and_totals()
+			set_taxes(doc, cultivation_tax_row)
 
 	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
 		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
@@ -55,16 +53,12 @@ def validate_cannabis_tax(doc, method):
 		# calculate cultivation tax for buying cycle and if customer is distributor then caclulate for selling cycle
 		cultivation_tax_row = calculate_cultivation_tax(doc, cultivation_tax_account, license_type)
 		if cultivation_tax_row:
-			doc.append('taxes', cultivation_tax_row)
-			# make sure all total and taxes modified accroding to above tax.
-			doc.calculate_taxes_and_totals()
+			set_taxes(doc, cultivation_tax_row)
 
 		# calculate excise tax for selling cycle except when customer is distributor
 		exicse_tax_row = calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type)
 		if exicse_tax_row:
-			doc.append('taxes', exicse_tax_row)
-			# make sure all total and taxes modified accroding to above tax.
-			doc.calculate_taxes_and_totals()
+			set_taxes(doc, exicse_tax_row)
 
 def calculate_cultivation_tax(doc, cultivation_tax_account,  license_type = None):
 	# if customer is distributor then calculate cultivation tax.
@@ -141,6 +135,17 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type
 			'tax_amount': excise_tax
 			}
 		return exicse_tax_row
+
+def set_taxes(doc, tax_row):
+	existing_tax_row = doc.get("taxes", filters=tax_row['account_head'])
+	if existing_tax_row:
+		# take the last record found
+		existing_tax_row[-1].tax_amount = tax_row['tax_amount']
+	else:
+		doc.append('taxes', tax_row)
+
+	# make sure all total and taxes modified accroding to above tax.
+	doc.calculate_taxes_and_totals()
 
 def convert_to_ounce(item_code, uom, qty):
 	"convert any unit into ounce"
