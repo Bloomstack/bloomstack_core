@@ -38,7 +38,7 @@ def validate_cannabis_tax(doc, method):
 			# make sure all total and taxes modified accroding to above tax.
 			doc.calculate_taxes_and_totals()
 
-    if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
+	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
 		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
 		license_type = frappe.db.get_value("Compliance Info", customer_license, "license_type")
 
@@ -49,7 +49,7 @@ def validate_cannabis_tax(doc, method):
 		excise_tax_account = frappe.db.get_value("Company", doc.company, "default_excise_tax_account")
 		shipping_account = frappe.db.get_value("Company", doc.company, "default_shipping_account")
 
-        if not excise_tax_account and not shipping_account:
+		if not excise_tax_account and not shipping_account:
 			frappe.throw(_("Please set default excise tax and default shipping account in company {0}").format(doc.company))
 
 		# calculate cultivation tax for buying cycle and if customer is distributor then caclulate for selling cycle
@@ -101,7 +101,7 @@ def calculate_cultivation_tax(doc, cultivation_tax_account,  license_type = None
 		}
 	return cultivation_tax_row
 
-def calculate_excise_tax(doc, license_type, excise_tax_account, shipping_account):
+def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type):
 	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery_note"):
 
 		# if customer is distributor then dont calculate excise tax.
