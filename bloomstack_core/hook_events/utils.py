@@ -128,7 +128,7 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type
 				return
 
 			#calculate shipping facotor for each compliance item in range 0 to 1.
-			shipping_factor = ((shipping_charges/doc.net_total) * item.price_list_rate)
+			shipping_factor = ((shipping_charges/doc.total) * item.price_list_rate)
 
 			#calculate shipping charges for individual compliance item
 			total_shipping_charges = ((((item.amount  * 27) / 100)/item.price_list_rate) * shipping_factor)
