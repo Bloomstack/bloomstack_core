@@ -116,7 +116,7 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type
 
 		for tax in doc.get("taxes"):
 			if tax.account_head == shipping_account:
-				shipping_charges = tax.amount
+				shipping_charges = tax.tax_amount
 
 		for item in doc.get("items"):
 
@@ -127,17 +127,18 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type
 			if not compliance_item:
 				return
 
-			total_shipping_charges = ((shipping_charges/doc.net_total) * item.price_list_rate)
-			excise_tax = excise_tax + ((item.amount * 27) / 100) + total_shipping_charges
+			#calculate shipping facotor for each compliance item in range 0 to 1.
+			shipping_factor = ((shipping_charges/doc.net_total) * item.price_list_rate)
+
+			#calculate shipping charges for individual compliance item
+			total_shipping_charges = ((((item.amount  * 27) / 100)/item.price_list_rate) * shipping_factor)
+			excise_tax = excise_tax + ((item.amount  * 27) / 100) + total_shipping_charges
 
 		exicse_tax_row = {
-			'category':'Total',
 			'charge_type':'Actual',
-			'add_deduct_tax': 'Add',
 			'description': 'Excise Tax',
 			'account_head': excise_tax_account,
-			'tax_amount': excise_tax,
-			'total': doc.total + excise_tax
+			'tax_amount': excise_tax
 			}
 		return exicse_tax_row
 
