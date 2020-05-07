@@ -9,10 +9,10 @@
  "field_order": [
   "item_code",
   "item_name",
-  "enable_metrc",
+  "item_category",
   "cb_compliance_item",
   "enable_cultivation_tax",
-  "cultivation_tax_type",
+  "enable_metrc",
   "sb_item_details",
   "metrc_id",
   "metrc_item_category",
@@ -98,14 +98,15 @@
    "label": "Enable Cultivation Tax"
   },
   {
-   "fieldname": "cultivation_tax_type",
+   "depends_on": "eval:doc.enable_cultivation_tax",
+   "fieldname": "item_category",
    "fieldtype": "Select",
-   "label": "Cultivation Tax Type",
+   "label": "Item Category",
    "options": "\nDry Flower\nDry Leaf\nFresh Plant"
   }
  ],
  "links": [],
- "modified": "2020-04-26 21:35:40.124046",
+ "modified": "2020-05-07 12:45:14.676937",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Item",
