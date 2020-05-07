@@ -1,7 +1,12 @@
 import frappe
+from erpnext.stock.doctype.item.item import get_uom_conv_factor
 from frappe import _
 from frappe.utils import getdate, nowdate
-from erpnext.stock.doctype.item.item import get_uom_conv_factor
+
+DRY_FLOWER_MULTIPLIER = 9.65
+DRY_LEAF_MULTIPLER = 2.87
+FRESH_PLANT_MULTIPLER = 1.35
+EXCISE_TAX_PERCENTAGE = 27
 
 
 def validate_license_expiry(doc, method):
@@ -25,117 +30,114 @@ def validate_entity_license(party_type, party_name):
 		frappe.throw(_("{0}'s license number {1} has expired on {2}").format(
 			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
 
+
 def validate_cannabis_tax(doc, method):
+	cultivation_tax_account = frappe.db.get_value("Company", doc.company, "default_cultivation_tax_account")
+	excise_tax_account = frappe.db.get_value("Company", doc.company, "default_excise_tax_account")
+	shipping_account = frappe.db.get_value("Company", doc.company, "default_shipping_account")
+
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt"):
-		cultivation_tax_account = frappe.db.get_value("Company", doc.company, "default_cultivation_tax_account")
 		if not cultivation_tax_account:
 			frappe.throw(_("Please set default cultivation tax account in company {0}").format(doc.company))
 
-		# calculate cultivation tax for buying cycle and if customer is distributor then caclulate for selling cycle
+		# calculate cultivation tax for buying cycle
 		cultivation_tax_row = calculate_cultivation_tax(doc, cultivation_tax_account)
 		if cultivation_tax_row:
 			set_taxes(doc, cultivation_tax_row)
-
-	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
-		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
-		license_type = frappe.db.get_value("Compliance Info", customer_license, "license_type")
-
-		cultivation_tax_account = frappe.db.get_value("Company", doc.company, "default_cultivation_tax_account")
-		if not cultivation_tax_account:
-			frappe.throw(_("Please set default cultivation tax account in company {0}").format(doc.company))
-
-		excise_tax_account = frappe.db.get_value("Company", doc.company, "default_excise_tax_account")
-		shipping_account = frappe.db.get_value("Company", doc.company, "default_shipping_account")
-
+	elif doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
 		if not excise_tax_account and not shipping_account:
 			frappe.throw(_("Please set default excise tax and default shipping account in company {0}").format(doc.company))
 
-		# calculate cultivation tax for buying cycle and if customer is distributor then caclulate for selling cycle
-		cultivation_tax_row = calculate_cultivation_tax(doc, cultivation_tax_account, license_type)
-		if cultivation_tax_row:
-			set_taxes(doc, cultivation_tax_row)
+		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
+		# TODO: confirm which taxes should apply if the customer's license does not exist
+		license_type = frappe.db.get_value("Compliance Info", customer_license, "license_type")
+		if license_type == "Distributor":
+			if not cultivation_tax_account:
+				frappe.throw(_("Please set default cultivation tax account in company {0}").format(doc.company))
 
-		# calculate excise tax for selling cycle except when customer is distributor
-		exicse_tax_row = calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type)
-		if exicse_tax_row:
-			set_taxes(doc, exicse_tax_row)
+			# calculate cultivation tax for selling cycle if customer is distributor
+			cultivation_tax_row = calculate_cultivation_tax(doc, cultivation_tax_account)
+			if cultivation_tax_row:
+				set_taxes(doc, cultivation_tax_row)
+		else:
+			# calculate excise tax for selling cycle except when customer is distributor
+			exicse_tax_row = calculate_excise_tax(doc, excise_tax_account, shipping_account)
+			if exicse_tax_row:
+				set_taxes(doc, exicse_tax_row)
 
-def calculate_cultivation_tax(doc, cultivation_tax_account,  license_type = None):
-	# if customer is distributor then calculate cultivation tax.
-	if not license_type == "Distributor" and doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
-		return 
 
+def calculate_cultivation_tax(doc, cultivation_tax_account):
 	cultivation_tax = 0
 
 	for item in doc.get("items"):
-
 		compliance_item = frappe.get_all('Compliance Item',
-			filters={'item_code': item.item_code, 'enable_cultivation_tax': 1 },
-			fields=['enable_cultivation_tax','cultivation_tax_type'])
+			filters={'item_code': item.item_code, 'enable_cultivation_tax': 1},
+			fields=['cultivation_tax_type'])
 
 		if not compliance_item:
-			return
+			continue
 
+		tax_type = compliance_item[0].cultivation_tax_type
 		ounce_qty = convert_to_ounce(item.name, item.weight_uom, item.total_weight)
-		if compliance_item[0].cultivation_tax_type == "Dry Flower":
-			cultivation_tax = cultivation_tax + ounce_qty * 9.65
-		if compliance_item[0].cultivation_tax_type == "Dry Leaf":
-			cultivation_tax =  cultivation_tax + ounce_qty * 2.87
-		if compliance_item[0].cultivation_tax_type == "Fresh Plant":
-			cultivation_tax = cultivation_tax + ounce_qty * 1.35
+
+		if tax_type == "Dry Flower":
+			cultivation_tax += (ounce_qty * DRY_FLOWER_MULTIPLIER)
+		elif tax_type == "Dry Leaf":
+			cultivation_tax += (ounce_qty * DRY_LEAF_MULTIPLER)
+		elif tax_type == "Fresh Plant":
+			cultivation_tax += (ounce_qty * FRESH_PLANT_MULTIPLER)
 
 	cultivation_tax_row = {
-		'category':'Total',
-		'charge_type':'Actual',
+		'category': 'Total',
+		'charge_type': 'Actual',
 		'add_deduct_tax': 'Deduct',
 		'description': 'Cultivation Tax',
 		'account_head': cultivation_tax_account,
 		'tax_amount': cultivation_tax
-		}
+	}
+
 	return cultivation_tax_row
 
-def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type):
-	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery_note"):
 
-		# if customer is distributor then dont calculate excise tax.
-		if license_type == "Distributor":
-			return
+def calculate_excise_tax(doc, excise_tax_account, shipping_account):
+	excise_tax = shipping_charges = 0
 
-		excise_tax = 0
-		shipping_charges = 0
+	if not excise_tax_account and not shipping_account:
+		frappe.throw(_("Please set default excise tax and default shipping account for company {0}").format(doc.company))
 
-		if not excise_tax_account and not shipping_account:
-			frappe.throw(_("Please set default excise tax and default shipping account in company {0}").format(doc.company))
+	for tax in doc.get("taxes"):
+		if tax.account_head == shipping_account:
+			shipping_charges = tax.tax_amount
 
-		for tax in doc.get("taxes"):
-			if tax.account_head == shipping_account:
-				shipping_charges = tax.tax_amount
+	for item in doc.get("items"):
+		compliance_item = frappe.get_all('Compliance Item',
+			filters={'item_code': item.item_code, 'enable_cultivation_tax': 1},
+			fields=['cultivation_tax_type'])
 
-		for item in doc.get("items"):
+		if not compliance_item:
+			continue
 
-			compliance_item = frappe.get_all('Compliance Item',
-				filters={'item_code': item.item_code, 'enable_cultivation_tax': 1 },
-				fields=['enable_cultivation_tax','cultivation_tax_type'])
+		# calculate shipping factor for each compliance item in range 0 to 1
+		shipping_factor = (shipping_charges / doc.total) * item.price_list_rate
 
-			if not compliance_item:
-				return
+		# calculate excise tax base value
+		base_excise_tax = (item.amount * EXCISE_TAX_PERCENTAGE / 100)
 
-			#calculate shipping facotor for each compliance item in range 0 to 1.
-			shipping_factor = ((shipping_charges/doc.total) * item.price_list_rate)
+		# calculate shipping charges for individual compliance item
+		total_shipping_charges = (base_excise_tax / item.price_list_rate) * shipping_factor
+		excise_tax += base_excise_tax + total_shipping_charges
 
-			#calculate shipping charges for individual compliance item
-			total_shipping_charges = ((((item.amount  * 27) / 100)/item.price_list_rate) * shipping_factor)
-			excise_tax = excise_tax + ((item.amount  * 27) / 100) + total_shipping_charges
+	exicse_tax_row = {
+		'category': 'Total',
+		'add_deduct_tax': 'Add',
+		'charge_type': 'Actual',
+		'description': 'Excise Tax',
+		'account_head': excise_tax_account,
+		'tax_amount': excise_tax
+	}
 
-		exicse_tax_row = {
-			'category':'Total',
-			'add_deduct_tax': 'Add',
-			'charge_type':'Actual',
-			'description': 'Excise Tax',
-			'account_head': excise_tax_account,
-			'tax_amount': excise_tax
-			}
-		return exicse_tax_row
+	return exicse_tax_row
+
 
 def set_taxes(doc, tax_row):
 	existing_tax_row = doc.get("taxes", filters=tax_row['account_head'])
@@ -148,10 +150,13 @@ def set_taxes(doc, tax_row):
 	# make sure all total and taxes modified accroding to above tax.
 	doc.calculate_taxes_and_totals()
 
+
 def convert_to_ounce(item_code, uom, qty):
 	"convert any unit into ounce"
+
 	conversion_factor = get_uom_conv_factor(uom, 'Ounce')
 	if not conversion_factor:
 		frappe.throw(_("Add UOM Conversion Factor for {0} to Ounce").format(uom))
+
 	value = qty * conversion_factor
 	return value
