@@ -38,8 +38,7 @@ def validate_cannabis_tax(doc, method):
 
 	#fetch all compliance item which are enable for cultivation and excise tax calculation
 	compliance_items = frappe.get_all('Compliance Item',
-		filters={'enable_cultivation_tax': 1},
-		fields=['item_code', 'cultivation_tax_type'])
+		fields=['item_code', 'enable_cultivation_tax', 'cultivation_tax_type'])
 	
 	if not compliance_items:
 		return
@@ -58,8 +57,9 @@ def validate_cannabis_tax(doc, method):
 			frappe.throw(_("Please set default excise tax and default shipping account in company {0}").format(doc.company))
 
 		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
+		#customer license is important for fetching customer license type
 		if not customer_license:
-			frappe.throw(_("Please set customer compliance license in customer {0}").format(doc.customer))
+			return
 
 		license_type = frappe.db.get_value("Compliance Info", customer_license, "license_type")
 		if license_type == "Distributor":
@@ -70,19 +70,21 @@ def validate_cannabis_tax(doc, method):
 			cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items, cultivation_tax_account)
 			if cultivation_tax_row:
 				set_taxes(doc, cultivation_tax_row)
-		else:
-			# calculate excise tax for selling cycle except when customer is distributor
+		elif license_type in ("Retailer","Consumer"):
+			# calculate excise tax for selling cycle except when customer is distributor, cultivator and manufacurer
 			exicse_tax_row = calculate_excise_tax(doc, compliance_items, excise_tax_account, shipping_account)
 			if exicse_tax_row:
 				set_taxes(doc, exicse_tax_row)
+		else:
+			return
 
 
 def calculate_cultivation_tax(doc, compliance_items, cultivation_tax_account):
 	cultivation_tax = 0
 
 	for item in doc.get("items"):
-		compliance_item = next(data for data in compliance_items if data["item_code"] == item.item_code)
-		if not compliance_item:
+		compliance_item = next((data for data in compliance_items if data["item_code"] == item.item_code), None)
+		if not compliance_item and not compliance_item.enable_cultivation_tax:
 			continue
 
 		tax_type = compliance_item.cultivation_tax_type
@@ -118,7 +120,7 @@ def calculate_excise_tax(doc, compliance_items, excise_tax_account, shipping_acc
 			shipping_charges = tax.tax_amount
 
 	for item in doc.get("items"):
-		compliance_item = next(data for data in compliance_items if data["item_code"] == item.item_code)
+		compliance_item = next((data for data in compliance_items if data["item_code"] == item.item_code), None)
 		if not compliance_item:
 			continue
 
