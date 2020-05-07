@@ -88,7 +88,7 @@ def calculate_cultivation_tax(doc, compliance_items, cultivation_tax_account):
 			continue
 
 		tax_type = compliance_item.cultivation_tax_type
-		ounce_qty = convert_to_ounce(item.item_name, item.uom, item.stock_qty)
+		ounce_qty = convert_to_ounce(item.item_name, item.uom, item.qty)
 
 		if tax_type == "Dry Flower":
 			cultivation_tax += (ounce_qty * DRY_FLOWER_MULTIPLIER)
