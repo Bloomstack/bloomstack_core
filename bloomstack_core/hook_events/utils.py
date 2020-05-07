@@ -76,7 +76,7 @@ def calculate_cultivation_tax(doc, cultivation_tax_account,  license_type = None
 		if not compliance_item:
 			return
 
-		ounce_qty = convert_to_ounce(item.name, item.weight_uom, item.total_weight)
+		ounce_qty = convert_to_ounce(item.item_name, item.weight_uom, item.total_weight)
 		if compliance_item[0].cultivation_tax_type == "Dry Flower":
 			cultivation_tax = cultivation_tax + ounce_qty * 9.65
 		if compliance_item[0].cultivation_tax_type == "Dry Leaf":
@@ -139,7 +139,7 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type
 
 def set_taxes(doc, tax_row):
 	existing_tax_row = doc.get("taxes", filters=tax_row['account_head'])
-	if existing_tax_row[-1].account_head == tax_row['account_head']:
+	if existing_tax_row and existing_tax_row[-1].account_head == tax_row['account_head']:
 		# take the last record found
 		existing_tax_row[-1].tax_amount = tax_row['tax_amount']
 	else:
@@ -148,10 +148,10 @@ def set_taxes(doc, tax_row):
 	# make sure all total and taxes modified accroding to above tax.
 	doc.calculate_taxes_and_totals()
 
-def convert_to_ounce(item_code, uom, qty):
+def convert_to_ounce(item_name, uom, qty):
 	"convert any unit into ounce"
 	conversion_factor = get_uom_conv_factor(uom, 'Ounce')
 	if not conversion_factor:
-		frappe.throw(_("Add UOM Conversion Factor for {0} to Ounce").format(uom))
+		frappe.throw(_("Add Weight UOM Conversion Factor for {0} to Ounce for item {1}").format(uom, item_name))
 	value = qty * conversion_factor
 	return value
