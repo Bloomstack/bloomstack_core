@@ -3,7 +3,7 @@
 		"node_modules/chart.js/dist/Chart.min.js",
 		"node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"
 	],
-	"js/address.min.js": [
+	"js/address_list.min.js": [
 		"public/js/templates/address_list.html"
 	]
 }
