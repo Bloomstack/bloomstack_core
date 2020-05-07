@@ -36,49 +36,57 @@ def validate_cannabis_tax(doc, method):
 	excise_tax_account = frappe.db.get_value("Company", doc.company, "default_excise_tax_account")
 	shipping_account = frappe.db.get_value("Company", doc.company, "default_shipping_account")
 
+	#fetch all compliance item which are enable for cultivation and excise tax calculation
+	compliance_items = frappe.get_all('Compliance Item',
+		filters={'enable_cultivation_tax': 1},
+		fields=['item_code', 'cultivation_tax_type'])
+	
+	if not compliance_items:
+		return
+
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt"):
 		if not cultivation_tax_account:
 			frappe.throw(_("Please set default cultivation tax account in company {0}").format(doc.company))
 
 		# calculate cultivation tax for buying cycle
-		cultivation_tax_row = calculate_cultivation_tax(doc, cultivation_tax_account)
+		cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items, cultivation_tax_account)
 		if cultivation_tax_row:
 			set_taxes(doc, cultivation_tax_row)
+
 	elif doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
 		if not excise_tax_account and not shipping_account:
 			frappe.throw(_("Please set default excise tax and default shipping account in company {0}").format(doc.company))
 
 		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
-		# TODO: confirm which taxes should apply if the customer's license does not exist
+		if not customer_license:
+			frappe.throw(_("Please set customer compliance license in customer {0}").format(doc.customer))
+
 		license_type = frappe.db.get_value("Compliance Info", customer_license, "license_type")
 		if license_type == "Distributor":
 			if not cultivation_tax_account:
 				frappe.throw(_("Please set default cultivation tax account in company {0}").format(doc.company))
 
 			# calculate cultivation tax for selling cycle if customer is distributor
-			cultivation_tax_row = calculate_cultivation_tax(doc, cultivation_tax_account)
+			cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items, cultivation_tax_account)
 			if cultivation_tax_row:
 				set_taxes(doc, cultivation_tax_row)
 		else:
 			# calculate excise tax for selling cycle except when customer is distributor
-			exicse_tax_row = calculate_excise_tax(doc, excise_tax_account, shipping_account)
+			exicse_tax_row = calculate_excise_tax(doc, compliance_items, excise_tax_account, shipping_account)
 			if exicse_tax_row:
 				set_taxes(doc, exicse_tax_row)
 
 
-def calculate_cultivation_tax(doc, cultivation_tax_account):
+def calculate_cultivation_tax(doc, compliance_items, cultivation_tax_account):
 	cultivation_tax = 0
 
 	for item in doc.get("items"):
-		compliance_item = frappe.get_all('Compliance Item',
-			filters={'item_code': item.item_code, 'enable_cultivation_tax': 1},
-			fields=['cultivation_tax_type'])
-
+		compliance_item = next(data for data in compliance_items if data["item_code"] == item.item_code)
 		if not compliance_item:
 			continue
 
-		tax_type = compliance_item[0].cultivation_tax_type
-		ounce_qty = convert_to_ounce(item.name, item.weight_uom, item.total_weight)
+		tax_type = compliance_item.cultivation_tax_type
+		ounce_qty = convert_to_ounce(item.item_name, item.uom, item.stock_qty)
 
 		if tax_type == "Dry Flower":
 			cultivation_tax += (ounce_qty * DRY_FLOWER_MULTIPLIER)
@@ -99,7 +107,7 @@ def calculate_cultivation_tax(doc, cultivation_tax_account):
 	return cultivation_tax_row
 
 
-def calculate_excise_tax(doc, excise_tax_account, shipping_account):
+def calculate_excise_tax(doc, compliance_items, excise_tax_account, shipping_account):
 	excise_tax = shipping_charges = 0
 
 	if not excise_tax_account and not shipping_account:
@@ -110,10 +118,7 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account):
 			shipping_charges = tax.tax_amount
 
 	for item in doc.get("items"):
-		compliance_item = frappe.get_all('Compliance Item',
-			filters={'item_code': item.item_code, 'enable_cultivation_tax': 1},
-			fields=['cultivation_tax_type'])
-
+		compliance_item = next(data for data in compliance_items if data["item_code"] == item.item_code)
 		if not compliance_item:
 			continue
 
@@ -151,7 +156,7 @@ def set_taxes(doc, tax_row):
 	doc.calculate_taxes_and_totals()
 
 
-def convert_to_ounce(item_code, uom, qty):
+def convert_to_ounce(item_name, uom, qty):
 	"convert any unit into ounce"
 
 	conversion_factor = get_uom_conv_factor(uom, 'Ounce')
