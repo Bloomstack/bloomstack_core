@@ -90,8 +90,7 @@ def calculate_cultivation_tax(doc, cultivation_tax_account,  license_type = None
 		'add_deduct_tax': 'Deduct',
 		'description': 'Cultivation Tax',
 		'account_head': cultivation_tax_account,
-		'tax_amount': cultivation_tax,
-		'total': doc.total - cultivation_tax
+		'tax_amount': cultivation_tax
 		}
 	return cultivation_tax_row
 
@@ -129,6 +128,8 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type
 			excise_tax = excise_tax + ((item.amount  * 27) / 100) + total_shipping_charges
 
 		exicse_tax_row = {
+			'category':'Total',
+			'add_deduct_tax': 'Add',
 			'charge_type':'Actual',
 			'description': 'Excise Tax',
 			'account_head': excise_tax_account,
@@ -138,7 +139,7 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account, license_type
 
 def set_taxes(doc, tax_row):
 	existing_tax_row = doc.get("taxes", filters=tax_row['account_head'])
-	if existing_tax_row:
+	if existing_tax_row[-1].account_head == tax_row['account_head']:
 		# take the last record found
 		existing_tax_row[-1].tax_amount = tax_row['tax_amount']
 	else:
