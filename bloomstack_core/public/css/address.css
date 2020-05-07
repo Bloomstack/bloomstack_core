@@ -1,0 +1,9 @@
+#unlinkModal .modal-header,
+#deleteModal .modal-header {
+  border-bottom: 0;
+}
+
+#unlinkModal .modal-footer,
+#deleteModal .modal-footer {
+  border-top: 0;
+}
