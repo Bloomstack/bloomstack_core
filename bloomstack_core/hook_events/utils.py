@@ -141,7 +141,7 @@ def calculate_excise_tax(doc, excise_tax_account, shipping_account):
 
 def set_taxes(doc, tax_row):
 	existing_tax_row = doc.get("taxes", filters=tax_row['account_head'])
-	if existing_tax_row[-1].account_head == tax_row['account_head']:
+	if existing_tax_row and existing_tax_row[-1].account_head == tax_row['account_head']:
 		# take the last record found
 		existing_tax_row[-1].tax_amount = tax_row['tax_amount']
 	else:
@@ -155,8 +155,9 @@ def convert_to_ounce(item_code, uom, qty):
 	"convert any unit into ounce"
 
 	conversion_factor = get_uom_conv_factor(uom, 'Ounce')
+
 	if not conversion_factor:
-		frappe.throw(_("Add UOM Conversion Factor for {0} to Ounce").format(uom))
+		frappe.throw(_("Add Weight UOM Conversion Factor for {0} to Ounce for item {1}").format(uom, item_name))
 
 	value = qty * conversion_factor
 	return value
