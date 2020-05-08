@@ -265,3 +265,27 @@ def get_document_links(doctype, docs):
 		})
 		links.append(link)
 	return links
+
+@frappe.whitelist()
+def unlink_address(doc, doctype, name):
+	doc = json.loads(doc)
+	doc = frappe._dict(doc)
+	address = frappe.get_doc("Address", doc.name)
+	address_links = address.get("links")
+	for data in address_links:
+			if(data.link_doctype == doctype and data.link_name == name ):
+					address_links.remove(data)
+	address.save()
+
+@frappe.whitelist()
+def delete_address(doc, doctype, name):
+	doc = json.loads(doc)
+	doc = frappe._dict(doc)
+	address = frappe.get_doc("Address", doc.name)
+	address_links = address.get("links")
+	if(len(address_links) > 1):
+		doc = json.dumps(doc)
+		unlink_address(doc, doctype, name)
+	else:
+		frappe.delete_doc(doc.doctype, doc.name)
+		frappe.db.commit()
