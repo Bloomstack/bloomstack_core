@@ -1,57 +1,43 @@
 $(document).ready(function () {
-	$(document).on('click', '.address-box a.unlink_address', function() {
-		var name = $(this).attr('address_name');
-		unlink_address(name);
+
+	$(document).on('click', '.address-box a.unlink_address', function () {
+		var name = $(this).attr('data_address_name');
+		frappe.confirm(
+			'Are you sure you want to unlink this address associated with '+cur_frm.docname+'?',
+			function () {
+				frappe.call({
+					method: "bloomstack_core.utils.unlink_address",
+					args: {
+						"doc": name,
+						"doctype": cur_frm.doctype,
+						"name": cur_frm.docname
+					},
+					callback: function () {
+						window.location.reload()
+					}
+				})
+			}
+		);
 	});
 
-	function unlink_address(name) {
+	$(document).on('click', '.address-box a.delete_address', function () {
+		var name = $(this).attr('data_address_name');
 		frappe.confirm(
-			'Are you sure to unlink this address?',
-			function(){
-				frappe.model.with_doc("Address", name, ()=> {
-					address = frappe.model.get_doc("Address", name);
-					frappe.call({
-						method: "bloomstack_core.utils.unlink_address",
-						args: {"doc": address, "doctype": cur_frm.doctype, "name": cur_frm.docname },
-						callback: function () {
-							window.location.reload()
-						}
-					})
-					// console.log(address2);
+			'If this address is associated to any other user in the system, it will just remove the address from '+cur_frm.docname+'.<br> Are you sure you want to delete this address associated with '+cur_frm.docname+'?',
+			function () {
+				frappe.call({
+					method: "bloomstack_core.utils.delete_address",
+					args: {
+						"doc": name,
+						"doctype": cur_frm.doctype,
+						"name": cur_frm.docname
+					},
+					callback: function () {
+						window.location.reload()
+					}
 				})
-			},
-			function(){
-				window.close();
 			}
-	);
-	}
-
-	$(document).on('click', '.address-box a.delete_address', function() {
-		var name = $(this).attr('address_name');
-		delete_address(name);
+		);
 	});
 
-	function delete_address(name) {
-		frappe.confirm(
-			'Are you sure to delete this address?',
-			function(){
-				frappe.model.with_doc("Address", name, ()=> {
-					address = frappe.model.get_doc("Address", name);
-					frappe.call({
-						method: "bloomstack_core.utils.delete_address",
-						args: {"doc": address, "doctype": cur_frm.doctype, "name": cur_frm.docname },
-						callback: function () {
-							window.location.reload()
-						}
-					})
-				})
-			},
-			function(){
-				window.close();
-			}
-	);
-	}
-
-	
 });
-

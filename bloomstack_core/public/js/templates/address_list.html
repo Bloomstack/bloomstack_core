@@ -11,13 +11,13 @@
 		<span class="text-muted">({%= __("Shipping") %})</span>{% } %}
 
 		<a href="#Form/Address/{%= encodeURIComponent(addr_list[i].name) %}" class="btn btn-default btn-xs pull-right"
-			style="margin-top:-3px; margin-right: -5px;">
+			style="margin-top:-3px; margin-right: -5px;" title="Edit">
 			<i class="octicon octicon-pencil"></i></a>
 			
-		<a class="btn btn-primary btn-xs pull-right unlink_address" style="margin-top:-3px; margin-right: 10px;" address_name="{%= addr_list[i].name %}">
+		<a class="btn btn-primary btn-xs pull-right unlink_address" style="margin-top:-3px; margin-right: 10px;" data_address_name="{%= addr_list[i].name %}" title="Unlink">
 			<i class="fa fa-unlink"></i></a>
 
-		<a class="btn btn-danger btn-xs pull-right delete_address" style="margin-top:-3px; margin-right: 10px;" address_name="{%= addr_list[i].name %}">
+		<a class="btn btn-danger btn-xs pull-right delete_address" style="margin-top:-3px; margin-right: 10px;" data_address_name="{%= addr_list[i].name %}" title="Delete">
 			<i class="octicon octicon-trashcan"></i></a>
 	</p>
 	<p>{%= addr_list[i].display %}</p>
