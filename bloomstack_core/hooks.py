@@ -36,7 +36,9 @@ app_include_js = [
 	"/assets/bloomstack_core/js/banner.js",
 	"/assets/bloomstack_core/js/utils.js",
 	"/assets/js/address_list.min.js",
-	"/assets/bloomstack_core/js/address.js"
+	"/assets/js/contact_list.min.js",
+	"/assets/bloomstack_core/js/address.js",
+	"/assets/bloomstack_core/js/contact.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",

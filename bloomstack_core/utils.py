@@ -283,4 +283,21 @@ def delete_address(doc, doctype, name):
 		unlink_address(doc, doctype, name)
 	else:
 		frappe.delete_doc("Address", doc)
-		frappe.db.commit()
+
+@frappe.whitelist()
+def unlink_contact(doc, doctype, name):
+	contact = frappe.get_doc("Contact", doc)
+	contact_links = contact.get("links")
+	for data in contact_links:
+			if(data.link_doctype == doctype and data.link_name == name ):
+					contact_links.remove(data)
+	contact.save()
+
+@frappe.whitelist()
+def delete_contact(doc, doctype, name):
+	contact = frappe.get_doc("Contact", doc)
+	contact_links = contact.get("links")
+	if(len(contact_links) > 1):
+		unlink_contact(doc, doctype, name)
+	else:
+		frappe.delete_doc("Contact", doc)

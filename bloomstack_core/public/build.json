@@ -5,5 +5,8 @@
 	],
 	"js/address_list.min.js": [
 		"public/js/templates/address_list.html"
+	],
+	"js/contact_list.min.js": [
+		"public/js/templates/contact_list.html"
 	]
 }
