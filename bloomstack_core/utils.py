@@ -267,17 +267,7 @@ def get_document_links(doctype, docs):
 	return links
 
 @frappe.whitelist()
-def link_contact(doctype, doc, data):
-	data = json.loads(data)
-	data = frappe._dict(data)
-	contact = frappe.get_doc("Contact", data.contact)
-	contact.append("links", {"link_doctype": doctype, "link_name": doc})
-	contact.save()
-
-@frappe.whitelist()
-def link_address(doctype, doc, data):
-	data = json.loads(data)
-	data = frappe._dict(data)
-	address = frappe.get_doc("Address", data.address)
-	address.append("links", {"link_doctype": doctype, "link_name": doc})
-	address.save()
+def link_address_or_contact(ref_doctype, ref_name, link_doctype, link_name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	doc.append("links", {"link_doctype": link_doctype, "link_name": link_name})
+	doc.save()

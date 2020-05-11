@@ -2,7 +2,7 @@ frappe.provide('frappe.contacts')
 
 $.extend(frappe.contacts, {
 	clear_address_and_contact: function (frm) {
-		$(frm.fields_dict['address_html'].wrapper).html("");
+		$(frm.fields_dict['address_html'].wrapper).html("") && $(frm.fields_dict['contact_html'].wrapper).html("");
 		frm.fields_dict['contact_html'] && $(frm.fields_dict['contact_html'].wrapper).html("");
 	},
 
@@ -23,12 +23,28 @@ $.extend(frappe.contacts, {
 				fieldname: "address",
 				fieldtype: "Link",
 				options: "Address",
-				reqd: 1
+				reqd: 1,
+				get_query: () => {
+					var addr_list = [];
+					for (let addr of frm.doc.__onload.addr_list) {
+						addr_list.push(addr.name)
+					}
+					return {
+						filters: {
+							"name": ["not in", addr_list]
+						}
+					}
+				}
 			},
 				(data) => {
 					frappe.call({
-						method: "bloomstack_core.utils.link_address",
-						args: { "doctype": frm.doctype, "doc": frm.docname, "data": data },
+						method: "bloomstack_core.utils.link_address_or_contact",
+						args: {
+							"ref_doctype": "Address",
+							"ref_name": data.address,
+							"link_doctype": frm.doctype,
+							"link_name": frm.docname
+						},
 						callback: function () {
 							window.location.reload()
 						}
@@ -45,7 +61,7 @@ $.extend(frappe.contacts, {
 				.find(".btn-contact").on("click", function () {
 					frappe.new_doc("Contact");
 				},
-			);
+				);
 		}
 
 		$(document).on('click', '.btn-contact-link', function () {
@@ -54,12 +70,28 @@ $.extend(frappe.contacts, {
 				fieldname: "contact",
 				fieldtype: "Link",
 				options: "Contact",
-				reqd: 1
+				reqd: 1,
+				get_query: () => {
+					var contact_list = [];
+					for (let contact of frm.doc.__onload.contact_list) {
+						contact_list.push(contact.name)
+					}
+					return {
+						filters: {
+							"name": ["not in", contact_list]
+						}
+					}
+				}
 			},
 				(data) => {
 					frappe.call({
-						method: "bloomstack_core.utils.link_contact",
-						args: { "doctype": frm.doctype, "doc": frm.docname, "data": data },
+						method: "bloomstack_core.utils.link_address_or_contact",
+						args: {
+							"ref_doctype": "Contact",
+							"ref_name": data.contact,
+							"link_doctype": frm.doctype,
+							"link_name": frm.docname
+						},
 						callback: function () {
 							window.location.reload()
 						}
