@@ -35,8 +35,7 @@ app_include_js = [
 	"/assets/bloomstack_core/js/query_report.js",
 	"/assets/bloomstack_core/js/banner.js",
 	"/assets/bloomstack_core/js/utils.js",
-	"/assets/js/address_and_contact.min.js",
-	"/assets/bloomstack_core/js/address_and_contact.js"
+	"/assets/js/address_and_contact.min.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
@@ -44,8 +43,7 @@ app_include_css = [
 	"/assets/bloomstack_core/css/mobile-fixes.css",
 	"/assets/bloomstack_core/css/banner.css",
 	"/assets/bloomstack_core/css/desk.css",
-	"/assets/bloomstack_core/css/order_desk.css",
-	"/assets/bloomstack_core/css/address.css"
+	"/assets/bloomstack_core/css/order_desk.css"
 ]
 
 # include js, css files in header of web template
