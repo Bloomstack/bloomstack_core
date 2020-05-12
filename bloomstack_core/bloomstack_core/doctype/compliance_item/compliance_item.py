@@ -14,7 +14,8 @@ class ComplianceItem(Document):
 	def validate(self):
 		self.validate_item_category()
 		self.validate_existing_metrc_item()
-		self.sync_metrc_item()
+		if self.enable_metrc:
+			self.sync_metrc_item()
 
 	def validate_item_category(self):
 		if self.enable_cultivation_tax and not self.item_category:
