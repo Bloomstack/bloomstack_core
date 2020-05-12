@@ -93,6 +93,7 @@ doctype_list_js = {
 override_doctype_dashboards = {
 	"Contract": "bloomstack_core.hook_events.contract.get_data",
 	"Employee": "bloomstack_core.hook_events.employee.get_data",
+	"Item": "bloomstack_core.hook_events.item.get_data",
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
