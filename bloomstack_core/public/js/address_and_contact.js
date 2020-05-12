@@ -2,7 +2,7 @@ frappe.provide('frappe.contacts')
 
 $.extend(frappe.contacts, {
 	clear_address_and_contact: function (frm) {
-		$(frm.fields_dict['address_html'].wrapper).html("") && $(frm.fields_dict['contact_html'].wrapper).html("");
+		frm.fields_dict['address_html'] && $(frm.fields_dict['address_html'].wrapper).html("");
 		frm.fields_dict['contact_html'] && $(frm.fields_dict['contact_html'].wrapper).html("");
 	},
 
@@ -25,10 +25,7 @@ $.extend(frappe.contacts, {
 				options: "Address",
 				reqd: 1,
 				get_query: () => {
-					var addr_list = [];
-					for (let addr of frm.doc.__onload.addr_list) {
-						addr_list.push(addr.name)
-					}
+					let addr_list = frm.doc.__onload.addr_list.map(addr => addr.name);
 					return {
 						filters: {
 							"name": ["not in", addr_list]
@@ -49,8 +46,7 @@ $.extend(frappe.contacts, {
 							window.location.reload()
 						}
 					})
-				}
-				, __("Select Address"));
+				}, __("Select Address"));
 		})
 
 		// render contact
@@ -72,10 +68,7 @@ $.extend(frappe.contacts, {
 				options: "Contact",
 				reqd: 1,
 				get_query: () => {
-					var contact_list = [];
-					for (let contact of frm.doc.__onload.contact_list) {
-						contact_list.push(contact.name)
-					}
+					let contact_list = frm.doc.__onload.contact_list.map(contact => contact.name);
 					return {
 						filters: {
 							"name": ["not in", contact_list]
@@ -96,8 +89,7 @@ $.extend(frappe.contacts, {
 							window.location.reload()
 						}
 					})
-				}
-				, __("Select Contact"));
+				}, __("Select Contact"));
 		})
 	}
 })
