@@ -10,7 +10,8 @@ frappe.listview_settings['Sales Order'].onload = function (doclist) {
 				}
 			};
 
-			frappe.confirm(__("This action will create a Pick List for each Sales Order.<br><br>Are you sure you want to create {0} Pick List(s)?", [selected_docs.length]),
+			frappe.confirm(__(`This will create a Pick List for each Sales Order.<br><br>
+				Are you sure you want to create {0} Pick List(s)?`, [selected_docs.length]),
 				() => {
 					frappe.call({
 						method: "bloomstack_core.hook_events.sales_order.create_multiple_pick_lists",
@@ -21,13 +22,21 @@ frappe.listview_settings['Sales Order'].onload = function (doclist) {
 						callback: (r) => {
 							if (!r.exc) {
 								if (r.message.length > 0) {
+									let message = "";
 
-								} else {
+									// loop through each order and render linked Pick Lists
+									for (let order of r.message) {
+										let pick_lists = order.pick_lists
+											.map(pick_list => frappe.utils.get_form_link("Pick List", pick_list, true))
+											.join(", ");
 
+										message += `<li><strong>${order.sales_order}</strong>: ${pick_lists}</li>`;
+									}
+
+									message = `<ul>${message}</ul>`;
+									frappe.msgprint(__(`The following Pick Lists were created / found against each Sales Order:<br><br>${message}`));
+									doclist.refresh();
 								}
-
-								frappe.msgprint(__(``));
-								doclist.refresh();
 							}
 						}
 					});

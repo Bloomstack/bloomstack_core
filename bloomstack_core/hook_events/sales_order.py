@@ -24,25 +24,30 @@ def create_multiple_pick_lists(orders):
 
 	created_orders = []
 	for order in orders:
+		created = False
 		customer = frappe.db.get_value("Sales Order", order, "customer")
 
+		# check if a Pick List already exists against the order
 		pick_lists = frappe.get_all("Pick List",
 			filters=[
+				["Pick List", "docstatus", "<", 2],
 				["Pick List Item", "sales_order", "=", order]
 			],
-			fields=["parent"],
 			distinct=True)
-		pick_lists = [item.parent for item in pick_lists if item.parent]
+		pick_lists = [item.name for item in pick_lists if item.name]
 
+		# if none are found, then create a new Pick List
 		if not pick_lists:
 			order_doc = create_pick_list(order)
 			order_doc.save()
 			pick_lists = [order_doc.name]
+			created = True
 
 		created_orders.append({
 			"sales_order": order,
 			"customer": customer,
-			"pick_lists": pick_lists
+			"pick_lists": pick_lists,
+			"created": created
 		})
 
 	return created_orders
