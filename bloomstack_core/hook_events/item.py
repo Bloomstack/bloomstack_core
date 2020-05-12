@@ -48,7 +48,6 @@ def autoname(item, method=None):
 		return item.item_code
 
 def get_data(data):
-	print("==========================data========================", data)
 	for transaction in data.transactions:
 		if transaction.get("label") == "Traceability":
 			transaction.get("items", []).append("Compliance Item")
