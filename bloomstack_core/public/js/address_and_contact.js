@@ -52,7 +52,7 @@ $.extend(frappe.contacts, {
 		$(document).on('click', '.address-box a.unlink_address', function () {
 			var name = $(this).attr('data_address_name');
 			frappe.confirm(
-				'Are you sure you want to unlink this address linked with ' + cur_frm.docname + '?',
+				`Are you sure you want to unlink this address with ${cur_frm.docname}?`,
 				function () {
 					frappe.call({
 						method: "bloomstack_core.utils.unlink_address_or_contact",
@@ -73,7 +73,8 @@ $.extend(frappe.contacts, {
 		$(document).on('click', '.address-box a.delete_address', function () {
 			var name = $(this).attr('data_address_name');
 			frappe.confirm(
-				'If this address is linked to any other user in the system, it will just remove the address from ' + cur_frm.docname + '.<br> Are you sure you want to delete this address linked with ' + cur_frm.docname + '?',
+				`If this address is linked to any other entity in the system, it will instead remove the address from ${cur_frm.docname}.<br><br>
+					Are you sure you want to delete this address?`,
 				function () {
 					frappe.call({
 						method: "bloomstack_core.utils.delete_address_or_contact",
@@ -98,7 +99,8 @@ $.extend(frappe.contacts, {
 					frm.doc.__onload))
 				.find(".btn-contact").on("click", function () {
 					frappe.new_doc("Contact");
-				}, );
+				}, 
+				);
 		}
 
 		$(document).on('click', '.btn-contact-link', function () {
@@ -136,7 +138,7 @@ $.extend(frappe.contacts, {
 		$(document).on('click', '.address-box a.unlink_contact', function () {
 			var name = $(this).attr('data_contact_name');
 			frappe.confirm(
-				'Are you sure you want to unlink this contact linked with ' + cur_frm.docname + '?',
+				`Are you sure you want to unlink this contact with ${cur_frm.docname}?`,
 				function () {
 					frappe.call({
 						method: "bloomstack_core.utils.unlink_address_or_contact",
@@ -157,7 +159,8 @@ $.extend(frappe.contacts, {
 		$(document).on('click', '.address-box a.delete_contact', function () {
 			var name = $(this).attr('data_contact_name');
 			frappe.confirm(
-				'If this contact is associated to any other user in the system, it will just remove the contact from ' + cur_frm.docname + '.<br> Are you sure you want to delete this contact linked with ' + cur_frm.docname + '?',
+				`If this contact is linked to any other entity in the system, it will instead remove the contact from ${cur_frm.docname}.<br><br>
+							Are you sure you want to delete this contact?`,
 				function () {
 					frappe.call({
 						method: "bloomstack_core.utils.delete_address_or_contact",
