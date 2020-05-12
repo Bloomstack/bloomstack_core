@@ -37,8 +37,7 @@ app_include_js = [
 	"/assets/bloomstack_core/js/utils.js",
 	"/assets/js/address_list.min.js",
 	"/assets/js/contact_list.min.js",
-	"/assets/bloomstack_core/js/address.js",
-	"/assets/bloomstack_core/js/contact.js"
+	"/assets/bloomstack_core/js/address_and_contact.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
@@ -98,6 +97,7 @@ doctype_list_js = {
 override_doctype_dashboards = {
 	"Contract": "bloomstack_core.hook_events.contract.get_data",
 	"Employee": "bloomstack_core.hook_events.employee.get_data",
+	"Item": "bloomstack_core.hook_events.item.get_data",
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -201,7 +201,10 @@ doc_events = {
 		"after_insert": "bloomstack_core.bloomtrace.user.create_bloomtrace_client_user"
 	},
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
-		'validate': ['bloomstack_core.hook_events.utils.validate_license_expiry']
+		'validate': [
+			'bloomstack_core.hook_events.utils.validate_license_expiry', 
+			'bloomstack_core.hook_events.taxes.calculate_cannabis_tax'
+		]
 	}
 }
 

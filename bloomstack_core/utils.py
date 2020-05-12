@@ -267,37 +267,25 @@ def get_document_links(doctype, docs):
 	return links
 
 @frappe.whitelist()
-def unlink_address(doc, doctype, name):
-	address = frappe.get_doc("Address", doc)
-	address_links = address.get("links")
-	for data in address_links:
-			if(data.link_doctype == doctype and data.link_name == name ):
-					address_links.remove(data)
-	address.save()
+def link_address_or_contact(ref_doctype, ref_name, link_doctype, link_name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	doc.append("links", {"link_doctype": link_doctype, "link_name": link_name})
+	doc.save()
 
 @frappe.whitelist()
-def delete_address(doc, doctype, name):
-	address = frappe.get_doc("Address", doc)
-	address_links = address.get("links")
-	if(len(address_links) > 1):
-		unlink_address(doc, doctype, name)
+def unlink_address_or_contact(ref_doctype, ref_name, doctype, name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	links = doc.get("links")
+	for data in links:
+		if data.link_doctype == doctype and data.link_name == name:
+			links.remove(data)
+	doc.save()
+
+@frappe.whitelist()
+def delete_address_or_contact(ref_doctype, ref_name, doctype, name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	links = doc.get("links")
+	if len(links) > 1:
+		unlink_address_or_contact(ref_doctype, ref_name, doctype, name)
 	else:
-		frappe.delete_doc("Address", doc)
-
-@frappe.whitelist()
-def unlink_contact(doc, doctype, name):
-	contact = frappe.get_doc("Contact", doc)
-	contact_links = contact.get("links")
-	for data in contact_links:
-			if(data.link_doctype == doctype and data.link_name == name ):
-					contact_links.remove(data)
-	contact.save()
-
-@frappe.whitelist()
-def delete_contact(doc, doctype, name):
-	contact = frappe.get_doc("Contact", doc)
-	contact_links = contact.get("links")
-	if(len(contact_links) > 1):
-		unlink_contact(doc, doctype, name)
-	else:
-		frappe.delete_doc("Contact", doc)
+		frappe.delete_doc(ref_doctype, ref_name)

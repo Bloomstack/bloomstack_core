@@ -1,4 +1,3 @@
-
 <div class="clearfix"></div>
 {% for(var i=0, l=addr_list.length; i<l; i++) { %}
 <div class="address-box">
@@ -13,11 +12,13 @@
 		<a href="#Form/Address/{%= encodeURIComponent(addr_list[i].name) %}" class="btn btn-default btn-xs pull-right"
 			style="margin-top:-3px; margin-right: -5px;" title="Edit">
 			<i class="octicon octicon-pencil"></i></a>
-			
-		<a class="btn btn-primary btn-xs pull-right unlink_address" style="margin-top:-3px; margin-right: 10px;" data_address_name="{%= addr_list[i].name %}" title="Unlink">
+
+		<a class="btn btn-primary btn-xs pull-right unlink_address" style="margin-top:-3px; margin-right: 10px;"
+			data_address_name="{%= addr_list[i].name %}" title="Unlink">
 			<i class="fa fa-unlink"></i></a>
 
-		<a class="btn btn-danger btn-xs pull-right delete_address" style="margin-top:-3px; margin-right: 10px;" data_address_name="{%= addr_list[i].name %}" title="Delete">
+		<a class="btn btn-danger btn-xs pull-right delete_address" style="margin-top:-3px; margin-right: 10px;"
+			data_address_name="{%= addr_list[i].name %}" title="Delete">
 			<i class="octicon octicon-trashcan"></i></a>
 	</p>
 	<p>{%= addr_list[i].display %}</p>
@@ -30,4 +31,4 @@
 	<button class="btn btn-xs btn-default btn-address">{{ __("New Address") }}</button>
 	<button class="btn btn-xs btn-default btn-address-link">
 		{{ __("Link Address") }}</button>
-	</p>
+</p>
