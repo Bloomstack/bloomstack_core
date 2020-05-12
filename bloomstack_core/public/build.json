@@ -3,7 +3,9 @@
 		"node_modules/chart.js/dist/Chart.min.js",
 		"node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"
 	],
-	"js/contact_list.min.js": [
-		"public/js/templates/contact_list.html"
+	"js/address_and_contact.min.js": [
+		"public/js/templates/address_list.html",
+		"public/js/templates/contact_list.html",
+		"public/js/address_and_contact.js"
 	]
 }
