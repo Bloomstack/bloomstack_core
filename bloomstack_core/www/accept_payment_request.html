@@ -1,0 +1,58 @@
+{% extends "templates/web.html" %}
+
+{% block header %}
+	<h1 class="m-0">Payment Request</h1>
+{% endblock %}
+
+{% block page_content %}
+
+{% if error %}
+		{{ error }}
+	{% else %}
+<div class="row">
+	<div class="pay-selector col-sm-9">
+		<div>
+			Customer : <span class="col-sm-6"> {{ doc.customer }}</span>
+		</div>
+		<div class="row">
+			{% for gateway in payment_gateway_list %}
+				<br>
+				<span class="col-sm-6">
+				<input type="radio" name="pay-select" value="{{gateway.payment_gateway}}" class="radio-item"
+					onchange="payment_gateway_selected(event)" {% if gateway.is_default %} checked {% endif %}>
+				{{ gateway.label }}
+				{{ gateway.payment_gateway }}
+				</input>
+				</span>
+			{% endfor %}
+		</div>
+		<div class="page-header-actions-block" data-html-block="header-actions">
+			<p>
+				<a onclick="initiate_payment()" class="btn btn-primary btn-sm" id="pay-for-order">{{ _("Pay") }}
+					{{ doc.get_formatted("grand_total")}}
+				</a>
+			</p>
+		</div>
+	</div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+{% if error %}
+{% else %}
+<script> {% include "templates/pages/order.js" %} </script>
+<script>
+	window.doc_info = {
+		customer: '{{doc.customer}}',
+		doctype: '{{ doc.doctype }}',
+		doctype_name: '{{ doc.name }}',
+		grand_total: '{{ doc.grand_total }}',
+		currency: '{{ doc.currency }}',
+		payment_gateway_url: '/api/method/erpnext.accounts.doctype.payment_request.payment_request.make_payment_request?dn={{ doc.name }}&dt={{ doc.doctype }}&submit_doc=1&order_type=Shopping Cart'
+	}
+</script>
+{% endif %}
+{% endblock %}

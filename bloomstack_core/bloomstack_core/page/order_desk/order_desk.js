@@ -93,6 +93,21 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				on_customer_change: (customer) => {
 					this.frm.set_value('customer', customer);
 				},
+				on_order_type_change: (order_type) => {
+					this.frm.set_value('order_type', order_type)
+
+					if (order_type == 'Sample') {
+						this.frm.set_value('additional_discount_percentage', 100);
+						this.frm.doc.items.forEach(item => {
+							this.items.events.update_cart(item.item_code, "discount_percentage", 100);
+						})
+					} else if (order_type == 'Sales') {
+						this.frm.set_value('additional_discount_percentage', 0);
+						this.frm.doc.items.forEach(item => {
+							this.items.events.update_cart(item.item_code, "discount_percentage", 0);
+						})
+					}
+				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
 				},
@@ -116,7 +131,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		});
 
 		frappe.ui.form.on('Sales Order', 'selling_price_list', (frm) => {
-			if(this.items) {
+			if(this.items.items && !this.items.items.length) {
 				this.items.reset_items();
 			}
 		})
@@ -149,11 +164,23 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					if(!this.frm.doc.customer) {
 						frappe.throw(__('Please select a customer'));
 					}
-					this.update_item_in_cart(item, field, value);
-					this.cart && this.cart.unselect_all();
+					// check and warn user if a batch item is our of stock.
+					const item_details = this.cart.events.get_item_details(item);
+
+					if(item_details.actual_qty || !item_details.has_batch_no){
+						this.update_item_in_cart(item, field, value);
+						this.cart && this.cart.unselect_all();
+					}else{
+						frappe.confirm(__(`Batch Item ${item_details.item_name} is out of stock, sure you want to add it to cart?`),
+							() => {
+							this.update_item_in_cart(item, field, value);
+							this.cart && this.cart.unselect_all();
+							},
+							() => {}
+							);
+					}}
 				}
-			}
-		});
+			});
 	}
 
 	update_item_in_cart(item_code, field='qty', value=1, batch_no) {
@@ -170,6 +197,10 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				value = item[field] + flt(value);
 			}
 
+			if(field === 'rate' && item){
+				this.frm.doc.ignore_pricing_rule = 1
+			}
+
 			if(field === 'serial_no') {
 				value = item.serial_no + '\n'+ value;
 			}
@@ -178,7 +209,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			// a case, no point showing the dialog
 			const show_dialog = item.has_serial_no || item.has_batch_no;
 
-			if (show_dialog && field == 'qty' && ((!item.batch_no && item.has_batch_no) ||
+			if (value && show_dialog && field == 'qty' && ((!item.batch_no && item.has_batch_no) ||
 				(item.has_serial_no) || (item.actual_batch_qty != item.actual_qty)) ) {
 				this.select_batch_and_serial_no(item);
 			} else {
@@ -251,12 +282,17 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	on_qty_change(item) {
+		if(item.has_batch_no && !item.batch_no){
+			this.on_close(item)
+			return;
+		}
 		frappe.run_serially([
 			() => this.update_cart_data(item),
 		]);
 	}
 
 	post_qty_change(item) {
+		this.frm.cscript._calculate_taxes_and_totals()
 		this.cart.update_taxes_and_totals();
 		this.cart.update_grand_total();
 		this.cart.update_qty_total();
@@ -267,9 +303,15 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	select_batch_and_serial_no(row) {
 		frappe.dom.unfreeze();
 
-		erpnext.show_serial_batch_selector(this.frm, row, () => {
+		erpnext.show_serial_batch_selector(this.frm, row, (success) => {
+			const updated_item = this.frm.doc.items.find(item => item.name === success.name)
+			if(updated_item){
+				this.update_item_in_frm(updated_item)
+			}else{
+				this.frm.add_child('items',success)
+			}
 			this.frm.doc.items.forEach(item => {
-				this.update_item_in_frm(item, 'qty', item.qty)
+				this.update_item_in_frm(item)
 					.then(() => {
 						// update cart
 						frappe.run_serially([
@@ -289,9 +331,10 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	on_close(item) {
-		if (!this.cart.exists(item.item_code, item.batch_no) && item.qty) {
+		if (item.qty == 0 || (item.has_batch_no && !item.batch_no)) {
 			frappe.model.clear_doc(item.doctype, item.name);
 		}
+		this.post_qty_change(item)
 	}
 
 	update_cart_data(item) {
@@ -323,8 +366,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					frappe.model.clear_doc(item.doctype, item.name);
 				}
 			})
-
-		return Promise.resolve();
 	}
 
 	submit_sales_order() {
@@ -438,7 +479,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	set_form_action() {
-		if(this.frm.doc.docstatus == 1 || this.frm.doc.items.length > 0) {
+		if(this.frm.doc.docstatus == 1) {
 			this.page.set_secondary_action(__("Print"), async() => {
 				if(this.frm.doc.docstatus != 1 ){
 					await this.frm.save();
@@ -554,13 +595,11 @@ class OrderDeskItems {
 				default: me.parent_item_group,
 				onchange: () => {
 					const item_group = this.item_group_field.get_value();
-					if (item_group) {
-						this.filter_items({ item_group: item_group });
-					}
+					this.filter_items({ item_group });
 				},
 				get_query: () => {
 					return {
-						query: 'erpnext.selling.page.point_of_sale.point_of_sale.item_group_query'
+						query: 'bloomstack_core.bloomstack_core.page.order_desk.order_desk.item_group_query'
 					};
 				}
 			},
@@ -687,7 +726,8 @@ class OrderDeskItems {
 
 	get_item_html(item) {
 		const price_list_rate = format_currency(item.price_list_rate, this.currency);
-		const { item_code, item_name, item_image} = item;
+		const item_qty_display = item.actual_qty > 0 ? `Stock: ${item.actual_qty} ${item.stock_uom}` : "Out of Stock"
+		const { item_code, item_name, item_image,item_group} = item;
 		const item_title = item_name || item_code;
 
 		const template = `
@@ -695,7 +735,11 @@ class OrderDeskItems {
 				<div class="image-view-header">
 					<div>
 						<a class="grey list-id" data-name="${item_code}" title="${item_title}">
-							${item_title}
+							${item_title},
+							<br>
+							<span style="font-size: large">
+								${item_group}
+							<span>
 						</a>
 					</div>
 				</div>
@@ -714,6 +758,9 @@ class OrderDeskItems {
 						<span class="price-info">
 							${price_list_rate}
 						</span>
+						<span class="price-info">
+							${item_qty_display}
+						</span>
 					</a>
 				</div>
 			</div>
@@ -725,19 +772,19 @@ class OrderDeskItems {
 	get_items({start = 0, page_length = 40, search_value='', item_group=this.parent_item_group}={}) {
 		const price_list = this.frm.doc.selling_price_list;
 		return new Promise(res => {
-			frappe.call({
-				method: "erpnext.selling.page.point_of_sale.point_of_sale.get_items",
-				freeze: true,
-				args: {
-					start,
-					page_length,
-					price_list,
-					item_group,
-					search_value
-				}
-			}).then(r => {
-				res(r.message);
-			});
+					frappe.call({
+						method: "bloomstack_core.bloomstack_core.page.order_desk.order_desk.get_items",
+						freeze: true,
+						args: {
+							start,
+							page_length,
+							price_list,
+							item_group,
+							search_value
+						}
+					}).then(r => {
+						res(r.message);
+					});
 		});
 	}
 }
@@ -756,6 +803,7 @@ class SalesOrderCart {
 		this.make_dom();
 		this.make_customer_field();
 		this.make_numpad();
+		this.make_order_type_field();
 	}
 
 	make_dom() {
@@ -955,6 +1003,24 @@ class SalesOrderCart {
 		// hiiremovethis this.frm.set_value("pos_total_qty",total_item_qty);
 	}
 
+	make_order_type_field() {
+		this.order_type_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Select',
+				label: 'Order Type',
+				fieldname: 'order_type',
+				options: this.frm.get_field("order_type").df.options,
+				reqd: 1,
+				default: this.frm.doc.order_type,
+				onchange: () => {
+					this.events.on_order_type_change(this.order_type_field.get_value());
+				}
+			},
+			parent: this.wrapper.find('.customer-field'),
+			render_input: true
+		});
+	}
+
 	make_customer_field() {
 		this.customer_field = frappe.ui.form.make_control({
 			df: {
@@ -1109,7 +1175,7 @@ class SalesOrderCart {
 
 		return `
 			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
-				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.actual_qty}">
+				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.actual_qty} ${item.stock_uom}">
 				<div class="item-name list-item__content list-item__content--flex-1.5 ellipsis">
 					${item.item_name}
 				</div>

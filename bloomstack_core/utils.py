@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import json
+from frappe.utils import get_url
 
 from six import string_types
 
@@ -155,6 +156,32 @@ def create_contract_from_quotation(source_name, target_doc=None):
 	return contract
 
 
+@frappe.whitelist()
+def create_customer(source_name, target_doc=None):
+	existing_customer = frappe.db.exists("Customer", {"license_number": source_name})
+	if existing_customer:
+		customer_link = frappe.utils.get_link_to_form("Customer", existing_customer)
+		frappe.throw("A Customer already exists for this license - {0}".format(customer_link))
+
+	customer = frappe.new_doc("Customer")
+	customer.customer_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
+	customer.license = source_name
+	return customer
+
+
+@frappe.whitelist()
+def create_supplier(source_name, target_doc=None):
+	existing_supplier = frappe.db.exists("Supplier", {"license_number": source_name})
+	if existing_supplier:
+		supplier_link = frappe.utils.get_link_to_form("Supplier", existing_supplier)
+		frappe.throw("A Supplier already exists for this license - {0}".format(supplier_link))
+
+	supplier = frappe.new_doc("Supplier")
+	supplier.supplier_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
+	supplier.license = source_name
+	return supplier
+
+
 @frappe.whitelist(allow_guest=True)
 def authorize_document(sign=None, signee=None, docname=None):
 	if frappe.db.exists("Authorization Request", docname):
@@ -195,3 +222,52 @@ def create_authorization_request(dt, dn, contact_email, contact_name):
 	new_authorization_request.authorizer_email = contact_email
 	new_authorization_request.authorizer_name = contact_name
 	new_authorization_request.save()
+
+@frappe.whitelist()
+def get_contact(doctype, name, contact_field):
+
+	contact = frappe.db.get_value(doctype, name, contact_field)
+
+	contact_persons = frappe.db.sql(
+		"""
+			SELECT parent,
+				(SELECT is_primary_contact FROM tabContact c WHERE c.name = dl.parent) AS is_primary_contact
+			FROM
+				`tabDynamic Link` dl
+			WHERE
+				dl.link_doctype=%s
+				AND dl.link_name=%s
+				AND dl.parenttype = "Contact"
+		""", (frappe.unscrub(contact_field), contact), as_dict=1)
+
+	if contact_persons:
+		for contact_person in contact_persons:
+			contact_person.email_id = frappe.db.get_value("Contact", contact_person.parent, ["email_id"])
+			if contact_person.is_primary_contact:
+				return contact_person
+
+		contact_person = contact_persons[0]
+
+		return contact_person
+
+@frappe.whitelist()
+def get_document_links(doctype, docs):
+	docs = json.loads(docs)
+	print_format = "print_format"
+	links = []
+	for doc in docs:
+		link = frappe.get_template("templates/emails/print_link.html").render({
+			"url": get_url(),
+			"doctype": doctype,
+			"name": doc.get("name"),
+			"print_format": print_format,
+			"key": frappe.get_doc(doctype, doc.get("name")).get_signature()
+		})
+		links.append(link)
+	return links
+
+@frappe.whitelist()
+def link_address_or_contact(ref_doctype, ref_name, link_doctype, link_name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	doc.append("links", {"link_doctype": link_doctype, "link_name": link_name})
+	doc.save()

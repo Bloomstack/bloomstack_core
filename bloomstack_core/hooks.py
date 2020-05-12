@@ -34,6 +34,9 @@ app_include_js = [
 	"/assets/bloomstack_core/js/conf.js",
 	"/assets/bloomstack_core/js/query_report.js",
 	"/assets/bloomstack_core/js/banner.js",
+	"/assets/bloomstack_core/js/utils.js",
+	"assets/js/contact_list.min.js",
+	"/assets/bloomstack_core/js/address_and_contact.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
@@ -63,9 +66,7 @@ webform_include_js = {
 # include js in doctype views
 doctype_js = {
 	"Batch": "public/js/batch.js",
-	"Company": "public/js/company.js",
 	"Contract": "public/js/contract.js",
-	"Customer": "public/js/customer.js",
 	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
@@ -79,18 +80,22 @@ doctype_js = {
 	"Sales Invoice": "public/js/sales_invoice.js",
 	"Sales Order": "public/js/sales_order.js",
 	"Stock Entry": "public/js/stock_entry.js",
-	"Supplier": "public/js/supplier.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
 }
 
 doctype_list_js = {
 	"Delivery Trip": "public/js/delivery_trip_list.js",
-	"Sales Order": "public/js/sales_order_list.js"
+	"Sales Order": "public/js/sales_order_list.js",
+	"Sales Invoice": "public/js/sales_invoice_list.js",
+	"Purchase Order": "public/js/purchase_order_list.js",
+	"Purchase Invoice": "public/js/purchase_invoice_list.js"
 }
 
 override_doctype_dashboards = {
 	"Contract": "bloomstack_core.hook_events.contract.get_data",
+	"Employee": "bloomstack_core.hook_events.employee.get_data",
+	"Item": "bloomstack_core.hook_events.item.get_data",
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -155,6 +160,9 @@ doc_events = {
 			"bloomstack_core.hook_events.contract.create_order_against_contract"
 		]
 	},
+	"Customer": {
+		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
+	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
@@ -175,6 +183,9 @@ doc_events = {
 	"Employee": {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
+	"Packing Slip": {
+		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
 	},
@@ -184,11 +195,14 @@ doc_events = {
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
 	},
-	"Packing Slip": {
-		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	"User": {
+		"after_insert": "bloomstack_core.bloomtrace.user.create_bloomtrace_client_user"
 	},
-	"Customer": {
-		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
+	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
+		'validate': [
+			'bloomstack_core.hook_events.utils.validate_license_expiry',
+			'bloomstack_core.hook_events.taxes.calculate_cannabis_tax'
+		]
 	}
 }
 
@@ -200,6 +214,8 @@ scheduler_events = {
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	]
 }
+
+after_migrate = ['bloomstack_core.hook_events.lead.rearrange_standard_fields']
 
 # Testing
 # -------

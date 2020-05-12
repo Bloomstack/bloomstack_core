@@ -22,7 +22,7 @@ def autoname(item, method=None):
 			e = variant ID number; has to be incremented.
 	"""
 
-	if not frappe.db.get_single_value("Bloomstack Settings", "autoname_item"):
+	if not frappe.db.get_single_value("Stock Settings", "autoname_item"):
 		return
 
 	# Get abbreviations
@@ -46,3 +46,10 @@ def autoname(item, method=None):
 
 	if not method:
 		return item.item_code
+
+def get_data(data):
+	for transaction in data.transactions:
+		if transaction.get("label") == "Traceability":
+			transaction.get("items", []).append("Compliance Item")
+
+	return data

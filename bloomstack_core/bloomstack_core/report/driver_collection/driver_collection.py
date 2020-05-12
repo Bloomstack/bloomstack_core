@@ -39,7 +39,7 @@ def get_collections(date_range, driver, show_individual_stops=False):
 			if stop.delivery_note:
 				# Base amounts
 				discount_stop_amount = promotional_stop_amount = 0.0
-				is_promotional_delivery = frappe.db.get_value("Delivery Note", stop.delivery_note, "new_order_type") == "Promotional"
+				is_promotional_delivery = frappe.db.get_value("Delivery Note", stop.delivery_note, "order_type") == "Promotional"
 
 				if stop.grand_total == 0:
 					discount_stop_amount = frappe.db.get_value("Delivery Note", stop.delivery_note, "discount_amount")

@@ -2,7 +2,22 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Compliance Info', {
-	refresh: function(frm) {
+	refresh: (frm) => {
+		console.log(!frm.is_new());
+		if (!frm.is_new()) {
+			frm.add_custom_button(__("Customer"), () => {
+				frappe.model.open_mapped_doc({
+					method: "bloomstack_core.utils.create_customer",
+					frm: frm
+				});
+			}, __("Create"));
 
+			frm.add_custom_button(__("Supplier"), () => {
+				frappe.model.open_mapped_doc({
+					method: "bloomstack_core.utils.create_supplier",
+					frm: frm
+				});
+			}, __("Create"));
+		}
 	}
 });

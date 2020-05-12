@@ -4,8 +4,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "autoname_item",
-  "column_break_2",
   "growth_guide_link"
  ],
  "fields": [
@@ -13,21 +11,11 @@
    "fieldname": "growth_guide_link",
    "fieldtype": "Data",
    "label": "Growth Guide Link"
-  },
-  {
-   "default": "0",
-   "fieldname": "autoname_item",
-   "fieldtype": "Check",
-   "label": "Autoname Item"
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-04-06 12:18:53.492081",
+ "modified": "2020-04-07 04:55:48.850504",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Bloomstack Settings",
