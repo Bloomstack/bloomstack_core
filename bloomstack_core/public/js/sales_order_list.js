@@ -21,22 +21,55 @@ frappe.listview_settings['Sales Order'].onload = function (doclist) {
 						freeze: true,
 						callback: (r) => {
 							if (!r.exc) {
-								if (r.message.length > 0) {
-									let message = "";
-
-									// loop through each order and render linked Pick Lists
-									for (let order of r.message) {
-										let pick_lists = order.pick_lists
-											.map(pick_list => frappe.utils.get_form_link("Pick List", pick_list, true))
-											.join(", ");
-
-										message += `<li><strong>${order.sales_order}</strong>: ${pick_lists}</li>`;
-									}
-
-									message = `<ul>${message}</ul>`;
-									frappe.msgprint(__(`The following Pick Lists were created / found against each Sales Order:<br><br>${message}`));
-									doclist.refresh();
+								if (r.message.length === 0) {
+									return
 								}
+
+								let message = "";
+
+								// loop through each created order and render linked Pick Lists
+								let created_order_message = "";
+								let created_orders = r.message.filter(order => order.created === true);
+								for (let order of created_orders) {
+									let pick_lists = order.pick_lists
+										.map(pick_list => frappe.utils.get_form_link("Pick List", pick_list, true))
+										.join(", ");
+
+									created_order_message += `<li><strong>${order.customer}</strong> (${order.sales_order}): ${pick_lists}</li>`;
+								}
+
+								if (created_order_message) {
+									message += `The following Pick Lists were created:<br><br><ul>${created_order_message}</ul>`;
+								}
+
+								// loop through each existing order and render linked Pick Lists
+								let existing_order_message = "";
+								let existing_orders = r.message.filter(order => order.created === false);
+								for (let order of existing_orders) {
+									let pick_lists = order.pick_lists
+										.map(pick_list => frappe.utils.get_form_link("Pick List", pick_list, true))
+										.join(", ");
+
+									existing_order_message += `<li><strong>${order.customer}</strong> (${order.sales_order}): ${pick_lists}</li>`;
+								}
+
+								if (existing_order_message) {
+									message += `<br>The following existing Pick Lists were found:<br><br><ul>${existing_order_message}</ul>`;
+								}
+
+								frappe.msgprint(__(message));
+
+								// if validation messages are found, append at the bottom of our message
+								if (r._server_messages) {
+									let server_messages = JSON.parse(r._server_messages);
+									for (let server_message of server_messages) {
+										frappe.msgprint(__(JSON.parse(server_message).message));
+									}
+									// delete server messages to avoid Frappe eating up our msgprint
+									delete r._server_messages;
+								}
+
+								doclist.refresh();
 							}
 						}
 					});
