@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "creation": "2020-05-11 20:44:33.930964",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "license",
+  "license_type",
+  "license_expiry_date",
+  "default_license"
+ ],
+ "fields": [
+  {
+   "fieldname": "license",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "License",
+   "options": "Compliance Info"
+  },
+  {
+   "fetch_from": "license.license_type",
+   "fieldname": "license_type",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "License Type"
+  },
+  {
+   "fetch_from": "license.license_expiry_date",
+   "fieldname": "license_expiry_date",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "License Expiry Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "default_license",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Default License"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2020-05-12 20:07:20.782685",
+ "modified_by": "Administrator",
+ "module": "Bloomstack Core",
+ "name": "Compliance License Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
