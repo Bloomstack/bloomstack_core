@@ -1,0 +1,7 @@
+.address-box p.h6 + p.h6 {
+  margin-top: 0;
+}
+
+.address-box p.h6 {
+  margin-bottom: 0;
+}
