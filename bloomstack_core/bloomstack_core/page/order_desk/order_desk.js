@@ -1029,7 +1029,7 @@ class SalesOrderCart {
 		this.delivery_date_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Date',
-				label: 'Delivery Date',
+				label: 'Expected Delivery Date',
 				fieldname: 'delivery_date',
 				reqd: 1,
 				onchange: () => {
