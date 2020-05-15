@@ -162,13 +162,12 @@ doc_events = {
 	},
 	"Customer": {
 		"validate": [
-			"bloomstack_core.hook_events.customer.update_lead_acc_open_date",
-			"bloomstack_core.hook_events.customer.validate_default_license"
+			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
 		]
 	},
-	"Supplier": {
+	("Supplier", "Customer"): {
 		"validate": [
-			"bloomstack_core.hook_events.customer.validate_default_license"
+			"bloomstack_core.hook_events.utils.validate_default_license"
 		]
 	},
 	"Delivery Note": {

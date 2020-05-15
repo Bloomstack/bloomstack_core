@@ -24,6 +24,13 @@ def validate_entity_license(party_type, party_name):
 		frappe.throw(_("{0}'s license number {1} has expired on {2}").format(
 			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
 
+def validate_default_license(doc, method):
+	"""allow to set only one default license for supplier or customer"""
+
+	default_license = [license for license in doc.compliance_licenses if license.is_default]
+	if len(default_license) != 1:
+			frappe.throw(_("There can be only one default license, found {0}").format(len(default_license)))
+
 def get_default_license(party_type, party_name):
 	"""get default license from customer or supplier"""
 	doc = frappe.get_doc(party_type, party_name)
