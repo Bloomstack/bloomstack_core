@@ -1,5 +1,4 @@
 import frappe
-from frappe import _
 
 def update_lead_acc_open_date(customer, method):
 	"""update lead account opend date"""
