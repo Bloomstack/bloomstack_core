@@ -161,7 +161,15 @@ doc_events = {
 		]
 	},
 	"Customer": {
-		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
+		"validate": [
+			"bloomstack_core.hook_events.customer.update_lead_acc_open_date",
+			"bloomstack_core.hook_events.customer.validate_default_license"
+		]
+	},
+	"Supplier": {
+		"validate": [
+			"bloomstack_core.hook_events.customer.validate_default_license"
+		]
 	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
@@ -198,7 +206,7 @@ doc_events = {
 	"User": {
 		"after_insert": "bloomstack_core.bloomtrace.user.create_bloomtrace_client_user"
 	},
-	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
+	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Supplier Quotation', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': [
 			'bloomstack_core.hook_events.utils.validate_license_expiry',
 			'bloomstack_core.hook_events.taxes.calculate_cannabis_tax'

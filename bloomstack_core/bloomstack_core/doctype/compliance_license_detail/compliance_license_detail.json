@@ -8,7 +8,7 @@
   "license",
   "license_type",
   "license_expiry_date",
-  "default_license"
+  "is_default"
  ],
  "fields": [
   {
@@ -34,18 +34,18 @@
   },
   {
    "default": "0",
-   "fieldname": "default_license",
+   "fieldname": "is_default",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Default License"
+   "label": "Is Default"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2020-05-12 20:07:20.782685",
+ "modified": "2020-05-15 04:44:20.775857",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
- "name": "Compliance License Item",
+ "name": "Compliance License Detail",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

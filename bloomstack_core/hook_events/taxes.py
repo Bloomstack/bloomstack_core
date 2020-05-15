@@ -1,5 +1,6 @@
 import frappe
 from erpnext.stock.doctype.item.item import get_uom_conv_factor
+from bloomstack_core.hook_events.utils import get_default_license
 from frappe import _
 
 DRY_FLOWER_TAX_RATE = 9.65
@@ -21,12 +22,12 @@ def calculate_cannabis_tax(doc, method):
 		set_taxes(doc, cultivation_tax_row)
 	elif doc.doctype in ("Quotation", "Sales Order", "Sales Invoice", "Delivery Note"):
 		# customer license is required to inspect license type
-		default_customer_license = frappe.db.exists("Compliance License Item", {"parent" doc.customer,"default_license":1})
+		default_customer_license = get_default_license("Customer", doc.customer)
 		if not default_customer_license:
 			frappe.msgprint(_("Please set default customer compliance license in customer {0}").format(doc.customer))
 			return
 
-		license_type = frappe.db.get_value("Complaince License Item", default_customer_license, "license_type")
+		license_type = frappe.db.get_value("Compliance Info", default_customer_license, "license_type")
 		if license_type == "Distributor":
 			# calculate cultivation tax for selling cycle if customer is a distributor
 			cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items)
