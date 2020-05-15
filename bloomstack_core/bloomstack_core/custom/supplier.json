@@ -141,7 +141,7 @@
    "modified_by": "Administrator",
    "name": "Supplier-compliance_licenses",
    "no_copy": 0,
-   "options": "Compliance License Item",
+   "options": "Compliance License Detail",
    "owner": "Administrator",
    "parent": null,
    "parentfield": null,
