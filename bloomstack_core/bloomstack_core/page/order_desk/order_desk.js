@@ -117,7 +117,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				on_numpad: (value) => {
 					if (value == Order) {
 						this.frm.doc.items.forEach((item) => {
-							item.delivery_date = frappe.datetime.add_days(this.frm.doc.transaction_date, 7);
+							item.delivery_date = this.delivery_date;
 						})
 
 						this.submit_sales_order();
