@@ -12,6 +12,7 @@ body[data-route="order-desk"] .list-item.list-item--head {
 
 body[data-route="order-desk"] .list-item.list-item--head .text-muted {
   color: #fff!important;
+  flex: 1.5;
 }
 
 body[data-route="order-desk"] .quantity.list-item__content.text-right span button {

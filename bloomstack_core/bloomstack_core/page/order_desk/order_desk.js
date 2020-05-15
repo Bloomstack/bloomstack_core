@@ -818,6 +818,7 @@ class SalesOrderCart {
 							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
 							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
 							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
+							<div class="list-item__content text-muted text-right">${__('Actions')}</div>
 						</div>
 						<div class="cart-items">
 							<div class="empty-state">
@@ -836,6 +837,7 @@ class SalesOrderCart {
 						<div class="quantity-total">
 							${this.get_item_qty_total()}
 						</div>
+						
 					</div>
 				</div>
 				<div class="row">
@@ -1187,6 +1189,9 @@ class SalesOrderCart {
 				</div>
 				<div class="rate list-item__content text-right">
 					${rate}
+				</div>
+				<div class="action list-item__content text-right">
+				<a class="btn btn-danger btn-xs" title="Delete"><i class="octicon octicon-trashcan"></i></a>
 				</div>
 			</div>
 		`;
