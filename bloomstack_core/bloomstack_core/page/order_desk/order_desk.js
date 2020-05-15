@@ -238,7 +238,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			return;
 		}
 
-		let args = { item_code: item_code, delivery_date: this.delivery_date ? this.delivery_date : null};
+		let args = { item_code: item_code, delivery_date: this.delivery_date || null };
 		if (in_list(['serial_no', 'batch_no'], field)) {
 			args[field] = value;
 		}
