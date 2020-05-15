@@ -108,8 +108,8 @@ erpnext.pos.OrderDesk = class OrderDesk {
 						})
 					}
 				},
-				on_delivery_date_change: (delivery_date) =>{
-					this.frm.set_value('delivery_date', delivery_date)
+				on_delivery_date_change: (delivery_date) => {
+					this.delivery_date = delivery_date
 				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
@@ -238,7 +238,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			return;
 		}
 
-		let args = { item_code: item_code };
+		let args = { item_code: item_code, delivery_date: this.delivery_date ? this.delivery_date : null};
 		if (in_list(['serial_no', 'batch_no'], field)) {
 			args[field] = value;
 		}
