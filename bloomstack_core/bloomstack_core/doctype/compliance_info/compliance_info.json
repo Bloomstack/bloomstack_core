@@ -98,11 +98,11 @@
    "fieldname": "license_for",
    "fieldtype": "Select",
    "label": "License For",
-   "options": "\nCultivator\nDistributor\nManufacturer\nMicrobusiness\nRetailer\nLab\nEvent"
+   "options": "\nCultivator\nDistributor\nManufacturer\nMicrobusiness\nRetailer\nLab\nEvent Organizer"
   }
  ],
  "links": [],
- "modified": "2020-05-16 02:23:19.397905",
+ "modified": "2020-05-16 02:41:04.670810",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Info",
