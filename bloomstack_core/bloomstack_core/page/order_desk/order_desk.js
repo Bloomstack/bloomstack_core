@@ -818,7 +818,7 @@ class SalesOrderCart {
 							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
 							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
 							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
-							<div class="list-item__content text-muted text-right">${__('Actions')}</div>
+							<div class="list-item__content text-muted text-right">${__('')}</div>
 						</div>
 						<div class="cart-items">
 							<div class="empty-state">
@@ -1191,7 +1191,7 @@ class SalesOrderCart {
 					${rate}
 				</div>
 				<div class="action list-item__content text-right">
-				<a class="btn btn-danger btn-xs" title="Delete"><i class="octicon octicon-trashcan"></i></a>
+				<a class="btn btn-danger btn-xs" title="Delete">X</a>
 				</div>
 			</div>
 		`;
