@@ -1189,7 +1189,7 @@ class SalesOrderCart {
 				</div>
 				<div class="rate list-item__content text-right">
 					${rate}
-					</div>
+				</div>
 				<div class="action list-item__content text-right action_button">
 					<a class="btn btn-danger btn-xs" title="Delete">X</a>
 				</div>
