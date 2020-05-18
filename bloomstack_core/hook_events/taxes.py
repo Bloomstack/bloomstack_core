@@ -24,7 +24,7 @@ def calculate_cannabis_tax(doc, method):
 		# customer license is required to inspect license type
 		default_customer_license = get_default_license("Customer", doc.customer)
 		if not default_customer_license:
-			frappe.msgprint(_("Please set default customer compliance license in customer {0}").format(doc.customer))
+			frappe.msgprint(_("Please set a default license for {0} to calculate taxes").format(doc.customer))
 			return
 
 		license_type = frappe.db.get_value("Compliance Info", default_customer_license, "license_type")

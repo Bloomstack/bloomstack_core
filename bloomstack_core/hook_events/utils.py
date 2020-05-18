@@ -26,19 +26,22 @@ def validate_entity_license(party_type, party_name):
 
 def validate_default_license(doc, method):
 	"""allow to set only one default license for supplier or customer"""
+	licenses = [license for license in doc.licenses]
+	if len(licenses) == 1:
+		doc.licenses[-1].is_default = 1
 
-	default_license = [license for license in doc.compliance_licenses if license.is_default]
+	default_license = [license for license in doc.licenses if license.is_default]
 	if len(default_license) != 1:
-			frappe.throw(_("There can be only one default license, found {0}").format(len(default_license)))
+		frappe.throw(_("There can be only one default license, found {0}").format(len(default_license)))
 
 def get_default_license(party_type, party_name):
 	"""get default license from customer or supplier"""
 	doc = frappe.get_doc(party_type, party_name)
-	compliance_licenses = doc.get("compliance_licenses")
-	if not compliance_licenses:
+	licenses = doc.get("licenses")
+	if not licenses:
 		return
 
-	default_license = find(compliance_licenses, lambda gateway: gateway.get("is_default")) or ''
+	default_license = find(licenses, lambda license: license.get("is_default")) or ''
 
 	if default_license:
 		default_license = default_license.get("license")
