@@ -1159,7 +1159,7 @@ class SalesOrderCart {
 
 			$item.find('.quantity input').val(item.qty);
 			$item.find('.discount').text(item.discount_percentage + '%');
-			$item.find('.rate').text(format_currency(item.rate, this.frm.doc.currency));
+			$item.find('.rate input').val(item.rate);
 			$item.addClass(indicator_class);
 			$item.removeClass(remove_class);
 		} else {
@@ -1169,7 +1169,6 @@ class SalesOrderCart {
 
 	get_item_html(item) {
 		const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
-		const rate = format_currency(item.rate, this.frm.doc.currency);
 		const indicator_class = (!is_stock_item || item.actual_qty >= item.qty) ? 'green' : 'red';
 		const batch_no = item.batch_no || '';
 
@@ -1186,7 +1185,7 @@ class SalesOrderCart {
 					${item.discount_percentage}%
 				</div>
 				<div class="rate list-item__content text-right">
-					${rate}
+					${get_rate_html(item.rate)}
 				</div>
 			</div>
 		`;
@@ -1205,6 +1204,13 @@ class SalesOrderCart {
 					</span>
 				</div>
 			`;
+		};
+
+		function get_rate_html(rate){
+			return `
+			<div class="input-group input-group-xs">
+						<input class="form-control" type="number" value="${rate}">
+					</div>`
 		}
 	}
 
@@ -1262,6 +1268,13 @@ class SalesOrderCart {
 			const $item = $input.closest('.list-item[data-item-code]');
 			const item_code = unescape($item.attr('data-item-code'));
 			events.on_field_change(item_code, 'qty', flt($input.val()));
+		});
+
+		this.$cart_items.on('change', '.rate input', function() {
+			const $input = $(this);
+			const $item = $input.closest('.list-item[data-item-code]');
+			const item_code = unescape($item.attr('data-item-code'));
+			events.on_field_change(item_code, 'rate', flt($input.val()));
 		});
 
 		// current item
