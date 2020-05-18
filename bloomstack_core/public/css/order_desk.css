@@ -19,3 +19,12 @@ body[data-route="order-desk"] .quantity.list-item__content.text-right span butto
   background-color: #4f5261;
   color: #fff;
 }
+
+body[data-route="order-desk"] .list-item.list-item--head .text-muted.actions {
+  flex: 1;
+}
+
+body[data-route="order-desk"] .list-item__content.rate {
+  margin-right: 0;
+  min-width: 65px;
+}

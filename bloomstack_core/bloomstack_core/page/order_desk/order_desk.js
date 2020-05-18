@@ -818,7 +818,7 @@ class SalesOrderCart {
 							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
 							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
 							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
-							<div class="list-item__content text-muted text-right">${__('')}</div>
+							<div class="list-item__content text-muted text-right actions">${__('')}</div>
 						</div>
 						<div class="cart-items">
 							<div class="empty-state">
@@ -1189,9 +1189,9 @@ class SalesOrderCart {
 				</div>
 				<div class="rate list-item__content text-right">
 					${rate}
-				</div>
-				<div class="action list-item__content text-right">
-				<a class="btn btn-danger btn-xs" title="Delete">X</a>
+					</div>
+					<div class="action list-item__content text-right action_button">
+					<a class="btn btn-danger btn-xs" title="Delete">X</a>
 				</div>
 			</div>
 		`;
