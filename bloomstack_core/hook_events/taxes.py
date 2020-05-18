@@ -32,7 +32,7 @@ def calculate_cannabis_tax(doc, method):
 			# calculate cultivation tax for selling cycle if customer is a distributor
 			cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items)
 			set_taxes(doc, cultivation_tax_row)
-		elif license_for == "Retailer":
+		elif license_type == "Retailer":
 			# calculate excise tax for selling cycle is customer is a retailer or end-consumer
 			exicse_tax_row = calculate_excise_tax(doc, compliance_items)
 			set_taxes(doc, exicse_tax_row)
