@@ -1196,7 +1196,8 @@ class SalesOrderCart {
 		const batch_no = item.batch_no || '';
 
 		const me = this;
-		$(document).off('click').on('click', '.action.list-item__content a', function () {
+		$(document).on('click', '.action.list-item__content a', function (event) {
+			event.stopImmediatePropagation();
 			let name = $(this).attr('data-name');
 			let item_code = $(this).attr('data-item-code');
 			frappe.confirm(__(`Are you sure you want to delete ${name} item?`),
