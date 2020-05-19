@@ -150,9 +150,6 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
-	"Item": {
-		"autoname": "bloomstack_core.hook_events.item.autoname"
-	},
 	"Contract": {
 		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
@@ -183,8 +180,15 @@ doc_events = {
 	"Employee": {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
+	"Item": {
+		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
+	"Pick List": {
+		"on_submit": "bloomstack_core.hook_events.pick_list.update_order_package_tag",
+		"on_cancel": "bloomstack_core.hook_events.pick_list.update_order_package_tag"
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
