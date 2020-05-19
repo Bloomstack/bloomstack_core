@@ -1,4 +1,5 @@
 import frappe
+from bloomstack_core.hook_events.utils import get_default_license
 from erpnext.stock.doctype.item.item import get_uom_conv_factor
 from frappe import _
 
@@ -21,12 +22,12 @@ def calculate_cannabis_tax(doc, method):
 		set_taxes(doc, cultivation_tax_row)
 	elif doc.doctype in ("Quotation", "Sales Order", "Sales Invoice", "Delivery Note"):
 		# customer license is required to inspect license type
-		customer_license = frappe.db.get_value("Customer", doc.customer, 'license')
-		if not customer_license:
-			frappe.msgprint(_("Please set a license for {0} to calculate taxes").format(doc.customer))
+		default_customer_license = get_default_license("Customer", doc.customer)
+		if not default_customer_license:
+			frappe.msgprint(_("Please set a default license for {0} to calculate taxes").format(doc.customer))
 			return
 
-		license_for = frappe.db.get_value("Compliance Info", customer_license, "license_for")
+		license_for = frappe.db.get_value("Compliance Info", default_customer_license, "license_for")
 		if license_for == "Distributor":
 			# calculate cultivation tax for selling cycle if customer is a distributor
 			cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items)
