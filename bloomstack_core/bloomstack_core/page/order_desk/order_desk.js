@@ -1195,6 +1195,18 @@ class SalesOrderCart {
 		const indicator_class = (!is_stock_item || item.actual_qty >= item.qty) ? 'green' : 'red';
 		const batch_no = item.batch_no || '';
 
+		const me = this;
+		$(document).on('click', '.action.list-item__content a', function (event) {
+			event.stopImmediatePropagation(); // to prevent firing of multiple events
+			let item_name = $(this).data('name');
+			let item_code = $(this).data('item-code');
+			frappe.confirm(__(`Are you sure you want to remove ${item_name} from the order?`),
+				 () => {
+					me.events.on_field_change(item_code, 'qty', 0);
+				}
+			);
+		})
+
 		return `
 			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
 				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.actual_qty} ${item.stock_uom}">
@@ -1211,7 +1223,7 @@ class SalesOrderCart {
 					${rate}
 				</div>
 				<div class="action list-item__content text-right action_button">
-					<a class="btn btn-danger btn-xs" title="Delete">X</a>
+					<a class="btn btn-danger btn-xs" title="Delete" data-name="${item.item_name}" data-item-code="${item.item_code}">X</a>
 				</div>
 			</div>
 		`;
