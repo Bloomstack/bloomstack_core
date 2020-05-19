@@ -1196,11 +1196,14 @@ class SalesOrderCart {
 		const batch_no = item.batch_no || '';
 
 		const me = this;
-		$(document).on('click', '.action.list-item__content a', function () {
-			var doctype = $(this).attr('data_doctype');
-			var name = $(this).attr('data_name');
-			var item_code = $(this).attr('data_item_code');
-			me.events.on_field_change(item_code, 'qty', 0);
+		$(document).off('click').on('click', '.action.list-item__content a', function () {
+			let name = $(this).attr('data-name');
+			let item_code = $(this).attr('data-item-code');
+			frappe.confirm(__(`Are you sure you want to delete ${name} item?`),
+				 () => {
+					me.events.on_field_change(item_code, 'qty', 0);
+				}
+			);
 		})
 
 		return `
@@ -1219,7 +1222,7 @@ class SalesOrderCart {
 					${rate}
 				</div>
 				<div class="action list-item__content text-right action_button">
-					<a class="btn btn-danger btn-xs" title="Delete" data_doctype="${item.doctype}" data_name="${item.name}" data_item_code="${item.item_code}">X</a>
+					<a class="btn btn-danger btn-xs" title="Delete" data-name="${item.item_name}" data-item-code="${item.item_code}">X</a>
 				</div>
 			</div>
 		`;
