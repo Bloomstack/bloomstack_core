@@ -75,7 +75,7 @@
    "fieldname": "license",
    "fieldtype": "Link",
    "hidden": 0,
-   "idx": 16,
+   "idx": 17,
    "ignore_user_permissions": 0,
    "ignore_xss_filter": 0,
    "in_global_search": 0,
