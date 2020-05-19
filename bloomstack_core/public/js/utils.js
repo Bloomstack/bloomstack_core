@@ -8,6 +8,11 @@ $(document).on('app_ready', function() {
 						args: {
 							party_type: "Supplier",
 							party_name: frm.doc.supplier
+						},
+						callback: (r) => {
+							if(r.message){
+								frm.set_value("license", r.message)
+							}
 						}
 					});
 				}
@@ -24,6 +29,11 @@ $(document).on('app_ready', function() {
 						args: {
 							party_type: "Customer",
 							party_name: frm.doc.customer
+						},
+						callback: (r) => {
+							if(r.message){
+								frm.set_value("license", r.message)
+							}
 						}
 					})
 				}
