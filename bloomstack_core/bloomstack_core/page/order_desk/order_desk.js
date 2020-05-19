@@ -1209,8 +1209,16 @@ class SalesOrderCart {
 		function get_rate_html(rate){
 			return `
 			<div class="input-group input-group-xs">
-						<input class="form-control" type="number" value="${rate}">
-					</div>`
+				<span class="input-group-btn">
+					<button class="btn btn-default btn-xs" data-action="increment_rate">+</button>
+				</span>
+
+				<input class="form-control" type="number" value="${rate}">
+
+				<span class="input-group-btn">
+					<button class="btn btn-default btn-xs" data-action="decrement_rate">-</button>
+				</span>
+			</div>`
 		}
 	}
 
@@ -1260,6 +1268,30 @@ class SalesOrderCart {
 					events.on_field_change(item_code, 'qty', '+1');
 				} else if(action === 'decrement') {
 					events.on_field_change(item_code, 'qty', '-1');
+				}
+			});
+
+		this.$cart_items.on('click',
+			'[data-action="increment_rate"], [data-action="decrement_rate"]', function() {
+				const $btn = $(this);
+				const $item = $btn.closest('.list-item[data-item-code]');
+				const item_code = unescape($item.attr('data-item-code'));
+				const action = $btn.attr('data-action');
+
+				if(action === 'increment_rate') {
+					events.on_field_change(item_code, 'rate', '+1');
+				}else if(action === 'decrement_rate') {
+
+					const existing_item = me.frm.doc.items.find(i => i.item_code === item_code);
+
+					if(existing_item.rate === 0){
+						frappe.show_alert({
+							indicator: 'red',
+							message: __('Rate amount cannot be less than 0')
+						});
+						return
+					}
+					events.on_field_change(item_code, 'rate', '-1');
 				}
 			});
 

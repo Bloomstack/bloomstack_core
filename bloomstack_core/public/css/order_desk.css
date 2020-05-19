@@ -18,3 +18,8 @@ body[data-route="order-desk"] .quantity.list-item__content.text-right span butto
   background-color: #4f5261;
   color: #fff;
 }
+
+body[data-route="order-desk"] .rate.list-item__content.text-right span button {
+  background-color: #4f5261;
+  color: #fff;
+}
