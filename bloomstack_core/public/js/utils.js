@@ -1,5 +1,5 @@
 $(document).on('app_ready', function() {
-	$.each(["Purchase Invoice", "Purchase Receipt", "Purchase Order"], function(i, doctype) {
+	$.each(["Supplier Quotation", "Purchase Order", "Purchase Invoice", "Purchase Receipt"], function(i, doctype) {
 		frappe.ui.form.on(doctype, {
 			supplier: (frm) => {
 				if (frm.doc.supplier) {

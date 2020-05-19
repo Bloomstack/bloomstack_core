@@ -50,11 +50,11 @@ frappe.listview_settings['Sales Order'].onload = function (doclist) {
 										.map(pick_list => frappe.utils.get_form_link("Pick List", pick_list, true))
 										.join(", ");
 
-									existing_order_message += `<li><strong>${order.customer}</strong> (${order.sales_order}): ${pick_lists}</li>`;
+									existing_order_message += `<li><strong>${order.customer}</strong> (${order.sales_order}): ${pick_lists || "No available items to pick"}</li>`;
 								}
 
 								if (existing_order_message) {
-									message += `<br>The following existing Pick Lists were found:<br><br><ul>${existing_order_message}</ul>`;
+									message += `<br>The following orders either have existing Pick Lists or no items to pick:<br><br><ul>${existing_order_message}</ul>`;
 								}
 
 								frappe.msgprint(__(message));

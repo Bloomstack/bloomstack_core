@@ -39,9 +39,14 @@ def create_multiple_pick_lists(orders):
 		# if none are found, then create a new Pick List
 		if not pick_lists:
 			order_doc = create_pick_list(order)
-			order_doc.save()
-			pick_lists = [order_doc.name]
-			created = True
+
+			# if no items can be picked, do not create an empty Pick List
+			if order_doc.get("locations"):
+				order_doc.save()
+				pick_lists = [order_doc.name]
+				created = True
+			else:
+				pick_lists = []
 
 		created_orders.append({
 			"sales_order": order,
