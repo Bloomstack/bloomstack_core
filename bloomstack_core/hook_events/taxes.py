@@ -1,6 +1,6 @@
 import frappe
-from erpnext.stock.doctype.item.item import get_uom_conv_factor
 from bloomstack_core.hook_events.utils import get_default_license
+from erpnext.stock.doctype.item.item import get_uom_conv_factor
 from frappe import _
 
 DRY_FLOWER_TAX_RATE = 9.65
