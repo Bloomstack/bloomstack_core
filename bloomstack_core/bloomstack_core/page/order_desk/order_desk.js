@@ -1195,6 +1195,14 @@ class SalesOrderCart {
 		const indicator_class = (!is_stock_item || item.actual_qty >= item.qty) ? 'green' : 'red';
 		const batch_no = item.batch_no || '';
 
+		const me = this;
+		$(document).on('click', '.action.list-item__content a', function () {
+			var doctype = $(this).attr('data_doctype');
+			var name = $(this).attr('data_name');
+			var item_code = $(this).attr('data_item_code');
+			me.events.on_field_change(item_code, 'qty', 0);
+		})
+
 		return `
 			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
 				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.actual_qty} ${item.stock_uom}">
@@ -1211,7 +1219,7 @@ class SalesOrderCart {
 					${rate}
 				</div>
 				<div class="action list-item__content text-right action_button">
-					<a class="btn btn-danger btn-xs" title="Delete">X</a>
+					<a class="btn btn-danger btn-xs" title="Delete" data_doctype="${item.doctype}" data_name="${item.name}" data_item_code="${item.item_code}">X</a>
 				</div>
 			</div>
 		`;
