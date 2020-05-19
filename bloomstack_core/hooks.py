@@ -165,7 +165,7 @@ doc_events = {
 			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
 		]
 	},
-	("Supplier", "Customer"): {
+	("Company", "Supplier", "Customer"): {
 		"validate": [
 			"bloomstack_core.hook_events.utils.validate_default_license"
 		]
