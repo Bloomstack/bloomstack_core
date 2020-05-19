@@ -265,3 +265,27 @@ def get_document_links(doctype, docs):
 		})
 		links.append(link)
 	return links
+
+@frappe.whitelist()
+def link_address_or_contact(ref_doctype, ref_name, link_doctype, link_name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	doc.append("links", {"link_doctype": link_doctype, "link_name": link_name})
+	doc.save()
+
+@frappe.whitelist()
+def unlink_address_or_contact(ref_doctype, ref_name, doctype, name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	links = doc.get("links")
+	for data in links:
+		if data.link_doctype == doctype and data.link_name == name:
+			links.remove(data)
+	doc.save()
+
+@frappe.whitelist()
+def delete_address_or_contact(ref_doctype, ref_name, doctype, name):
+	doc = frappe.get_doc(ref_doctype, ref_name)
+	links = doc.get("links")
+	if len(links) > 1:
+		unlink_address_or_contact(ref_doctype, ref_name, doctype, name)
+	else:
+		frappe.delete_doc(ref_doctype, ref_name)

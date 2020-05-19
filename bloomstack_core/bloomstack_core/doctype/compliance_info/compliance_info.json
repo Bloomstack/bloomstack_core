@@ -7,12 +7,14 @@
  "engine": "InnoDB",
  "field_order": [
   "status",
-  "sb_info",
+  "column_break_2",
   "license_issuer",
+  "sb_info",
   "license_number",
   "license_type",
   "license_category",
   "license_expiry_date",
+  "license_for",
   "cb_compliance",
   "legal_name",
   "county",
@@ -87,10 +89,20 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "\nAbout to Expire\nActive\nCanceled\nDelinquent\nExpired\nExpired - Pending Renewal\nFamily Support Suspension\nFTB Suspension\nInactive\nMilitary - License Inactive\nRevoked\nSurrendered\nSuspended"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "license_for",
+   "fieldtype": "Select",
+   "label": "License For",
+   "options": "\nCultivator\nDistributor\nManufacturer\nMicrobusiness\nRetailer\nLab\nEvent Organizer"
   }
  ],
  "links": [],
- "modified": "2020-04-18 04:22:35.358533",
+ "modified": "2020-05-16 02:41:04.670810",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Info",

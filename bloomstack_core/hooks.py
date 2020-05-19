@@ -34,7 +34,8 @@ app_include_js = [
 	"/assets/bloomstack_core/js/conf.js",
 	"/assets/bloomstack_core/js/query_report.js",
 	"/assets/bloomstack_core/js/banner.js",
-	"/assets/bloomstack_core/js/utils.js"
+	"/assets/bloomstack_core/js/utils.js",
+	"/assets/js/address_and_contact.min.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
@@ -42,7 +43,8 @@ app_include_css = [
 	"/assets/bloomstack_core/css/mobile-fixes.css",
 	"/assets/bloomstack_core/css/banner.css",
 	"/assets/bloomstack_core/css/desk.css",
-	"/assets/bloomstack_core/css/order_desk.css"
+	"/assets/bloomstack_core/css/order_desk.css",
+	"/assets/bloomstack_core/css/address_and_contact.css"
 ]
 
 # include js, css files in header of web template
@@ -93,6 +95,7 @@ doctype_list_js = {
 override_doctype_dashboards = {
 	"Contract": "bloomstack_core.hook_events.contract.get_data",
 	"Employee": "bloomstack_core.hook_events.employee.get_data",
+	"Item": "bloomstack_core.hook_events.item.get_data",
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -197,7 +200,7 @@ doc_events = {
 	},
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': [
-			'bloomstack_core.hook_events.utils.validate_license_expiry', 
+			'bloomstack_core.hook_events.utils.validate_license_expiry',
 			'bloomstack_core.hook_events.taxes.calculate_cannabis_tax'
 		]
 	}

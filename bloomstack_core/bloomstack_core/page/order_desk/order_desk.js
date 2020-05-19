@@ -108,13 +108,16 @@ erpnext.pos.OrderDesk = class OrderDesk {
 						})
 					}
 				},
+				on_delivery_date_change: (delivery_date) => {
+					this.delivery_date = delivery_date
+				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
 				},
 				on_numpad: (value) => {
 					if (value == Order) {
 						this.frm.doc.items.forEach((item) => {
-							item.delivery_date = frappe.datetime.add_days(this.frm.doc.transaction_date, 7);
+							item.delivery_date = this.delivery_date;
 						})
 
 						this.submit_sales_order();
@@ -235,7 +238,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			return;
 		}
 
-		let args = { item_code: item_code };
+		let args = { item_code: item_code, delivery_date: this.delivery_date || null };
 		if (in_list(['serial_no', 'batch_no'], field)) {
 			args[field] = value;
 		}
@@ -804,6 +807,7 @@ class SalesOrderCart {
 		this.make_customer_field();
 		this.make_numpad();
 		this.make_order_type_field();
+		this.make_delivery_date_field();
 	}
 
 	make_dom() {
@@ -818,6 +822,7 @@ class SalesOrderCart {
 							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
 							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
 							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
+							<div class="list-item__content text-muted text-right actions"></div>
 						</div>
 						<div class="cart-items">
 							<div class="empty-state">
@@ -836,6 +841,7 @@ class SalesOrderCart {
 						<div class="quantity-total">
 							${this.get_item_qty_total()}
 						</div>
+						
 					</div>
 				</div>
 				<div class="row">
@@ -1021,6 +1027,22 @@ class SalesOrderCart {
 		});
 	}
 
+	make_delivery_date_field() {
+		this.delivery_date_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Date',
+				label: 'Expected Delivery Date',
+				fieldname: 'delivery_date',
+				reqd: 1,
+				onchange: () => {
+					this.events.on_delivery_date_change(this.delivery_date_field.get_value());
+				}
+			},
+			parent: this.wrapper.find('.customer-field'),
+			render_input: true
+		});
+	}
+
 	make_customer_field() {
 		this.customer_field = frappe.ui.form.make_control({
 			df: {
@@ -1187,6 +1209,9 @@ class SalesOrderCart {
 				</div>
 				<div class="rate list-item__content text-right">
 					${rate}
+				</div>
+				<div class="action list-item__content text-right action_button">
+					<a class="btn btn-danger btn-xs" title="Delete">X</a>
 				</div>
 			</div>
 		`;
