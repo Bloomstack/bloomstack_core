@@ -27,12 +27,12 @@ def calculate_cannabis_tax(doc, method):
 			frappe.msgprint(_("Please set a default license for {0} to calculate taxes").format(doc.customer))
 			return
 
-		license_type = frappe.db.get_value("Compliance Info", default_customer_license, "license_type")
-		if license_type == "Distributor":
+		license_for = frappe.db.get_value("Compliance Info", default_customer_license, "license_for")
+		if license_for == "Distributor":
 			# calculate cultivation tax for selling cycle if customer is a distributor
 			cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items)
 			set_taxes(doc, cultivation_tax_row)
-		elif license_type == "Retailer":
+		elif license_for == "Retailer":
 			# calculate excise tax for selling cycle is customer is a retailer or end-consumer
 			exicse_tax_row = calculate_excise_tax(doc, compliance_items)
 			set_taxes(doc, exicse_tax_row)
