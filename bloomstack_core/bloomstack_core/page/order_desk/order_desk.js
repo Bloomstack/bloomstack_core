@@ -1198,8 +1198,8 @@ class SalesOrderCart {
 		const me = this;
 		$(document).on('click', '.action.list-item__content a', function (event) {
 			event.stopImmediatePropagation();
-			let name = $(this).attr('data-name');
-			let item_code = $(this).attr('data-item-code');
+			let name = $(this).data('name');
+			let item_code = $(this).data('item-code');
 			frappe.confirm(__(`Are you sure you want to delete ${name} item?`),
 				 () => {
 					me.events.on_field_change(item_code, 'qty', 0);
