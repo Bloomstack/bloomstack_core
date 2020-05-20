@@ -214,7 +214,25 @@ erpnext.pos.OrderDesk = class OrderDesk {
 
 			if (value && show_dialog && field == 'qty' && ((!item.batch_no && item.has_batch_no) ||
 				(item.has_serial_no) || (item.actual_batch_qty != item.actual_qty)) ) {
-				this.select_batch_and_serial_no(item);
+				// this.select_batch_and_serial_no(item);
+				this.update_item_in_frm(item, field, value)
+					.then(() => {
+						frappe.dom.unfreeze();
+						frappe.run_serially([
+							() => {
+								let items = this.frm.doc.items.map(item => item.name);
+								if (items && items.length > 0 && items.includes(item.name)) {
+									this.frm.doc.items.forEach(item_row => {
+										// update cart
+										this.on_qty_change(item_row);
+									});
+								} else {
+									this.on_qty_change(item);
+								}
+							},
+							() => this.post_qty_change(item)
+						]);
+					});
 			} else {
 				this.update_item_in_frm(item, field, value)
 					.then(() => {
