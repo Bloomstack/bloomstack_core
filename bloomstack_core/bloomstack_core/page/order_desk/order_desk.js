@@ -832,16 +832,18 @@ class SalesOrderCart {
 						<div class="quantity-total">
 							${this.get_item_qty_total()}
 						</div>
-						<div class="submit-order">
-							<div class="list-item__content text-muted"></div>
-							<div class="list-item__content list-item__content--flex-2">
-								<button class="order-primary" type="submit" data-action="submit_order"> Order </button>
-							</div>
-						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="number-pad-container col-sm-6"></div>
+				</div>
+				<div class="row">
+					<div class="submit-order">
+						<div class="list-item__content text-muted"></div>
+						<div class="list-item__content list-item__content--flex-2">
+							<button class="order-primary" type="submit" data-action="submit_order"> Order </button>
+						</div>
+					</div>
 				</div>
 			</div>
 		`);
