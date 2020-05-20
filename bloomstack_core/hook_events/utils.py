@@ -60,9 +60,9 @@ def get_default_license(party_type, party_name):
 def filter_license(doctype, txt, searchfield, start, page_len, filters):
 	"""filter license"""
 
-	return frappe.get_all('Compliance Info',
+	return frappe.get_all('Compliance License Detail',
 		filters={
-			'legal_name': filters.get("party_name")
+			'parent': filters.get("party_name")
 		},
 		fields=["name"],
 		as_list=1)
