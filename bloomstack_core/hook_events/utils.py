@@ -55,3 +55,14 @@ def get_default_license(party_type, party_name):
 		default_license = default_license.get("license")
 
 	return default_license
+
+@frappe.whitelist()
+def filter_license(doctype, txt, searchfield, start, page_len, filters):
+	"""filter license"""
+
+	return frappe.get_all('Compliance Info',
+		filters={
+			'legal_name': filters.get("party_name")
+		},
+		fields=["name"],
+		as_list=1)
