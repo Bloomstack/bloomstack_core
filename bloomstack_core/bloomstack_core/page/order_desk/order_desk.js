@@ -117,15 +117,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
 				},
-				on_numpad: (value) => {
-					if (value == Order) {
-						this.frm.doc.items.forEach((item) => {
-							item.delivery_date = this.delivery_date;
-						})
-
-						this.submit_sales_order();
-					}
-				},
 				on_select_change: () => {
 					this.set_form_action();
 				},
@@ -375,7 +366,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 
 	submit_sales_order() {
 		this.frm.doc.items.forEach((item) => {
-			item.delivery_date = frappe.datetime.add_days(this.frm.doc.transaction_date, 7);
+			item.delivery_date = this.delivery_date;
 		});
 
 		this.frm.savesubmit()
