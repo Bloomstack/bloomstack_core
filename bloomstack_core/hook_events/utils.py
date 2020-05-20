@@ -64,5 +64,5 @@ def filter_license(doctype, txt, searchfield, start, page_len, filters):
 		filters={
 			'parent': filters.get("party_name")
 		},
-		fields=["name"],
+		fields=["license"],
 		as_list=1)
