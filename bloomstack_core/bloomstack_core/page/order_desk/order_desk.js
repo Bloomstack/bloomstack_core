@@ -108,7 +108,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 						})
 					}
 				},
-				submit_order: ()=>{
+				submit_order: () => {
 					this.submit_sales_order()
 				},
 				on_delivery_date_change: (delivery_date) => {
@@ -1227,8 +1227,8 @@ class SalesOrderCart {
 			'[data-action="increment_rate"], [data-action="decrement_rate"]', function() {
 				const $btn = $(this);
 				const $item = $btn.closest('.list-item[data-item-code]');
-				const item_code = unescape($item.attr('data-item-code'));
-				const action = $btn.attr('data-action');
+				const item_code = unescape($item.data('item-code'));
+				const action = $btn.data('action');
 
 				if(action === 'increment_rate') {
 					events.on_field_change(item_code, 'rate', '+1');
@@ -1260,8 +1260,7 @@ class SalesOrderCart {
 
 		this.$cart_items.on('change', '.rate input', function() {
 			const $input = $(this);
-			const $item = $input.closest('.list-item[data-item-code]');
-			const item_code = unescape($item.attr('data-item-code'));
+			const item_code = unescape($item.data('item-code'));
 			events.on_field_change(item_code, 'rate', flt($input.val()));
 		});
 
