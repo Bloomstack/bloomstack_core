@@ -20,9 +20,9 @@
         <img src="https://gallery.mailchimp.com/8450e0cdfc0ece704a354070c/images/c93dc6dd-9e56-4435-ad7e-355038318242.png" alt="Logo" style="width: 40%; height: auto; float: left;">
         <p style="float: right; padding-top: 25px; font-size: 21px; margin-bottom: 0;">
           {% if authorization_request.status == "Request Sent" %}
-          Authorization Request
+            Authorization Request
           {% else %}
-          {{authorization_request.linked_doctype.name}}
+            {{ authorization_request.linked_docname }}
           {% endif %}
         </p>
       </td>
@@ -35,18 +35,18 @@
         <table>
           <tr>
             <td>
-              <p style="padding-left: 20px">Dear {{ authorization_request.linked_doctype.party_name }},</p>
+              <p style="padding-left: 20px">Dear {{ authorization_request.authorizer_name }},</p>
             </td>
           </tr>
           {% if authorization_request.status == "Request Sent" %}
           <tr>
             <td>
-              <p style="padding-left: 20px">{{company}} has sent you a {{authorization_request.linked_doctype.name}}</p>
+              <p style="padding-left: 20px">{{ company }} has sent you a {{ authorization_request.linked_docname }}.</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="padding-left: 20px">Your Signature is required for this agreement to be completed</p>
+              <p style="padding-left: 20px">Your Signature is required for this agreement to be completed.</p>
             </td>
           </tr>
           <tr>
@@ -57,12 +57,12 @@
           {% elif authorization_request.status == "Approved" %}
           <tr>
             <td>
-              <p style="padding-left: 20px">Your {{authorization_request.linked_doctype.name}} with {{company}} is now complete</p>
+              <p style="padding-left: 20px">Your {{ authorization_request.linked_docname }} with {{ company }} is now complete.</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="padding-left: 20px">The signed copy of the agreement is attached for your records. No further action is required for you</p>
+              <p style="padding-left: 20px">The signed copy of the agreement is attached for your records. No further action is required from you.</p>
             </td>
           </tr>
           {% endif %}
