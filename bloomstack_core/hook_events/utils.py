@@ -23,7 +23,7 @@ def validate_entity_license(party_type, party_name):
 	if license_expiry_date and license_expiry_date < getdate(nowdate()):
 		frappe.throw(_("{0}'s license number {1} has expired on {2}").format(
 			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
-	
+
 	return license_record
 
 
@@ -35,9 +35,9 @@ def validate_default_license(doc, method):
 		doc.licenses[0].is_default = 1
 
 	# prevent users from setting multiple default licenses
-	default_license = [license for license in doc.licenses if license.is_default]
-	if len(default_license) != 1:
-		frappe.throw(_("There can be only one default license for {0}, found {1}").format(doc.name, len(default_license)))
+	default_licenses = [license for license in doc.licenses if license.is_default]
+	if len(default_licenses) > 1:
+		frappe.throw(_("There can be only one default license for {0}, found {1}").format(doc.name, len(default_licenses)))
 
 
 def get_default_license(party_type, party_name):
