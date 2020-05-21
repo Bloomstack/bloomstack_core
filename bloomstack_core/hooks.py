@@ -151,9 +151,6 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
-	"Item": {
-		"autoname": "bloomstack_core.hook_events.item.autoname"
-	},
 	"Contract": {
 		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
@@ -162,7 +159,14 @@ doc_events = {
 		]
 	},
 	"Customer": {
-		"validate": "bloomstack_core.hook_events.customer.update_lead_acc_open_date"
+		"validate": [
+			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
+		]
+	},
+	("Company", "Supplier", "Customer"): {
+		"validate": [
+			"bloomstack_core.hook_events.utils.validate_default_license"
+		]
 	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
@@ -184,8 +188,15 @@ doc_events = {
 	"Employee": {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
+	"Item": {
+		"autoname": "bloomstack_core.hook_events.item.autoname"
+	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
+	},
+	"Pick List": {
+		"on_submit": "bloomstack_core.hook_events.pick_list.update_order_package_tag",
+		"on_cancel": "bloomstack_core.hook_events.pick_list.update_order_package_tag"
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
@@ -199,7 +210,7 @@ doc_events = {
 	"User": {
 		"after_insert": "bloomstack_core.bloomtrace.user.create_bloomtrace_client_user"
 	},
-	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
+	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Supplier Quotation', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': [
 			'bloomstack_core.hook_events.utils.validate_license_expiry',
 			'bloomstack_core.hook_events.taxes.calculate_cannabis_tax'

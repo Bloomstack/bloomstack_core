@@ -55,12 +55,12 @@ def get_items(start, page_length, price_list, item_group, search_value=""	):
 	if items_data:
 		items = [d.item_code for d in items_data]
 		item_prices_data = frappe.get_all("Item Price",
-			fields = ["item_code", "price_list_rate", "currency"],
-			filters = {'price_list': price_list, 'item_code': ['in', items]})
+			fields=["item_code", "price_list_rate", "currency"],
+			filters={'price_list': price_list, 'item_code': ['in', items]})
 
 		item_warehouse_list = frappe.get_all("Item Default",
-			fields = ["parent", "default_warehouse"],
-			filters = {'parent': ['in', items]})
+			fields=["parent", "default_warehouse"],
+			filters={'parent': ['in', items]})
 
 		warehouses = {}
 		for warehouse in item_warehouse_list:
@@ -72,20 +72,25 @@ def get_items(start, page_length, price_list, item_group, search_value=""	):
 
 		# update below get stock from Bin with a group query & joins to optimize performance.
 		for item in items_data:
-			row = {}
-			actual_qty = 0
+			item_quantities = frappe.get_all('Bin',
+				filters={'item_code': item.item_code,
+					'warehouse': warehouses.get(item.item_code)},
+				fields=['sum(actual_qty) as actual_qty',
+					'sum(reserved_qty) as reserved_qty'])
 
-			actual_qty =  frappe.get_all('Bin', fields=['sum(actual_qty) as actual_qty'],
-				filters={ 'item_code' : item.item_code, 'warehouse': warehouses.get(item.item_code) }
-			)[0].get("actual_qty")
+			item_qty = item_quantities[0]
+			actual_qty = item_qty.get("actual_qty") or 0
+			reserved_qty = item_qty.get("reserved_qty") or 0
 
-			row.update(item)
+			row = item.copy()
 			item_price = item_prices.get(item.item_code) or {}
 			row.update({
 				'price_list_rate': item_price.get('price_list_rate'),
 				'currency': item_price.get('currency'),
 				'default_warehouse': warehouses.get(item.item_code),
-				'actual_qty': actual_qty
+				'actual_qty': actual_qty,
+				'reserved_qty': reserved_qty,
+				'saleable_qty': actual_qty - reserved_qty
 			})
 			result.append(row)
 

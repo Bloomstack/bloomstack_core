@@ -7,6 +7,7 @@ from six import iteritems
 from six.moves import range
 
 import frappe
+from bloomstack_core.hook_events.utils import get_default_license
 
 field_map = {
 	"Contact": ["first_name", "last_name", "phone", "mobile_no", "email_id", "is_primary_contact"],
@@ -132,7 +133,7 @@ def get_party_addresses_and_contact(party_type, party, party_group):
 			sales_partner = frappe.db.get_value(party_type, party, "default_sales_partner")
 
 		if party_type in ("Customer", "Supplier"):
-			license_record = frappe.db.get_value(party_type, party, "license")
+			license_record = get_default_license(party_type, party)
 
 			if frappe.db.exists("Compliance Info", license_record):
 				license_type, license_number = frappe.db.get_value(
