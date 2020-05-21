@@ -1251,6 +1251,7 @@ class SalesOrderCart {
 
 		this.$cart_items.on('change', '.rate input', function() {
 			const $input = $(this);
+			const $item = $input.closest('.list-item[data-item-code]');
 			const item_code = unescape($item.data('item-code'));
 			events.on_field_change(item_code, 'rate', flt($input.val()));
 		});
