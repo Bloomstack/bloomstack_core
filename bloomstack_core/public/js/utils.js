@@ -1,6 +1,17 @@
 $(document).on('app_ready', function() {
 	$.each(["Supplier Quotation", "Purchase Order", "Purchase Invoice", "Purchase Receipt"], function(i, doctype) {
 		frappe.ui.form.on(doctype, {
+			onload: (frm) => {
+				frm.set_query("license", () => {
+					return {
+						query: "bloomstack_core.hook_events.utils.filter_license",
+						filters: {
+							party_name: frm.doc.supplier
+						}
+					};
+
+				});
+			},
 			supplier: (frm) => {
 				if (frm.doc.supplier) {
 					frappe.call({
@@ -20,8 +31,19 @@ $(document).on('app_ready', function() {
 		});
 	});
 
-	$.each(["Quotation", "Sales Order", "Sales Invoice", "Delivery Note"], function (i, doctype) {
+	$.each(["Sales Order", "Sales Invoice", "Delivery Note"], function (i, doctype) {
 		frappe.ui.form.on(doctype, {
+			onload: (frm) => {
+				frm.set_query("license", () => {
+					return {
+						query: "bloomstack_core.hook_events.utils.filter_license",
+						filters: {
+							party_name: frm.doc.customer
+						}
+					};
+
+				});
+			},
 			customer: (frm) => {
 				if (frm.doc.customer) {
 					frappe.call({
