@@ -32,14 +32,21 @@ def validate_entity_license(party_type, party_name):
 def validate_default_license(doc, method):
 	"""allow to set only one default license for supplier or customer"""
 
-	# auto-set default license if only one is found
-	if len(doc.licenses) == 1:
-		doc.licenses[0].is_default = 1
+	# remove duplicate licenses
+	unique_licenses = list(set([license.license for license in doc.licenses]))
+	if len(doc.licenses) != len(unique_licenses):
+		frappe.throw(_("Please remove duplicate licenses before proceeding"))
 
-	# prevent users from setting multiple default licenses
-	default_licenses = [license for license in doc.licenses if license.is_default]
-	if len(default_licenses) > 1:
-		frappe.throw(_("There can be only one default license for {0}, found {1}").format(doc.name, len(default_licenses)))
+	if len(doc.licenses) == 1:
+		# auto-set default license if only one is found
+		doc.licenses[0].is_default = 1
+	elif len(doc.licenses) > 1:
+		default_licenses = [license for license in doc.licenses if license.is_default]
+		# prevent users from setting multiple default licenses
+		if not default_licenses:
+			frappe.throw(_("There must be atleast one default license, found none"))
+		elif len(default_licenses) > 1:
+			frappe.throw(_("There can be only one default license for {0}, found {1}").format(doc.name, len(default_licenses)))
 
 
 def get_default_license(party_type, party_name):

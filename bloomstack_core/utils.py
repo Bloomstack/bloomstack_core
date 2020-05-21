@@ -1,14 +1,14 @@
 from __future__ import unicode_literals
 
 import json
-from frappe.utils import get_url
 
+from python_metrc import METRC
 from six import string_types
 
 import frappe
-from erpnext.stock.doctype.batch.batch import get_batch_qty
 from erpnext import get_default_company
-from python_metrc import METRC
+from erpnext.stock.doctype.batch.batch import get_batch_qty
+from frappe.utils import get_url, today
 
 
 def welcome_email():
@@ -268,6 +268,7 @@ def get_contact(doctype, name, contact_field):
 
 		return contact_person
 
+
 @frappe.whitelist()
 def get_document_links(doctype, docs):
 	docs = json.loads(docs)
@@ -284,11 +285,13 @@ def get_document_links(doctype, docs):
 		links.append(link)
 	return links
 
+
 @frappe.whitelist()
 def link_address_or_contact(ref_doctype, ref_name, link_doctype, link_name):
 	doc = frappe.get_doc(ref_doctype, ref_name)
 	doc.append("links", {"link_doctype": link_doctype, "link_name": link_name})
 	doc.save()
+
 
 @frappe.whitelist()
 def unlink_address_or_contact(ref_doctype, ref_name, doctype, name):
@@ -299,6 +302,7 @@ def unlink_address_or_contact(ref_doctype, ref_name, doctype, name):
 			links.remove(data)
 	doc.save()
 
+
 @frappe.whitelist()
 def delete_address_or_contact(ref_doctype, ref_name, doctype, name):
 	doc = frappe.get_doc(ref_doctype, ref_name)
@@ -307,3 +311,19 @@ def delete_address_or_contact(ref_doctype, ref_name, doctype, name):
 		unlink_address_or_contact(ref_doctype, ref_name, doctype, name)
 	else:
 		frappe.delete_doc(ref_doctype, ref_name)
+
+
+def get_active_licenses(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.get_all(doctype,
+		filters=[
+			[doctype, "status", "!=", "Expired"],
+			[doctype, "name", "NOT IN", filters.get("set_licenses")],
+			[doctype, "name", "like", "%{0}%".format(txt)]
+		],
+		or_filters=[
+			{"license_expiry_date": ["is", "not set"]},
+			{"license_expiry_date": [">=", today()]}
+		],
+		fields=["name", "legal_name", "license_number", "status", "license_issuer",
+			"license_for", "license_expiry_date", "license_type"],
+		as_list=True)

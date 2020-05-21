@@ -62,4 +62,20 @@ $(document).on('app_ready', function() {
 			}
 		});
 	});
+
+	$.each(["Customer", "Supplier", "Company"], function (i, doctype) {
+		frappe.ui.form.on(doctype, {
+			refresh: (frm) => {
+				frm.set_query("license", "licenses", (doc, cdt, cdn) => {
+					const set_licenses = doc.licenses.map(license => license.license);
+					return {
+						query: "bloomstack_core.utils.get_active_licenses",
+						filters: {
+							set_licenses: set_licenses
+						}
+					}
+				});
+			}
+		});
+	});
 });
