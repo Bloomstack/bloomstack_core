@@ -12,7 +12,7 @@ def update_bloomtrace_client_user():
 	site_url = urlparse(get_url()).netloc
 
 	pending_requests = frappe.get_all("Integration Request", 
-		filters={"status": ["IN", ["Queued", "Failed"]], "integration_request_service": "BloomTrace"})
+		filters={"status": ["IN", ["Queued", "Failed"]], "reference_doctype": "User", "integration_request_service": "BloomTrace"})
 
 	for request in pending_requests:
 		integration_request = frappe.get_doc("Integration Request", request.name)

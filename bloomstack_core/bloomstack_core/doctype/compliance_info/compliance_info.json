@@ -30,9 +30,11 @@
    "fieldname": "license_type",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "License Type"
+   "label": "License Type",
+   "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "license_number",
    "fieldtype": "Data",
    "in_global_search": 1,
@@ -51,7 +53,8 @@
    "fieldname": "license_expiry_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "License Expiry Date"
+   "label": "License Expiry Date",
+   "read_only": 1
   },
   {
    "fieldname": "license_issuer",
@@ -59,22 +62,26 @@
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "License Issuer",
-   "options": "\nCDFA\nCDPH\nBCC"
+   "options": "\nCDFA\nCDPH\nBCC",
+   "read_only": 1
   },
   {
    "fieldname": "county",
    "fieldtype": "Data",
-   "label": "County"
+   "label": "County",
+   "read_only": 1
   },
   {
    "fieldname": "city",
    "fieldtype": "Data",
-   "label": "City"
+   "label": "City",
+   "read_only": 1
   },
   {
    "fieldname": "license_category",
    "fieldtype": "Data",
-   "label": "License Category"
+   "label": "License Category",
+   "read_only": 1
   },
   {
    "fieldname": "legal_name",
@@ -82,13 +89,15 @@
    "in_global_search": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Legal Name"
+   "label": "Legal Name",
+   "read_only": 1
   },
   {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nAbout to Expire\nActive\nCanceled\nDelinquent\nExpired\nExpired - Pending Renewal\nFamily Support Suspension\nFTB Suspension\nInactive\nMilitary - License Inactive\nRevoked\nSurrendered\nSuspended"
+   "options": "\nAbout to Expire\nActive\nCanceled\nDelinquent\nExpired\nExpired - Pending Renewal\nFamily Support Suspension\nFTB Suspension\nInactive\nMilitary - License Inactive\nRevoked\nSurrendered\nSuspended",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_2",
@@ -98,11 +107,12 @@
    "fieldname": "license_for",
    "fieldtype": "Select",
    "label": "License For",
-   "options": "\nCultivator\nDistributor\nManufacturer\nMicrobusiness\nRetailer\nLab\nEvent Organizer"
+   "options": "\nCultivator\nDistributor\nManufacturer\nMicrobusiness\nRetailer\nLab\nEvent Organizer",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2020-05-16 02:41:04.670811",
+ "modified": "2020-05-21 06:24:56.176093",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Info",
