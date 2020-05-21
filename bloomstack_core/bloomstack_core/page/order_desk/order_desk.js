@@ -157,26 +157,27 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			frm: this.frm,
 			events: {
 				update_cart: (item, field, value) => {
-					if(!this.frm.doc.customer) {
+					if (!this.frm.doc.customer) {
 						frappe.throw(__('Please select a customer'));
 					}
 					// check and warn user if a batch item is our of stock.
 					const item_details = this.cart.events.get_item_details(item);
 
-					if(item_details.actual_qty || !item_details.has_batch_no){
+					if (item_details.saleable_qty || !item_details.has_batch_no) {
 						this.update_item_in_cart(item, field, value);
 						this.cart && this.cart.unselect_all();
-					}else{
+					} else {
 						frappe.confirm(__(`Batch Item ${item_details.item_name} is out of stock, sure you want to add it to cart?`),
 							() => {
-							this.update_item_in_cart(item, field, value);
-							this.cart && this.cart.unselect_all();
+								this.update_item_in_cart(item, field, value);
+								this.cart && this.cart.unselect_all();
 							},
 							() => {}
-							);
-					}}
+						);
+					}
 				}
-			});
+			}
+		});
 	}
 
 	update_item_in_cart(item_code, field='qty', value=1, batch_no) {
@@ -726,7 +727,7 @@ class OrderDeskItems {
 
 	get_item_html(item) {
 		const price_list_rate = format_currency(item.price_list_rate, this.currency);
-		const item_qty_display = item.actual_qty > 0 ? `Stock: ${item.actual_qty} ${item.stock_uom}` : "Out of Stock"
+		const item_qty_display = item.saleable_qty > 0 ? `Stock: ${item.saleable_qty} ${item.stock_uom}` : "Out of Stock"
 		const { item_code, item_name, item_image,item_group} = item;
 		const item_title = item_name || item_code;
 
@@ -1082,7 +1083,7 @@ class SalesOrderCart {
 
 		if(item.qty > 0) {
 			const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
-			const indicator_class = (!is_stock_item || item.actual_qty >= item.qty) ? 'green' : 'red';
+			const indicator_class = (!is_stock_item || item.saleable_qty >= item.qty) ? 'green' : 'red';
 			const remove_class = indicator_class == 'green' ? 'red' : 'green';
 
 			$item.find('.quantity input').val(item.qty);
@@ -1097,7 +1098,7 @@ class SalesOrderCart {
 
 	get_item_html(item) {
 		const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
-		const indicator_class = (!is_stock_item || item.actual_qty >= item.qty) ? 'green' : 'red';
+		const indicator_class = (!is_stock_item || item.saleable_qty >= item.qty) ? 'green' : 'red';
 		const batch_no = item.batch_no || '';
 
 		const me = this;
@@ -1114,7 +1115,7 @@ class SalesOrderCart {
 
 		return `
 			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
-				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.actual_qty} ${item.stock_uom}">
+				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.saleable_qty} ${item.stock_uom}">
 				<div class="item-name list-item__content list-item__content--flex-1.5 ellipsis">
 					${item.item_name}
 				</div>
