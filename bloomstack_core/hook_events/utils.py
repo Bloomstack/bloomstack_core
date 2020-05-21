@@ -9,9 +9,8 @@ def validate_license_expiry(doc, method):
 		validate_entity_license("Customer", doc.customer)
 	elif doc.doctype in ("Supplier Quotation", "Purchase Order", "Purchase Invoice", "Purchase Receipt"):
 		validate_entity_license("Supplier", doc.supplier)
-	else:
-		if doc.doctype == "Quotation" and doc.quotation_to == "Customer":
-			validate_entity_license("Customer", doc.party_name)
+	elif doc.doctype == "Quotation" and doc.quotation_to == "Customer":
+		validate_entity_license("Customer", doc.party_name)
 
 
 @frappe.whitelist()
