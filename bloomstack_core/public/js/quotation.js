@@ -50,7 +50,17 @@ frappe.ui.form.on('Quotation', {
 			}, __("Create"));
 		}
 	},
+	onload: (frm) => {
+		frm.set_query("license", () => {
+			return {
+				query: "bloomstack_core.hook_events.utils.filter_license",
+				filters: {
+					party_name: frm.doc.party_name
+				}
+			};
 
+		});
+	},
 	no_charge_order: (frm) => {
 		frm.trigger("set_promotional_discount");
 	},
