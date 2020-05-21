@@ -73,6 +73,7 @@ doctype_js = {
 	"Item": "public/js/item.js",
 	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
+	"Pick List": "public/js/pick_list.js",
 	"Purchase Invoice": "public/js/purchase_invoice.js",
 	"Purchase Receipt": "public/js/purchase_receipt.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
