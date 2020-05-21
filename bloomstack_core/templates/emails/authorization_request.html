@@ -41,12 +41,12 @@
           {% if authorization_request.status == "Request Sent" %}
           <tr>
             <td>
-              <p style="padding-left: 20px">{{ company }} has sent you a {{ authorization_request.linked_docname }}.</p>
+              <p style="padding-left: 20px">{{ company }} has sent you a Contract.</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="padding-left: 20px">Your Signature is required for this agreement to be completed.</p>
+              <p style="padding-left: 20px">Your signature is required for this agreement to be completed.</p>
             </td>
           </tr>
           <tr>
@@ -57,7 +57,7 @@
           {% elif authorization_request.status == "Approved" %}
           <tr>
             <td>
-              <p style="padding-left: 20px">Your {{ authorization_request.linked_docname }} with {{ company }} is now complete.</p>
+              <p style="padding-left: 20px">Your contract with {{ company }} is now complete.</p>
             </td>
           </tr>
           <tr>
