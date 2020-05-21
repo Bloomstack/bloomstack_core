@@ -1,14 +1,14 @@
 from __future__ import unicode_literals
 
 import json
-from frappe.utils import get_url
 
+from python_metrc import METRC
 from six import string_types
 
 import frappe
-from erpnext.stock.doctype.batch.batch import get_batch_qty
 from erpnext import get_default_company
-from python_metrc import METRC
+from erpnext.stock.doctype.batch.batch import get_batch_qty
+from frappe.utils import get_url, today
 
 
 def welcome_email():
@@ -158,28 +158,46 @@ def create_contract_from_quotation(source_name, target_doc=None):
 
 @frappe.whitelist()
 def create_customer(source_name, target_doc=None):
-	existing_customer = frappe.db.exists("Customer", {"license_number": source_name})
-	if existing_customer:
-		customer_link = frappe.utils.get_link_to_form("Customer", existing_customer)
+	existing_customers = get_existing_licensees(source_name, "Customer")
+	if existing_customers:
+		customer_link = frappe.utils.get_link_to_form("Customer", existing_customers[0])
 		frappe.throw("A Customer already exists for this license - {0}".format(customer_link))
 
 	customer = frappe.new_doc("Customer")
 	customer.customer_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
-	customer.license = source_name
+	customer.append("licenses", {
+		"license": source_name,
+		"is_default": 1
+	})
+
 	return customer
 
 
 @frappe.whitelist()
 def create_supplier(source_name, target_doc=None):
-	existing_supplier = frappe.db.exists("Supplier", {"license_number": source_name})
-	if existing_supplier:
-		supplier_link = frappe.utils.get_link_to_form("Supplier", existing_supplier)
+	existing_suppliers = get_existing_licensees(source_name, "Supplier")
+	if existing_suppliers:
+		supplier_link = frappe.utils.get_link_to_form("Supplier", existing_suppliers[0])
 		frappe.throw("A Supplier already exists for this license - {0}".format(supplier_link))
 
 	supplier = frappe.new_doc("Supplier")
 	supplier.supplier_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
-	supplier.license = source_name
+	supplier.append("licenses", {
+		"license": source_name,
+		"is_default": 1
+	})
+
 	return supplier
+
+
+def get_existing_licensees(license, party_type):
+	existing_licensees = frappe.get_all("Compliance License Detail",
+		filters={"license": license, "parenttype": party_type},
+		fields=["parent"],
+		distinct=True)
+
+	existing_licensees = [license.parent for license in existing_licensees if license.parent]
+	return existing_licensees
 
 
 @frappe.whitelist(allow_guest=True)
@@ -250,6 +268,7 @@ def get_contact(doctype, name, contact_field):
 
 		return contact_person
 
+
 @frappe.whitelist()
 def get_document_links(doctype, docs):
 	docs = json.loads(docs)
@@ -266,11 +285,13 @@ def get_document_links(doctype, docs):
 		links.append(link)
 	return links
 
+
 @frappe.whitelist()
 def link_address_or_contact(ref_doctype, ref_name, link_doctype, link_name):
 	doc = frappe.get_doc(ref_doctype, ref_name)
 	doc.append("links", {"link_doctype": link_doctype, "link_name": link_name})
 	doc.save()
+
 
 @frappe.whitelist()
 def unlink_address_or_contact(ref_doctype, ref_name, doctype, name):
@@ -281,6 +302,7 @@ def unlink_address_or_contact(ref_doctype, ref_name, doctype, name):
 			links.remove(data)
 	doc.save()
 
+
 @frappe.whitelist()
 def delete_address_or_contact(ref_doctype, ref_name, doctype, name):
 	doc = frappe.get_doc(ref_doctype, ref_name)
@@ -289,3 +311,19 @@ def delete_address_or_contact(ref_doctype, ref_name, doctype, name):
 		unlink_address_or_contact(ref_doctype, ref_name, doctype, name)
 	else:
 		frappe.delete_doc(ref_doctype, ref_name)
+
+
+def get_active_licenses(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.get_all(doctype,
+		filters=[
+			[doctype, "status", "!=", "Expired"],
+			[doctype, "name", "NOT IN", filters.get("set_licenses")],
+			[doctype, "name", "like", "%{0}%".format(txt)]
+		],
+		or_filters=[
+			{"license_expiry_date": ["is", "not set"]},
+			{"license_expiry_date": [">=", today()]}
+		],
+		fields=["name", "legal_name", "license_number", "status", "license_issuer",
+			"license_for", "license_expiry_date", "license_type"],
+		as_list=True)
