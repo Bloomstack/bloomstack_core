@@ -158,28 +158,46 @@ def create_contract_from_quotation(source_name, target_doc=None):
 
 @frappe.whitelist()
 def create_customer(source_name, target_doc=None):
-	existing_customer = frappe.db.exists("Customer", {"license_number": source_name})
-	if existing_customer:
-		customer_link = frappe.utils.get_link_to_form("Customer", existing_customer)
+	existing_customers = get_existing_licensees(source_name, "Customer")
+	if existing_customers:
+		customer_link = frappe.utils.get_link_to_form("Customer", existing_customers[0])
 		frappe.throw("A Customer already exists for this license - {0}".format(customer_link))
 
 	customer = frappe.new_doc("Customer")
 	customer.customer_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
-	customer.license = source_name
+	customer.append("licenses", {
+		"license": source_name,
+		"is_default": 1
+	})
+
 	return customer
 
 
 @frappe.whitelist()
 def create_supplier(source_name, target_doc=None):
-	existing_supplier = frappe.db.exists("Supplier", {"license_number": source_name})
-	if existing_supplier:
-		supplier_link = frappe.utils.get_link_to_form("Supplier", existing_supplier)
+	existing_suppliers = get_existing_licensees(source_name, "Supplier")
+	if existing_suppliers:
+		supplier_link = frappe.utils.get_link_to_form("Supplier", existing_suppliers[0])
 		frappe.throw("A Supplier already exists for this license - {0}".format(supplier_link))
 
 	supplier = frappe.new_doc("Supplier")
 	supplier.supplier_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
-	supplier.license = source_name
+	supplier.append("licenses", {
+		"license": source_name,
+		"is_default": 1
+	})
+
 	return supplier
+
+
+def get_existing_licensees(license, party_type):
+	existing_licensees = frappe.get_all("Compliance License Detail",
+		filters={"license": license, "parenttype": party_type},
+		fields=["parent"],
+		distinct=True)
+
+	existing_licensees = [license.parent for license in existing_licensees if license.parent]
+	return existing_licensees
 
 
 @frappe.whitelist(allow_guest=True)
