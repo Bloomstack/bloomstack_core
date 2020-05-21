@@ -111,6 +111,9 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				submit_order: () => {
 					this.submit_sales_order()
 				},
+				save_order: () => {
+					this.save_order()
+				},
 				on_delivery_date_change: (delivery_date) => {
 					this.delivery_date = delivery_date
 				},
@@ -143,7 +146,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		const pointer_events = disabled ? 'none' : 'inherit';
 
 		this.wrapper.find('input, button, select').prop("disabled", disabled);
-		this.wrapper.find('.number-pad-container').toggleClass("hide", disabled);
 
 		this.wrapper.find('.cart-container').css('pointer-events', pointer_events);
 		this.wrapper.find('.item-container').css('pointer-events', pointer_events);
@@ -365,17 +367,14 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	submit_sales_order() {
-		this.frm.doc.items.forEach((item) => {
-			item.delivery_date = this.delivery_date;
-		});
-
+		this.set_delivery_date()
 		this.frm.savesubmit()
 			.then((r) => {
 				if (r && r.doc) {
 					this.frm.doc.docstatus = r.doc.docstatus;
 					frappe.show_alert({
 						indicator: 'green',
-						message: __(`Sales Order ${r.doc.name} created succesfully`)
+						message: __(`Sales Order ${r.doc.name} submitted successfully`)
 					});
 
 					this.toggle_editing();
@@ -383,6 +382,20 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.set_primary_action_in_modal();
 				}
 			});
+	}
+
+	save_order(){
+		this.set_delivery_date()
+		this.frm.save()
+			.then((r) => {
+					// add modal action to start new or continue editing.
+			});
+	}
+
+	set_delivery_date(){
+		this.frm.doc.items.forEach((item) => {
+			item.delivery_date = this.delivery_date;
+		});
 	}
 
 	set_primary_action_in_modal() {
@@ -847,7 +860,8 @@ class SalesOrderCart {
 					<div class="submit-order">
 						<div class="list-item__content text-muted"></div>
 						<div class="list-item__content list-item__content--flex-2">
-							<button class="order-primary" type="submit" data-action="submit_order"> Order </button>
+							<button class="order-primary" type="submit" data-action="save_order">Save As Draft</button>
+							<button class="order-primary" type="submit" data-action="submit_order">Submit Order</button>
 						</div>
 					</div>
 				</div>
@@ -1247,6 +1261,10 @@ class SalesOrderCart {
 
 		this.$submit_order.on('click', '[data-action="submit_order"]',() => {
 			events.submit_order()
+		})
+
+		this.$submit_order.on('click', '[data-action="save_order"]',() => {
+			events.save_order()
 		})
 
 		this.$cart_items.on('change', '.rate input', function() {
