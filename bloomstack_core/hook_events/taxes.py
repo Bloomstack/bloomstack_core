@@ -22,7 +22,13 @@ def calculate_cannabis_tax(doc, method):
 		set_taxes(doc, cultivation_tax_row)
 	elif doc.doctype in ("Quotation", "Sales Order", "Sales Invoice", "Delivery Note"):
 		# customer license is required to inspect license type
-		default_customer_license = get_default_license("Customer", doc.customer)
+		if doc.doctype == "Quotation" and doc.quotation_to == "Customer":
+			default_customer_license = get_default_license("Customer", doc.party_name)
+		elif doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
+			default_customer_license = get_default_license("Customer", doc.customer)
+		else:
+			return
+
 		if not default_customer_license:
 			frappe.msgprint(_("Please set a default license for {0} to calculate taxes").format(doc.customer))
 			return

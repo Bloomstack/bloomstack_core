@@ -31,7 +31,7 @@ $(document).on('app_ready', function() {
 		});
 	});
 
-	$.each(["Quotation", "Sales Order", "Sales Invoice", "Delivery Note"], function (i, doctype) {
+	$.each(["Sales Order", "Sales Invoice", "Delivery Note"], function (i, doctype) {
 		frappe.ui.form.on(doctype, {
 			onload: (frm) => {
 				frm.set_query("license", () => {
