@@ -7,6 +7,9 @@ def get_bloomtrace_client():
 	username = frappe.conf.get("bloomtrace_username")
 	password = frappe.conf.get("bloomtrace_password")
 
+	if not url:
+		return
+	
 	try:
 		client = FrappeClient(url, username=username, password=password, verify=True)
 	except ConnectionError:
