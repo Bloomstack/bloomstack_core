@@ -6,14 +6,18 @@ from bloomstack_core.hook_events.utils import get_default_license
 def execute():
 	sync_customizations("bloomstack_core")
 
+	compliance_info = frappe.get_all('Compliance Info', fields=['name'])
+	if not compliance_info:
+		return
+
 	sales_orders = frappe.get_all("Sales Order",fields=["customer", "name"])
 	sales_invoices = frappe.get_all("Sales Invoice",fields=["customer", "name"])
 	delivery_notes = frappe.get_all("Sales Invoice",fields=["customer", "name"])
 	quotations = frappe.get_all("Quotation",fields=["party_name", "name", "quotation_to"])
-	supplier_quotation = frappe.get_all("Supplier Quotation",fields=["supplier", "name"])
+	supplier_quotations = frappe.get_all("Supplier Quotation",fields=["supplier", "name"])
 	purchase_orders = frappe.get_all("Purchase Order",fields=["supplier", "name"])
 	purchase_invoices = frappe.get_all("Purchase Invoice",fields=["supplier", "name"])
-	purchase_receipt = frappe.get_all("Purchase Receipt",fields=["supplier", "name"]) 
+	purchase_receipts = frappe.get_all("Purchase Receipt",fields=["supplier", "name"]) 
 
 	for doc in sales_orders:
 		license = get_default_license("Customer", doc.customer)
@@ -44,7 +48,7 @@ def execute():
 			frappe.db.set_value("Quotation", doc.name, "license", license)
 			frappe.db.commit()
 
-	for doc in supplier_quotation:
+	for doc in supplier_quotations:
 		license = get_default_license("Supplier", doc.supplier)
 		if not license:
 			continue
@@ -65,7 +69,7 @@ def execute():
 		frappe.db.set_value("Purchase Invoice", doc.name, "license", license)
 		frappe.db.commit()
 	
-	for doc in purchase_receipt:
+	for doc in purchase_receipts:
 		license = get_default_license("Supplier", doc.supplier)
 		if not license:
 			continue
