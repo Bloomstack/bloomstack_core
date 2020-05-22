@@ -77,7 +77,7 @@
   }
  ],
  "links": [],
- "modified": "2020-05-22 02:15:33.621431",
+ "modified": "2020-05-22 04:41:49.297151",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Package Tag",
@@ -138,6 +138,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "search_fields": "item_code,item_name,package_tag",
  "show_name_in_global_search": 1,
  "show_preview_popup": 1,

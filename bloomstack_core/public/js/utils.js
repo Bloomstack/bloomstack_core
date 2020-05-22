@@ -79,7 +79,7 @@ $(document).on('app_ready', function() {
 		});
 	});
 
-	$.each(["Sales Invoice Item", "Stock Entry Detail"], function (i, doctype) {
+	$.each(["Sales Invoice Item", "Delivery Note Item", "Stock Entry Detail"], function (i, doctype) {
 		frappe.ui.form.on(doctype, {
 			package_tag: (frm, cdt, cdn) => {
 				const row = frm.selected_doc;
