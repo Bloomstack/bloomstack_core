@@ -74,13 +74,9 @@ doctype_js = {
 	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
-	"Purchase Invoice": "public/js/purchase_invoice.js",
-	"Purchase Receipt": "public/js/purchase_receipt.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
-	"Sales Invoice": "public/js/sales_invoice.js",
 	"Sales Order": "public/js/sales_order.js",
-	"Stock Entry": "public/js/stock_entry.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
 }

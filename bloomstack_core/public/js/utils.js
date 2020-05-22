@@ -78,4 +78,19 @@ $(document).on('app_ready', function() {
 			}
 		});
 	});
+
+	$.each(["Sales Invoice Item", "Delivery Note Item", "Stock Entry Detail"], function (i, doctype) {
+		frappe.ui.form.on(doctype, {
+			package_tag: (frm, cdt, cdn) => {
+				const row = frm.selected_doc;
+
+				// set batch no from the selected package tag, even if none found
+				if (row.package_tag) {
+					frappe.db.get_value("Package Tag", row.package_tag, "batch_no", (r) => {
+						frappe.model.set_value(cdt, cdn, "batch_no", r.batch_no);
+					})
+				}
+			}
+		});
+	});
 });
