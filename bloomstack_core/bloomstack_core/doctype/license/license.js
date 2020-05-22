@@ -1,7 +1,7 @@
-// Copyright (c) 2019, Bloom Stack, Inc and contributors
+// Copyright (c) 2020, Bloom Stack, Inc and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Compliance Info', {
+frappe.ui.form.on('License', {
 	refresh: (frm) => {
 		if (!frm.is_new()) {
 			if (!frm.doc.license_expiry_date || frm.doc.license_expiry_date > frappe.datetime.get_today()) {

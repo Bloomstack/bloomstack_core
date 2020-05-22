@@ -164,7 +164,7 @@ def create_customer(source_name, target_doc=None):
 		frappe.throw("A Customer already exists for this license - {0}".format(customer_link))
 
 	customer = frappe.new_doc("Customer")
-	customer.customer_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
+	customer.customer_name = frappe.db.get_value("License", source_name, "legal_name")
 	customer.append("licenses", {
 		"license": source_name,
 		"is_default": 1
@@ -181,7 +181,7 @@ def create_supplier(source_name, target_doc=None):
 		frappe.throw("A Supplier already exists for this license - {0}".format(supplier_link))
 
 	supplier = frappe.new_doc("Supplier")
-	supplier.supplier_name = frappe.db.get_value("Compliance Info", source_name, "legal_name")
+	supplier.supplier_name = frappe.db.get_value("License", source_name, "legal_name")
 	supplier.append("licenses", {
 		"license": source_name,
 		"is_default": 1

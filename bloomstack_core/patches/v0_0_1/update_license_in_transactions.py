@@ -6,8 +6,8 @@ from bloomstack_core.hook_events.utils import get_default_license
 def execute():
 	sync_customizations("bloomstack_core")
 
-	compliance_info = frappe.get_all('Compliance Info', fields=['name'])
-	if not compliance_info:
+	license = frappe.get_all('License', fields=['name'])
+	if not license:
 		return
 
 	sales_orders = frappe.get_all("Sales Order",fields=["customer", "name"])

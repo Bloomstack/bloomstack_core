@@ -1,6 +1,6 @@
 {
  "actions": [],
- "creation": "2020-05-11 20:44:33.930964",
+ "creation": "2020-05-11 20:44:33.930914",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -16,7 +16,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "License",
-   "options": "Compliance Info"
+   "options": "License"
   },
   {
    "fetch_from": "license.license_type",

@@ -9,7 +9,7 @@ from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe.utils import get_url
 from urllib.parse import urlparse
 
-class ComplianceInfo(Document):
+class License(Document):
 	def before_insert(self):
 		client = get_bloomtrace_client()
 		if not client:

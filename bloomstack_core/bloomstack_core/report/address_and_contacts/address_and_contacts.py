@@ -135,9 +135,9 @@ def get_party_addresses_and_contact(party_type, party, party_group):
 		if party_type in ("Customer", "Supplier"):
 			license_record = get_default_license(party_type, party)
 
-			if frappe.db.exists("Compliance Info", license_record):
+			if frappe.db.exists("License", license_record):
 				license_type, license_number = frappe.db.get_value(
-					"Compliance Info", license_record, ["license_type", "license_number"])
+					"License", license_record, ["license_type", "license_number"])
 
 		# If no addresses and contacts exist, add a single row to display the party
 		addresses = details.get("address", [])
