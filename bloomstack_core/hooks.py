@@ -201,7 +201,8 @@ doc_events = {
 		]
 	},
 	"Purchase Receipt": {
-		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
+		"on_submit": "bloomstack_core.hook_events.purchase_receipt.update_package_tags",
+		"on_cancel": "bloomstack_core.hook_events.purchase_receipt.update_package_tags"
 	},
 	"Sales Invoice": {
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
