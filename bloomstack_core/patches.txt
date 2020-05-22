@@ -6,3 +6,4 @@ bloomstack_core.patches.v0_0_1.set_order_type
 bloomstack_core.patches.v0_0_1.move_license_to_table
 bloomstack_core.patches.v0_0_1.update_license_in_transactions
 bloomstack_core.patches.v0_0_1.set_batch_in_package_tags
+bloomstack_core.patches.v0_0_1.rename_compliance_info_name

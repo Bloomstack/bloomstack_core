@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
+ "allow_rename": 1,
  "autoname": "field:license_number",
  "creation": "2019-04-26 02:55:33.798894",
  "doctype": "DocType",
@@ -112,7 +113,7 @@
   }
  ],
  "links": [],
- "modified": "2020-05-21 06:24:56.176093",
+ "modified": "2020-05-22 00:29:48.944035",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Info",
