@@ -195,8 +195,14 @@ doc_events = {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
 	},
 	"Pick List": {
-		"on_submit": "bloomstack_core.hook_events.pick_list.update_order_package_tag",
-		"on_cancel": "bloomstack_core.hook_events.pick_list.update_order_package_tag"
+		"on_submit": [
+			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
+			"bloomstack_core.hook_events.pick_list.update_package_tag"
+		],
+		"on_cancel": [
+			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
+			"bloomstack_core.hook_events.pick_list.update_package_tag"
+		]
 	},
 	"Purchase Receipt": {
 		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
