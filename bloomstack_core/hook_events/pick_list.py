@@ -11,10 +11,14 @@ def update_order_package_tag(pick_list, method):
 			continue
 
 		if item.sales_order_item:
+			existing_package_tag = frappe.db.get_value("Sales Order Item", item.sales_order_item, "package_tag")
+
 			if method == "on_submit":
-				frappe.db.set_value("Sales Order Item", item.sales_order_item, "package_tag", item.package_tag)
+				if not existing_package_tag:
+					frappe.db.set_value("Sales Order Item", item.sales_order_item, "package_tag", item.package_tag)
 			elif method == "on_cancel":
-				frappe.db.set_value("Sales Order Item", item.sales_order_item, "package_tag", "")
+				if existing_package_tag:
+					frappe.db.set_value("Sales Order Item", item.sales_order_item, "package_tag", None)
 
 
 def update_package_tag(pick_list, method):
