@@ -64,30 +64,32 @@ $(document).on('app_ready', function() {
 					})
 				}
 				if (frm.doc.license) {
-					frappe.call({
-						method: "bloomstack_core.hook_events.taxes.set_excise_tax",
-						args: {
-							doc: frm.doc
-						},
-						callback: (r) => {
-							if(r.message){
-								let taxes = frm.doc.taxes;
-								if (taxes && taxes.length > 0){
-									$.each(taxes, function (i, d) {
-										if (d.account_head == r.message.account_head ) {
-											d.tax_amount = r.message.tax_amount
-										} 
-										else 
-										{
+					frappe.db.get_value("Compliance Info", { "name": frm.doc.license }, "license_for", (r) => {
+						if (r && r.license_for=="Retailer") {
+							frappe.call({
+								method: "bloomstack_core.hook_events.taxes.set_excise_tax",
+								args: {
+									doc: frm.doc
+								},
+								callback: (r) => {
+									if(r.message){
+										let taxes = frm.doc.taxes;
+										if (taxes && taxes.length > 0){
+											$.each(taxes, function (i, d) {
+												if (d.account_head == r.message.account_head ) {
+													d.tax_amount = r.message.tax_amount
+												} else {
+													frm.add_child('taxes',  r.message);
+												}
+											});
+										}
+										else {
 											frm.add_child('taxes',  r.message);
 										}
-									});
+									}
 								}
-								else {
-									frm.add_child('taxes',  r.message);
-								}
-							}
-						}
+							})
+						};
 					})
 				}
 			}
