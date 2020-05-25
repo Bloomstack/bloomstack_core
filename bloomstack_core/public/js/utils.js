@@ -65,19 +65,32 @@ $(document).on('app_ready', function() {
 				}
 				if (frm.doc.license) {
 					frappe.call({
-						method: "bloomstack_core.hook_events.taxes.calculate_excise_tax",
+						method: "bloomstack_core.hook_events.taxes.set_excise_tax",
 						args: {
 							doc: frm.doc
 						},
 						callback: (r) => {
-							console.log(r)
 							if(r.message){
-								frm.add_child('taxes',  r.message);
+								let taxes = frm.doc.taxes;
+								if (taxes && taxes.length > 0){
+									$.each(taxes, function (i, d) {
+										if (d.account_head == r.message.account_head ) {
+											d.tax_amount = r.message.tax_amount
+										} 
+										else 
+										{
+											frm.add_child('taxes',  r.message);
+										}
+									});
+								}
+								else {
+									frm.add_child('taxes',  r.message);
+								}
 							}
 						}
 					})
 				}
-			},
+			}
 		});
 	});
 
@@ -93,7 +106,7 @@ $(document).on('app_ready', function() {
 						}
 					}
 				});
-			}
-		});
+			}											
+		});																																
 	});
 });
