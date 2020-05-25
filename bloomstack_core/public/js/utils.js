@@ -55,11 +55,29 @@ $(document).on('app_ready', function() {
 						callback: (r) => {
 							if(r.message){
 								frm.set_value("license", r.message)
+								frappe.show_alert({
+									indicator: 'blue',
+									message: __(r.message + "license set for customer")
+								});
 							}
 						}
 					})
 				}
-			}
+				if (frm.doc.license) {
+					frappe.call({
+						method: "bloomstack_core.hook_events.taxes.calculate_excise_tax",
+						args: {
+							doc: frm.doc
+						},
+						callback: (r) => {
+							console.log(r)
+							if(r.message){
+								frm.add_child('taxes',  r.message);
+							}
+						}
+					})
+				}
+			},
 		});
 	});
 

@@ -1,7 +1,9 @@
 import frappe
 from bloomstack_core.hook_events.utils import get_default_license
+from erpnext.accounts.utils import get_company_default
 from erpnext.stock.doctype.item.item import get_uom_conv_factor
 from frappe import _
+import json
 
 DRY_FLOWER_TAX_RATE = 9.65
 DRY_LEAF_TAX_RATE = 2.87
@@ -9,8 +11,7 @@ FRESH_PLANT_TAX_RATE = 1.35
 EXCISE_TAX_RATE = 15
 MARKUP_PERCENTAGE = 80
 
-
-def calculate_cannabis_tax(doc, method):
+def calculate_cannabis_tax(doc, method=None):
 	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
 
 	if not compliance_items:
@@ -40,7 +41,7 @@ def calculate_cannabis_tax(doc, method):
 			set_taxes(doc, cultivation_tax_row)
 		elif license_for == "Retailer":
 			# calculate excise tax for selling cycle is customer is a retailer or end-consumer
-			exicse_tax_row = calculate_excise_tax(doc, compliance_items)
+			exicse_tax_row = calculate_excise_tax(doc)
 			set_taxes(doc, exicse_tax_row)
 
 
@@ -72,22 +73,27 @@ def calculate_cultivation_tax(doc, compliance_items):
 
 	return cultivation_tax_row
 
+@frappe.whitelist()
+def calculate_excise_tax(doc):
+	if isinstance(doc, str):
+		doc = frappe._dict(json.loads(doc))
 
-def calculate_excise_tax(doc, compliance_items):
+	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
 	total_excise_tax = total_shipping_charge = 0
 
-	for tax in doc.taxes:
-		if tax.account_head == doc.get_company_default("default_shipping_account"):
-			total_shipping_charge += tax.tax_amount
+	if doc.get("taxes"):
+		for tax in doc.get("taxes"):
+			if tax.get("account_head") == get_company_default(doc.get("company"), "default_shipping_account"):
+				total_shipping_charge += tax.tax_amount
 
-	for item in doc.items:
-		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.item_code), None)
+	for item in doc.get("items"):
+		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
 		if not compliance_item:
 			continue
 
 		# calculate the total excist tax for each item
-		item_shipping_charge = (total_shipping_charge / doc.total) * (item.price_list_rate * item.qty)
-		item_cost_with_shipping = (item.price_list_rate * item.qty) + item_shipping_charge
+		item_shipping_charge = (total_shipping_charge / doc.total) * (item.get("price_list_rate") * item.get("qty"))
+		item_cost_with_shipping = (item.get("price_list_rate") * item.get("qty")) + item_shipping_charge
 		item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
 		total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
 
@@ -96,7 +102,7 @@ def calculate_excise_tax(doc, compliance_items):
 		'add_deduct_tax': 'Add',
 		'charge_type': 'Actual',
 		'description': 'Excise Tax',
-		'account_head': doc.get_company_default("default_excise_tax_account"),
+		'account_head': get_company_default(doc.get("company"), "default_excise_tax_account"),
 		'tax_amount': total_excise_tax
 	}
 
@@ -107,7 +113,7 @@ def set_taxes(doc, tax_row):
 	if not tax_row.get("tax_amount"):
 		return
 
-	existing_tax_row = doc.get("taxes", filters={"account_head": tax_row.get('account_head')})
+	existing_tax_row = doc.get("taxes", {"account_head": tax_row.get('account_head')})
 
 	# update an existing tax row, or create a new one
 	if existing_tax_row:
