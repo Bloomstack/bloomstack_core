@@ -89,8 +89,8 @@ def calculate_excise_tax(doc, compliance_items):
 			continue
 
 		# calculate the total excist tax for each item
-		item_shipping_charge = (total_shipping_charge / doc.total) * (item.get("price_list_rate") * item.get("qty"))
-		item_cost_with_shipping = (item.get("price_list_rate") * item.get("qty")) + item_shipping_charge
+		item_shipping_charge = (total_shipping_charge / doc.total) * (item.get("rate") * item.get("qty"))
+		item_cost_with_shipping = (item.get("rate") * item.get("qty")) + item_shipping_charge
 		item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
 		total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
 
@@ -138,5 +138,9 @@ def set_excise_tax(doc):
 		doc = frappe._dict(json.loads(doc))
 
 	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
+
+	if not compliance_items:
+		return
+
 	exicse_tax_row = calculate_excise_tax(doc, compliance_items)
 	return exicse_tax_row
