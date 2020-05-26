@@ -145,3 +145,9 @@ def item_group_query(doctype, txt, searchfield, start, page_len, filters):
 			where (name like %(txt)s) limit {start}, {page_len}"""
 		.format(start=start, page_len= page_len),
 			{'txt': '%%%s%%' % txt})
+
+def get_sales_order(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.db.sql(""" select distinct name from `tabSales Order`
+			where (name like %(txt)s) and (docstatus = 0) limit {start}, {page_len}"""
+		.format(start=start, page_len= page_len),
+			{'txt': '%%%s%%' % txt})

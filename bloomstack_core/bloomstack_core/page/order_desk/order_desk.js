@@ -176,7 +176,17 @@ erpnext.pos.OrderDesk = class OrderDesk {
 							},
 							() => {}
 							);
-					}}
+					}},
+				reset: (sales_order) =>{
+					this.frm.doc = sales_order;
+					cur_frm.doc = sales_order;
+					// this.order_type_field.set_value(sales_order.order_type);
+					// this.customer_field.set_value(sales_order.customer);
+					// this.delivery_date = sales_order.delivery_date;
+					this.frm.doc.items.forEach(item => {
+						this.update_cart_data(item)
+					})
+				}
 				}
 			});
 	}
@@ -613,6 +623,29 @@ class OrderDeskItems {
 				get_query: () => {
 					return {
 						query: 'bloomstack_core.bloomstack_core.page.order_desk.order_desk.item_group_query'
+					};
+				}
+			},
+			parent: this.wrapper.find('.item-group-field'),
+			render_input: true
+		});
+
+		this.selected_sales_order = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: 'Sales Order',
+				options: 'Sales Order',
+				default: 'New',
+				onchange: (e) => {
+					if(this.selected_sales_order.value){
+						frappe.db.get_doc('Sales Order', this.selected_sales_order.value).then(sales_order => {
+							this.events.reset(sales_order)
+						});
+					}
+				},
+				get_query: () => {
+					return {
+						query: 'bloomstack_core.bloomstack_core.page.order_desk.order_desk.get_sales_order'
 					};
 				}
 			},
