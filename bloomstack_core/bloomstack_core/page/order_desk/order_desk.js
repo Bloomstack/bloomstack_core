@@ -1,6 +1,4 @@
 /* global Clusterize */
-const [Qty,Disc,Rate,Del,Order] = [__("Qty"), __('Disc'), __('Rate'), __('Del'), __('Order')];
-
 frappe.provide('erpnext.pos');
 
 frappe.pages['order-desk'].refresh = function(wrapper) {
@@ -188,14 +186,21 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			const item = this.frm.doc.items.find(i => i[search_field] === search_value);
 			frappe.flags.hide_serial_batch_dialog = false;
 
-
 			if (typeof value === 'string' && !in_list(['serial_no', 'batch_no'], field)) {
 				// value can be of type '+1' or '-1'
 				value = item[field] + flt(value);
 			}
 
-			if(field === 'rate' && item){
-				this.frm.doc.ignore_pricing_rule = 1
+			if (field === 'rate' && item) {
+				this.frm.doc.ignore_pricing_rule = 1;
+
+				if (value < 0) {
+					frappe.show_alert({
+						indicator: 'red',
+						message: __('Rate amount cannot be less than 0')
+					});
+					value = 0;
+				}
 			}
 
 			if(field === 'serial_no') {
@@ -208,7 +213,23 @@ erpnext.pos.OrderDesk = class OrderDesk {
 
 			if (value && show_dialog && field == 'qty' && ((!item.batch_no && item.has_batch_no) ||
 				(item.has_serial_no) || (item.actual_batch_qty != item.actual_qty)) ) {
-				this.select_batch_and_serial_no(item);
+				this.update_item_in_frm(item, field, value);
+				this.frm.doc.items.forEach(item_row => {
+					this.update_item_in_frm(item_row)
+						.then(() => {
+							frappe.dom.unfreeze();
+							frappe.run_serially([
+								() => {
+									if (item_row.qty === 0) {
+										frappe.model.clear_doc(item_row.doctype, item_row.name);
+									}
+								},
+								() => this.update_cart_data(item_row),
+								() => this.post_qty_change(item_row)
+							]);
+						});
+					});
+				this.on_close(item);
 			} else {
 				this.update_item_in_frm(item, field, value)
 					.then(() => {
@@ -1083,7 +1104,8 @@ class SalesOrderCart {
 
 		if(item.qty > 0) {
 			const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
-			const indicator_class = (!is_stock_item || item.saleable_qty >= item.qty) ? 'green' : 'red';
+			const saleable_qty = this.get_item_details(item.item_code).saleable_qty;
+			const indicator_class = (!is_stock_item || saleable_qty >= item.qty) ? 'green' : 'red';
 			const remove_class = indicator_class == 'green' ? 'red' : 'green';
 
 			$item.find('.quantity input').val(item.qty);
@@ -1098,7 +1120,8 @@ class SalesOrderCart {
 
 	get_item_html(item) {
 		const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
-		const indicator_class = (!is_stock_item || item.saleable_qty >= item.qty) ? 'green' : 'red';
+		const saleable_qty = this.get_item_details(item.item_code).saleable_qty;
+		const indicator_class = (!is_stock_item || saleable_qty >= item.qty) ? 'green' : 'red';
 		const batch_no = item.batch_no || '';
 
 		const me = this;
@@ -1115,7 +1138,7 @@ class SalesOrderCart {
 
 		return `
 			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
-				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.saleable_qty} ${item.stock_uom}">
+				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
 				<div class="item-name list-item__content list-item__content--flex-1.5 ellipsis">
 					${item.item_name}
 				</div>
@@ -1222,19 +1245,9 @@ class SalesOrderCart {
 				const item_code = unescape($item.data('item-code'));
 				const action = $btn.data('action');
 
-				if(action === 'increment_rate') {
+				if (action === 'increment_rate') {
 					events.on_field_change(item_code, 'rate', '+1');
-				}else if(action === 'decrement_rate') {
-
-					const existing_item = me.frm.doc.items.find(i => i.item_code === item_code);
-
-					if(existing_item.rate === 0){
-						frappe.show_alert({
-							indicator: 'red',
-							message: __('Rate amount cannot be less than 0')
-						});
-						return
-					}
+				} else if (action === 'decrement_rate') {
 					events.on_field_change(item_code, 'rate', '-1');
 				}
 			});
