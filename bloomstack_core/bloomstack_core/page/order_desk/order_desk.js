@@ -188,7 +188,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			const item = this.frm.doc.items.find(i => i[search_field] === search_value);
 			frappe.flags.hide_serial_batch_dialog = false;
 
-
 			if (typeof value === 'string' && !in_list(['serial_no', 'batch_no'], field)) {
 				// value can be of type '+1' or '-1'
 				value = item[field] + flt(value);
@@ -208,25 +207,23 @@ erpnext.pos.OrderDesk = class OrderDesk {
 
 			if (value && show_dialog && field == 'qty' && ((!item.batch_no && item.has_batch_no) ||
 				(item.has_serial_no) || (item.actual_batch_qty != item.actual_qty)) ) {
-				// this.select_batch_and_serial_no(item);
-				this.update_item_in_frm(item, field, value)
-					.then(() => {
-						frappe.dom.unfreeze();
-						frappe.run_serially([
-							() => {
-								let items = this.frm.doc.items.map(item => item.name);
-								if (items && items.length > 0 && items.includes(item.name)) {
-									this.frm.doc.items.forEach(item_row => {
-										// update cart
-										this.on_qty_change(item_row);
-									});
-								} else {
-									this.on_qty_change(item);
-								}
-							},
-							() => this.post_qty_change(item)
-						]);
+				this.update_item_in_frm(item, field, value);
+				this.frm.doc.items.forEach(item_row => {
+					this.update_item_in_frm(item_row)
+						.then(() => {
+							frappe.dom.unfreeze();
+							frappe.run_serially([
+								() => {
+									if (item_row.qty === 0) {
+										frappe.model.clear_doc(item_row.doctype, item_row.name);
+									}
+								},
+								() => this.update_cart_data(item_row),
+								() => this.post_qty_change(item_row)
+							]);
+						});
 					});
+				this.on_close(item);
 			} else {
 				this.update_item_in_frm(item, field, value)
 					.then(() => {
