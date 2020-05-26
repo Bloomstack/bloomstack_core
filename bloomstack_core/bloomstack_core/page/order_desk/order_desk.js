@@ -1083,7 +1083,8 @@ class SalesOrderCart {
 
 		if(item.qty > 0) {
 			const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
-			const indicator_class = (!is_stock_item || item.saleable_qty >= item.qty) ? 'green' : 'red';
+			const saleable_qty = this.get_item_details(item.item_code).saleable_qty;
+			const indicator_class = (!is_stock_item || saleable_qty >= item.qty) ? 'green' : 'red';
 			const remove_class = indicator_class == 'green' ? 'red' : 'green';
 
 			$item.find('.quantity input').val(item.qty);
@@ -1098,7 +1099,8 @@ class SalesOrderCart {
 
 	get_item_html(item) {
 		const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
-		const indicator_class = (!is_stock_item || item.saleable_qty >= item.qty) ? 'green' : 'red';
+		const saleable_qty = this.get_item_details(item.item_code).saleable_qty;
+		const indicator_class = (!is_stock_item || saleable_qty >= item.qty) ? 'green' : 'red';
 		const batch_no = item.batch_no || '';
 
 		const me = this;
@@ -1115,7 +1117,7 @@ class SalesOrderCart {
 
 		return `
 			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
-				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${item.saleable_qty} ${item.stock_uom}">
+				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
 				<div class="item-name list-item__content list-item__content--flex-1.5 ellipsis">
 					${item.item_name}
 				</div>
