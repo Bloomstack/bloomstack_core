@@ -16,13 +16,13 @@ frappe.ui.form.on('Pick List Item', {
 		const row = frm.selected_doc || locals[cdt][cdn];
 
 		if (row.package_tag) {
-			frappe.db.get_value("Batch", {"package_tag": row.package_tag}, "name", (r) => {
-				if (r && r.name) {
+			frappe.db.get_value("Package Tag", {"name": row.package_tag}, "batch_no", (r) => {
+				if (r && r.batch_no) {
 					// check if a different batch already exists
-					if (row.batch_no && row.batch_no != r.name) {
-						frappe.throw(__(`The "${row.package_tag}" tag is linked to a different batch (${r.name})`));
+					if (row.batch_no && row.batch_no != r.batch_no) {
+						frappe.throw(__(`The "${row.package_tag}" tag is linked to a different batch (${r.batch_no})`));
 					} else {
-						frappe.model.set_value(cdt, cdn, "batch_no", r.name);
+						frappe.model.set_value(cdt, cdn, "batch_no", r.batch_no);
 					}
 				}
 			});

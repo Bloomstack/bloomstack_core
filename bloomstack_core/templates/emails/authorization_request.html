@@ -35,34 +35,34 @@
         <table>
           <tr>
             <td>
-              <p style="padding-left: 20px">Dear {{ authorization_request.authorizer_name }},</p>
+              <p style="padding-left: 20px; margin-bottom: 0!important;">Dear {{ authorization_request.authorizer_name }},</p>
             </td>
           </tr>
           {% if authorization_request.status == "Request Sent" %}
           <tr>
             <td>
-              <p style="padding-left: 20px">{{ company }} has sent you a contract.</p>
+              <p style="padding-left: 20px; margin-bottom: 0!important;">{{ company }} has sent you a contract.</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="padding-left: 20px">Your signature is required for this agreement to be completed.</p>
+              <p style="padding-left: 20px; margin-bottom: 0!important;">Your signature is required for this agreement to be completed.</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="padding-left: 20px"><a href="{{ authorization_request.request_link }}" style="color: #fff;background-color: #5389a8 ;display: inline-block;padding: 10px 15px;text-decoration: none;border-radius: 10px; font-weight: bold;">Review & Sign</a></p>
+              <p style="padding-left: 20px; margin-bottom: 0!important;"><a href="{{ authorization_request.request_link }}" style="color: #fff;background-color: #5389a8 ;display: inline-block;padding: 10px 15px;text-decoration: none;border-radius: 10px; font-weight: bold;">Review & Sign</a></p>
             </td>
           </tr>
           {% elif authorization_request.status == "Approved" %}
           <tr>
             <td>
-              <p style="padding-left: 20px">Your contract with {{ company }} is now complete.</p>
+              <p style="padding-left: 20px; margin-bottom: 0!important;">Your contract with {{ company }} is now complete.</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="padding-left: 20px">The signed copy of the agreement is attached for your records. No further action is required from you.</p>
+              <p style="padding-left: 20px; margin-bottom: 0!important;">The signed copy of the agreement is attached for your records. No further action is required from you.</p>
             </td>
           </tr>
           {% endif %}
@@ -74,17 +74,17 @@
         <table>
           <tr>
             <td>
-              <p style="padding-left: 20px">Thank you!</p>
+              <p style="padding-left: 20px;">Thank you!</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="margin: 0; padding-left: 20px">Regards,</p>
+              <p style="margin: 0; padding-left: 20px; margin-bottom: 0!important;">Regards,</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="margin: 0; padding-left: 20px">Bloomstack Team</p>
+              <p style="margin: 0; padding-left: 20px; margin-bottom: 0!important;">Bloomstack Team</p>
             </td>
           </tr>
         </table>
@@ -98,7 +98,7 @@
         <table style="width: 100%;">
           <tr>
             <td>
-              <p style="color: #fff; margin-bottom: 0;">Our support address is:</p>
+              <p style="color: #fff; margin-bottom: 0!important;">Our support address is:</p>
             </td>
           </tr>
           <tr>
