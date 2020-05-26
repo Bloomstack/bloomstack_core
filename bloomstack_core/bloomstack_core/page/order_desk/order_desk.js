@@ -121,7 +121,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				get_item_details: (item_code) => {
 					return this.items.get(item_code);
 				},
-				update_batched_item: (item) =>{
+				update_batched_item: (item) => {
 					this.select_batch_and_serial_no(item)
 				}
 			}
