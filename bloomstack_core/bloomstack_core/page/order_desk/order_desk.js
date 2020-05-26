@@ -1,6 +1,4 @@
 /* global Clusterize */
-const [Qty,Disc,Rate,Del,Order] = [__("Qty"), __('Disc'), __('Rate'), __('Del'), __('Order')];
-
 frappe.provide('erpnext.pos');
 
 frappe.pages['order-desk'].refresh = function(wrapper) {
@@ -188,14 +186,21 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			const item = this.frm.doc.items.find(i => i[search_field] === search_value);
 			frappe.flags.hide_serial_batch_dialog = false;
 
-
 			if (typeof value === 'string' && !in_list(['serial_no', 'batch_no'], field)) {
 				// value can be of type '+1' or '-1'
 				value = item[field] + flt(value);
 			}
 
-			if(field === 'rate' && item){
-				this.frm.doc.ignore_pricing_rule = 1
+			if (field === 'rate' && item) {
+				this.frm.doc.ignore_pricing_rule = 1;
+
+				if (value < 0) {
+					frappe.show_alert({
+						indicator: 'red',
+						message: __('Rate amount cannot be less than 0')
+					});
+					value = 0;
+				}
 			}
 
 			if(field === 'serial_no') {
@@ -1224,19 +1229,9 @@ class SalesOrderCart {
 				const item_code = unescape($item.data('item-code'));
 				const action = $btn.data('action');
 
-				if(action === 'increment_rate') {
+				if (action === 'increment_rate') {
 					events.on_field_change(item_code, 'rate', '+1');
-				}else if(action === 'decrement_rate') {
-
-					const existing_item = me.frm.doc.items.find(i => i.item_code === item_code);
-
-					if(existing_item.rate === 0){
-						frappe.show_alert({
-							indicator: 'red',
-							message: __('Rate amount cannot be less than 0')
-						});
-						return
-					}
+				} else if (action === 'decrement_rate') {
 					events.on_field_change(item_code, 'rate', '-1');
 				}
 			});
