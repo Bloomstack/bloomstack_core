@@ -89,8 +89,12 @@ def calculate_excise_tax(doc, compliance_items):
 			continue
 
 		# calculate the total excist tax for each item
-		item_shipping_charge = (total_shipping_charge / doc.total) * (item.get("rate") * item.get("qty"))
-		item_cost_with_shipping = (item.get("rate") * item.get("qty")) + item_shipping_charge
+		price_list_rate = item.get("price_list_rate")
+		rate = item.get("rate")
+		# fetch item rate whichever is maximum in rate and price_list_rate
+		max_item_rate = max([price_list_rate, rate])
+		item_shipping_charge = (total_shipping_charge / doc.total) * (max_item_rate * item.get("qty"))
+		item_cost_with_shipping = (max_item_rate * item.get("qty")) + item_shipping_charge
 		item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
 		total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
 

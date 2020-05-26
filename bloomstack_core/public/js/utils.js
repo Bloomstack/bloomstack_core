@@ -81,8 +81,8 @@ $(document).on('app_ready', function() {
 						}
 					}
 				});
-			}											
-		});																																
+			}
+		});
 	});
 
 	$.each(["Sales Invoice Item", "Delivery Note Item", "Stock Entry Detail"], function (i, doctype) {
