@@ -74,13 +74,9 @@ doctype_js = {
 	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
-	"Purchase Invoice": "public/js/purchase_invoice.js",
-	"Purchase Receipt": "public/js/purchase_receipt.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
-	"Sales Invoice": "public/js/sales_invoice.js",
 	"Sales Order": "public/js/sales_order.js",
-	"Stock Entry": "public/js/stock_entry.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
 }
@@ -195,11 +191,20 @@ doc_events = {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
 	},
 	"Pick List": {
-		"on_submit": "bloomstack_core.hook_events.pick_list.update_order_package_tag",
-		"on_cancel": "bloomstack_core.hook_events.pick_list.update_order_package_tag"
+		"on_submit": [
+			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
+			"bloomstack_core.hook_events.pick_list.update_package_tag"
+		],
+		"on_cancel": [
+			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
+			"bloomstack_core.hook_events.pick_list.update_package_tag"
+		]
 	},
 	"Purchase Receipt": {
-		"on_submit": "bloomstack_core.hook_events.purchase_receipt.set_package_tags"
+		"on_submit": "bloomstack_core.hook_events.purchase_receipt.update_package_tags",
+		# ERPNext tries to delete auto-created batches on cancel, so removing the link
+		# from Package Tag before the on_cancel hook runs
+		"before_cancel": "bloomstack_core.hook_events.purchase_receipt.update_package_tags"
 	},
 	"Sales Invoice": {
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"

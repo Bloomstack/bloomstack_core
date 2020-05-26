@@ -8,8 +8,13 @@
  "engine": "InnoDB",
  "field_order": [
   "package_tag",
+  "sb_item",
   "item_code",
-  "item_name"
+  "item_name",
+  "item_group",
+  "cb_item",
+  "batch_no",
+  "source_package_tag"
  ],
  "fields": [
   {
@@ -17,13 +22,16 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Code",
+   "no_copy": 1,
    "options": "Item"
   },
   {
    "fetch_from": "item_code.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Item Name",
+   "no_copy": 1,
    "read_only": 1
   },
   {
@@ -32,10 +40,44 @@
    "label": "UID Number / Package Tag",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "sb_item",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cb_item",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Batch No",
+   "no_copy": 1,
+   "options": "Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_package_tag",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source Package Tag",
+   "no_copy": 1,
+   "options": "Package Tag",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "item_code.item_group",
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2020-03-20 00:30:41.797677",
+ "modified": "2020-05-22 04:41:49.297151",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Package Tag",
@@ -96,6 +138,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "search_fields": "item_code,item_name,package_tag",
  "show_name_in_global_search": 1,
  "show_preview_popup": 1,
