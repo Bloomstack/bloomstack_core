@@ -1,9 +1,10 @@
+import json
+
 import frappe
 from bloomstack_core.hook_events.utils import get_default_license
 from erpnext.accounts.utils import get_company_default
 from erpnext.stock.doctype.item.item import get_uom_conv_factor
 from frappe import _
-import json
 
 DRY_FLOWER_TAX_RATE = 9.65
 DRY_LEAF_TAX_RATE = 2.87
@@ -14,7 +15,6 @@ MARKUP_PERCENTAGE = 80
 
 def calculate_cannabis_tax(doc, method):
 	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
-
 	if not compliance_items:
 		return
 
@@ -42,8 +42,8 @@ def calculate_cannabis_tax(doc, method):
 			set_taxes(doc, cultivation_tax_row)
 		elif license_for == "Retailer":
 			# calculate excise tax for selling cycle is customer is a retailer or end-consumer
-			exicse_tax_row = calculate_excise_tax(doc, compliance_items)
-			set_taxes(doc, exicse_tax_row)
+			excise_tax_row = calculate_excise_tax(doc, compliance_items)
+			set_taxes(doc, excise_tax_row)
 
 
 def calculate_cultivation_tax(doc, compliance_items):
@@ -88,17 +88,18 @@ def calculate_excise_tax(doc, compliance_items):
 		if not compliance_item:
 			continue
 
-		# calculate the total excist tax for each item
+		# fetch either the transaction rate or price list rate, whichever is higher
 		price_list_rate = item.get("price_list_rate")
 		rate = item.get("rate")
-		# fetch item rate whichever is maximum in rate and price_list_rate
 		max_item_rate = max([price_list_rate, rate])
+
+		# calculate the total excise tax for each item
 		item_shipping_charge = (total_shipping_charge / doc.total) * (max_item_rate * item.get("qty"))
 		item_cost_with_shipping = (max_item_rate * item.get("qty")) + item_shipping_charge
 		item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
 		total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
 
-	exicse_tax_row = {
+	excise_tax_row = {
 		'category': 'Total',
 		'add_deduct_tax': 'Add',
 		'charge_type': 'Actual',
@@ -107,7 +108,7 @@ def calculate_excise_tax(doc, compliance_items):
 		'tax_amount': total_excise_tax
 	}
 
-	return exicse_tax_row
+	return excise_tax_row
 
 
 def set_taxes(doc, tax_row):
@@ -136,15 +137,15 @@ def convert_to_ounces(uom, qty):
 
 	return qty_in_ounce
 
+
 @frappe.whitelist()
 def set_excise_tax(doc):
 	if isinstance(doc, str):
 		doc = frappe._dict(json.loads(doc))
 
-	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
-
+	compliance_items = frappe.get_all('Compliance Item', fields=['item_code'])
 	if not compliance_items:
 		return
 
-	exicse_tax_row = calculate_excise_tax(doc, compliance_items)
-	return exicse_tax_row
+	excise_tax_row = calculate_excise_tax(doc, compliance_items)
+	return excise_tax_row
