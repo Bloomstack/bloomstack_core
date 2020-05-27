@@ -65,6 +65,6 @@ frappe.ui.form.on("Contract", {
                 frm.refresh_field("employee_name");
             })
         }
-    }
+    },
     
 });
