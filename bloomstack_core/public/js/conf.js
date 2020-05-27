@@ -99,22 +99,6 @@ frappe.form.link_formatters['Item'] = (value, doc) => {
 	}
 }
 
-
-frappe.form.link_formatters['Employee'] = function(value, doc) {
-	if(doc && doc.employee_name) {
-		return doc.employee_name;
-	}
-	if (doc && !doc.employee_name) {
-		frappe.db.get_value("Employee", { "name" : value }, "employee_name", (r) => {
-			employee_name = r.employee_name;
-		});
-		return employee_name;
-	}
-	else {
-		return value;
-	}
-}
-
 bloomstack_core.get_growth_guide_articles = (doc_type) => {
 	frappe.call({
 		method: "bloomstack_core.config.docs.get_growth_guide_articles",
