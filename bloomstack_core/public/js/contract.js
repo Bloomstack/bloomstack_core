@@ -64,6 +64,9 @@ frappe.ui.form.on("Contract", {
 				if (r && r.employee_name) {
 					frm.set_value("employee_name", r.employee_name);
 				}
+				else {
+					frm.set_value("employee_name", "");
+				}
 			})
 		}
 		else {
