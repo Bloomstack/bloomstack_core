@@ -231,7 +231,7 @@ scheduler_events = {
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	],
 	"hourly": [
-		"bloomstack_core.bloomtrace.user.update_bloomtrace_client_user"
+		"bloomstack_core.bloomtrace.user.update_bloomstack_customer_user"
 	]
 }
 
