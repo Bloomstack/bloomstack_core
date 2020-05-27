@@ -78,7 +78,10 @@ doctype_js = {
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
 	"User": "public/js/user.js",
-	"Work Order": "public/js/work_order.js"
+	"Work Order": "public/js/work_order.js",
+	"Project": "public/js/project.js",
+	"Task": "public/js/task.js",
+	"Timesheet": "public/js/timesheet.js"
 }
 
 doctype_list_js = {
