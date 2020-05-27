@@ -1142,10 +1142,12 @@ class SalesOrderCart {
 		$(document).on('click', '.list-item div', function (event) {
 			event.stopImmediatePropagation(); // to prevent firing of multiple events
 			let item_code = $(this).data('item-code');
-			const item_data = me.frm.doc.items.find(item => item.item_code === item_code)
-			const show_dialog = item_data.has_batch_no;
-			if (show_dialog) {
-				me.events.update_batched_item(item_data)
+			if (item_code) {
+				const item_data = me.frm.doc.items.find(item => item.item_code === item_code)
+				const show_dialog = item_data.has_batch_no;
+				if (show_dialog) {
+					me.events.update_batched_item(item_data)
+				}
 			}
 		})
 
