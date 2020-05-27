@@ -57,7 +57,7 @@ $(document).on('app_ready', function() {
 								frm.set_value("license", r.message);
 								frappe.show_alert({
 									indicator: 'blue',
-									message: __(`Found the following license for ${frm.doc.customer}: ${r.message}`)
+									message: __(`The following license was set for ${frm.doc.customer}: ${r.message.bold()}`)
 								});
 							}
 						}

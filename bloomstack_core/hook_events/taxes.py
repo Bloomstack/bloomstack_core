@@ -129,12 +129,10 @@ def set_taxes(doc, tax_row):
 
 def convert_to_ounces(uom, qty):
 	conversion_factor = get_uom_conv_factor(uom, 'Ounce')
-
 	if not conversion_factor:
 		frappe.throw(_("Please set Conversion Factor for {0} to Ounce").format(uom))
 
 	qty_in_ounce = qty * conversion_factor
-
 	return qty_in_ounce
 
 
