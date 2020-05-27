@@ -56,5 +56,15 @@ frappe.ui.form.on("Contract", {
             frm.scroll_to_field('signee_company');
             frappe.throw("Please sign the contract before submiting it.")
         }
-	},
+    },
+
+    party_name: (frm) => {
+        if(frm.doc.party_type == 'Employee') {
+            frappe.db.get_value("Employee", { "name": frm.doc.party_name }, "employee_name", (r) => {
+                frm.doc.employee_name = r.employee_name; 
+                frm.refresh_field("employee_name");
+            })
+        }
+    }
+    
 });
