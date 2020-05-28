@@ -38,23 +38,24 @@
                     <span class="description">Average of payments received in the last 7 days</span>
                 </div>
             </div>
-            <div class="col-md-4 col-xs-12 average-monthly-revenue">
-                <div class="container">
-                    <span class="amount">{{ format_number(total_items_sold, null, 0) }}</span>
-                    <span class="name">ITEMS SOLD</span>
-                    <span class="description">Sold from the start of business</span>
-                </div>
-            </div>
-        </div>
-        <!-- <div class="row">
-            <div class="col-md-4 col-xs-12 average-weekly-revenue">
+            <div class="col-md-4 col-xs-12 total-invoices">
                 <div class="container">
                     <span class="amount">{{ total_invoices }}</span>
                     <span class="name">TOTAL INVOICES</span>
                     <span class="description">Raised from the start of business</span>
                 </div>
             </div>
-            <div class="col-md-4 col-xs-12 cash-on-hand">
+
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-xs-12 products-sold">
+                <div class="container">
+                    <span class="amount">{{ format_number(total_items_sold, null, 0) }}</span>
+                    <span class="name">PRODUCTS SOLD</span>
+                    <span class="description">Sold from the start of business</span>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 total-products">
                 <div class="container">
                     <span class="amount">{{ total_skus }}</span>
                     <span class="name">TOTAL PRODUCTS</span>
@@ -68,7 +69,7 @@
                     <span class="description">As on {{ moment().format("MMM D") }}</span>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
     <div class="total-revenue parent-container">
         <div class="row">
