@@ -102,38 +102,40 @@
             </div>
         </div>
     </div>
-    <div class="total-upsell-revenue parent-container">
-        <div class="row">
-            <div class="col-md-6 col-xs-12 left-chart">
-                <div class="section-heading">
-                    <p class="heading">
-                        TOTAL REVENUE
-                        <span>
-                            From Upsell
-                        </span>
-                    </p>
-                    <p class="period">
-                        Month-to-Date
-                    </p>
+    {% if total_upsell_sales_by_month %}
+        <div class="total-upsell-revenue parent-container">
+            <div class="row">
+                <div class="col-md-6 col-xs-12 left-chart">
+                    <div class="section-heading">
+                        <p class="heading">
+                            TOTAL REVENUE
+                            <span>
+                                From Upsell
+                            </span>
+                        </p>
+                        <p class="period">
+                            Month-to-Date
+                        </p>
+                    </div>
+                    <canvas class="graphics"></canvas>
                 </div>
-                <canvas class="graphics"></canvas>
-            </div>
-            <div class="col-md-6 col-xs-12 right-chart">
-                <div class="section-heading">
-                    <p class="heading">
-                        TOTAL REVENUE
-                        <span>
-                            From Upsell
-                        </span>
-                    </p>
-                    <p class="period">
-                        Year-to-Date
-                    </p>
+                <div class="col-md-6 col-xs-12 right-chart">
+                    <div class="section-heading">
+                        <p class="heading">
+                            TOTAL REVENUE
+                            <span>
+                                From Upsell
+                            </span>
+                        </p>
+                        <p class="period">
+                            Year-to-Date
+                        </p>
+                    </div>
+                    <canvas class="graphics"></canvas>
                 </div>
-                <canvas class="graphics"></canvas>
             </div>
         </div>
-    </div>
+    {% endif %}
     <div class="graphical-distribution parent-container">
         <div class="row">
             <div class="col-md-6 col-xs-12 left-chart">
