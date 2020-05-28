@@ -22,8 +22,10 @@ def validate_entity_license(party_type, party_name):
 	license_expiry_date, license_number = frappe.db.get_value(
 		"Compliance Info", license_record, ["license_expiry_date", "license_number"])
 
-	if license_expiry_date and license_expiry_date < getdate(nowdate()):
-		frappe.throw(_("{0}'s license number {1} has expired on {2}").format(
+	if not license_expiry_date:
+		frappe.msgprint(_("We could not verify the status of license number {0}, Proceed with Caution.").format(frappe.bold(license_number)))
+	elif license_expiry_date < getdate(nowdate()):
+		frappe.msgprint(_("Our records indicate {0}'s license number {1} has expired on {2}, Proceed with Caution.").format(
 			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
 
 	return license_record
