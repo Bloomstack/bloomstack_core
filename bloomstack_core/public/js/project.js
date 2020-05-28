@@ -18,5 +18,20 @@ frappe.ui.form.on("Project", {
 				frm.set_value("billable", 0)
 			}
 		});
+	},
+	billable: (frm) => {
+		frappe.confirm(__(`Do you want to update linked timesheets with billable status as ${frm.doc.billable} ?`),
+			() => {
+				frappe.call({
+					method: "bloomstack_core.hook_events.utils.update_timesheets",
+					args: {
+						doctype: frm.doctype,
+						doc: frm.doc.name,
+						billable: frm.doc.billable
+					}
+				})
+			},
+			() => {}
+		);
 	}
 });

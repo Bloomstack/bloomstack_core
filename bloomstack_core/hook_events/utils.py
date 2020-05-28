@@ -75,3 +75,15 @@ def filter_license(doctype, txt, searchfield, start, page_len, filters):
 		},
 		fields=["license", "is_default", "license_type"],
 		as_list=1)
+
+@frappe.whitelist()
+def update_timesheets(doctype, doc, billable):
+	if doctype == "Project":
+		timesheets = frappe.db.get_all("Timesheet Detail", filters={"project":doc}, fields=["name", "billable"])
+	elif doctype == "Task":
+		timesheets = frappe.db.get_all("Timesheet Detail", filters={"task":doc}, fields=["name", "billable"])
+
+	for time_logs in timesheets:
+		timesheet = frappe.get_doc("Timesheet Detail", time_logs.name)
+		timesheet.billable = billable
+		timesheet.save()
