@@ -21,6 +21,10 @@ body[data-route="order-desk"] .quantity.list-item__content.text-right span butto
   color: #fff;
 }
 
+body[data-route="order-desk"] .quantity.list-item__content.text-right .input-group {
+  min-width: 75px;
+}
+
 body[data-route="order-desk"] .rate.list-item__content.text-right span button {
   background-color: #4f5261;
   color: #fff;
@@ -38,14 +42,20 @@ body[data-route="order-desk"] .order-primary {
 }
 
 body[data-route="order-desk"] .list-item.list-item--head .text-muted.actions {
-  flex: 1;
+  flex: 0;
 }
 
 body[data-route="order-desk"] .list-item__content.rate {
   margin-right: 0;
-  min-width: 85px;
+  min-width: 75px;
 }
 
 body[data-route="order-desk"] .list-item__content.rate input {
   padding: 4px;
+}
+
+body[data-route="order-desk"] .batch.list-item__content.text-right {
+  min-width: 55px;
+  margin-right: 0;
+  margin-left: 10px;
 }
