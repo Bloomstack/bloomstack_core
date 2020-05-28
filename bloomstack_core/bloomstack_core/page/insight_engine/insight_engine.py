@@ -25,7 +25,6 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 	weekly_revenue = get_revenue_by_date_range(last_week, today)
 	monthly_revenue = get_revenue_by_date_range(last_month, today)
 	top_products = get_top_products(*date_range)
-	total_upsell_sales = get_total_upsell_sales(*date_range)
 	top_customers = get_top_customers(*date_range)
 	top_customer_groups = get_top_customer_groups(*date_range)
 	top_territories = get_top_territories(*date_range)
@@ -38,6 +37,15 @@ def get_insight_engine_dashboards(start_date=None, end_date=None):
 	total_invoices = frappe.db.count("Sales Invoice", filters={"docstatus": 1})
 	total_skus = frappe.db.count("Item", filters={"is_sales_item": 1, "disabled": 0})
 	total_items_sold = frappe.db.get_value("Sales Invoice Item", filters={"docstatus": 1}, fieldname="SUM(qty)")
+
+	# get upsell sales reporting from other apps
+	total_upsell_sales = {}
+	insight_engine_hooks = frappe.get_hooks('insight_engine')
+	if insight_engine_hooks and isinstance(insight_engine_hooks, dict):
+		upsell_hooks = insight_engine_hooks.get("total_upsell_sales")
+
+		for fn in upsell_hooks:
+			total_upsell_sales = frappe.get_attr(fn)(*date_range)
 
 	return {
 		"new_customers_by_month": new_customer_details.get("new_count_by_month"),
@@ -321,46 +329,6 @@ def get_top_products(start_date, end_date, limit=10):
 		"revenue": top_products_by_revenue,
 		"by_volume": top_products_by_volume,
 		"by_time": top_products_by_time_and_revenue
-	}
-
-
-def get_total_upsell_sales(start_date, end_date):
-	invoices_with_base_items = frappe.get_all("Sales Invoice",
-		filters=[
-			["Sales Invoice", "docstatus", "=", 1],
-			["Sales Invoice", "posting_date", "between", [start_date, end_date]],
-			["Sales Invoice Item", "item_group", "in", ["Custom", "Universal"]]
-		],
-		distinct=True)
-	invoices_with_base_items = [invoice.name for invoice in invoices_with_base_items]
-
-	query = """
-		SELECT
-			SUM(si_item.amount) AS revenue,
-			SUM(si_item.qty) AS volume,
-			{0}(si.posting_date) AS period,
-			YEAR(si.posting_date) AS year
-		FROM
-			`tabSales Invoice` si
-				JOIN `tabSales Invoice Item` si_item
-					ON si_item.parent = si.name
-		WHERE
-			si.name IN ({1})
-				AND si_item.item_group NOT IN ("Custom", "Demo", "IEMs", "Full Retail", "Universal")
-		GROUP BY
-			YEAR(si.posting_date), {0}(si.posting_date) ASC
-	"""
-
-	daily_sales = frappe.db.sql(query.format("DATE", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
-	weekly_sales = frappe.db.sql(query.format("WEEK", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
-	monthly_sales = frappe.db.sql(query.format("MONTH", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
-	yearly_sales = frappe.db.sql(query.format("YEAR", ", ".join(["%s"] * len(invoices_with_base_items))), invoices_with_base_items, as_dict=True)
-
-	return {
-		"daily": daily_sales,
-		"weekly": weekly_sales,
-		"monthly": monthly_sales,
-		"yearly": yearly_sales
 	}
 
 
