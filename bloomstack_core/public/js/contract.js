@@ -59,19 +59,16 @@ frappe.ui.form.on("Contract", {
 	},
 	
 	party_name: (frm) => {
-		if(frm.doc.party_type == 'Employee' && frm.doc.party_name) {
+		if (frm.doc.party_type == 'Employee' && frm.doc.party_name) {
 			frappe.db.get_value("Employee", { "name": frm.doc.party_name }, "employee_name", (r) => {
 				if (r && r.employee_name) {
 					frm.set_value("employee_name", r.employee_name);
-				}
-				else {
-					frm.set_value("employee_name", "");
+				} else {
+					frm.set_value("employee_name", null);
 				}
 			})
-		}
-		else {
-			frm.set_value("employee_name", "");
+		} else {
+			frm.set_value("employee_name", null);
 		}
 	},
-	
 });
