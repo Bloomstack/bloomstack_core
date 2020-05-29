@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from frappe.core.utils import find
-from frappe.utils import getdate, nowdate
+from frappe.utils import date_diff, getdate, nowdate, today
 
 
 def validate_license_expiry(doc, method):
@@ -51,6 +51,16 @@ def validate_default_license(doc, method):
 			frappe.throw(_("There can be only one default license for {0}, found {1}").format(doc.name, len(default_licenses)))
 
 
+def validate_expired_licenses(doc, method):
+	"""remove expired licenses from company, customer and supplier records"""
+
+	for row in doc.licenses:
+		if row.license_expiry_date < getdate(today()):
+			expired_since = date_diff(getdate(today()), getdate(row.license_expiry_date))
+			frappe.msgprint(_("Row #{0}: License {1} has expired {2} days ago".format(
+				row.idx, frappe.bold(row.license), frappe.bold(expired_since))))
+
+
 def get_default_license(party_type, party_name):
 	"""get default license from customer or supplier"""
 
@@ -66,6 +76,7 @@ def get_default_license(party_type, party_name):
 		default_license = default_license.get("license")
 
 	return default_license
+
 
 @frappe.whitelist()
 def filter_license(doctype, txt, searchfield, start, page_len, filters):
