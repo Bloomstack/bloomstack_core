@@ -4,7 +4,7 @@ import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe.utils import get_url
 
-def update_bloomstack_customer_user():
+def update_bloomstack_site_user():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
 			return
