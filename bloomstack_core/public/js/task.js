@@ -14,8 +14,8 @@ frappe.ui.form.on("Task", {
 				frappe.call({
 					method: "bloomstack_core.hook_events.utils.update_timesheets",
 					args: {
-						doctype: frm.doctype,
-						doc: frm.doc.name,
+						ref_dt: frm.doctype,
+						ref_dn: frm.doc.name,
 						billable: frm.doc.billable
 					}
 				})
