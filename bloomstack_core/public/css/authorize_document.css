@@ -241,14 +241,9 @@ table td div {
     padding-right: 2em;
 }
 
-#rejectDocument {
-    padding-left: inherit;
-}
-
 a#rejectDocument {
     align-self: end;
     color: indianred;
-    padding-right: 0px;
 }
 
 .signed-doc-actions {
