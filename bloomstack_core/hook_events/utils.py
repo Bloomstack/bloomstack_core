@@ -78,10 +78,27 @@ def filter_license(doctype, txt, searchfield, start, page_len, filters):
 
 @frappe.whitelist()
 def update_timesheets(ref_dt, ref_dn, billable):
+	timesheets = []
 	if ref_dt == "Project":
 		timesheets = frappe.db.get_all("Timesheet Detail", filters={"project":ref_dn}, fields=["name", "billable"])
 	elif ref_dt == "Task":
 		timesheets = frappe.db.get_all("Timesheet Detail", filters={"task":ref_dn}, fields=["name", "billable"])
+	elif ref_dt == "Project Type":
+		timesheets = update_linked_project("project_type", ref_dn, billable)
+	elif ref_dt == "Project Template":
+		timesheets = update_linked_project("project_template", ref_dn, billable)
 
 	for time_logs in timesheets:
 		frappe.db.set_value("Timesheet Detail", time_logs.name, "billable", billable)
+
+
+def update_linked_project(filter_name, ref_dn, billable):
+	timesheets = []
+	projects = frappe.db.get_all("Project", filters={filter_name:ref_dn}, fields=["name","billable"])
+	
+	for project in projects:
+		if project.billable == 0:
+			frappe.db.set_value("Project", project.name, "billable", billable)
+			timesheets = timesheets + frappe.db.get_all("Timesheet Detail", filters={"project":project.name}, fields=["name", "billable"])
+
+	return timesheets

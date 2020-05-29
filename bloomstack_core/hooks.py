@@ -81,7 +81,9 @@ doctype_js = {
 	"Work Order": "public/js/work_order.js",
 	"Project": "public/js/project.js",
 	"Task": "public/js/task.js",
-	"Timesheet": "public/js/timesheet.js"
+	"Timesheet": "public/js/timesheet.js",
+	"Project Type": "public/js/project_type.js",
+	"Project Template": "public/js/project_template.js"
 }
 
 doctype_list_js = {
