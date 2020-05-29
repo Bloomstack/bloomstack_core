@@ -30,7 +30,7 @@ def get_context(context):
 	context.authorizer_email = auth_req.authorizer_email
 	context.status = auth_req.status
 
-	print_format = "Web Contract" if auth_req.linked_doctype == 'Contract' else "Standard"
+	print_format = "Bloomstack Contract" if auth_req.linked_doctype == 'Contract' else "Standard"
 	context.print_url = "/{0}/{1}?format={2}&key={3}&trigger_print=1".format(auth_req.linked_doctype, auth_req.linked_docname, print_format, context.doc.get_signature())
 
 @frappe.whitelist(allow_guest = True)
@@ -38,7 +38,7 @@ def custom_print_doc(auth_req_docname):
 	frappe.local.flags.ignore_print_permissions = True
 
 	auth_req = frappe.get_doc("Authorization Request", auth_req_docname)
-	print_format = "Web Contract" if auth_req.linked_doctype == 'Contract' else "Standard"
+	print_format = "Bloomstack Contract" if auth_req.linked_doctype == 'Contract' else "Standard"
 	print_doc = frappe.get_print(auth_req.linked_doctype, auth_req.linked_docname, print_format)
 	custom_print_format = print_doc[print_doc.find('<body>') + len('<body>'):len(print_doc) - len('</body>')]
 
