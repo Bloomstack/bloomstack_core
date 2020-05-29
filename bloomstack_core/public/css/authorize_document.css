@@ -236,11 +236,6 @@ table td div {
     font-size: 24px;
 }
 
-#approveDocument {
-    padding-left: 2em;
-    padding-right: 2em;
-}
-
 a#rejectDocument {
     align-self: end;
     color: indianred;
