@@ -236,19 +236,9 @@ table td div {
     font-size: 24px;
 }
 
-#approveDocument {
-    padding-left: 2em;
-    padding-right: 2em;
-}
-
-#rejectDocument {
-    padding-left: inherit;
-}
-
 a#rejectDocument {
     align-self: end;
     color: indianred;
-    padding-right: 0px;
 }
 
 .signed-doc-actions {
