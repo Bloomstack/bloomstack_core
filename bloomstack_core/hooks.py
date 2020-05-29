@@ -162,7 +162,8 @@ doc_events = {
 	},
 	("Company", "Supplier", "Customer"): {
 		"validate": [
-			"bloomstack_core.hook_events.utils.validate_default_license"
+			"bloomstack_core.hook_events.utils.validate_default_license",
+			"bloomstack_core.hook_events.utils.validate_expired_licenses"
 		]
 	},
 	"Delivery Note": {
