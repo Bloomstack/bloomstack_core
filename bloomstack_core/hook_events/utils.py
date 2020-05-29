@@ -57,7 +57,7 @@ def validate_expired_licenses(doc, method):
 	for row in doc.licenses:
 		if row.license_expiry_date < getdate(today()):
 			expired_since = date_diff(getdate(today()), getdate(row.license_expiry_date))
-			frappe.throw(_("Row #{0}: License {1} has expired {2} days ago".format(
+			frappe.msgprint(_("Row #{0}: License {1} has expired {2} days ago".format(
 				row.idx, frappe.bold(row.license), frappe.bold(expired_since))))
 
 
