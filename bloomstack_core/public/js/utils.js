@@ -115,6 +115,31 @@ $(document).on('app_ready', function() {
 			rate: (frm, cdt, cdn) => {
 				// update excise tax on rate change.
 				set_and_update_excise_tax(frm);
+			},
+			items_remove: (frm, cdt, cdn) => {
+				frm.call({
+					method: "erpnext.accounts.utils.get_company_default",
+					args: {
+						"fieldname": "default_excise_tax_account",
+						"company": frm.doc.company
+					},
+					callback: function(r) {
+						if (!r.exc) {
+							let taxes = frm.doc.taxes;
+							if (taxes.length > 1) {
+								$.each(taxes, function (i, tax) {
+									if (tax.account_head == r.message) {
+										frm.get_field("taxes").grid.grid_rows[i].remove();
+									}
+								});
+							} else {
+								frm.clear_table("taxes");
+							}
+						}
+					}
+				});
+				
+					
 			}
 		});
 	});
