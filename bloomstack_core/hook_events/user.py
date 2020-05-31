@@ -8,7 +8,7 @@ import frappe
 
 def update_bloomtrace_user(user, method):
 	if frappe.get_conf().enable_bloomtrace:
-		if user.user_type == "System User" and user.name not in ["Administrator", "Guest"]:
+		if user.user_type == "System User" and user.name not in ["Administrator", "Guest"] and not user.from_bloomstack:
 			integration_request = frappe.new_doc("Integration Request")
 			integration_request.update({
 				"integration_type": "Remote",
