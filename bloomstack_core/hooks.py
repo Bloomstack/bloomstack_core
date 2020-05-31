@@ -216,7 +216,7 @@ doc_events = {
 	},
 	"User": {
 		"validate": [
-			"bloomstack_core.hook_events.user.validate_from_bloomstack",
+			"bloomstack_core.hook_events.user.validate_if_bloomstack_user",
 			"bloomstack_core.hook_events.user.update_bloomtrace_user"
 		],
 		"before_insert": "bloomstack_core.hook_events.user.set_from_bloomstack_false",
@@ -238,7 +238,7 @@ scheduler_events = {
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	],
 	"hourly": [
-		"bloomstack_core.bloomtrace.user.update_bloomstack_site_user"
+		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
 	]
 }
 
