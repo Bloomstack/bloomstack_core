@@ -6,6 +6,10 @@ from __future__ import unicode_literals
 
 import frappe
 
+def validate_from_bloomstack(user, method):
+	if user.from_bloomstack and not user.enabled:
+		frappe.throw("Please contact support to disable Bloomstack Users.")
+
 def update_bloomtrace_user(user, method):
 	if frappe.get_conf().enable_bloomtrace:
 		if user.user_type == "System User" and user.name not in ["Administrator", "Guest"] and not user.from_bloomstack:

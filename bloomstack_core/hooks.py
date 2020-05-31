@@ -215,7 +215,10 @@ doc_events = {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
 	},
 	"User": {
-		"validate": "bloomstack_core.hook_events.user.update_bloomtrace_user"
+		"validate": [
+			"bloomstack_core.hook_events.user.validate_from_bloomstack",
+			"bloomstack_core.hook_events.user.update_bloomtrace_user"
+		]
 	},
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Supplier Quotation', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': [
