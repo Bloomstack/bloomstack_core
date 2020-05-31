@@ -218,7 +218,9 @@ doc_events = {
 		"validate": [
 			"bloomstack_core.hook_events.user.validate_from_bloomstack",
 			"bloomstack_core.hook_events.user.update_bloomtrace_user"
-		]
+		],
+		"before_insert": "bloomstack_core.hook_events.user.set_from_bloomstack_false",
+		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
 	},
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Supplier Quotation', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': [
