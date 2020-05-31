@@ -33,7 +33,7 @@ def update_bloomstack_site_user():
 					"bloomstack_site": site_url
 				}
 				
-				frappe_client.insert(bloomstack_site_user)
+				bloomstack_site_user = frappe_client.insert(bloomstack_site_user)
 			else:
 				doc_name = bloomstack_site_user[0].get('name')
 				bloomstack_site_user = {
@@ -45,10 +45,12 @@ def update_bloomstack_site_user():
 					"email": user.email,
 					"bloomstack_site": site_url
 				}
-				frappe_client.update(bloomstack_site_user)
+				bloomstack_site_user = frappe_client.update(bloomstack_site_user)
+			
+			frappe.db.set_value("User", user.name, "from_bloomstack", bloomstack_site_user.get('from_bloomstack'))
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
-
+			
 		except:
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
