@@ -22,7 +22,7 @@ frappe.ui.form.on("Project", {
 	},
 
 	billable: (frm) => {
-		frappe.confirm(__(`Do you want to update linked timesheets with billable status as ${frm.doc.billable} ?`),
+		frappe.confirm(__(`Do you want to update this project's linked timesheets to be set as {0}?`, [frm.doc.billable ? "billed" : "unbilled"]),
 			() => {
 				frappe.call({
 					method: "bloomstack_core.hook_events.utils.update_timesheet_logs",
