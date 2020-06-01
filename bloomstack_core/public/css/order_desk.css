@@ -39,6 +39,7 @@ body[data-route="order-desk"] .order-primary {
   padding: 10px 0;
   font-size: 20px;
   margin-left: 15px;
+  border-radius: 3px;
 }
 
 body[data-route="order-desk"] .list-item.list-item--head .text-muted.actions {
@@ -58,4 +59,78 @@ body[data-route="order-desk"] .batch.list-item__content.text-right {
   min-width: 55px;
   margin-right: 0;
   margin-left: 10px;
+}
+
+body[data-route="order-desk"] .pos section.cart-container {
+  width: 49%;
+}
+
+body[data-route="order-desk"] .pos section.item-container {
+  width: 50%;
+}
+
+body[data-route="order-desk"] .pos .image-view-container .image-view-item {
+  flex: 0 0 33%;
+  width: 33%;
+  max-width: 33%;
+}
+
+body[data-route="order-desk"] .pos section.cart-container .frappe-control {
+  margin-bottom: 15px;
+  width: 32%;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+body[data-route="order-desk"] .pos section.cart-container .frappe-control:last-child {
+  margin-right: 0;
+}
+
+/* body[data-route="order-desk"] .pos section.cart-container .frappe-control {
+  margin-bottom: 15px;
+  width: 49%;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+body[data-route="order-desk"] .pos section.cart-container .frappe-control:first-child {
+  width: 100%;
+} */
+
+body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-header a.grey.list-id,
+body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-bpdy a.grey.list-id {
+  display: flex;
+  flex-direction: column;
+}
+
+body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-header a.grey.list-id {
+  height: 6rem;
+}
+
+body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-field {
+  height: 200px;
+}
+
+body[data-route="order-desk"] .pos section.cart-container .item-name.ellipsis {
+  white-space: initial;
+  margin-bottom: 8px;
+  flex: 1.5;
+}
+
+body[data-route="order-desk"] .pos .cart-wrapper .list-item__content:not(:first-child) {
+  justify-content: center;
+}
+
+body[data-route="order-desk"] .pos .cart-wrapper .list-item__content.action.action_button {
+  justify-content: flex-end;
+  max-width: 25px;
+}
+
+body[data-route="order-desk"] .pos .list-item__content.list-item__content--flex-2.text-muted {
+  flex: 2;
+}
+
+
+body[data-route="order-desk"] .cart-items .list-item .quantity {
+  flex: 1;
 }

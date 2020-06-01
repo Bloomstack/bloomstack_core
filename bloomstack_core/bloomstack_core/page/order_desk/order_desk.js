@@ -653,7 +653,7 @@ class OrderDeskItems {
 		for (let i=0; i < all_items.length; i++) {
 			// wrap 4 items in a div to emulate
 			// a row for clusterize
-			if(i % 4 === 0 && i !== 0) {
+			if(i % 3 === 0 && i !== 0) {
 				curr_row += '</div>';
 				row_items.push(curr_row);
 				curr_row = row_container;
@@ -839,7 +839,7 @@ class SalesOrderCart {
 				<div class="cart-wrapper">
 					<div class="list-item-table">
 						<div class="list-item list-item--head">
-							<div class="list-item__content list-item__content--flex-1.5 text-muted">${__('Item Name')}</div>
+							<div class="list-item__content list-item__content--flex-2 text-muted">${__('Item Name')}</div>
 							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
 							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
 							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
