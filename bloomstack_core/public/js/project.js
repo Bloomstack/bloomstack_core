@@ -10,6 +10,7 @@ frappe.ui.form.on("Project", {
 			}
 		}
 	},
+
 	project_type: (frm) => {
 		if (frm.doc.billable == 0) {
 			frappe.db.get_value("Project Type", { "name": frm.doc.project_type }, "billable", (r) => {
@@ -19,11 +20,12 @@ frappe.ui.form.on("Project", {
 			});
 		}
 	},
+
 	billable: (frm) => {
 		frappe.confirm(__(`Do you want to update linked timesheets with billable status as ${frm.doc.billable} ?`),
 			() => {
 				frappe.call({
-					method: "bloomstack_core.hook_events.utils.update_timesheets",
+					method: "bloomstack_core.hook_events.utils.update_timesheet_logs",
 					args: {
 						ref_dt: frm.doctype,
 						ref_dn: frm.doc.name,

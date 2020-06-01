@@ -76,29 +76,33 @@ def filter_license(doctype, txt, searchfield, start, page_len, filters):
 		fields=["license", "is_default", "license_type"],
 		as_list=1)
 
+
 @frappe.whitelist()
-def update_timesheets(ref_dt, ref_dn, billable):
-	timesheets = []
-	if ref_dt == "Project":
-		timesheets = frappe.db.get_all("Timesheet Detail", filters={"project":ref_dn}, fields=["name", "billable"])
-	elif ref_dt == "Task":
-		timesheets = frappe.db.get_all("Timesheet Detail", filters={"task":ref_dn}, fields=["name", "billable"])
-	elif ref_dt == "Project Type":
-		timesheets = update_linked_project("project_type", ref_dn, billable)
-	elif ref_dt == "Project Template":
-		timesheets = update_linked_project("project_template", ref_dn, billable)
+def update_timesheet_logs(ref_dt, ref_dn, billable):
+	time_logs = []
 
-	for time_logs in timesheets:
-		frappe.db.set_value("Timesheet Detail", time_logs.name, "billable", billable)
+	if ref_dt in ["Project", "Task"]:
+		time_logs = frappe.get_all("Timesheet Detail", filters={frappe.scrub(ref_dt): ref_dn})
+	elif ref_dt in ["Project Type", "Project Template"]:
+		projects = update_linked_projects(frappe.scrub(ref_dt), ref_dn, billable)
+		time_logs = [get_project_time_logs(project) for project in projects]
+		# flatten the list of time log lists
+		time_logs = [log for time_log in time_logs for log in time_log]
+
+	for log in time_logs:
+		frappe.db.set_value("Timesheet Detail", log.name, "billable", billable)
 
 
-def update_linked_project(filter_name, ref_dn, billable):
-	timesheets = []
-	projects = frappe.db.get_all("Project", filters={filter_name:ref_dn}, fields=["name","billable"])
-	
+def update_linked_projects(ref_field, ref_value, billable):
+	projects = frappe.get_all("Project", filters={ref_field: ref_value})
+
 	for project in projects:
-		if project.billable == 0:
-			frappe.db.set_value("Project", project.name, "billable", billable)
-			timesheets = timesheets + frappe.db.get_all("Timesheet Detail", filters={"project":project.name}, fields=["name", "billable"])
+		project_doc = frappe.get_doc("Project", project.name)
+		project_doc.billable = billable
+		project_doc.save()
 
-	return timesheets
+	return projects
+
+
+def get_project_time_logs(project):
+	return frappe.get_all("Timesheet Detail", filters={"project": project.name})
