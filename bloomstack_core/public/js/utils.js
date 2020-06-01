@@ -120,29 +120,8 @@ $(document).on('app_ready', function() {
 				set_and_update_excise_tax(frm);
 			},
 			items_remove: (frm, cdt, cdn) => {
-				frm.call({
-					method: "erpnext.accounts.utils.get_company_default",
-					args: {
-						"fieldname": "default_excise_tax_account",
-						"company": frm.doc.company
-					},
-					callback: function(r) {
-						if (!r.exc) {
-							let taxes = frm.doc.taxes;
-							if (taxes.length > 1) {
-								$.each(taxes, function (i, tax) {
-									if (tax.account_head == r.message) {
-										frm.get_field("taxes").grid.grid_rows[i].remove();
-									}
-								});
-							} else {
-								frm.clear_table("taxes");
-							}
-						}
-					}
-				});
-				
-					
+				// update excise tax on items_remove
+				set_and_update_excise_tax(frm);
 			}
 		});
 	});
@@ -158,7 +137,7 @@ set_and_update_excise_tax = function(frm) {
 						doc: frm.doc
 					},
 					callback: (r) => {
-						if (r.message) {
+						if (r.message.tax_amount > 0) {
 							let excise_tax_row = r.message;
 							let taxes = frm.doc.taxes;
 
@@ -172,6 +151,15 @@ set_and_update_excise_tax = function(frm) {
 								});
 							} else {
 								frm.add_child('taxes', excise_tax_row);
+							}
+						} else if (r.message.tax_amount == 0) {
+							let taxes = frm.doc.taxes;
+							if (taxes.length > 0) {
+								$.each(taxes, function (i, tax) {
+									if (tax.account_head == r.message.account_head) {
+										frm.get_field("taxes").grid.grid_rows[i].remove();
+									}
+								});
 							}
 						}
 					}
