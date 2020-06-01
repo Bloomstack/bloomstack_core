@@ -843,6 +843,7 @@ class SalesOrderCart {
 							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
 							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
 							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
+							<div class="list-item__content text-muted text-right">${__('Batch No.')}</div>
 							<div class="list-item__content text-muted text-right actions"></div>
 						</div>
 						<div class="cart-items">
@@ -1160,11 +1161,14 @@ class SalesOrderCart {
 				<div class="quantity list-item__content text-right" data-item-code="${item.item_code}">
 					${get_quantity_html(item.qty)}
 				</div>
-				<div class="discount list-item__content text-right" data-item-code="${item.item_code}">
+				<div class="discount list-item__content text-center" data-item-code="${item.item_code}">
 					${item.discount_percentage}%
 				</div>
 				<div class="rate list-item__content text-right" data-item-code="${item.item_code}">
 					${get_rate_html(item.rate)}
+				</div>
+				<div class="batch list-item__content text-right" data-item-code="${item.item_code}">
+					${item.batch_no || "-"}
 				</div>
 				<div class="action list-item__content text-right action_button" data-item-code="${item.item_code}">
 					<a class="btn btn-danger btn-xs" title="Delete" data-name="${item.item_name}" data-item-code="${item.item_code}">X</a>
