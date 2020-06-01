@@ -246,7 +246,7 @@ after_migrate = ['bloomstack_core.hook_events.lead.rearrange_standard_fields']
 
 # Overriding Whitelisted Methods
 # ------------------------------
-#
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "bloomstack_core.event.get_events"
-# }
+
+override_whitelisted_methods = {
+	"erpnext.selling.doctype.sales_order.sales_order.create_pick_list": "bloomstack_core.hook_events.pick_list.create_pick_list"
+}
