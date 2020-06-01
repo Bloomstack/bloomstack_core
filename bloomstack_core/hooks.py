@@ -219,7 +219,7 @@ doc_events = {
 			"bloomstack_core.hook_events.user.validate_if_bloomstack_user",
 			"bloomstack_core.hook_events.user.update_bloomtrace_user"
 		],
-		"before_insert": "bloomstack_core.hook_events.user.set_from_bloomstack_false",
+		"before_insert": "bloomstack_core.hook_events.user.set_works_with_bloomstack_false",
 		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
 	},
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Supplier Quotation', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
@@ -237,7 +237,7 @@ scheduler_events = {
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	],
-	"hourly": [
+	"all": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
 	]
 }

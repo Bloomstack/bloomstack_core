@@ -9,16 +9,16 @@ from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe.utils import get_url
 from urllib.parse import urlparse
 
-def set_from_bloomstack_false(user, method):
-	user.from_bloomstack=False
+def set_works_with_bloomstack_false(user, method):
+	user.works_with_bloomstack=False
 
 def validate_if_bloomstack_user(user, method):
-	if user.from_bloomstack and not user.enabled:
+	if user.works_with_bloomstack and not user.enabled:
 		frappe.throw("Please contact support to disable Bloomstack Users.")
 
 def update_bloomtrace_user(user, method):
 	if frappe.get_conf().enable_bloomtrace and not user.is_new():
-		if user.user_type == "System User" and user.name not in ["Administrator", "Guest"] and not user.from_bloomstack:
+		if user.user_type == "System User" and user.name not in ["Administrator", "Guest"] and not user.works_with_bloomstack:
 			integration_request = frappe.new_doc("Integration Request")
 			integration_request.update({
 				"integration_type": "Remote",
@@ -54,7 +54,7 @@ def execute_bloomtrace_integration_request():
 				doc_name = bloomstack_site_user[0].get('name')
 				bloomstack_site_user = update_bloomstack_site_user(user, doc_name, site_url, frappe_client)
 			
-			frappe.db.set_value("User", user.name, "from_bloomstack", bloomstack_site_user.get('from_bloomstack'))
+			frappe.db.set_value("User", user.name, "works_with_bloomstack", bloomstack_site_user.get('works_with_bloomstack'))
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
 			
