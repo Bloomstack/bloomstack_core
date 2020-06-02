@@ -124,6 +124,8 @@ def update_linked_tasks(project, billable):
 		task_doc = frappe.get_doc("Task", task.name)
 		task_doc.billable = billable
 		task_doc.save()
+	
+	return tasks
 
 def get_project_time_logs(project):
 	return frappe.get_all("Timesheet Detail", filters={"project": project.name})
