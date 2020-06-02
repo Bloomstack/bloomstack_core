@@ -16,10 +16,15 @@ frappe.ui.form.on("Task", {
 						ref_dt: frm.doctype,
 						ref_dn: frm.doc.name,
 						billable: frm.doc.billable
+					},
+					callback: (r) => {
+						frm.save();
 					}
 				})
 			},
-			() => {}
+			() => {
+				frm.reload_doc();
+			}
 		);
 	}
 });
