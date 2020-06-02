@@ -32,6 +32,9 @@ $(document).bind('toolbar_setup', () => {
 	const $guide_menu_item = $(`<li><a href=${frappe.boot.growth_guide_link} target="_blank">${__('Growth Guide')}</a></li>`)
 		.insertAfter($report_issue_menu_item);
 
+	const $keyboard_shortcuts = $(`<li><a href="#" onclick="return frappe.ui.toolbar.show_shortcuts(event)" >${__('Keyboard Shortcuts')}</a></li>`)
+		.insertAfter($guide_menu_item);
+
 	// Hack to remove all but the above elements
 	$('.dropdown-help ul li')
 		.not($bcc_site)
@@ -39,6 +42,7 @@ $(document).bind('toolbar_setup', () => {
 		.not($help_menu)
 		.not($guide_menu_item)
 		.not($report_issue_menu_item)
+		.not($keyboard_shortcuts)
 		.remove();
 
 	//////////////////////////////////////////////////

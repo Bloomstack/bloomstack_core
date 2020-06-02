@@ -44,7 +44,8 @@ app_include_css = [
 	"/assets/bloomstack_core/css/banner.css",
 	"/assets/bloomstack_core/css/desk.css",
 	"/assets/bloomstack_core/css/order_desk.css",
-	"/assets/bloomstack_core/css/address_and_contact.css"
+	"/assets/bloomstack_core/css/address_and_contact.css",
+	"/assets/bloomstack_core/css/contract.css",
 ]
 
 # include js, css files in header of web template
@@ -166,7 +167,8 @@ doc_events = {
 	},
 	("Company", "Supplier", "Customer"): {
 		"validate": [
-			"bloomstack_core.hook_events.utils.validate_default_license"
+			"bloomstack_core.hook_events.utils.validate_default_license",
+			"bloomstack_core.hook_events.utils.validate_expired_licenses"
 		]
 	},
 	"Delivery Note": {
@@ -218,7 +220,12 @@ doc_events = {
 		"on_submit": "bloomstack_core.compliance.package.create_package"
 	},
 	"User": {
-		"validate": "bloomstack_core.hook_events.user.update_bloomtrace_user"
+		"validate": [
+			"bloomstack_core.hook_events.user.validate_if_bloomstack_user",
+			"bloomstack_core.hook_events.user.update_bloomtrace_user"
+		],
+		"before_insert": "bloomstack_core.hook_events.user.set_works_with_bloomstack_false",
+		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
 	},
 	('Quotation', 'Sales Invoice', 'Sales Order', 'Delivery Note', 'Supplier Quotation', 'Purchase Invoice', 'Purchase Order', 'Purchase Receipt'): {
 		'validate': [
@@ -235,8 +242,8 @@ scheduler_events = {
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	],
-	"hourly": [
-		"bloomstack_core.bloomtrace.user.update_bloomtrace_client_user"
+	"all": [
+		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
 	]
 }
 
@@ -249,7 +256,7 @@ after_migrate = ['bloomstack_core.hook_events.lead.rearrange_standard_fields']
 
 # Overriding Whitelisted Methods
 # ------------------------------
-#
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "bloomstack_core.event.get_events"
-# }
+
+override_whitelisted_methods = {
+	"erpnext.selling.doctype.sales_order.sales_order.create_pick_list": "bloomstack_core.hook_events.pick_list.create_pick_list"
+}

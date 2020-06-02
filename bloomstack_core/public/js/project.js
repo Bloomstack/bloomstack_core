@@ -64,7 +64,8 @@ frappe.ui.form.on("Project", {
 									})
 								},
 								() => {
-									frm.reload_doc();
+									frm.doc.billable = !frm.doc.billable;
+									refresh_field("billable");
 									}
 							);
 						}

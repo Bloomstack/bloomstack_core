@@ -1,8 +1,9 @@
 import frappe
 from frappe import _
 from frappe.core.utils import find
-from frappe.utils import getdate, nowdate
+from frappe.utils import date_diff, getdate, nowdate, today
 from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
+
 
 def validate_license_expiry(doc, method):
 	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
@@ -22,8 +23,10 @@ def validate_entity_license(party_type, party_name):
 	license_expiry_date, license_number = frappe.db.get_value(
 		"Compliance Info", license_record, ["license_expiry_date", "license_number"])
 
-	if license_expiry_date and license_expiry_date < getdate(nowdate()):
-		frappe.throw(_("{0}'s license number {1} has expired on {2}").format(
+	if not license_expiry_date:
+		frappe.msgprint(_("We could not verify the status of license number {0}, Proceed with Caution.").format(frappe.bold(license_number)))
+	elif license_expiry_date < getdate(nowdate()):
+		frappe.msgprint(_("Our records indicate {0}'s license number {1} has expired on {2}, Proceed with Caution.").format(
 			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
 
 	return license_record
@@ -49,6 +52,16 @@ def validate_default_license(doc, method):
 			frappe.throw(_("There can be only one default license for {0}, found {1}").format(doc.name, len(default_licenses)))
 
 
+def validate_expired_licenses(doc, method):
+	"""remove expired licenses from company, customer and supplier records"""
+
+	for row in doc.licenses:
+		if row.license_expiry_date < getdate(today()):
+			expired_since = date_diff(getdate(today()), getdate(row.license_expiry_date))
+			frappe.msgprint(_("Row #{0}: License {1} has expired {2} days ago".format(
+				row.idx, frappe.bold(row.license), frappe.bold(expired_since))))
+
+
 def get_default_license(party_type, party_name):
 	"""get default license from customer or supplier"""
 
@@ -64,6 +77,7 @@ def get_default_license(party_type, party_name):
 		default_license = default_license.get("license")
 
 	return default_license
+
 
 @frappe.whitelist()
 def filter_license(doctype, txt, searchfield, start, page_len, filters):

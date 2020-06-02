@@ -32,6 +32,7 @@ class AuthorizationRequest(Document):
 		subject = "{0} requests your authorization on {1}".format(company, self.linked_doctype)
 		message = frappe.render_template("templates/emails/authorization_request.html", {
 			"authorization_request": self,
+			"linked_doc": doc,
 			"company": company
 		})
 

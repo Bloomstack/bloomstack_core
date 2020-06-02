@@ -50,7 +50,8 @@ frappe.ui.form.on("Task", {
 									})
 								},
 								() => {
-									frm.reload_doc();
+									frm.doc.billable = !frm.doc.billable;
+									refresh_field("billable");
 									}
 							);
 						}
