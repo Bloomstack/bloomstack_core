@@ -23,7 +23,7 @@ frappe.ui.form.on("Task", {
 				})
 			},
 			() => {
-				frm.set_value("billable", !frm.doc.billable);
+				frm.reload_doc();
 			}
 		);
 	}
