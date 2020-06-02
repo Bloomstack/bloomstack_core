@@ -3,7 +3,7 @@ $(document).ready(function () {
 	$sigdiv.jSignature();   // inits the jSignature widget.
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
-	$('.refresh_signature').on("click", function () {
+	$(".refresh_signature").on("click", function () {
 		$sigdiv.jSignature("reset"); 
 	});
 

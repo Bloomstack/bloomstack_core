@@ -279,7 +279,7 @@ ul.actions li a.approveBtn {
     border-color: rgb(120, 184, 152);
 }
 
-ul.actions li a.approveBtn:hover {
+.user-signature ul.actions li a.approveBtn:hover {
     color: #fff;
     background-color: #57b4aa;
     border-color: #57b4aa;
