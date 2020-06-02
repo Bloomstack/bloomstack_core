@@ -3,9 +3,9 @@ frappe.ui.form.on("Timesheet Detail", {
 		var row = locals[cdt][cdn];
 		if (row.project) {
 			frappe.db.get_value("Project", { "name": row.project }, "billable", (r) => {
-				if (row.billable == 0){
-					if (r && r.billable == 1) {
-						row.billable = 1
+				if (row.billable === 0){
+					if (r && r.billable === 1) {
+						row.billable = 1;
 						refresh_field("billable", cdn, "time_logs");
 					}
 				}
@@ -16,9 +16,9 @@ frappe.ui.form.on("Timesheet Detail", {
 		var row = locals[cdt][cdn];
 		if (row.task) {
 			frappe.db.get_value("Task", { "name": row.task }, "billable", (r) => {
-				if (row.billable == 0){
-					if (r && r.billable == 1) {
-						row.billable = 1
+				if (row.billable === 0){
+					if (r && r.billable === 1) {
+						row.billable = 1;
 						refresh_field("billable", cdn, "time_logs");
 					}
 				}

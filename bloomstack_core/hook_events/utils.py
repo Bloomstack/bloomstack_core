@@ -113,7 +113,7 @@ def update_linked_projects(ref_field, ref_value, billable):
 		project_doc = frappe.get_doc("Project", project.name)
 		project_doc.billable = billable
 		project_doc.save()
-		tasks = update_linked_tasks(project.name, billable)
+		update_linked_tasks(project.name, billable)
 
 	return projects
 
@@ -124,7 +124,7 @@ def update_linked_tasks(project, billable):
 		task_doc = frappe.get_doc("Task", task.name)
 		task_doc.billable = billable
 		task_doc.save()
-	
+
 	return tasks
 
 def get_project_time_logs(project):
