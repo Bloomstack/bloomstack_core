@@ -190,7 +190,24 @@ table td div {
 }
 
 #signature {
-    display: contents;
+    display: block;
+    border: 1px solid #ececec;
+    position: relative;
+}
+
+#signature .refresh_signature {
+    position: absolute;
+    bottom: 3px;
+    right: 5px;
+    color: #000;
+    background-color: #ececec;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+#signature canvas {
+    height: 250px!important;
 }
 
 .btn {
@@ -199,8 +216,8 @@ table td div {
 
 .actions {
     display: flex;
-    justify-content: space-between;
-    padding: 0 18px 0 0;
+    justify-content: center;
+    padding: 0 0 0 0;
 }
 
 .actions .btn-primary {
@@ -217,18 +234,22 @@ table td div {
 }
 
 .actions a {
-    padding: 10px 40px;
+    padding: 10px 35px;
 }
 
 .actions li {
     display: inline-flex;
-    padding: inherit;
+    padding: 0 18px 0 0;
+}
+
+.actions li:last-child {
+    padding: 0;
 }
 
 #signee {
     border-radius: 3px;
-    border: 1px solid #8e8e8e;
-    width: 280px;
+    border: 1px solid #ececec;
+    width: 100%;
 }
 
 .title {
@@ -241,16 +262,29 @@ a#rejectDocument {
     color: indianred;
 }
 
+a#rejectDocument.btn-outline-danger:hover {
+    color: #fff;
+}
+
 .signed-doc-actions {
     display: none;
 }
 
-#printBtn {
+ul.actions li a.approveBtn {
+    padding: 10px 29px;
     color: rgb(120, 184, 152);
     align-self: baseline;
     border-color: gray;
     text-align: center;
     border-color: rgb(120, 184, 152);
+}
+
+.user-signature ul.actions li a.approveBtn:hover {
+    color: #fff;
+    background-color: #57b4aa;
+    border-color: #57b4aa;
+    -webkit-box-shadow: 0 1px 10px rgba(80,161,255,.4);
+    box-shadow: 0 1px 10px rgba(80,161,255,.4);
 }
 
 #signeeName {

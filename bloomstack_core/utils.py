@@ -137,7 +137,7 @@ def email_authorized_doc(authorization_request_name):
 			"authorization_request": authorization_request,
 			"company": company
 		})
-	print_format = "Web Contract" if authorized_doc.doctype == 'Contract' else "Standard"
+	print_format = "Bloomstack Contract" if authorized_doc.doctype == 'Contract' else "Standard"
 	attachments = [frappe.attach_print(authorized_doc.doctype, authorized_doc.name, print_format=print_format)]
 	frappe.sendmail(recipients=recipients, attachments=attachments, subject=subject, message=message)
 
