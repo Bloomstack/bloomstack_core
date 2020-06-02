@@ -216,7 +216,7 @@ table td div {
 
 .actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 18px 0 0;
 }
 
@@ -244,8 +244,8 @@ table td div {
 
 #signee {
     border-radius: 3px;
-    border: 1px solid #8e8e8e;
-    width: 280px;
+    border: 1px solid #ececec;
+    width: 100%;
 }
 
 .title {
@@ -266,7 +266,7 @@ a#rejectDocument.btn-outline-danger:hover {
     display: none;
 }
 
-#printBtn {
+.printBtn {
     color: rgb(120, 184, 152);
     align-self: baseline;
     border-color: gray;
@@ -274,7 +274,7 @@ a#rejectDocument.btn-outline-danger:hover {
     border-color: rgb(120, 184, 152);
 }
 
-#printBtn:hover {
+.printBtn:hover {
     color: #fff;
     background-color: #57b4aa;
     border-color: #57b4aa;

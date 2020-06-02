@@ -43,13 +43,8 @@
 							{% endif %}
 						</li>
 						<li>
-							<a class="btn printBtn" href="{{ print_url }}" target="_blank" rel="noopener noreferrer" id="printBtn">
-								<span class="glyphicon glyphicon-print"></span> Print
-							</a>
-						</li>
-						<li>
 							{% if status not in ("Approved", "Rejected") %}
-								<a class="btn btn-primary" href="#" id="approveDocument">
+								<a class="btn printBtn" href="#" id="approveDocument">
 									<span class="glyphicon glyphicon-ok"></span> Approve
 								</a>
 							{% endif %}
