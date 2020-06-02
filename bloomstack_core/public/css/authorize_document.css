@@ -217,7 +217,7 @@ table td div {
 .actions {
     display: flex;
     justify-content: center;
-    padding: 0 18px 0 0;
+    padding: 0 0 0 0;
 }
 
 .actions .btn-primary {
@@ -239,7 +239,11 @@ table td div {
 
 .actions li {
     display: inline-flex;
-    padding: inherit;
+    padding: 0 18px 0 0;
+}
+
+.actions li:last-child {
+    padding: 0;
 }
 
 #signee {
@@ -266,7 +270,8 @@ a#rejectDocument.btn-outline-danger:hover {
     display: none;
 }
 
-.printBtn {
+ul.actions li a.approveBtn {
+    padding: 10px 29px;
     color: rgb(120, 184, 152);
     align-self: baseline;
     border-color: gray;
@@ -274,7 +279,7 @@ a#rejectDocument.btn-outline-danger:hover {
     border-color: rgb(120, 184, 152);
 }
 
-.printBtn:hover {
+ul.actions li a.approveBtn:hover {
     color: #fff;
     background-color: #57b4aa;
     border-color: #57b4aa;
