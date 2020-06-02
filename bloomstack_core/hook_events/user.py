@@ -36,12 +36,12 @@ def execute_bloomtrace_integration_request():
 
 	site_url = urlparse(get_url()).netloc
 	pending_requests = frappe.get_all("Integration Request", 
-		filters={"status": ["IN", ["Queued", "Failed"]], "reference_doctype": "User", "integration_request_service": "BloomTrace"})
+		filters={"status": ["IN", ["Queued", "Failed"]], "reference_doctype": "User", "integration_request_service": "BloomTrace"},
+		order_by="creation ASC", limit=50)
 
 	for request in pending_requests:
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		user = frappe.get_doc("User", integration_request.reference_docname)
-
 		try:
 			bloomstack_site_user = frappe_client.get_doc("Bloomstack Site User", filters={
 					"bloomstack_site": site_url, 
