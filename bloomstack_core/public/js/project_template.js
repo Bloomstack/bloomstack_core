@@ -1,22 +1,55 @@
 frappe.ui.form.on("Project Template", {
 	billable: (frm) => {
-		frappe.confirm(__(`Do you want to update this template's linked projects and timesheets to be set as {0}?`, [frm.doc.billable ? "billed" : "unbilled"]),
+		let confirm_message = ""
+		frappe.run_serially([
 			() => {
 				frappe.call({
-					method: "bloomstack_core.hook_events.utils.update_timesheet_logs",
+					method: "bloomstack_core.hook_events.utils.get_linked_documents",
 					args: {
-						ref_dt: frm.doctype,
-						ref_dn: frm.doc.name,
-						billable: frm.doc.billable
+						doctype: frm.doc.doctype,
+						name: frm.doc.name
 					},
+					freeze:true,
 					callback: (r) => {
-						frm.save();
+						if (!r.exc && r.message.count > 0) {
+							// add confirmation message for cancelling all linked docs
+							let links_text = "";
+							let links = r.message.docs;
+							const doctypes = Array.from(new Set(links.map(link => link.doctype)));
+
+							for (let doctype of doctypes) {
+								let docnames = links
+									.filter((link) => link.doctype == doctype)
+									.map((link) => frappe.utils.get_form_link(link.doctype, link.name, true))
+									.join(", ");
+								links_text += `<li><strong>${doctype}</strong>: ${docnames}</li>`
+
+							}
+							links_text = "<ul>" + links_text + "</ul>"
+
+							confirm_message = `This <strong>${frm.doc.doctype}</strong> ${frm.doc.name} is linked with the following documents: ${links_text}`
+							frappe.confirm(__(`${confirm_message} Do you want to set them as {0} too?`, [frm.doc.billable ? "billed" : "unbilled"]),
+								() => {
+									frappe.call({
+										method: "bloomstack_core.hook_events.utils.update_timesheet_logs",
+										args: {
+											ref_dt: frm.doctype,
+											ref_dn: frm.doc.name,
+											billable: frm.doc.billable
+										},
+										callback: (r) => {
+											frm.save();
+										}
+									})
+								},
+								() => {
+									frm.reload_doc();
+									}
+							);
+						}
 					}
-				})
+				});
 			},
-			() => {
-				frm.reload_doc();
-			}
-		);
+		]);
 	}
 });

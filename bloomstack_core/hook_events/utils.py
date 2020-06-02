@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 from frappe.core.utils import find
 from frappe.utils import getdate, nowdate
-
+from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
 
 def validate_license_expiry(doc, method):
 	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
@@ -92,7 +92,6 @@ def update_timesheet_logs(ref_dt, ref_dn, billable):
 	for log in time_logs:
 		frappe.db.set_value("Timesheet Detail", log.name, "billable", billable)
 
-
 def update_linked_projects(ref_field, ref_value, billable):
 	projects = frappe.get_all("Project", filters={ref_field: ref_value})
 
@@ -100,9 +99,81 @@ def update_linked_projects(ref_field, ref_value, billable):
 		project_doc = frappe.get_doc("Project", project.name)
 		project_doc.billable = billable
 		project_doc.save()
+		tasks = update_linked_tasks(project.name, billable)
 
 	return projects
 
+def update_linked_tasks(project, billable):
+	tasks = frappe.get_all("Task", filters={"project": project})
+
+	for task in tasks:
+		task_doc = frappe.get_doc("Task", task.name)
+		task_doc.billable = billable
+		task_doc.save()
 
 def get_project_time_logs(project):
 	return frappe.get_all("Timesheet Detail", filters={"project": project.name})
+
+
+def get_task_time_logs(task):
+	return frappe.get_all("Timesheet Detail", filters={"task": task.name})
+
+
+@frappe.whitelist()
+def get_linked_documents(doctype, name, docs=None):
+	"""
+	Get all nested task, timesheet and project linked doctype linkinfo
+
+	Arguments:
+		doctype (str) - The doctype for which get all linked doctypes
+		name (str) - The docname for which get all linked doctypes
+
+	Keyword Arguments:
+		docs (list of dict) - (Optional) Get list of dictionary for linked doctype.
+
+	Returns:
+		dict - Return list of documents and link count
+	"""
+
+	if not docs:
+		docs = []
+
+	linkinfo = get_linked_doctypes(doctype)
+	linked_docs = get_linked_docs(doctype, name, linkinfo)
+	link_count = 0
+	for link_doctype, link_names in linked_docs.items():
+		for link in link_names:
+			docinfo = link.update({"doctype": link_doctype})
+			validated_doc = validate_linked_doc(docinfo)
+
+			if not validated_doc:
+				continue
+
+			link_count += 1
+			if link.name in [doc.get("name") for doc in docs]:
+				continue
+
+			links = get_linked_documents(link_doctype, link.name, docs)
+			docs.append({
+				"doctype": link_doctype,
+				"name": link.name,
+				"docstatus": link.docstatus,
+				"link_count": links.get("count")
+			})
+
+	# sort linked documents by ascending number of links
+	docs.sort(key=lambda doc: doc.get("link_count"))
+	return {
+		"docs": docs,
+		"count": link_count
+	}
+
+def validate_linked_doc(docinfo):
+
+	# Allowed only Task, Timesheet and Project
+	if docinfo.get('doctype') in ["Project", "Timesheet", "Task"]:
+		return True
+
+	return False
+
+
