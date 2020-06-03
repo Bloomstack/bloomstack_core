@@ -75,9 +75,12 @@ doctype_js = {
 	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
+	"Project": "public/js/project.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
+	"Task": "public/js/task.js",
+	"Timesheet": "public/js/timesheet.js",
 	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js"
 }
