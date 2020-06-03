@@ -134,10 +134,6 @@ def get_project_time_logs(project):
 	return frappe.get_all("Timesheet Detail", filters={"project": project.name})
 
 
-def get_task_time_logs(task):
-	return frappe.get_all("Timesheet Detail", filters={"task": task.name})
-
-
 @frappe.whitelist()
 def get_linked_documents(doctype, name, docs=None):
 	"""
