@@ -106,6 +106,7 @@ def update_timesheet_logs(ref_dt, ref_dn, billable):
 	for log in time_logs:
 		frappe.db.set_value("Timesheet Detail", log.name, "billable", billable)
 
+
 def update_linked_projects(ref_field, ref_value, billable):
 	projects = frappe.get_all("Project", filters={ref_field: ref_value})
 
@@ -117,6 +118,7 @@ def update_linked_projects(ref_field, ref_value, billable):
 
 	return projects
 
+
 def update_linked_tasks(project, billable):
 	tasks = frappe.get_all("Task", filters={"project": project})
 
@@ -126,6 +128,7 @@ def update_linked_tasks(project, billable):
 		task_doc.save()
 
 	return tasks
+
 
 def get_project_time_logs(project):
 	return frappe.get_all("Timesheet Detail", filters={"project": project.name})
@@ -145,7 +148,7 @@ def get_linked_documents(doctype, name, docs=None):
 		name (str) - The docname for which get all linked doctypes
 
 	Keyword Arguments:
-		docs (list of dict) - (Optional) Get list of dictionary for linked doctype.
+		docs (list of dict; optional) Existing list of linked doctypes
 
 	Returns:
 		dict - Return list of documents and link count
@@ -184,12 +187,10 @@ def get_linked_documents(doctype, name, docs=None):
 		"count": link_count
 	}
 
-def validate_linked_doc(docinfo):
 
+def validate_linked_doc(docinfo):
 	# Allowed only Task, Timesheet and Project
 	if docinfo.get('doctype') in ["Project", "Timesheet", "Task"]:
 		return True
 
 	return False
-
-

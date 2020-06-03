@@ -104,7 +104,7 @@ $(document).on('app_ready', function() {
 						doctype: frm.doc.doctype,
 						name: frm.doc.name
 					},
-					freeze:true,
+					freeze: true,
 					callback: (r) => {
 						if (!r.exc && r.message.count > 0) {
 							// add confirmation message for cancelling all linked docs
@@ -122,8 +122,8 @@ $(document).on('app_ready', function() {
 							}
 							links_text = "<ul>" + links_text + "</ul>";
 
-							confirm_message = `This <strong>${frm.doc.doctype}</strong> ${frm.doc.name} is linked with the following documents: ${links_text}`;
-							frappe.confirm(__(`${confirm_message} Do you want to set them as {0} too?`, [frm.doc.billable ? "billed" : "unbilled"]),
+							confirm_message = `${frm.doc.name.bold()} is linked with the following documents: ${links_text}`;
+							frappe.confirm(__(`${confirm_message} Do you want to set them as <strong>{0}</strong> too?`, [frm.doc.billable ? "billable" : "non-billable"]),
 								() => {
 									frappe.call({
 										method: "bloomstack_core.hook_events.utils.update_timesheet_logs",
@@ -140,7 +140,7 @@ $(document).on('app_ready', function() {
 								() => {
 									frm.doc.billable = !frm.doc.billable;
 									refresh_field("billable");
-									}
+								}
 							);
 						}
 					}
