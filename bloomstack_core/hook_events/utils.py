@@ -1,7 +1,8 @@
 import frappe
 from frappe import _
 from frappe.core.utils import find
-from frappe.utils import getdate, nowdate
+from frappe.utils import date_diff, getdate, nowdate, today
+from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
 
 
 def validate_license_expiry(doc, method):
@@ -22,8 +23,10 @@ def validate_entity_license(party_type, party_name):
 	license_expiry_date, license_number = frappe.db.get_value(
 		"Compliance Info", license_record, ["license_expiry_date", "license_number"])
 
-	if license_expiry_date and license_expiry_date < getdate(nowdate()):
-		frappe.throw(_("{0}'s license number {1} has expired on {2}").format(
+	if not license_expiry_date:
+		frappe.msgprint(_("We could not verify the status of license number {0}, Proceed with Caution.").format(frappe.bold(license_number)))
+	elif license_expiry_date < getdate(nowdate()):
+		frappe.msgprint(_("Our records indicate {0}'s license number {1} has expired on {2}, Proceed with Caution.").format(
 			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
 
 	return license_record
@@ -49,6 +52,16 @@ def validate_default_license(doc, method):
 			frappe.throw(_("There can be only one default license for {0}, found {1}").format(doc.name, len(default_licenses)))
 
 
+def validate_expired_licenses(doc, method):
+	"""remove expired licenses from company, customer and supplier records"""
+
+	for row in doc.licenses:
+		if row.license_expiry_date < getdate(today()):
+			expired_since = date_diff(getdate(today()), getdate(row.license_expiry_date))
+			frappe.msgprint(_("Row #{0}: License {1} has expired {2} days ago".format(
+				row.idx, frappe.bold(row.license), frappe.bold(expired_since))))
+
+
 def get_default_license(party_type, party_name):
 	"""get default license from customer or supplier"""
 
@@ -65,6 +78,7 @@ def get_default_license(party_type, party_name):
 
 	return default_license
 
+
 @frappe.whitelist()
 def filter_license(doctype, txt, searchfield, start, page_len, filters):
 	"""filter license"""
@@ -75,3 +89,104 @@ def filter_license(doctype, txt, searchfield, start, page_len, filters):
 		},
 		fields=["license", "is_default", "license_type"],
 		as_list=1)
+
+
+@frappe.whitelist()
+def update_timesheet_logs(ref_dt, ref_dn, billable):
+	time_logs = []
+
+	if ref_dt in ["Project", "Task"]:
+		time_logs = frappe.get_all("Timesheet Detail", filters={frappe.scrub(ref_dt): ref_dn})
+	elif ref_dt in ["Project Type", "Project Template"]:
+		projects = update_linked_projects(frappe.scrub(ref_dt), ref_dn, billable)
+		time_logs = [get_project_time_logs(project) for project in projects]
+		# flatten the list of time log lists
+		time_logs = [log for time_log in time_logs for log in time_log]
+
+	for log in time_logs:
+		frappe.db.set_value("Timesheet Detail", log.name, "billable", billable)
+
+
+def update_linked_projects(ref_field, ref_value, billable):
+	projects = frappe.get_all("Project", filters={ref_field: ref_value})
+
+	for project in projects:
+		project_doc = frappe.get_doc("Project", project.name)
+		project_doc.billable = billable
+		project_doc.save()
+		update_linked_tasks(project.name, billable)
+
+	return projects
+
+
+def update_linked_tasks(project, billable):
+	tasks = frappe.get_all("Task", filters={"project": project})
+
+	for task in tasks:
+		task_doc = frappe.get_doc("Task", task.name)
+		task_doc.billable = billable
+		task_doc.save()
+
+	return tasks
+
+
+def get_project_time_logs(project):
+	return frappe.get_all("Timesheet Detail", filters={"project": project.name})
+
+
+@frappe.whitelist()
+def get_linked_documents(doctype, name, docs=None):
+	"""
+	Get all nested task, timesheet and project linked doctype linkinfo
+
+	Arguments:
+		doctype (str) - The doctype for which get all linked doctypes
+		name (str) - The docname for which get all linked doctypes
+
+	Keyword Arguments:
+		docs (list of dict; optional) Existing list of linked doctypes
+
+	Returns:
+		dict - Return list of documents and link count
+	"""
+
+	if not docs:
+		docs = []
+
+	linkinfo = get_linked_doctypes(doctype)
+	linked_docs = get_linked_docs(doctype, name, linkinfo)
+	link_count = 0
+	for link_doctype, link_names in linked_docs.items():
+		for link in link_names:
+			docinfo = link.update({"doctype": link_doctype})
+			validated_doc = validate_linked_doc(docinfo)
+
+			if not validated_doc:
+				continue
+
+			link_count += 1
+			if link.name in [doc.get("name") for doc in docs]:
+				continue
+
+			links = get_linked_documents(link_doctype, link.name, docs)
+			docs.append({
+				"doctype": link_doctype,
+				"name": link.name,
+				"docstatus": link.docstatus,
+				"link_count": links.get("count")
+			})
+
+	# sort linked documents by ascending number of links
+	docs.sort(key=lambda doc: doc.get("link_count"))
+	return {
+		"docs": docs,
+		"count": link_count
+	}
+
+
+def validate_linked_doc(docinfo):
+	# Allowed only Task, Timesheet and Project
+	if docinfo.get('doctype') in ["Project", "Timesheet", "Task"]:
+		return True
+
+	return False

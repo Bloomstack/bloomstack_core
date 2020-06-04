@@ -280,133 +280,135 @@ class InsightEngine {
 		});
 
 		// split list of upsell revenue by year
-		let currentYearUpsellRevenue = this.dashboardData.total_upsell_sales_by_month.filter(elem => elem.year == currentYear).map(elem => elem.revenue)
-		let lastYearUpsellRevenue = this.dashboardData.total_upsell_sales_by_month.filter(elem => elem.year == lastYear).map(elem => elem.revenue)
+		if (this.dashboardData.total_upsell_sales_by_month) {
+			let currentYearUpsellRevenue = this.dashboardData.total_upsell_sales_by_month.filter(elem => elem.year == currentYear).map(elem => elem.revenue);
+			let lastYearUpsellRevenue = this.dashboardData.total_upsell_sales_by_month.filter(elem => elem.year == lastYear).map(elem => elem.revenue);
 
-		let currentYearCumulativeUpsellRevenue = currentYearUpsellRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], [])
-		let lastYearCumulativeUpsellRevenue = lastYearUpsellRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], [])
+			let currentYearCumulativeUpsellRevenue = currentYearUpsellRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], []);
+			let lastYearCumulativeUpsellRevenue = lastYearUpsellRevenue.reduce((prev, next, i) => [...prev, next + (prev[i - 1] || 0)], []);
 
-		// MTD Sales Partner upsell vs last year
-		new Chart($(".total-upsell-revenue .left-chart .graphics"), {
-			type: 'line',
-			data: {
-				labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
-				datasets: [
-					{
-						label: currentYear,
-						data: currentYearUpsellRevenue,
-						backgroundColor: colors.rgba[0],
-						borderColor: colors.hex[0],
-						borderWidth: 1.5,
-						fill: false
-					},
-					{
-						label: lastYear,
-						data: lastYearUpsellRevenue,
-						backgroundColor: colors.rgba[1],
-						borderColor: colors.hex[1],
-						borderWidth: 1.5,
-						fill: false
-					}
-				]
-			},
-			options: {
-				legend: {
-					display: true,
-					position: 'bottom'
-				},
-				layout: { padding: 30 },
-				scales: {
-					xAxes: [{
-						type: 'category',
-						time: { minUnit: "month" },
-						gridLines: { display: false },
-						distribution: 'series'
-					}],
-					yAxes: [{
-						gridLines: { display: false },
-						ticks: {
-							callback(value, index, values) {
-								return format_currency(value, null, 0);
-							}
+			// MTD Sales Partner upsell vs last year
+			new Chart($(".total-upsell-revenue .left-chart .graphics"), {
+				type: 'line',
+				data: {
+					labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
+					datasets: [
+						{
+							label: currentYear,
+							data: currentYearUpsellRevenue,
+							backgroundColor: colors.rgba[0],
+							borderColor: colors.hex[0],
+							borderWidth: 1.5,
+							fill: false
+						},
+						{
+							label: lastYear,
+							data: lastYearUpsellRevenue,
+							backgroundColor: colors.rgba[1],
+							borderColor: colors.hex[1],
+							borderWidth: 1.5,
+							fill: false
 						}
-					}]
+					]
 				},
-				plugins: {
-					datalabels: {
-						display: false
-					}
-				},
-				tooltips: {
-					callbacks: {
-						label(tooltipItem, data) {
-							return format_currency(tooltipItem.value);
+				options: {
+					legend: {
+						display: true,
+						position: 'bottom'
+					},
+					layout: { padding: 30 },
+					scales: {
+						xAxes: [{
+							type: 'category',
+							time: { minUnit: "month" },
+							gridLines: { display: false },
+							distribution: 'series'
+						}],
+						yAxes: [{
+							gridLines: { display: false },
+							ticks: {
+								callback(value, index, values) {
+									return format_currency(value, null, 0);
+								}
+							}
+						}]
+					},
+					plugins: {
+						datalabels: {
+							display: false
+						}
+					},
+					tooltips: {
+						callbacks: {
+							label(tooltipItem, data) {
+								return format_currency(tooltipItem.value);
+							}
 						}
 					}
 				}
-			}
-		});
+			});
 
-		// YTD Sales Partner upsell vs last year
-		new Chart($(".total-upsell-revenue .right-chart .graphics"), {
-			type: 'line',
-			data: {
-				labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
-				datasets: [
-					{
-						label: currentYear,
-						data: currentYearCumulativeUpsellRevenue,
-						backgroundColor: colors.rgba[0],
-						borderColor: colors.hex[0],
-						borderWidth: 1.5,
-						fill: false
-					},
-					{
-						label: lastYear,
-						data: lastYearCumulativeUpsellRevenue,
-						backgroundColor: colors.rgba[1],
-						borderColor: colors.hex[1],
-						borderWidth: 1.5,
-						fill: false
-					}
-				]
-			},
-			options: {
-				legend: {
-					display: true,
-					position: 'bottom'
-				},
-				layout: { padding: 30 },
-				scales: {
-					xAxes: [{
-						type: 'category',
-						time: { minUnit: "month" },
-						gridLines: { display: false },
-						distribution: 'series'
-					}],
-					yAxes: [{
-						gridLines: { display: false },
-						ticks: {
-							callback(value, index, values) {
-								return format_currency(value, null, 0);
-							}
+			// YTD Sales Partner upsell vs last year
+			new Chart($(".total-upsell-revenue .right-chart .graphics"), {
+				type: 'line',
+				data: {
+					labels: this.getDateRangeAsArray(frappe.datetime.year_start(), frappe.datetime.year_end(), "month"),
+					datasets: [
+						{
+							label: currentYear,
+							data: currentYearCumulativeUpsellRevenue,
+							backgroundColor: colors.rgba[0],
+							borderColor: colors.hex[0],
+							borderWidth: 1.5,
+							fill: false
+						},
+						{
+							label: lastYear,
+							data: lastYearCumulativeUpsellRevenue,
+							backgroundColor: colors.rgba[1],
+							borderColor: colors.hex[1],
+							borderWidth: 1.5,
+							fill: false
 						}
-					}]
+					]
 				},
-				plugins: {
-					datalabels: {
-						display: false
-					}
-				},
-				tooltips: {
-					callbacks: {
-						label(tooltipItem, data) {
-							return format_currency(tooltipItem.value);
+				options: {
+					legend: {
+						display: true,
+						position: 'bottom'
+					},
+					layout: { padding: 30 },
+					scales: {
+						xAxes: [{
+							type: 'category',
+							time: { minUnit: "month" },
+							gridLines: { display: false },
+							distribution: 'series'
+						}],
+						yAxes: [{
+							gridLines: { display: false },
+							ticks: {
+								callback(value, index, values) {
+									return format_currency(value, null, 0);
+								}
+							}
+						}]
+					},
+					plugins: {
+						datalabels: {
+							display: false
+						}
+					},
+					tooltips: {
+						callbacks: {
+							label(tooltipItem, data) {
+								return format_currency(tooltipItem.value);
+							}
 						}
 					}
 				}
-			}
-		});
+			});
+		}
 
 		// Daily sales trends in the last 30 days
 		new Chart($(".chart-container .chart-graphics"), {

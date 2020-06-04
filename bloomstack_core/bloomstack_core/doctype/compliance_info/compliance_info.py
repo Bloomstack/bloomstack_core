@@ -16,19 +16,19 @@ class ComplianceInfo(Document):
 			return
 		site_url = urlparse(get_url()).netloc
 
-		license = client.get_doc("License", self.license_number)
-		if not license:
-			frappe.throw("Invalid License Number")
+		license_info = client.get_doc("License", self.license_number)
+		if not license_info:
+			frappe.msgprint("License Number not found in our database. Proceed with Caution")
 		else:
-			self.status = license.get("status")
-			self.license_issuer = license.get('license_issuer')
-			self.license_type = license.get('license_type')
-			self.license_category = license.get('license_category')
-			self.license_expiry_date = license.get('license_expiry_date')
-			self.license_for = license.get('license_for')
-			self.legal_name = license.get('legal_name')
-			self.county = license.get('county')
-			self.city = license.get('city')
+			self.status = license_info.get("status")
+			self.license_issuer = license_info.get('license_issuer')
+			self.license_type = license_info.get('license_type')
+			self.license_category = license_info.get('license_category')
+			self.license_expiry_date = license_info.get('license_expiry_date')
+			self.license_for = license_info.get('license_for')
+			self.legal_name = license_info.get('legal_name')
+			self.county = license_info.get('county')
+			self.city = license_info.get('city')
 
 
 		client_records = client.get_doc("Client", filters={"bloomstack_instance": site_url})

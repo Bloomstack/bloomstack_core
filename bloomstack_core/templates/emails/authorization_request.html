@@ -35,7 +35,11 @@
         <table>
           <tr>
             <td>
-              <p style="padding-left: 20px; margin-bottom: 0!important;">Dear {{ authorization_request.authorizer_name }},</p>
+              {% if linked_doc.party_type != "Employee" %}
+              <p style="padding-left: 20px; margin-bottom: 0!important;">Dear {{ linked_doc.party_name }},</p>
+              {% else %}
+              <p style="padding-left: 20px; margin-bottom: 0!important;">Dear {{ linked_doc.employee_name }},</p>
+              {% endif %}
             </td>
           </tr>
           {% if authorization_request.status == "Request Sent" %}
