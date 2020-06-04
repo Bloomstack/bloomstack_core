@@ -1,4 +1,4 @@
-.price-info {
+body[data-route="order-desk"] .price-info {
   margin: 10px 0;
   display: block;
   position: static;
@@ -6,28 +6,59 @@
   background-color: #4f5261;
 }
 
-body[data-route="order-desk"] .list-item.list-item--head {
+body[data-route="order-desk"] .cart-wrapper table {
+  width: 100%;
+  border: 1px solid #d1d8dd;
+  border-radius: 3px
+}
+
+body[data-route="order-desk"] .empty-state span {
+  top: 52%;
+  left: 25%;
+} 
+
+body[data-route="order-desk"] .cart-wrapper table table {
+  border: 0;
+}
+
+body[data-route="order-desk"] .table > tbody > tr > td {
+  border-top: 0;
+}
+
+body[data-route="order-desk"] .cart-wrapper tr.table-head {
   background-color: #4f5261;
+  color: #fff;
 }
 
-body[data-route="order-desk"] .list-item.list-item--head .text-muted {
-  color: #fff!important;
-  flex: 1.5;
-  justify-content: center;
+body[data-route="order-desk"] .cart-wrapper tr.table-head th {
+ padding: 10px 0;
+ border: 0;
 }
 
-body[data-route="order-desk"] .quantity.list-item__content.text-right span button {
+body[data-route="order-desk"] .cart-items .empty-state {
+  height: auto;
+}
+
+body[data-route="order-desk"] .cart-wrapper tr.grand-total {
+  font-size: 18px;
+}
+
+body[data-route="order-desk"] .cart-wrapper tr.table-head th:first-child {
+  padding-left: 10px;
+}
+
+body[data-route="order-desk"] .middle {
+  vertical-align: middle!important;
+}
+
+body[data-route="order-desk"] .quantity.list-item__content.text-right span button,
+body[data-route="order-desk"] .rate.list-item__content.text-right span button {
   background-color: #4f5261;
   color: #fff;
 }
 
 body[data-route="order-desk"] .quantity.list-item__content.text-right .input-group {
   min-width: 75px;
-}
-
-body[data-route="order-desk"] .rate.list-item__content.text-right span button {
-  background-color: #4f5261;
-  color: #fff;
 }
 
 body[data-route="order-desk"] .order-primary {
@@ -77,17 +108,6 @@ body[data-route="order-desk"] .pos .image-view-container .image-view-item {
 
 body[data-route="order-desk"] .pos section.cart-container .frappe-control {
   margin-bottom: 15px;
-  width: 32%;
-  display: inline-block;
-  margin-right: 10px;
-}
-
-body[data-route="order-desk"] .pos section.cart-container .frappe-control:last-child {
-  margin-right: 0;
-}
-
-/* body[data-route="order-desk"] .pos section.cart-container .frappe-control {
-  margin-bottom: 15px;
   width: 49%;
   display: inline-block;
   margin-right: 10px;
@@ -95,7 +115,11 @@ body[data-route="order-desk"] .pos section.cart-container .frappe-control:last-c
 
 body[data-route="order-desk"] .pos section.cart-container .frappe-control:first-child {
   width: 100%;
-} */
+}
+
+body[data-route="order-desk"] .pos section.cart-container .frappe-control:last-child {
+  margin-right: 0;
+}
 
 body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-header a.grey.list-id,
 body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-bpdy a.grey.list-id {
@@ -117,20 +141,7 @@ body[data-route="order-desk"] .pos section.cart-container .item-name.ellipsis {
   flex: 1.5;
 }
 
-body[data-route="order-desk"] .pos .cart-wrapper .list-item__content:not(:first-child) {
-  justify-content: center;
-}
-
-body[data-route="order-desk"] .pos .cart-wrapper .list-item__content.action.action_button {
+body[data-route="order-desk"] .pos .cart-wrapper .action.action_button {
   justify-content: flex-end;
   max-width: 25px;
-}
-
-body[data-route="order-desk"] .pos .list-item__content.list-item__content--flex-2.text-muted {
-  flex: 2;
-}
-
-
-body[data-route="order-desk"] .cart-items .list-item .quantity {
-  flex: 1;
 }

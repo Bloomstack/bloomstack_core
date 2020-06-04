@@ -393,7 +393,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
 		});
-
 		this.frm.savesubmit()
 			.then((r) => {
 				if (r && r.doc) {
@@ -837,34 +836,41 @@ class SalesOrderCart {
 				<div class="customer-field">
 				</div>
 				<div class="cart-wrapper">
-					<div class="list-item-table">
-						<div class="list-item list-item--head">
-							<div class="list-item__content list-item__content--flex-2 text-muted">${__('Item Name')}</div>
-							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
-							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
-							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
-							<div class="list-item__content text-muted text-right">${__('Batch No.')}</div>
-							<div class="list-item__content text-muted text-right actions"></div>
-						</div>
-						<div class="cart-items">
-							<div class="empty-state">
-								<span>${__('No Items added to cart')}</span>
-							</div>
-						</div>
-						<div class="taxes-and-totals">
+					<table class="table table-responsive">
+					<tbody>
+						<tr class="table-head">
+							<th>${__('Item Name')}</th>
+							<th>${__('Quantity')}</th>
+							<th>${__('Discount')}</th>
+							<th>${__('Rate')}</th>
+							<th>${__('Batch No.')}</th>
+							<th></th>
+						</tr>
+						<tr class="cart-items">
+							<td colspan="6">
+								<table>
+									<tr class="empty-state">
+										<td colspan = "6">
+											<span>${__('No Items added to cart')}</span>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr class="taxes-and-totals">
 							${this.get_taxes_and_totals()}
-						</div>
-						<div class="discount-amount">
+						</tr>
+						<tr class="discount-amount">
 							${this.get_discount_amount()}
-						</div>
-						<div class="grand-total">
+						</tr>
+						<tr class="grand-total">
 							${this.get_grand_total()}
-						</div>
-						<div class="quantity-total">
+						</tr>
+						<tr class="quantity-total">
 							${this.get_item_qty_total()}
-						</div>
-
-					</div>
+						</tr>
+					</tbody>
+					</table>
 				</div>
 				<div class="row">
 					<div class="number-pad-container col-sm-6"></div>
@@ -880,7 +886,7 @@ class SalesOrderCart {
 			</div>
 		`);
 
-		this.$cart_items = this.wrapper.find('.cart-items');
+		this.$cart_items = this.wrapper.find('.cart-items table');
 		this.$empty_state = this.wrapper.find('.cart-items .empty-state');
 		this.$taxes_and_totals = this.wrapper.find('.taxes-and-totals');
 		this.$discount_amount = this.wrapper.find('.discount-amount');
@@ -932,10 +938,8 @@ class SalesOrderCart {
 
 	get_total_template(label, class_name) {
 		return `
-			<div class="list-item">
-				<div class="list-item__content text-muted">${__(label)}</div>
-				<div class="list-item__content list-item__content--flex-2 ${class_name}">0.00</div>
-			</div>
+				<td colspan = "3">${__(label)}</td>
+				<td colspan = "3" class="${class_name} text-right">0.00</td>
 		`;
 	}
 
@@ -943,24 +947,21 @@ class SalesOrderCart {
 		const get_currency_symbol = window.get_currency_symbol;
 
 		return `
-			<div class="list-item">
-				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Discount')}</div>
-				<div class="list-item__content discount-inputs">
-					<input type="text"
-						class="form-control additional_discount_percentage text-right"
-						placeholder="% 0.00"
-					>
-					<input type="text"
-						class="form-control discount_amount text-right"
-						placeholder="${get_currency_symbol(this.frm.doc.currency)} 0.00"
-					>
+				
+			<td colspan="6">
+				<div class="list-item">
+					<div class="list-item__content list-item__content--flex-2 text-muted">${__('Discount')}</div>
+					<div class="list-item__content discount-inputs">
+						<input type="text" class="form-control additional_discount_percentage text-right" placeholder="% 0.00">
+						<input type="text" class="form-control discount_amount text-right" placeholder="${get_currency_symbol(this.frm.doc.currency)} 0.00">
 				</div>
-			</div>
+			</td>
 		`;
 	}
 
 	get_taxes_and_totals() {
 		return `
+		<td colspan="6">
 			<div class="list-item">
 				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Net Total')}</div>
 				<div class="list-item__content net-total">0.00</div>
@@ -969,6 +970,7 @@ class SalesOrderCart {
 				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Taxes')}</div>
 				<div class="list-item__content taxes">0.00</div>
 			</div>
+			</td>
 		`;
 	}
 
@@ -1153,27 +1155,26 @@ class SalesOrderCart {
 		})
 
 		return `
-			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
-				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
-				<div class="item-name list-item__content list-item__content--flex-1.5 ellipsis" data-item-code="${item.item_code}">
+			<tr class="indicator ${indicator_class}" data-item-code="${escape(item.item_code)}" data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
+				<td class="item-name ellipsis" data-item-code="${item.item_code}">
 					${item.item_name}
-				</div>
-				<div class="quantity list-item__content text-right" data-item-code="${item.item_code}">
+				</td>
+				<td class="quantity" data-item-code="${item.item_code}">
 					${get_quantity_html(item.qty)}
-				</div>
-				<div class="discount list-item__content text-center" data-item-code="${item.item_code}">
+				</td>
+				<td class="discount" data-item-code="${item.item_code}">
 					${item.discount_percentage}%
-				</div>
-				<div class="rate list-item__content text-right" data-item-code="${item.item_code}">
+				</td>
+				<td class="rate" data-item-code="${item.item_code}">
 					${get_rate_html(item.rate)}
-				</div>
-				<div class="batch list-item__content text-right" data-item-code="${item.item_code}">
+				</td>
+				<td class="batch" data-item-code="${item.item_code}">
 					${item.batch_no || "-"}
-				</div>
-				<div class="action list-item__content text-right action_button" data-item-code="${item.item_code}">
+				</td>
+				<td class="action action_button" data-item-code="${item.item_code}">
 					<a class="btn btn-danger btn-xs" title="Delete" data-name="${item.item_name}" data-item-code="${item.item_code}">X</a>
-				</div>
-			</div>
+				</td>
+			</tr>
 		`;
 
 		function get_quantity_html(value) {
