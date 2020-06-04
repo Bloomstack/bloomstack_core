@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url
+from frappe.utils import get_url, cstr
 from urllib.parse import urlparse
 
 def set_works_with_bloomstack_false(user, method):
@@ -48,14 +48,16 @@ def execute_bloomtrace_integration_request():
 					"email": user.email
 				})
 			if not bloomstack_site_user:
-				bloomstack_site_user = make_bloomstack_site_user(user, site_url, frappe_client)
+				bloomstack_site_user = insert_bloomstack_site_user(user, site_url, frappe_client)
 			else:
 				doc_name = bloomstack_site_user[0].get('name')
 				bloomstack_site_user = update_bloomstack_site_user(user, doc_name, site_url, frappe_client)	
 			frappe.db.set_value("User", user.name, "works_with_bloomstack", bloomstack_site_user.get('works_with_bloomstack'))
+			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)	
-		except:
+		except Exception as e:
+			integration_request.error = cstr(e)
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 

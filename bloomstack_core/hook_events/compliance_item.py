@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url
+from frappe.utils import get_url, cstr
 from urllib.parse import urlparse
 
 def execute_bloomtrace_integration_request():
@@ -27,10 +27,11 @@ def execute_bloomtrace_integration_request():
 				insert_compliance_item(compliance_item, site_url, frappe_client)
 			else:
 				update_compliance_item(compliance_item, site_url, frappe_client)
-
+			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
-		except:
+		except Exception as e:
+			integration_request.error = cstr(e)
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
