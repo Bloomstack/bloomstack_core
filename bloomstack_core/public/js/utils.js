@@ -193,7 +193,7 @@ set_and_update_excise_tax = function(frm) {
 						doc: frm.doc
 					},
 					callback: (r) => {
-						if (r.message.tax_amount > 0) {
+						if (r.message && r.message.tax_amount > 0) {
 							let excise_tax_row = r.message;
 							let taxes = frm.doc.taxes;
 
@@ -208,7 +208,7 @@ set_and_update_excise_tax = function(frm) {
 							} else {
 								frm.add_child('taxes', excise_tax_row);
 							}
-						} else if (r.message.tax_amount == 0) {
+						} else if ((r.message && r.message.tax_amount == 0)) {
 							let taxes = frm.doc.taxes;
 							if (taxes && taxes.length > 0) {
 								$.each(taxes, function (i, tax) {
