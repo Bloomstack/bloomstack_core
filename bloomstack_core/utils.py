@@ -135,7 +135,8 @@ def email_authorized_doc(authorization_request_name):
 	subject = "Your signed {0} with {1}".format(authorized_doc.doctype, company)
 	message = frappe.render_template("templates/emails/authorization_request.html", {
 			"authorization_request": authorization_request,
-			"company": company
+			"company": company,
+			"linked_doc": authorized_doc
 		})
 	print_format = "Bloomstack Contract" if authorized_doc.doctype == 'Contract' else "Standard"
 	attachments = [frappe.attach_print(authorized_doc.doctype, authorized_doc.name, print_format=print_format)]
