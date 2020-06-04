@@ -31,8 +31,7 @@ $(document).ready(function () {
 						callback: (r) => {
 							frappe.msgprint(__("The {{ doc.doctype }} has been signed and emailed to you at {{ authorizer_email }}"));
 							$(".title").empty();
-							$(".contract").html(r.message);
-							$(".contract").show();
+							$(".contract").html('The Contract is authorized. Please check the email for the PDF');
 						}
 					})
 				}
