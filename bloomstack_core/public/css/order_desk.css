@@ -9,23 +9,22 @@ body[data-route="order-desk"] .price-info {
 body[data-route="order-desk"] .cart-wrapper table {
   width: 100%;
   border: 1px solid #d1d8dd;
-  border-radius: 3px
+  border-radius: 3px;
+  margin: 10px 0px 20px;
+  table-layout: fixed;
+  min-height: 270px;
 }
 
 body[data-route="order-desk"] .empty-state span {
-  top: 52%;
+  top: 47%;
   left: 25%;
-} 
-
-body[data-route="order-desk"] .cart-wrapper table table {
-  border: 0;
 }
 
 body[data-route="order-desk"] .table > tbody > tr > td {
   border-top: 0;
 }
 
-body[data-route="order-desk"] .cart-wrapper tr.table-head {
+body[data-route="order-desk"] .cart-wrapper thead tr.table-head {
   background-color: #4f5261;
   color: #fff;
 }
@@ -33,6 +32,7 @@ body[data-route="order-desk"] .cart-wrapper tr.table-head {
 body[data-route="order-desk"] .cart-wrapper tr.table-head th {
  padding: 10px 0;
  border: 0;
+ text-align: center;
 }
 
 body[data-route="order-desk"] .cart-items .empty-state {
@@ -45,20 +45,17 @@ body[data-route="order-desk"] .cart-wrapper tr.grand-total {
 
 body[data-route="order-desk"] .cart-wrapper tr.table-head th:first-child {
   padding-left: 10px;
+  text-align: left;
 }
 
 body[data-route="order-desk"] .middle {
   vertical-align: middle!important;
 }
 
-body[data-route="order-desk"] .quantity.list-item__content.text-right span button,
-body[data-route="order-desk"] .rate.list-item__content.text-right span button {
+body[data-route="order-desk"] .quantity span button,
+body[data-route="order-desk"] .rate span button {
   background-color: #4f5261;
   color: #fff;
-}
-
-body[data-route="order-desk"] .quantity.list-item__content.text-right .input-group {
-  min-width: 75px;
 }
 
 body[data-route="order-desk"] .order-primary {
@@ -71,25 +68,6 @@ body[data-route="order-desk"] .order-primary {
   font-size: 20px;
   margin-left: 15px;
   border-radius: 3px;
-}
-
-body[data-route="order-desk"] .list-item.list-item--head .text-muted.actions {
-  flex: 0;
-}
-
-body[data-route="order-desk"] .list-item__content.rate {
-  margin-right: 0;
-  min-width: 75px;
-}
-
-body[data-route="order-desk"] .list-item__content.rate input {
-  padding: 4px;
-}
-
-body[data-route="order-desk"] .batch.list-item__content.text-right {
-  min-width: 55px;
-  margin-right: 0;
-  margin-left: 10px;
 }
 
 body[data-route="order-desk"] .pos section.cart-container {
@@ -107,7 +85,7 @@ body[data-route="order-desk"] .pos .image-view-container .image-view-item {
 }
 
 body[data-route="order-desk"] .pos section.cart-container .frappe-control {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   width: 49%;
   display: inline-block;
   margin-right: 10px;
@@ -136,9 +114,7 @@ body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.imag
 }
 
 body[data-route="order-desk"] .pos section.cart-container .item-name.ellipsis {
-  white-space: initial;
   margin-bottom: 8px;
-  flex: 1.5;
 }
 
 body[data-route="order-desk"] .pos .cart-wrapper .action.action_button {

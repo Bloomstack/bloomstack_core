@@ -837,39 +837,37 @@ class SalesOrderCart {
 				</div>
 				<div class="cart-wrapper">
 					<table class="table table-responsive">
-					<tbody>
+					<thead>
 						<tr class="table-head">
-							<th>${__('Item Name')}</th>
-							<th>${__('Quantity')}</th>
+							<th width="25%">${__('Item Name')}</th>
+							<th width="20%">${__('Quantity')}</th>
 							<th>${__('Discount')}</th>
-							<th>${__('Rate')}</th>
+							<th width="20%">${__('Rate')}</th>
 							<th>${__('Batch No.')}</th>
-							<th></th>
+							<th width="7%"></th>
 						</tr>
-						<tr class="cart-items">
-							<td colspan="6">
-								<table>
-									<tr class="empty-state">
-										<td colspan = "6">
-											<span>${__('No Items added to cart')}</span>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						<tr class="taxes-and-totals">
-							${this.get_taxes_and_totals()}
-						</tr>
-						<tr class="discount-amount">
-							${this.get_discount_amount()}
-						</tr>
-						<tr class="grand-total">
-							${this.get_grand_total()}
-						</tr>
-						<tr class="quantity-total">
-							${this.get_item_qty_total()}
-						</tr>
-					</tbody>
+						</thead>
+						<tbody class="cart-items">
+							<tr class="empty-state">
+								<td colspan="6">
+									<span>${__('No Items added to cart')}</span>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr class="taxes-and-totals">
+								${this.get_taxes_and_totals()}
+							</tr>
+							<tr class="discount-amount">
+								${this.get_discount_amount()}
+							</tr>
+							<tr class="grand-total">
+								${this.get_grand_total()}
+							</tr>
+							<tr class="quantity-total">
+								${this.get_item_qty_total()}
+							</tr>
+					</tfoot>
 					</table>
 				</div>
 				<div class="row">
@@ -886,7 +884,7 @@ class SalesOrderCart {
 			</div>
 		`);
 
-		this.$cart_items = this.wrapper.find('.cart-items table');
+		this.$cart_items = this.wrapper.find('.cart-items');
 		this.$empty_state = this.wrapper.find('.cart-items .empty-state');
 		this.$taxes_and_totals = this.wrapper.find('.taxes-and-totals');
 		this.$discount_amount = this.wrapper.find('.discount-amount');
@@ -1155,8 +1153,8 @@ class SalesOrderCart {
 		})
 
 		return `
-			<tr class="indicator ${indicator_class}" data-item-code="${escape(item.item_code)}" data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
-				<td class="item-name ellipsis" data-item-code="${item.item_code}">
+			<tr data-item-code="${escape(item.item_code)}" data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
+				<td width: 50px class="item-name" data-item-code="${item.item_code}">
 					${item.item_name}
 				</td>
 				<td class="quantity" data-item-code="${item.item_code}">
@@ -1171,7 +1169,7 @@ class SalesOrderCart {
 				<td class="batch" data-item-code="${item.item_code}">
 					${item.batch_no || "-"}
 				</td>
-				<td class="action action_button" data-item-code="${item.item_code}">
+				<td width: 10px class="action action_button" data-item-code="${item.item_code}">
 					<a class="btn btn-danger btn-xs" title="Delete" data-name="${item.item_name}" data-item-code="${item.item_code}">X</a>
 				</td>
 			</tr>
