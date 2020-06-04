@@ -21,8 +21,8 @@ $(document).on('app_ready', function() {
 							party_name: frm.doc.supplier
 						},
 						callback: (r) => {
-							if(r.message){
-								frm.set_value("license", r.message)
+							if (r.message) {
+								frm.set_value("license", r.message);
 							}
 						}
 					});
@@ -53,12 +53,19 @@ $(document).on('app_ready', function() {
 							party_name: frm.doc.customer
 						},
 						callback: (r) => {
-							if(r.message){
-								frm.set_value("license", r.message)
+							if (r.message) {
+								frm.set_value("license", r.message);
+								frappe.show_alert({
+									indicator: 'blue',
+									message: __(`The following license was set for ${frm.doc.customer}: ${r.message.bold()}`)
+								});
 							}
 						}
-					})
+					});
 				}
+
+				// set excise tax if customer has license number
+				set_and_update_excise_tax(frm);
 			}
 		});
 	});
@@ -94,6 +101,31 @@ $(document).on('app_ready', function() {
 		});
 	});
 
+	$.each(["Quotation Item", "Sales Invoice Item", "Delivery Note Item", "Sales Order Item"], function (i, doctype) {
+		frappe.ui.form.on(doctype, {
+			qty: (frm, cdt, cdn) => {
+				// update excise tax on qty change.
+				set_and_update_excise_tax(frm);
+			},
+
+			item_code: (frm, cdt, cdn) => {
+				if (frm.doc.total) {
+					// update excise tax on item_code change.
+					set_and_update_excise_tax(frm);
+				}
+			},
+
+			rate: (frm, cdt, cdn) => {
+				// update excise tax on rate change.
+				set_and_update_excise_tax(frm);
+			},
+			items_remove: (frm, cdt, cdn) => {
+				// update excise tax on items_remove
+				set_and_update_excise_tax(frm);
+			}
+		});
+	});
+		
 	$.each(["Project", "Task", "Project Template", "Project Type"], function (i, doctype) {
 		frappe.ui.form.on(doctype, {
 			billable: (frm) => {
@@ -149,3 +181,46 @@ $(document).on('app_ready', function() {
 		});
 	});
 });
+
+set_and_update_excise_tax = function(frm) {
+	cur_frm.cscript.calculate_taxes_and_totals();
+	if (frm.doc.license) {
+		frappe.db.get_value("Compliance Info", { "name": frm.doc.license }, "license_for", (r) => {
+			if (r && r.license_for == "Retailer") {
+				frappe.call({
+					method: "bloomstack_core.hook_events.taxes.set_excise_tax",
+					args: {
+						doc: frm.doc
+					},
+					callback: (r) => {
+						if (r.message && r.message.tax_amount > 0) {
+							let excise_tax_row = r.message;
+							let taxes = frm.doc.taxes;
+
+							if (taxes && taxes.length > 0) {
+								$.each(taxes, function (i, tax) {
+									if (tax.account_head == excise_tax_row.account_head) {
+										tax.tax_amount = excise_tax_row.tax_amount
+									} else {
+										frm.add_child('taxes', excise_tax_row);
+									}
+								});
+							} else {
+								frm.add_child('taxes', excise_tax_row);
+							}
+						} else if ((r.message && r.message.tax_amount == 0)) {
+							let taxes = frm.doc.taxes;
+							if (taxes && taxes.length > 0) {
+								$.each(taxes, function (i, tax) {
+									if (tax.account_head == r.message.account_head) {
+										frm.get_field("taxes").grid.grid_rows[i].remove();
+									}
+								});
+							}
+						}
+					}
+				})
+			};
+		})
+	}
+}
