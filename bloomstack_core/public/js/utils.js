@@ -154,7 +154,7 @@ set_and_update_excise_tax = function(frm) {
 							}
 						} else if (r.message.tax_amount == 0) {
 							let taxes = frm.doc.taxes;
-							if (taxes.length > 0) {
+							if (taxes && taxes.length > 0) {
 								$.each(taxes, function (i, tax) {
 									if (tax.account_head == r.message.account_head) {
 										frm.get_field("taxes").grid.grid_rows[i].remove();
