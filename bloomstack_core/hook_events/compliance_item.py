@@ -30,7 +30,6 @@ def execute_bloomtrace_integration_request():
 
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
-	
 		except:
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
