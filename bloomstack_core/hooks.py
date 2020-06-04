@@ -241,7 +241,8 @@ scheduler_events = {
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	],
 	"all": [
-		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request"
 	]
 }
 
