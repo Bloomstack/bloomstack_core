@@ -16,6 +16,10 @@ class ComplianceItem(Document):
 		self.validate_existing_metrc_item()
 		if self.enable_metrc:
 			self.sync_metrc_item()
+		self.make_bloomtrace_integration_request()
+
+	def after_insert(self):
+		self.make_bloomtrace_integration_request()
 
 	def validate_item_category(self):
 		if self.enable_cultivation_tax and not self.item_category:
@@ -43,6 +47,17 @@ class ComplianceItem(Document):
 			update_item(item)
 			frappe.msgprint(_("{} was successfully updated in METRC.".format(item.item_name)))
 
+	def make_bloomtrace_integration_request(self):
+		if frappe.get_conf().enable_bloomtrace and not self.is_new():
+			integration_request = frappe.new_doc("Integration Request")
+			integration_request.update({
+				"integration_type": "Remote",
+				"integration_request_service": "BloomTrace",
+				"status": "Queued",
+				"reference_doctype": "Compliance Item",
+				"reference_docname": self.name
+			})
+			integration_request.save(ignore_permissions=True)
 
 def metrc_item_category_query(doctype, txt, searchfield, start, page_len, filters):
 	metrc_uom = filters.get("metrc_uom")

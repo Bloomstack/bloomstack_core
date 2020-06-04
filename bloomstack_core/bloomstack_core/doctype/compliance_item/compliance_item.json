@@ -19,7 +19,8 @@
   "metrc_unit_value",
   "cb_item_details",
   "metrc_uom",
-  "metrc_unit_uom"
+  "metrc_unit_uom",
+  "bloomtrace_id"
  ],
  "fields": [
   {
@@ -103,10 +104,16 @@
    "fieldtype": "Select",
    "label": "Item Category",
    "options": "\nDry Flower\nDry Leaf\nFresh Plant"
+  },
+  {
+   "fieldname": "bloomtrace_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Bloomtrace ID"
   }
  ],
  "links": [],
- "modified": "2020-05-07 12:45:14.676937",
+ "modified": "2020-06-03 07:03:53.541932",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Item",
