@@ -128,6 +128,7 @@ $(document).on('app_ready', function() {
 });
 
 set_and_update_excise_tax = function(frm) {
+	cur_frm.cscript.calculate_taxes_and_totals();
 	if (frm.doc.license) {
 		frappe.db.get_value("Compliance Info", { "name": frm.doc.license }, "license_for", (r) => {
 			if (r && r.license_for == "Retailer") {

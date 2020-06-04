@@ -330,7 +330,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				this.frm.add_child('items',success)
 			}
 			this.frm.doc.items.forEach(item => {
-				this.update_item_in_frm(item)
+				this.update_item_in_frm(item, 'qty', item.qty)
 					.then(() => {
 						// update cart
 						frappe.run_serially([
