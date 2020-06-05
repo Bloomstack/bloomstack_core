@@ -1110,8 +1110,8 @@ class SalesOrderCart {
 			$item.find('.quantity input').val(item.qty);
 			$item.find('.discount').text(item.discount_percentage + '%');
 			$item.find('.rate input').val(item.rate);
-			$item.addClass(indicator_class);
-			$item.removeClass(remove_class);
+			$item.children('.item').addClass(indicator_class);
+			$item.children('.item').removeClass(remove_class);
 		} else { 
 			$item.remove();
 		}
@@ -1159,7 +1159,7 @@ class SalesOrderCart {
 
 		return `
 			<tr class="item" data-item-code="${escape(item.item_code)}" data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
-				<td width: 50px class="item-name ellipsis" data-item-code="${item.item_code}">
+				<td width: 50px class="item-name ellipsis indicator ${indicator_class}" data-item-code="${item.item_code}">
 					${item.item_name}
 				</td>
 				<td class="quantity" data-item-code="${item.item_code}">
