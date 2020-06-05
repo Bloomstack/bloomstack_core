@@ -1128,12 +1128,21 @@ class SalesOrderCart {
 			event.stopImmediatePropagation(); // to prevent firing of multiple events
 			let item_name = $(this).data('name');
 			let item_code = $(this).data('item-code');
+			let total_quantity;
 			frappe.confirm(__(`Are you sure you want to remove ${item_name} from the order?`),
 				 () => {
 					me.events.on_field_change(item_code, 'qty', 0);
-					console.log(cur_frm.doc.items.length);
+					me.update_qty_total();
 				}
-			);
+				);
+				
+				setTimeout( () => {
+					total_quantity = me.$qty_total.find('.quantity-total').text();
+					console.log(total_quantity);
+					if(total_quantity == 0) {
+						me.wrapper.find('.cart-items .empty-state').show();
+					}
+				}, 1500)
 		})
 
 		$(document).on('click', '.list-item div', function (event) {
