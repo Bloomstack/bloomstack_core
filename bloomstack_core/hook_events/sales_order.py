@@ -2,7 +2,9 @@ import json
 
 import frappe
 from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
-from erpnext.stock.doctype.batch.batch import set_batch_nos
+from erpnext.stock.doctype.batch.batch import set_batch_nos, get_batch_qty
+from frappe.utils import flt
+from frappe import _
 
 
 def create_sales_invoice_against_contract():
@@ -59,8 +61,13 @@ def create_multiple_pick_lists(orders):
 	return created_orders
 
 def validate_batch_item(sales_order, method):
-	""" validate batch item based on fifo basis"""
+	""" validate batch item """
 
-	if frappe.db.get_single_value("Stock Settings", "automatically_set_batch_nos_based_on_fifo"):
-		set_batch_nos(sales_order, 'warehouse', throw=True)
-
+	for d in sales_order.items:
+		qty = d.get('stock_qty') or d.get('transfer_qty') or d.get('qty') or 0
+		has_batch_no = frappe.db.get_value('Item', d.item_code, 'has_batch_no')
+		warehouse = d.get('warehouse', None)
+		if has_batch_no and warehouse and qty > 0:
+			batch_qty = get_batch_qty(batch_no=d.batch_no, warehouse=warehouse)
+			if flt(batch_qty, d.precision("qty")) < flt(qty, d.precision("qty")):
+				frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3} qty available or split the row into multiple rows, to deliver/issue from multiple batches").format(d.idx, d.batch_no, batch_qty, qty))
