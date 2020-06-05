@@ -2,6 +2,7 @@ import json
 
 import frappe
 from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
+from erpnext.stock.doctype.batch.batch import set_batch_nos
 
 
 def create_sales_invoice_against_contract():
@@ -56,3 +57,9 @@ def create_multiple_pick_lists(orders):
 		})
 
 	return created_orders
+
+def validate_batch_item(sales_order, method):
+	""" validate batch item """
+
+	set_batch_nos(sales_order, 'warehouse', True)
+
