@@ -59,7 +59,8 @@ def create_multiple_pick_lists(orders):
 	return created_orders
 
 def validate_batch_item(sales_order, method):
-	""" validate batch item """
+	""" validate batch item based on fifo basis"""
 
-	set_batch_nos(sales_order, 'warehouse', True)
+	if frappe.db.get_single_value("Stock Settings", "automatically_set_batch_nos_based_on_fifo"):
+		set_batch_nos(sales_order, 'warehouse', throw=True)
 
