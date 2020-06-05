@@ -86,7 +86,7 @@ $(document).on('app_ready', function() {
 		});
 	});
 
-	$.each(["Sales Invoice Item", "Delivery Note Item", "Stock Entry Detail"], function (i, doctype) {
+	$.each(["Sales Order Item", "Sales Invoice Item", "Delivery Note Item", "Stock Entry Detail"], function (i, doctype) {
 		frappe.ui.form.on(doctype, {
 			package_tag: (frm, cdt, cdn) => {
 				const row = frm.selected_doc;
@@ -119,13 +119,14 @@ $(document).on('app_ready', function() {
 				// update excise tax on rate change.
 				set_and_update_excise_tax(frm);
 			},
+
 			items_remove: (frm, cdt, cdn) => {
 				// update excise tax on items_remove
 				set_and_update_excise_tax(frm);
 			}
 		});
 	});
-		
+
 	$.each(["Project", "Task", "Project Template", "Project Type"], function (i, doctype) {
 		frappe.ui.form.on(doctype, {
 			billable: (frm) => {

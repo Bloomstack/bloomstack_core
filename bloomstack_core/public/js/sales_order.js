@@ -1,6 +1,18 @@
 /* global frappe, erpnext, _ */
 
 frappe.ui.form.on('Sales Order', {
+	refresh: (frm,) => {
+		frm.set_query("package_tag", "items", (doc, cdt, cdn) => {
+			let row = frm.selected_doc || locals[cdt][cdn];
+
+			if (!row.batch_no) {
+				return { filters: { "item_code": row.item_code } };
+			} else {
+				return { filters: { "item_code": row.item_code, "batch_no": row.batch_no } };
+			}
+		})
+	},
+
 	no_charge_order: (frm) => {
 		frm.trigger("set_promotional_discount");
 	},
