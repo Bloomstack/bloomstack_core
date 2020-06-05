@@ -63,11 +63,14 @@ def create_multiple_pick_lists(orders):
 def validate_batch_item(sales_order, method):
 	""" validate batch item """
 
-	for d in sales_order.items:
-		qty = d.get('stock_qty') or d.get('transfer_qty') or d.get('qty') or 0
-		has_batch_no = frappe.db.get_value('Item', d.item_code, 'has_batch_no')
-		warehouse = d.get('warehouse', None)
+	for item in sales_order.items:
+		qty = item.get('stock_qty') or item.get('transfer_qty') or item.get('qty') or 0
+		has_batch_no = frappe.db.get_value('Item', item.item_code, 'has_batch_no')
+		warehouse = item.get('warehouse', None)
 		if has_batch_no and warehouse and qty > 0:
-			batch_qty = get_batch_qty(batch_no=d.batch_no, warehouse=warehouse)
-			if flt(batch_qty, d.precision("qty")) < flt(qty, d.precision("qty")):
-				frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3} qty available or split the row into multiple rows, to deliver/issue from multiple batches").format(d.idx, d.batch_no, batch_qty, qty))
+			if not item.batch_no:
+				frappe.throw(_('Row #{0}: Please select a Batch for Item {1}. Unable to find a single batch that fulfills this requirement').format(item.idx, frappe.bold(item.item_code)))
+			else:
+				batch_qty = get_batch_qty(batch_no=item.batch_no, warehouse=warehouse)
+				if flt(batch_qty, item.precision("qty")) < flt(qty, item.precision("qty")):
+					frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3} qty available or split the row into multiple rows, to deliver/issue from multiple batches.").format(item.idx, item.batch_no, batch_qty, qty))
