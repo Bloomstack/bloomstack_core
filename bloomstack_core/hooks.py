@@ -259,7 +259,8 @@ scheduler_events = {
 	],
 	"all": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request"
 	]
 }
 
