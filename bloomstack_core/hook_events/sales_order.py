@@ -2,7 +2,7 @@ import json
 
 import frappe
 from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
-from erpnext.stock.doctype.batch.batch import set_batch_nos, get_batch_qty
+from erpnext.stock.doctype.batch.batch import get_batch_qty
 from frappe.utils import flt
 from frappe import _
 
@@ -69,8 +69,8 @@ def validate_batch_item(sales_order, method):
 		warehouse = item.get('warehouse', None)
 		if has_batch_no and warehouse and qty > 0:
 			if not item.batch_no:
-				frappe.throw(_('Row #{0}: Please select a Batch for Item {1}. Unable to find a single batch that fulfills this requirement').format(item.idx, frappe.bold(item.item_code)))
-			else:
-				batch_qty = get_batch_qty(batch_no=item.batch_no, warehouse=warehouse)
-				if flt(batch_qty, item.precision("qty")) < flt(qty, item.precision("qty")):
-					frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3} qty available or split the row into multiple rows, to deliver/issue from multiple batches.").format(item.idx, item.batch_no, batch_qty, qty))
+				return
+
+			batch_qty = get_batch_qty(batch_no=item.batch_no, warehouse=warehouse)
+			if flt(batch_qty, item.precision("qty")) < flt(qty, item.precision("qty")):
+				frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3} qty available or split the row into multiple rows, to deliver/issue from multiple batches. Avilable batches").format(item.idx, item.batch_no, batch_qty, qty))
