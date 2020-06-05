@@ -13,6 +13,16 @@ body[data-route="order-desk"] .cart-wrapper table {
   margin: 10px 0px 20px;
   table-layout: fixed;
   min-height: 270px;
+  min-width: 500px;
+}
+
+body[data-route="order-desk"] .cart-wrapper {
+  border: 0;
+}
+
+body[data-route="order-desk"] .cart-wrapper table tbody div.selected-items {
+  max-height: 150px;
+  overflow-y: scroll;
 }
 
 body[data-route="order-desk"] .empty-state span {
@@ -120,4 +130,48 @@ body[data-route="order-desk"] .pos section.cart-container .item-name.ellipsis {
 body[data-route="order-desk"] .pos .cart-wrapper .action.action_button {
   justify-content: flex-end;
   max-width: 25px;
+}
+
+/* Responsive */
+
+@media screen and (max-width: 1199px) and (min-width: 992px) {
+  body[data-route="order-desk"] .pos section.cart-container .frappe-control {
+    width: 48.7%
+  }
+}
+
+@media screen and (max-width: 992px) {
+  body[data-route="order-desk"] .pos section.cart-container,
+  body[data-route="order-desk"] .pos section.item-container {
+    width: 100%;
+  }
+
+  body[data-route="order-desk"] .pos section.item-container {
+    margin-top: 30px;
+  }
+
+  body[data-route="order-desk"] .empty-state span {
+    top: 25%;
+    left: 50%;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  body[data-route="order-desk"] .pos section.cart-container .frappe-control {
+    width: 48.5%
+  }
+}
+
+@media screen and (max-width: 500px) {
+  body[data-route="order-desk"] .pos .image-view-container .image-view-item {
+    flex: 0 0 50%;
+    width: 50%;
+    max-width: 50%;
+  }
+}
+
+@media screen and (max-width: 395px) {
+  body[data-route="order-desk"] .pos section.cart-container .frappe-control {
+    width: 48%
+  }
 }
