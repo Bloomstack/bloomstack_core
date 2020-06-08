@@ -103,7 +103,7 @@ def update_timesheet_logs(ref_dt, ref_dn, billable):
 			time_logs = [log for time_log in time_logs for log in time_log]
 		else:
 			time_logs = frappe.get_all("Timesheet Detail", filters={frappe.scrub(ref_dt): ref_dn})
-	
+
 	elif ref_dt in ["Project Type", "Project Template"]:
 		projects = update_linked_projects(frappe.scrub(ref_dt), ref_dn, billable)
 		time_logs = [get_project_time_logs(project) for project in projects]
