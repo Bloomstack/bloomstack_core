@@ -96,7 +96,14 @@ def update_timesheet_logs(ref_dt, ref_dn, billable):
 	time_logs = []
 
 	if ref_dt in ["Project", "Task"]:
-		time_logs = frappe.get_all("Timesheet Detail", filters={frappe.scrub(ref_dt): ref_dn})
+		if ref_dt == "Project":
+			tasks = update_linked_tasks(ref_dn, billable)
+			time_logs = [get_task_time_logs(task) for task in tasks]
+			# flatten the list of time log lists
+			time_logs = [log for time_log in time_logs for log in time_log]
+		else:
+			time_logs = frappe.get_all("Timesheet Detail", filters={frappe.scrub(ref_dt): ref_dn})
+
 	elif ref_dt in ["Project Type", "Project Template"]:
 		projects = update_linked_projects(frappe.scrub(ref_dt), ref_dn, billable)
 		time_logs = [get_project_time_logs(project) for project in projects]
@@ -132,6 +139,9 @@ def update_linked_tasks(project, billable):
 
 def get_project_time_logs(project):
 	return frappe.get_all("Timesheet Detail", filters={"project": project.name})
+
+def get_task_time_logs(task):
+	return frappe.get_all("Timesheet Detail", filters={"task": task.name})
 
 
 @frappe.whitelist()
