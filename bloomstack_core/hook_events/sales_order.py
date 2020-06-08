@@ -76,5 +76,5 @@ def validate_batch_item(sales_order, method):
 				frappe.throw(_("""
 					Row #{0}: The batch {1} has only {2} qty. Either select a different
 					batch that has more than {3} qty available, or split the row to sell
-					from multiple batches.<br><br>
+					from multiple batches.
 				""").format(item.idx, item.batch_no, batch_qty, qty))
