@@ -2,6 +2,7 @@ import json
 
 import frappe
 from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
+from erpnext.stock.doctype.batch.batch import get_batch_qty
 from frappe.utils import flt
 from frappe import _
 
@@ -83,21 +84,3 @@ def get_avilable_batches(warehouse, item_code):
 	batch_dict = {item['batch_no']:str(item.qty) + ' ' + str(item.stock_uom) for item in batches}
 	value = '<br> <li>'.join(' = '.join((key,val)) for (key,val) in batch_dict.items())
 	return value
-
-
-def get_batch_qty(batch_no=None, warehouse=None, item_code=None):
-	out = 0
-
-	if batch_no and warehouse:
-		out = float(frappe.db.sql("""select sum(actual_qty)
-			from `tabStock Ledger Entry`
-			where warehouse=%s and batch_no=%s""",
-			(warehouse, batch_no))[0][0] or 0)
-
-	if not batch_no and item_code and warehouse:
-		out = frappe.db.sql('''select batch_no, sum(actual_qty) as qty, stock_uom
-			from `tabStock Ledger Entry`
-			where item_code = %s and warehouse=%s
-			group by batch_no''', (item_code, warehouse), as_dict=1)
-
-	return out
