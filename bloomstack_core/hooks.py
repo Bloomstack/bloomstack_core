@@ -176,6 +176,9 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
 		]
 	},
+	"Sales Order": {
+		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item"
+	},
 	"Delivery Trip": {
 		"validate": [
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
