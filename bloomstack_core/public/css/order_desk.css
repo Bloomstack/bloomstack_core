@@ -59,7 +59,7 @@ body[data-route="order-desk"] .cart-wrapper tr.table-head th:first-child {
 }
 
 body[data-route="order-desk"] .middle {
-  vertical-align: middle!important;
+  vertical-align: middle !important;
 }
 
 body[data-route="order-desk"] .quantity span button,
@@ -109,14 +109,8 @@ body[data-route="order-desk"] .pos section.cart-container .frappe-control:last-c
   margin-right: 0;
 }
 
-body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-header a.grey.list-id,
-body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-bpdy a.grey.list-id {
-  display: flex;
-  flex-direction: column;
-}
-
 body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-view-header a.grey.list-id {
-  height: 6rem;
+  display: inline-block;
 }
 
 body[data-route="order-desk"] .pos section.item-container .pos-item-wrapper.image-view-item .image-field {

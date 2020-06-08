@@ -758,7 +758,7 @@ class OrderDeskItems {
 			<div class="pos-item-wrapper image-view-item" data-item-code="${escape(item_code)}">
 				<div class="image-view-header">
 					<div>
-						<a class="grey list-id" data-name="${item_code}" title="${item_title}">
+						<a class="grey list-id ellipsis" data-name="${item_code}" title="${item_title}">
 							${item_title},
 							<br>
 							<span style="font-size: large">
@@ -840,10 +840,10 @@ class SalesOrderCart {
 					<thead>
 						<tr class="table-head">
 							<th width="25%">${__('Item Name')}</th>
-							<th width="20%">${__('Quantity')}</th>
+							<th width="25%">${__('Batch No.')}</th>
+							<th>${__('Quantity')}</th>
 							<th>${__('Discount')}</th>
-							<th width="20%">${__('Rate')}</th>
-							<th>${__('Batch No.')}</th>
+							<th>${__('Rate')}</th>
 							<th width="7%"></th>
 						</tr>
 						</thead>
@@ -1162,17 +1162,17 @@ class SalesOrderCart {
 				<td width: 50px class="item-name ellipsis indicator ${indicator_class}" data-item-code="${item.item_code}">
 					${item.item_name}
 				</td>
+				<td class="batch text-center" data-item-code="${item.item_code}">
+					${item.batch_no || "-"}
+				</td>
 				<td class="quantity" data-item-code="${item.item_code}">
 					${get_quantity_html(item.qty)}
 				</td>
-				<td class="discount" data-item-code="${item.item_code}">
+				<td class="discount text-right" data-item-code="${item.item_code}">
 					${item.discount_percentage}%
 				</td>
 				<td class="rate" data-item-code="${item.item_code}">
 					${get_rate_html(item.rate)}
-				</td>
-				<td class="batch" data-item-code="${item.item_code}">
-					${item.batch_no || "-"}
 				</td>
 				<td width: 10px class="action action_button" data-item-code="${item.item_code}">
 					<a class="btn btn-danger btn-xs" title="Delete" data-name="${item.item_name}" data-item-code="${item.item_code}">X</a>
@@ -1183,15 +1183,7 @@ class SalesOrderCart {
 		function get_quantity_html(value) {
 			return `
 				<div class="input-group input-group-xs">
-					<span class="input-group-btn">
-						<button class="btn btn-default btn-xs" data-action="increment">+</button>
-					</span>
-
 					<input class="form-control" type="number" value="${value}">
-
-					<span class="input-group-btn">
-						<button class="btn btn-default btn-xs" data-action="decrement">-</button>
-					</span>
 				</div>
 			`;
 		};
@@ -1199,15 +1191,7 @@ class SalesOrderCart {
 		function get_rate_html(rate){
 			return `
 			<div class="input-group input-group-xs">
-				<span class="input-group-btn">
-					<button class="btn btn-default btn-xs" data-action="increment_rate">+</button>
-				</span>
-
 				<input class="form-control" type="number" value="${rate}">
-
-				<span class="input-group-btn">
-					<button class="btn btn-default btn-xs" data-action="decrement_rate">-</button>
-				</span>
 			</div>`
 		}
 	}
