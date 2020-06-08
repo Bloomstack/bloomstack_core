@@ -3,8 +3,8 @@ import json
 import frappe
 from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
 from erpnext.stock.doctype.batch.batch import get_batch_qty
-from frappe.utils import flt
 from frappe import _
+from frappe.utils import flt
 
 
 def create_sales_invoice_against_contract():
@@ -60,27 +60,31 @@ def create_multiple_pick_lists(orders):
 
 	return created_orders
 
-def validate_batch_item(sales_order, method):
-	""" validate batch item """
 
+def validate_batch_item(sales_order, method):
 	for item in sales_order.items:
-		qty = item.get('stock_qty') or item.get('transfer_qty') or item.get('qty') or 0
+		qty = item.stock_qty or item.transfer_qty or item.qty or 0
 		has_batch_no = frappe.db.get_value('Item', item.item_code, 'has_batch_no')
-		warehouse = item.get('warehouse', None)
+		warehouse = item.warehouse
+
 		if has_batch_no and warehouse and qty > 0:
 			if not item.batch_no:
 				return
-			batches = get_avilable_batches(warehouse, item.item_code)
+
 			batch_qty = get_batch_qty(batch_no=item.batch_no, warehouse=warehouse)
 			if flt(batch_qty, item.precision("qty")) < flt(qty, item.precision("qty")):
-				frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3}\
-					qty available or split the row into multiple rows, \
-					to deliver/issue from multiple batches. \
-					<br><br> Avilable batches with qty.<br> <li>{4}</li>").format(item.idx, item.batch_no, batch_qty, qty, batches))
+				batches = get_available_batches(warehouse, item.item_code)
+				frappe.throw(_("""
+					Row #{0}: The batch {1} has only {2} qty. Either select a different
+					batch that has more than {3} qty available, or split the row to sell
+					from multiple batches.<br><br>
+					Available batches with qty:<br><li>{4}</li>
+				""").format(item.idx, item.batch_no, batch_qty, qty, batches))
 
-def get_avilable_batches(warehouse, item_code):
+
+def get_available_batches(warehouse, item_code):
 	batches = get_batch_qty(warehouse=warehouse, item_code=item_code)
 
-	batch_dict = {item['batch_no']:str(item.qty) + ' ' + str(item.stock_uom) for item in batches}
-	value = '<br> <li>'.join(' = '.join((key,val)) for (key,val) in batch_dict.items())
+	batch_dict = {item.get('batch_no'): "{0} {1}".format(item.qty, item.stock_uom) for item in batches}
+	value = '<br><li>'.join(' = '.join((key, val)) for (key, val) in batch_dict.items())
 	return value
