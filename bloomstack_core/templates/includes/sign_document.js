@@ -1,6 +1,11 @@
 $(document).ready(function () {
+	var body = $('.third-party-sign')
 	var $sigdiv = $("#signature");
-	$sigdiv.jSignature();   // inits the jSignature widget.
+	$sigdiv.jSignature({
+		height: 300,
+		width: (body.width() - 5),
+		lineWidth: 3
+	});   // inits the jSignature widget.
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
 	$(".refresh_signature").on("click", function () {
