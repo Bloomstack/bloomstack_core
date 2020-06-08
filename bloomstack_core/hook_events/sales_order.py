@@ -73,18 +73,8 @@ def validate_batch_item(sales_order, method):
 
 			batch_qty = get_batch_qty(batch_no=item.batch_no, warehouse=warehouse)
 			if flt(batch_qty, item.precision("qty")) < flt(qty, item.precision("qty")):
-				batches = get_available_batches(warehouse, item.item_code)
 				frappe.throw(_("""
 					Row #{0}: The batch {1} has only {2} qty. Either select a different
 					batch that has more than {3} qty available, or split the row to sell
 					from multiple batches.<br><br>
-					Available batches with qty:<br><li>{4}</li>
-				""").format(item.idx, item.batch_no, batch_qty, qty, batches))
-
-
-def get_available_batches(warehouse, item_code):
-	batches = get_batch_qty(warehouse=warehouse, item_code=item_code)
-
-	batch_dict = {item.get('batch_no'): "{0}".format(item.qty) for item in batches}
-	value = '<br><li>'.join(' = '.join((key, val)) for (key, val) in batch_dict.items())
-	return value
+				""").format(item.idx, item.batch_no, batch_qty, qty))
