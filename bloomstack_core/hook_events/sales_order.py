@@ -2,7 +2,6 @@ import json
 
 import frappe
 from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
-from erpnext.stock.doctype.batch.batch import get_batch_qty
 from frappe.utils import flt
 from frappe import _
 
@@ -70,7 +69,35 @@ def validate_batch_item(sales_order, method):
 		if has_batch_no and warehouse and qty > 0:
 			if not item.batch_no:
 				return
-
+			batches = get_avilable_batches(warehouse, item.item_code)
 			batch_qty = get_batch_qty(batch_no=item.batch_no, warehouse=warehouse)
 			if flt(batch_qty, item.precision("qty")) < flt(qty, item.precision("qty")):
-				frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3} qty available or split the row into multiple rows, to deliver/issue from multiple batches. Avilable batches").format(item.idx, item.batch_no, batch_qty, qty))
+				frappe.throw(_("Row #{0}: The batch {1} has only {2} qty. Please select another batch which has {3}\
+					qty available or split the row into multiple rows, \
+					to deliver/issue from multiple batches. \
+					<br><br> Avilable batches with qty.<br> <li>{4}</li>").format(item.idx, item.batch_no, batch_qty, qty, batches))
+
+def get_avilable_batches(warehouse, item_code):
+	batches = get_batch_qty(warehouse=warehouse, item_code=item_code)
+
+	batch_dict = {item['batch_no']:str(item.qty) + ' ' + str(item.stock_uom) for item in batches}
+	value = '<br> <li>'.join(' = '.join((key,val)) for (key,val) in batch_dict.items())
+	return value
+
+
+def get_batch_qty(batch_no=None, warehouse=None, item_code=None):
+	out = 0
+
+	if batch_no and warehouse:
+		out = float(frappe.db.sql("""select sum(actual_qty)
+			from `tabStock Ledger Entry`
+			where warehouse=%s and batch_no=%s""",
+			(warehouse, batch_no))[0][0] or 0)
+
+	if not batch_no and item_code and warehouse:
+		out = frappe.db.sql('''select batch_no, sum(actual_qty) as qty, stock_uom
+			from `tabStock Ledger Entry`
+			where item_code = %s and warehouse=%s
+			group by batch_no''', (item_code, warehouse), as_dict=1)
+
+	return out
