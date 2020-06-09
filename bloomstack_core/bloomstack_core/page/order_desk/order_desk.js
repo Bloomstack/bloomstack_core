@@ -1158,7 +1158,7 @@ class SalesOrderCart {
 		})
 
 		return `
-			<tr class="item" data-item-code="${escape(item.item_code)}" data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
+			<tr class="item" data-item-code="${escape(item.item_code)}" data-batch-no="${batch_no}" title="Item: ${item.item_name} || Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
 				<td width: 50px class="item-name ellipsis indicator ${indicator_class}" data-item-code="${item.item_code}">
 					${item.item_name}
 				</td>
