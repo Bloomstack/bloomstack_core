@@ -212,6 +212,9 @@ doc_events = {
 			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
 			"bloomstack_core.hook_events.pick_list.update_package_tag"
 		],
+		"before_submit" :[
+			"bloomstack_core.hook_events.pick_list.set_picked_qty"
+		],
 		"on_cancel": [
 			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
 			"bloomstack_core.hook_events.pick_list.update_package_tag"
