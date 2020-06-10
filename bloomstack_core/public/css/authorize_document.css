@@ -190,7 +190,6 @@ table td div {
 }
 
 #signature {
-    display: block;
     border: 1px solid #ececec;
     position: relative;
 }
@@ -204,10 +203,6 @@ table td div {
     border-radius: 4px;
     padding: 5px 10px;
     font-size: 12px;
-}
-
-#signature canvas {
-    height: 250px!important;
 }
 
 .btn {
