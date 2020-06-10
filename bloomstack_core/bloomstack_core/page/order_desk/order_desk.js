@@ -923,7 +923,8 @@ class SalesOrderCart {
 		let total = this.get_total_template('Grand Total', 'grand-total-value');
 
 		if (!cint(frappe.sys_defaults.disable_rounded_total)) {
-			total += this.get_total_template('Rounded Total', 'rounded-total-value');
+			total += 
+			"</tr><tr class=\"grand-total\">" + this.get_total_template('Rounded Total', 'rounded-total-value');
 		}
 
 		return total;

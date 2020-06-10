@@ -12,7 +12,7 @@ body[data-route="order-desk"] .cart-wrapper table {
   border-radius: 3px;
   margin: 10px 0 20px;
   table-layout: fixed;
-  min-height: 270px;
+  min-height: 320px;
   min-width: 500px;
 }
 
