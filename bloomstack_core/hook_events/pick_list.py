@@ -24,6 +24,7 @@ def update_order_package_tag(pick_list, method):
 
 def set_picked_qty(pick_list, method):
 	for row in pick_list.locations:
+		if not row.picked_qty:
 			row.update({
 				'picked_qty': row.stock_qty
 			})
