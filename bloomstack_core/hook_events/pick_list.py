@@ -22,6 +22,11 @@ def update_order_package_tag(pick_list, method):
 				if existing_package_tag:
 					frappe.db.set_value("Sales Order Item", item.sales_order_item, "package_tag", None)
 
+def set_picked_qty(pick_list, method):
+	for row in pick_list.locations:
+		if not row.picked_qty:
+			row.picked_qty = row.stock_qty
+
 
 def update_package_tag(pick_list, method):
 	package_tags = [item.package_tag for item in pick_list.locations if item.package_tag]
