@@ -12,3 +12,14 @@ def update_package_tags(pr, method):
 				frappe.db.set_value("Package Tag", item.package_tag, "item_name", None)
 				frappe.db.set_value("Package Tag", item.package_tag, "item_group", None)
 				frappe.db.set_value("Package Tag", item.package_tag, "batch_no", None)
+
+def create_package_tag(pr, method):
+	for item in pr.items:
+		if item.package_tag:
+			doc = frappe.new_doc("Package Tag")
+			doc.update({
+				"package_tag": item.package_tag,
+				"item_code": item.item_code
+			})
+			doc.save()
+
