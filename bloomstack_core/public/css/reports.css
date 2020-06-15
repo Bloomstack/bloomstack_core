@@ -1,5 +1,5 @@
 body[data-route="query-report/Cash Flow"] .chart-container .frappe-chart.chart g rect.legend-bar {
-  width: 200px!important;
+  width: 200px !important;
 }
 
 body[data-route="query-report/Cash Flow"] .chart-container .frappe-chart.chart g.chart-legend g:nth-child(2) {
