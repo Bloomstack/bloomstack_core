@@ -221,10 +221,8 @@ doc_events = {
 		]
 	},
 	"Purchase Receipt": {
-		"on_submit": [
-			"bloomstack_core.hook_events.purchase_receipt.update_package_tags",
-			"bloomstack_core.hook_events.purchase_receipt.create_package_tag"
-		],
+		"before_submit": "bloomstack_core.hook_events.purchase_receipt.create_package_tag",
+		"on_submit": "bloomstack_core.hook_events.purchase_receipt.update_package_tags",
 		# ERPNext tries to delete auto-created batches on cancel, so removing the link
 		# from Package Tag before the on_cancel hook runs
 		"before_cancel": "bloomstack_core.hook_events.purchase_receipt.update_package_tags"
