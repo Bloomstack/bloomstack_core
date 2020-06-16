@@ -837,20 +837,29 @@ class SalesOrderCart {
 				</div>
 				<div class="cart-wrapper table-responsive">
 					<table class="table">
-					<thead>
-						<tr class="table-head">
-							<th width="25%">${__('Item Name')}</th>
-							<th width="25%">${__('Batch No.')}</th>
-							<th>${__('Quantity')}</th>
-							<th>${__('Discount')}</th>
-							<th>${__('Rate')}</th>
-							<th width="7%"></th>
-						</tr>
-						</thead>
-						<tbody class="cart-items">
-								<tr class="empty-state">
+					<thead></thead>
+						<tbody>
+								<tr>
 									<td colspan="6">
-										<span>${__('No Items added to cart')}</span>
+										<table class="table cart-items">
+											<thead>
+												<tr class="table-head">
+													<th width="25%">${__('Item Name')}</th>
+													<th width="25%">${__('Batch No.')}</th>
+													<th>${__('Quantity')}</th>
+													<th>${__('Discount')}</th>
+													<th>${__('Rate')}</th>
+													<th width="7%"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr class="empty-state">
+													<td>
+														<span>${__('No Items added to cart')}</span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 									</td>
 								</tr>
 						</tbody>
@@ -1134,16 +1143,17 @@ class SalesOrderCart {
 				 () => {
 					me.events.on_field_change(item_code, 'qty', 0);
 					me.update_qty_total();
+					setTimeout( () => {
+						total_quantity = me.$qty_total.find('.quantity-total').text();
+						console.log(total_quantity);
+						if(total_quantity == 0) {
+							me.wrapper.find('.cart-items .empty-state').show();
+						}
+					}, 100)
 				}
 				);
 				
-				setTimeout( () => {
-					total_quantity = me.$qty_total.find('.quantity-total').text();
-					console.log(total_quantity);
-					if(total_quantity == 0) {
-						me.wrapper.find('.cart-items .empty-state').show();
-					}
-				}, 1500)
+				
 		})
 
 		$(document).on('click', '.list-item div', function (event) {

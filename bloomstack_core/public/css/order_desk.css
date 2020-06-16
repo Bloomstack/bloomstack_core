@@ -6,14 +6,27 @@ body[data-route="order-desk"] .price-info {
   background-color: #4f5261;
 }
 
-body[data-route="order-desk"] .cart-wrapper table {
+body[data-route="order-desk"] .cart-wrapper table:not(.cart-items) {
   width: 100%;
   border: 1px solid #d1d8dd;
   border-radius: 3px;
   margin: 10px 0 20px;
   table-layout: fixed;
-  min-height: 320px;
   min-width: 500px;
+}
+
+body[data-route="order-desk"] .cart-wrapper table.cart-items {
+  height: 200px;
+  table-layout: fixed;
+  margin: 0;
+}
+
+body[data-route="order-desk"] .cart-wrapper table.cart-items tbody tr {
+  height: 0;
+}
+
+body[data-route="order-desk"] .cart-wrapper table.cart-items tbody tr td {
+  padding: 10px 10px;
 }
 
 body[data-route="order-desk"] .cart-wrapper {
@@ -32,6 +45,7 @@ body[data-route="order-desk"] .empty-state span {
 
 body[data-route="order-desk"] .table > tbody > tr > td {
   border-top: 0;
+  padding: 0;
 }
 
 body[data-route="order-desk"] .cart-wrapper thead tr.table-head {
