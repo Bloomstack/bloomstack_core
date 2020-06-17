@@ -16,19 +16,14 @@ def create_package_tag(pr, method):
 	package_tags = [item.package_tag for item in pr.items if item.package_tag]
 
 	if len(package_tags) != len(set(package_tags)):
-		package_tag_list = []
-		for i in range(len(package_tags)):
-			k = i + 1
-			for j in range(k, len(package_tags)):
-				if package_tags[i] == package_tags[j] and package_tags[i] not in package_tag_list:
-					package_tag_list.append(package_tags[i])
-		frappe.throw("Package Tag {0} cannot be same for multiple Purchase Receipt Item".format(", ".join(package_tag_list)))
+		duplicate_tags = list(set([tag for tag in package_tags if package_tags.count(tag) > 1]))
+		frappe.throw("Package Tag {0} cannot be same for multiple Purchase Receipt Item".format(", ".join(duplicate_tags)))
 
 	for item in pr.items:
 		if item.package_tag:
 			package_tag = frappe.db.exists("Package Tag", {"package_tag": item.package_tag})
 			if package_tag:
-				frappe.throw("Package Tag {0} already Exist".format(package_tag))
+				frappe.throw("Row #{0}: Package Tag '{1}' already exists".format(item.idx, frappe.utils.get_link_to_form("Package Tag", package_tag)))
 			else:
 				doc = frappe.new_doc("Package Tag")
 				doc.update({
