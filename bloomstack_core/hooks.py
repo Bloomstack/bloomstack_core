@@ -26,6 +26,15 @@ website_context = {
 	"splash_image": "/assets/bloomstack_core/images/splash.png"
 }
 
+# Set session defaults
+override_document_validations = [
+	"bloomstack_core.session.override_pick_list_validation"
+]
+
+update_website_context = override_document_validations
+on_session_creation = override_document_validations
+on_login = override_document_validations
+
 # Includes in <head>
 # ------------------
 
@@ -46,6 +55,7 @@ app_include_css = [
 	"/assets/bloomstack_core/css/order_desk.css",
 	"/assets/bloomstack_core/css/address_and_contact.css",
 	"/assets/bloomstack_core/css/contract.css",
+	"/assets/css/reports.min.css"
 ]
 
 # include js, css files in header of web template
@@ -176,6 +186,9 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
 		]
 	},
+	"Sales Order": {
+		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item"
+	},
 	"Delivery Trip": {
 		"validate": [
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
@@ -199,6 +212,9 @@ doc_events = {
 		"on_submit": [
 			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
 			"bloomstack_core.hook_events.pick_list.update_package_tag"
+		],
+		"before_submit" :[
+			"bloomstack_core.hook_events.pick_list.set_picked_qty"
 		],
 		"on_cancel": [
 			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
@@ -241,7 +257,8 @@ scheduler_events = {
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
 	],
 	"all": [
-		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request"
 	]
 }
 

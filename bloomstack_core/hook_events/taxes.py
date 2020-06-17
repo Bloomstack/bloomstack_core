@@ -1,5 +1,8 @@
+import json
+
 import frappe
 from bloomstack_core.hook_events.utils import get_default_license
+from erpnext.accounts.utils import get_company_default
 from erpnext.stock.doctype.item.item import get_uom_conv_factor
 from frappe import _
 
@@ -12,7 +15,6 @@ MARKUP_PERCENTAGE = 80
 
 def calculate_cannabis_tax(doc, method):
 	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
-
 	if not compliance_items:
 		return
 
@@ -40,19 +42,19 @@ def calculate_cannabis_tax(doc, method):
 			set_taxes(doc, cultivation_tax_row)
 		elif license_for == "Retailer":
 			# calculate excise tax for selling cycle is customer is a retailer or end-consumer
-			exicse_tax_row = calculate_excise_tax(doc, compliance_items)
-			set_taxes(doc, exicse_tax_row)
+			excise_tax_row = calculate_excise_tax(doc, compliance_items)
+			set_taxes(doc, excise_tax_row)
 
 
 def calculate_cultivation_tax(doc, compliance_items):
 	cultivation_tax = 0
 
-	for item in doc.items:
-		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.item_code), None)
+	for item in doc.get("items"):
+		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
 		if not compliance_item or not compliance_item.enable_cultivation_tax:
 			continue
 
-		qty_in_ounces = convert_to_ounces(item.uom, item.qty)
+		qty_in_ounces = convert_to_ounces(item.get("uom"), item.get("qty"))
 
 		if compliance_item.item_category == "Dry Flower":
 			cultivation_tax += (qty_in_ounces * DRY_FLOWER_TAX_RATE)
@@ -66,7 +68,7 @@ def calculate_cultivation_tax(doc, compliance_items):
 		'charge_type': 'Actual',
 		'add_deduct_tax': 'Deduct',
 		'description': 'Cultivation Tax',
-		'account_head': doc.get_company_default("default_cultivation_tax_account"),
+		'account_head': get_company_default(doc.get("company"), "default_cultivation_tax_account"),
 		'tax_amount': cultivation_tax
 	}
 
@@ -76,31 +78,42 @@ def calculate_cultivation_tax(doc, compliance_items):
 def calculate_excise_tax(doc, compliance_items):
 	total_excise_tax = total_shipping_charge = 0
 
-	for tax in doc.taxes:
-		if tax.account_head == doc.get_company_default("default_shipping_account"):
-			total_shipping_charge += tax.tax_amount
+	if doc.get("taxes"):
+		for tax in doc.get("taxes"):
+			if tax.get("account_head") == get_company_default(doc.get("company"), "default_shipping_account"):
+				total_shipping_charge += tax.tax_amount
 
-	for item in doc.items:
-		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.item_code), None)
+	for item in doc.get("items"):
+		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
 		if not compliance_item:
 			continue
 
-		# calculate the total excist tax for each item
-		item_shipping_charge = (total_shipping_charge / doc.total) * (item.price_list_rate * item.qty)
-		item_cost_with_shipping = (item.price_list_rate * item.qty) + item_shipping_charge
+		# fetch either the transaction rate or price list rate, whichever is higher
+		price_list_rate = item.get("price_list_rate") or 0
+		rate = item.get("rate") or 0
+		max_item_rate = max([price_list_rate, rate])
+		if max_item_rate == 0:
+			continue
+
+		if not doc.net_total:
+			return
+
+		# calculate the total excise tax for each item
+		item_shipping_charge = (total_shipping_charge / doc.net_total) * (max_item_rate * item.get("qty"))
+		item_cost_with_shipping = (max_item_rate * item.get("qty")) + item_shipping_charge
 		item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
 		total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
 
-	exicse_tax_row = {
+	excise_tax_row = {
 		'category': 'Total',
 		'add_deduct_tax': 'Add',
 		'charge_type': 'Actual',
 		'description': 'Excise Tax',
-		'account_head': doc.get_company_default("default_excise_tax_account"),
+		'account_head': get_company_default(doc.get("company"), "default_excise_tax_account"),
 		'tax_amount': total_excise_tax
 	}
 
-	return exicse_tax_row
+	return excise_tax_row
 
 
 def set_taxes(doc, tax_row):
@@ -121,10 +134,21 @@ def set_taxes(doc, tax_row):
 
 def convert_to_ounces(uom, qty):
 	conversion_factor = get_uom_conv_factor(uom, 'Ounce')
-
 	if not conversion_factor:
 		frappe.throw(_("Please set Conversion Factor for {0} to Ounce").format(uom))
 
 	qty_in_ounce = qty * conversion_factor
-
 	return qty_in_ounce
+
+
+@frappe.whitelist()
+def set_excise_tax(doc):
+	if isinstance(doc, str):
+		doc = frappe._dict(json.loads(doc))
+
+	compliance_items = frappe.get_all('Compliance Item', fields=['item_code'])
+	if not compliance_items:
+		return
+
+	excise_tax_row = calculate_excise_tax(doc, compliance_items)
+	return excise_tax_row

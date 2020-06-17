@@ -1,6 +1,11 @@
 $(document).ready(function () {
+	var body = $('.third-party-sign')
 	var $sigdiv = $("#signature");
-	$sigdiv.jSignature();   // inits the jSignature widget.
+	$sigdiv.jSignature({
+		height: 300,
+		width: (body.width() - 5),
+		lineWidth: 3
+	});   // inits the jSignature widget.
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
 	$(".refresh_signature").on("click", function () {
@@ -31,8 +36,7 @@ $(document).ready(function () {
 						callback: (r) => {
 							frappe.msgprint(__("The {{ doc.doctype }} has been signed and emailed to you at {{ authorizer_email }}"));
 							$(".title").empty();
-							$(".contract").html(r.message);
-							$(".contract").show();
+							$(".contract").html('The contract is authorized. Please check your email for the signed copy of the document.');
 						}
 					})
 				}

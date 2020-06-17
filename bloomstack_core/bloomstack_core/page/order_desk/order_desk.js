@@ -181,7 +181,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		});
 	}
 
-	update_item_in_cart(item_code, field='qty', value=1, batch_no) {
+	update_item_in_cart(item_code, field='qty', value=0, batch_no) {
 		frappe.dom.freeze();
 		if(this.cart.exists(item_code, batch_no)) {
 			const search_field = batch_no ? 'batch_no' : 'item_code';
@@ -257,7 +257,8 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		}
 
 		let args = { item_code: item_code, delivery_date: this.delivery_date || null };
-		if (in_list(['serial_no', 'batch_no'], field)) {
+		args['qty'] = 0;
+		if (in_list(['serial_no', 'batch_no','qty'], field)) {
 			args[field] = value;
 		}
 
@@ -332,7 +333,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				this.frm.add_child('items',success)
 			}
 			this.frm.doc.items.forEach(item => {
-				this.update_item_in_frm(item)
+				this.update_item_in_frm(item, 'qty', item.qty)
 					.then(() => {
 						// update cart
 						frappe.run_serially([
@@ -355,7 +356,11 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		if (item.qty == 0 || (item.has_batch_no && !item.batch_no)) {
 			frappe.model.clear_doc(item.doctype, item.name);
 		}
-		this.post_qty_change(item)
+		setTimeout(() => {
+			const taxes = this.frm.doc.taxes || []
+			this.frm.doc.taxes = taxes.filter(tax => tax.item_wise_tax_detail !== '{}')
+			this.post_qty_change(item)
+		}, 500)
 	}
 
 	update_cart_data(item) {
@@ -1033,7 +1038,6 @@ class SalesOrderCart {
 				}
 		});
 		this.$qty_total.find('.quantity-total').text(total_item_qty);
-		// hiiremovethis this.frm.set_value("pos_total_qty",total_item_qty);
 	}
 
 	make_order_type_field() {
