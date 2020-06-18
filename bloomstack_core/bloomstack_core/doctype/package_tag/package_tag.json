@@ -14,6 +14,7 @@
   "item_group",
   "cb_item",
   "batch_no",
+  "coa_batch_no",
   "source_package_tag"
  ],
  "fields": [
@@ -74,10 +75,17 @@
    "label": "Item Group",
    "options": "Item Group",
    "read_only": 1
+  },
+  {
+   "fieldname": "coa_batch_no",
+   "fieldtype": "Link",
+   "label": "COA Batch No",
+   "options": "Batch",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2020-05-22 04:41:49.297151",
+ "modified": "2020-06-16 10:03:45.408426",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Package Tag",
