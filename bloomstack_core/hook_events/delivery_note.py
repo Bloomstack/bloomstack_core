@@ -5,9 +5,11 @@
 from __future__ import unicode_literals
 
 import frappe
+from bloomstack_core.utils import get_metrc
 from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
 from frappe import _
 from frappe.utils import get_link_to_form
+from datetime import datetime
 
 
 def link_invoice_against_delivery_note(delivery_note, method):
@@ -19,6 +21,56 @@ def link_invoice_against_delivery_note(delivery_note, method):
 
 			if sales_invoice and len(sales_invoice) == 1:
 				item.against_sales_invoice = sales_invoice[0].parent
+
+
+def create_metrc_transfer_template(delivery_note, method):
+	if delivery_note.is_return:
+		return
+
+	metrc_payload = map_metrc_payload(delivery_note)
+
+	if metrc_payload:
+		metrc = get_metrc()
+
+		if not metrc:
+			return
+
+		response = metrc.transfers.templates.post(json = metrc_payload)
+
+		if not response.ok:
+			frappe.throw(_(response.raise_for_status()))
+
+
+def map_metrc_payload(delivery_note):
+	settings = frappe.get_single("Compliance Settings")
+
+	if not settings.is_compliance_enabled:
+		return
+
+	packages = []
+
+	for item in delivery_note.items:
+		if item.package_tag:
+			packages.append({
+				"PackageLabel": item.package_tag
+			})
+
+	if packages.__len__ == 0:
+		return False
+
+	return [{
+		"Name": delivery_note.name,
+		"TransporterFacilityLicenseNumber": settings.metrc_license_no,
+		"Destinations": [
+			{
+				"RecipientLicenseNumber": "DRIVER-0001",
+				"TransferTypeName": "Transfer",
+				"EstimatedDepartureDateTime": datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
+				"EstimatedArrivalDateTime": datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
+				"Packages": packages
+			}
+		]
+	}]
 
 
 def make_sales_invoice_for_delivery(delivery_note, method):
