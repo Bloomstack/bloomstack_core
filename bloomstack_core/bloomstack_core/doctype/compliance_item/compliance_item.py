@@ -14,12 +14,14 @@ class ComplianceItem(Document):
 	def validate(self):
 		self.validate_item_category()
 		self.validate_existing_metrc_item()
-		if self.enable_metrc:
+		if not self.is_new() and self.enable_metrc:
 			self.sync_metrc_item()
 		self.make_bloomtrace_integration_request()
 
 	def after_insert(self):
 		self.make_bloomtrace_integration_request()
+		if self.enable_metrc:
+			self.sync_metrc_item()
 
 	def validate_item_category(self):
 		if self.enable_cultivation_tax and not self.item_category:
@@ -35,7 +37,7 @@ class ComplianceItem(Document):
 		# Merge Item and Compliance Item data
 		item.update(self.as_dict())
 
-		if self.is_new():
+		if not self.metrc_id:
 			metrc_id = create_item(item)
 
 			if metrc_id:
