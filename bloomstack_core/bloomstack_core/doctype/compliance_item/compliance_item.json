@@ -11,6 +11,7 @@
   "item_name",
   "item_category",
   "cb_compliance_item",
+  "requires_lab_tests",
   "enable_cultivation_tax",
   "enable_metrc",
   "sb_item_details",
@@ -110,10 +111,16 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Bloomtrace ID"
+  },
+  {
+   "default": "0",
+   "fieldname": "requires_lab_tests",
+   "fieldtype": "Check",
+   "label": "Requires Lab Tests"
   }
  ],
  "links": [],
- "modified": "2020-06-03 07:03:53.541932",
+ "modified": "2020-06-18 08:53:12.376502",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Item",
