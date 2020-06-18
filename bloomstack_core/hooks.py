@@ -188,6 +188,9 @@ doc_events = {
 		"on_submit": [
 			"bloomstack_core.hook_events.delivery_note.create_metrc_transfer_template",
 		],
+			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
+			"bloomstack_core.compliance.package.create_package_from_delivery"
+		]
 	},
 	"Sales Order": {
 		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item"
@@ -216,7 +219,7 @@ doc_events = {
 			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
 			"bloomstack_core.hook_events.pick_list.update_package_tag"
 		],
-		"before_submit" :[
+		"before_submit": [
 			"bloomstack_core.hook_events.pick_list.set_picked_qty"
 		],
 		"on_cancel": [
@@ -237,7 +240,7 @@ doc_events = {
 		],
 	},
 	"Stock Entry": {
-		"on_submit": "bloomstack_core.compliance.package.create_package"
+		"on_submit": "bloomstack_core.compliance.package.create_package_from_stock"
 	},
 	"User": {
 		"validate": [
