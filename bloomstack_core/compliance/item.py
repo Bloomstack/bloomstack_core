@@ -92,11 +92,15 @@ def build_payload(item):
 	compliance_item = frappe.get_doc("Compliance Item", item.item_code)
 
 	item_data = {
-		"Id": compliance_item.item.metrc_id,
 		"Name": compliance_item.item_name,
-		"ItemCategory": compliance_item.item.metrc_item_category,
-		"UnitOfMeasure": compliance_item.item.metrc_uom
+		"ItemCategory": compliance_item.metrc_item_category,
+		"UnitOfMeasure": compliance_item.metrc_uom
 	}
+
+	if compliance_item.metrc_id:
+		item_data.update({
+			"Id": compliance_item.metrc_id
+		})
 
 	mandatory_metrc_unit = frappe.db.get_value("Compliance Item Category", compliance_item.metrc_item_category, "mandatory_unit")
 
