@@ -5,7 +5,8 @@ from frappe import _
 
 def create_package_from_stock(stock_entry, method):
 	# TODO: Handle non-manufacture Stock Entries for intermediate packages
-	if stock_entry.stock_entry_type != "Manufacture":
+	stock_entry_purpose = frappe.db.get_value("Stock Entry Type", stock_entry.stock_entry_type, "purpose")
+	if stock_entry_purpose not in ["Manufacture", "Repack"]:
 		return
 
 	metrc = get_metrc()
