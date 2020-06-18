@@ -28,7 +28,7 @@ def update_coa_batch_no(stock_entry, method):
 		source_item =  next((item for item in stock_entry.items if item.s_warehouse), None)
 		for item in stock_entry.items:
 			if item.package_tag and item.t_warehouse:
-				if frappe.db.get_value("Item", item.item_code, "requires_lab_tests"):
+				if frappe.db.get_value("Compliance Item", item.item_code, "requires_lab_tests"):
 					frappe.db.set_value("Package Tag", item.package_tag, "coa_batch_no", item.batch_no)
 				else:
 					coa_batch_no = frappe.db.get_value("Package Tag", source_item.package_tag, "coa_batch_no")
