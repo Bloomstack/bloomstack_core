@@ -13,8 +13,9 @@ class PackageTag(Document):
 	def validate(self):
 		if self.source_package_tag:
 			self.validate_source_package_tag()
+			self.update_coa_batch_no()
 		self.make_bloomtrace_integration_request()
-	
+
 	def after_insert(self):
 		self.make_bloomtrace_integration_request()
 
@@ -22,6 +23,9 @@ class PackageTag(Document):
 		source_package_tag = frappe.db.get_value("Package Tag", self.source_package_tag, "source_package_tag")
 		if self.name == source_package_tag:
 			frappe.throw(_("Invalid package tag. {0} is already the source package for {1}.".format(self.name, self.source_package_tag)))
+
+	def update_coa_batch_no(self):
+		self.coa_batch_no = frappe.db.get_value("Package Tag", self.source_package_tag, "coa_batch_no")
 
 	def make_bloomtrace_integration_request(self):
 		if frappe.get_conf().enable_bloomtrace and not self.is_new():

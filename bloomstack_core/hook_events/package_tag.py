@@ -44,7 +44,7 @@ def update_uid(package_tag, frappe_client):
 		"name": package_tag.name
 	})
 	frappe_client.update(uid)
- 
+
 def make_uid(package_tag):
 	item = frappe.db.get_value("Compliance Item", package_tag.item_code, "bloomtrace_id")
 	manufacturing_date = frappe.db.get_value("Batch", package_tag.batch_no, "manufacturing_date") if package_tag.batch_no else None
