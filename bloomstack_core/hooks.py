@@ -26,14 +26,10 @@ website_context = {
 	"splash_image": "/assets/bloomstack_core/images/splash.png"
 }
 
-# Set session defaults
-override_document_validations = [
+# Set application defaults
+on_frappe_start = [
 	"bloomstack_core.session.override_pick_list_validation"
 ]
-
-update_website_context = override_document_validations
-on_session_creation = override_document_validations
-on_login = override_document_validations
 
 # Includes in <head>
 # ------------------
