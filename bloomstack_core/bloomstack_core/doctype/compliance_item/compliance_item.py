@@ -41,8 +41,8 @@ class ComplianceItem(Document):
 			metrc_id = create_item(item)
 
 			if metrc_id:
-				self.metrc_id = metrc_id
-				frappe.msgprint(_("{} was successfully created in METRC (ID number: {}).".format(item.item_name, self.metrc_id)))
+				frappe.db.set_value("Compliance Item", self.name, "metrc_id", metrc_id)
+				frappe.msgprint(_("{} was successfully created in METRC (ID number: {}).".format(item.item_name, metrc_id)))
 			else:
 				frappe.msgprint(_("{} was successfully created in METRC.".format(item.item_name)))
 		else:
