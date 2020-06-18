@@ -1149,7 +1149,6 @@ class SalesOrderCart {
 					me.update_qty_total();
 					setTimeout( () => {
 						total_quantity = me.$qty_total.find('.quantity-total').text();
-						console.log(total_quantity);
 						if(total_quantity == 0) {
 							me.wrapper.find('.cart-items .empty-state').show();
 						}
