@@ -223,6 +223,7 @@ doc_events = {
 		]
 	},
 	"Purchase Receipt": {
+		"before_submit": "bloomstack_core.hook_events.purchase_receipt.create_package_tag",
 		"on_submit": [
 			"bloomstack_core.hook_events.purchase_receipt.update_package_tags",
 			"bloomstack_core.hook_events.purchase_receipt.update_coa_batch_no"
