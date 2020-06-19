@@ -55,6 +55,7 @@ app_include_css = [
 	"/assets/bloomstack_core/css/order_desk.css",
 	"/assets/bloomstack_core/css/address_and_contact.css",
 	"/assets/bloomstack_core/css/contract.css",
+	"/assets/css/reports.min.css"
 ]
 
 # include js, css files in header of web template
@@ -182,7 +183,8 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
 			"bloomstack_core.hook_events.delivery_note.make_sales_invoice_for_delivery",
-			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
+			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
+			"bloomstack_core.compliance.package.create_package_from_delivery"
 		]
 	},
 	"Sales Order": {
@@ -212,7 +214,7 @@ doc_events = {
 			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
 			"bloomstack_core.hook_events.pick_list.update_package_tag"
 		],
-		"before_submit" :[
+		"before_submit": [
 			"bloomstack_core.hook_events.pick_list.set_picked_qty"
 		],
 		"on_cancel": [
@@ -222,7 +224,10 @@ doc_events = {
 	},
 	"Purchase Receipt": {
 		"before_submit": "bloomstack_core.hook_events.purchase_receipt.create_package_tag",
-		"on_submit": "bloomstack_core.hook_events.purchase_receipt.update_package_tags",
+		"on_submit": [
+			"bloomstack_core.hook_events.purchase_receipt.update_package_tags",
+			"bloomstack_core.hook_events.purchase_receipt.update_coa_batch_no"
+		],
 		# ERPNext tries to delete auto-created batches on cancel, so removing the link
 		# from Package Tag before the on_cancel hook runs
 		"before_cancel": "bloomstack_core.hook_events.purchase_receipt.update_package_tags"
@@ -231,7 +236,10 @@ doc_events = {
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
 	},
 	"Stock Entry": {
-		"on_submit": "bloomstack_core.compliance.package.create_package"
+		"on_submit": [
+			"bloomstack_core.compliance.package.create_package_from_stock",
+			"bloomstack_core.hook_events.stock_entry.update_coa_batch_no"
+		]
 	},
 	"User": {
 		"validate": [
@@ -258,7 +266,8 @@ scheduler_events = {
 	],
 	"all": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request"
 	]
 }
 

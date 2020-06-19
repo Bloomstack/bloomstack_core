@@ -1,0 +1,11 @@
+body[data-route="query-report/Cash Flow"] .chart-container .frappe-chart.chart g rect.legend-bar {
+  width: 200px !important;
+}
+
+body[data-route="query-report/Cash Flow"] .chart-container .frappe-chart.chart g.chart-legend g:nth-child(2) {
+  transform: translate(200px, 0);
+}
+
+body[data-route="query-report/Cash Flow"] .chart-container .frappe-chart.chart g.chart-legend g:nth-child(3) {
+  transform: translate(400px, 0);
+}
