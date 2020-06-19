@@ -961,7 +961,7 @@ class SalesOrderCart {
 		return `
 			<td colspan="6">
 				<div class="list-item">
-					<div class="list-item__content list-item__content--flex-2 text-muted">${__('Discount')}</div>
+					<div class="list-item__content text-muted">${__('Discount')}</div>
 					<div class="list-item__content discount-inputs">
 						<input type="text" class="form-control additional_discount_percentage text-right" placeholder="% 0.00">
 						<input type="text" class="form-control discount_amount text-right" placeholder="${get_currency_symbol(this.frm.doc.currency)} 0.00">
@@ -974,11 +974,11 @@ class SalesOrderCart {
 		return `
 		<td colspan="6">
 			<div class="list-item">
-				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Net Total')}</div>
+				<div class="list-item__content text-muted">${__('Net Total')}</div>
 				<div class="list-item__content net-total">0.00</div>
 			</div>
 			<div class="list-item">
-				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Taxes')}</div>
+				<div class="list-item__content text-muted">${__('Taxes')}</div>
 				<div class="list-item__content taxes">0.00</div>
 			</div>
 			</td>
