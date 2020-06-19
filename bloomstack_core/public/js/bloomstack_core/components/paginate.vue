@@ -25,7 +25,6 @@
         },
         methods: {
             changePage(page) {
-                console.log(page)
                 this.$emit("changePage", page);
             }
         }

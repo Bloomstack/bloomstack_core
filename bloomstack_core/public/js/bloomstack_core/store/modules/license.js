@@ -16,6 +16,7 @@ export default {
       SET_LICENSES(state, licenses) {
          state.licenses = licenses.license_info;
          state.totalPages = Math.ceil(Number(licenses.total_count)/state.perPage);
+         state.licenseTypes = licenses.license_types;
       },
       SET_PAGE(state, page) {
          state.currentPage = page;

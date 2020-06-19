@@ -5,7 +5,7 @@
             <option
                     v-for="option in options"
                     :selected="option === value"
-            >option</option>
+            >{{ option }}</option>
         </select>
     </div>
 </template>

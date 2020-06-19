@@ -12,8 +12,8 @@ def get_all_licenses(page_number, per_page, filters):
 			return
 
 	key_map = {
-		"zip": {"key": "zip_code", "operator": "=", "pattern": ""},
-		"licenseType": {"key": "license_type", "operator": "=", "pattern": ""},
+		"zip": {"key": "zip_code", "operator": "=", "pattern": "{}"},
+		"licenseType": {"key": "license_type", "operator": "=", "pattern": "{}"},
 		"search": {"key": "legal_name", "operator": "like", "pattern": "%{}%"}
 	}
 
@@ -48,12 +48,10 @@ def get_all_licenses(page_number, per_page, filters):
 		"filters": and_filters
 	})
 
-	license_types = frappe_client.get_api("frappe.desk.form.load.getdoctype", {
-		"doctype": "License Info",
-		"fieldname": "license_type"
-	})
-
-	# license_types = frappe_client.get_doc("DocType", "License Info")
+	license_doc = frappe_client.get_doc("DocType", "License Info")
+	for field in license_doc["fields"]:
+		if field["fieldname"] == 'license_type':
+			license_types = field["options"].splitlines()
 
 	return {
 		"license_info": license_info,
