@@ -398,7 +398,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
 		});
-
 		this.frm.savesubmit()
 			.then((r) => {
 				if (r && r.doc) {
@@ -658,7 +657,7 @@ class OrderDeskItems {
 		for (let i=0; i < all_items.length; i++) {
 			// wrap 4 items in a div to emulate
 			// a row for clusterize
-			if(i % 4 === 0 && i !== 0) {
+			if(i % 3 === 0 && i !== 0) {
 				curr_row += '</div>';
 				row_items.push(curr_row);
 				curr_row = row_container;
@@ -764,7 +763,7 @@ class OrderDeskItems {
 			<div class="pos-item-wrapper image-view-item" data-item-code="${escape(item_code)}">
 				<div class="image-view-header">
 					<div>
-						<a class="grey list-id" data-name="${item_code}" title="${item_title}">
+						<a class="grey list-id ellipsis" data-name="${item_code}" title="${item_title}">
 							${item_title},
 							<br>
 							<span style="font-size: large">
@@ -841,35 +840,49 @@ class SalesOrderCart {
 			<div class="pos-cart">
 				<div class="customer-field">
 				</div>
-				<div class="cart-wrapper">
-					<div class="list-item-table">
-						<div class="list-item list-item--head">
-							<div class="list-item__content list-item__content--flex-1.5 text-muted">${__('Item Name')}</div>
-							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
-							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
-							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
-							<div class="list-item__content text-muted text-right">${__('Batch No.')}</div>
-							<div class="list-item__content text-muted text-right actions"></div>
-						</div>
-						<div class="cart-items">
-							<div class="empty-state">
-								<span>${__('No Items added to cart')}</span>
-							</div>
-						</div>
-						<div class="taxes-and-totals">
-							${this.get_taxes_and_totals()}
-						</div>
-						<div class="discount-amount">
-							${this.get_discount_amount()}
-						</div>
-						<div class="grand-total">
-							${this.get_grand_total()}
-						</div>
-						<div class="quantity-total">
-							${this.get_item_qty_total()}
-						</div>
-
-					</div>
+				<div class="cart-wrapper table-responsive">
+					<table class="table">
+					<thead></thead>
+						<tbody>
+								<tr>
+									<td colspan="6">
+										<table class="table cart-items">
+											<thead>
+												<tr class="table-head">
+													<th width="25%">${__('Item Name')}</th>
+													<th width="25%">${__('Batch No.')}</th>
+													<th>${__('Quantity')}</th>
+													<th>${__('Discount')}</th>
+													<th>${__('Rate')}</th>
+													<th width="7%"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr class="empty-state">
+													<td>
+														<span>${__('No Items added to cart')}</span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+						</tbody>
+						<tfoot>
+							<tr class="taxes-and-totals">
+								${this.get_taxes_and_totals()}
+							</tr>
+							<tr class="discount-amount">
+								${this.get_discount_amount()}
+							</tr>
+							<tr class="grand-total">
+								${this.get_grand_total()}
+							</tr>
+							<tr class="quantity-total">
+								${this.get_item_qty_total()}
+							</tr>
+					</tfoot>
+					</table>
 				</div>
 				<div class="row">
 					<div class="number-pad-container col-sm-6"></div>
@@ -900,7 +913,7 @@ class SalesOrderCart {
 	}
 
 	reset() {
-		this.$cart_items.find('.list-item').remove();
+		this.$cart_items.find('.item').remove();
 		this.$empty_state.show();
 		this.$taxes_and_totals.html(this.get_taxes_and_totals());
 		this.customer_field.set_value("");
@@ -924,7 +937,8 @@ class SalesOrderCart {
 		let total = this.get_total_template('Grand Total', 'grand-total-value');
 
 		if (!cint(frappe.sys_defaults.disable_rounded_total)) {
-			total += this.get_total_template('Rounded Total', 'rounded-total-value');
+			total += 
+			"</tr><tr class=\"grand-total\">" + this.get_total_template('Rounded Total', 'rounded-total-value');
 		}
 
 		return total;
@@ -937,35 +951,28 @@ class SalesOrderCart {
 
 	get_total_template(label, class_name) {
 		return `
-			<div class="list-item">
-				<div class="list-item__content text-muted">${__(label)}</div>
-				<div class="list-item__content list-item__content--flex-2 ${class_name}">0.00</div>
-			</div>
+				<td colspan = "3">${__(label)}</td>
+				<td colspan = "3" class="${class_name} text-right">0.00</td>
 		`;
 	}
 
 	get_discount_amount() {
 		const get_currency_symbol = window.get_currency_symbol;
-
 		return `
-			<div class="list-item">
-				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Discount')}</div>
-				<div class="list-item__content discount-inputs">
-					<input type="text"
-						class="form-control additional_discount_percentage text-right"
-						placeholder="% 0.00"
-					>
-					<input type="text"
-						class="form-control discount_amount text-right"
-						placeholder="${get_currency_symbol(this.frm.doc.currency)} 0.00"
-					>
+			<td colspan="6">
+				<div class="list-item">
+					<div class="list-item__content list-item__content--flex-2 text-muted">${__('Discount')}</div>
+					<div class="list-item__content discount-inputs">
+						<input type="text" class="form-control additional_discount_percentage text-right" placeholder="% 0.00">
+						<input type="text" class="form-control discount_amount text-right" placeholder="${get_currency_symbol(this.frm.doc.currency)} 0.00">
 				</div>
-			</div>
+			</td>
 		`;
 	}
 
 	get_taxes_and_totals() {
 		return `
+		<td colspan="6">
 			<div class="list-item">
 				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Net Total')}</div>
 				<div class="list-item__content net-total">0.00</div>
@@ -974,6 +981,7 @@ class SalesOrderCart {
 				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Taxes')}</div>
 				<div class="list-item__content taxes">0.00</div>
 			</div>
+			</td>
 		`;
 	}
 
@@ -1086,13 +1094,11 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
-
 		this.customer_field.set_value(this.frm.doc.customer);
 	}
 
 	add_item(item) {
 		this.$empty_state.hide();
-
 		if (this.exists(item.item_code, item.batch_no)) {
 			// update quantity
 			this.update_item(item);
@@ -1115,13 +1121,12 @@ class SalesOrderCart {
 			const saleable_qty = this.get_item_details(item.item_code).saleable_qty;
 			const indicator_class = (!is_stock_item || saleable_qty >= item.qty) ? 'green' : 'red';
 			const remove_class = indicator_class == 'green' ? 'red' : 'green';
-
 			$item.find('.quantity input').val(item.qty);
 			$item.find('.discount').text(item.discount_percentage + '%');
 			$item.find('.rate input').val(item.rate);
-			$item.addClass(indicator_class);
-			$item.removeClass(remove_class);
-		} else {
+			$item.children('.item').addClass(indicator_class);
+			$item.children('.item').removeClass(remove_class);
+		} else { 
 			$item.remove();
 		}
 	}
@@ -1133,15 +1138,25 @@ class SalesOrderCart {
 		const batch_no = item.batch_no || '';
 
 		const me = this;
-		$(document).on('click', '.action.list-item__content a', function (event) {
+		$(document).on('click', '.action a', function (event) {
 			event.stopImmediatePropagation(); // to prevent firing of multiple events
 			let item_name = $(this).data('name');
 			let item_code = $(this).data('item-code');
+			let total_quantity;
 			frappe.confirm(__(`Are you sure you want to remove ${item_name} from the order?`),
 				 () => {
 					me.events.on_field_change(item_code, 'qty', 0);
+					me.update_qty_total();
+					setTimeout( () => {
+						total_quantity = me.$qty_total.find('.quantity-total').text();
+						if(total_quantity == 0) {
+							me.wrapper.find('.cart-items .empty-state').show();
+						}
+					}, 100)
 				}
-			);
+				);
+				
+				
 		})
 
 		$(document).on('click', '.list-item div', function (event) {
@@ -1157,41 +1172,32 @@ class SalesOrderCart {
 		})
 
 		return `
-			<div class="list-item indicator ${indicator_class}" data-item-code="${escape(item.item_code)}"
-				data-batch-no="${batch_no}" title="Item: ${item.item_name}  Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
-				<div class="item-name list-item__content list-item__content--flex-1.5 ellipsis" data-item-code="${item.item_code}">
+			<tr class="item" data-item-code="${escape(item.item_code)}" data-batch-no="${batch_no}" title="Item: ${item.item_name} || Available Qty: ${saleable_qty || 0} ${item.stock_uom}">
+				<td width: 50px class="item-name ellipsis indicator ${indicator_class}" data-item-code="${item.item_code}">
 					${item.item_name}
-				</div>
-				<div class="quantity list-item__content text-right" data-item-code="${item.item_code}">
-					${get_quantity_html(item.qty)}
-				</div>
-				<div class="discount list-item__content text-center" data-item-code="${item.item_code}">
-					${item.discount_percentage}%
-				</div>
-				<div class="rate list-item__content text-right" data-item-code="${item.item_code}">
-					${get_rate_html(item.rate)}
-				</div>
-				<div class="batch list-item__content text-right" data-item-code="${item.item_code}">
+				</td>
+				<td class="batch text-center" data-item-code="${item.item_code}">
 					${item.batch_no || "-"}
-				</div>
-				<div class="action list-item__content text-right action_button" data-item-code="${item.item_code}">
+				</td>
+				<td class="quantity" data-item-code="${item.item_code}">
+					${get_quantity_html(item.qty)}
+				</td>
+				<td class="discount text-right" data-item-code="${item.item_code}">
+					${item.discount_percentage}%
+				</td>
+				<td class="rate" data-item-code="${item.item_code}">
+					${get_rate_html(item.rate)}
+				</td>
+				<td width: 10px class="action action_button" data-item-code="${item.item_code}">
 					<a class="btn btn-danger btn-xs" title="Delete" data-name="${item.item_name}" data-item-code="${item.item_code}">X</a>
-				</div>
-			</div>
+				</td>
+			</tr>
 		`;
 
 		function get_quantity_html(value) {
 			return `
 				<div class="input-group input-group-xs">
-					<span class="input-group-btn">
-						<button class="btn btn-default btn-xs" data-action="increment">+</button>
-					</span>
-
 					<input class="form-control" type="number" value="${value}">
-
-					<span class="input-group-btn">
-						<button class="btn btn-default btn-xs" data-action="decrement">-</button>
-					</span>
 				</div>
 			`;
 		};
@@ -1199,15 +1205,7 @@ class SalesOrderCart {
 		function get_rate_html(rate){
 			return `
 			<div class="input-group input-group-xs">
-				<span class="input-group-btn">
-					<button class="btn btn-default btn-xs" data-action="increment_rate">+</button>
-				</span>
-
 				<input class="form-control" type="number" value="${rate}">
-
-				<span class="input-group-btn">
-					<button class="btn btn-default btn-xs" data-action="decrement_rate">-</button>
-				</span>
 			</div>`
 		}
 	}
@@ -1250,7 +1248,7 @@ class SalesOrderCart {
 		this.$cart_items.on('click',
 			'[data-action="increment"], [data-action="decrement"]', function() {
 				const $btn = $(this);
-				const $item = $btn.closest('.list-item[data-item-code]');
+				const $item = $btn.closest('.item[data-item-code]');
 				const item_code = unescape($item.attr('data-item-code'));
 				const action = $btn.attr('data-action');
 
@@ -1264,7 +1262,7 @@ class SalesOrderCart {
 		this.$cart_items.on('click',
 			'[data-action="increment_rate"], [data-action="decrement_rate"]', function() {
 				const $btn = $(this);
-				const $item = $btn.closest('.list-item[data-item-code]');
+				const $item = $btn.closest('.item[data-item-code]');
 				const item_code = unescape($item.data('item-code'));
 				const action = $btn.data('action');
 
@@ -1277,7 +1275,7 @@ class SalesOrderCart {
 
 		this.$cart_items.on('change', '.quantity input', function() {
 			const $input = $(this);
-			const $item = $input.closest('.list-item[data-item-code]');
+			const $item = $input.closest('.item[data-item-code]');
 			const item_code = unescape($item.attr('data-item-code'));
 			events.on_field_change(item_code, 'qty', flt($input.val()));
 		});
@@ -1288,13 +1286,13 @@ class SalesOrderCart {
 
 		this.$cart_items.on('change', '.rate input', function() {
 			const $input = $(this);
-			const $item = $input.closest('.list-item[data-item-code]');
+			const $item = $input.closest('.item[data-item-code]');
 			const item_code = unescape($item.data('item-code'));
 			events.on_field_change(item_code, 'rate', flt($input.val()));
 		});
 
 		// current item
-		this.$cart_items.on('click', '.list-item', function() {
+		this.$cart_items.on('click', '.item', function() {
 			me.set_selected_item($(this));
 		});
 
@@ -1336,13 +1334,13 @@ class SalesOrderCart {
 
 	set_selected_item($item) {
 		this.selected_item = $item;
-		this.$cart_items.find('.list-item').removeClass('current-item qty disc rate');
+		this.$cart_items.find('.item').removeClass('current-item qty disc rate');
 		this.selected_item.addClass('current-item');
 		this.events.on_select_change();
 	}
 
 	unselect_all() {
-		this.$cart_items.find('.list-item').removeClass('current-item qty disc rate');
+		this.$cart_items.find('.item').removeClass('current-item qty disc rate');
 		this.selected_item = null;
 		this.events.on_select_change();
 	}

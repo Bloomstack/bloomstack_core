@@ -10,5 +10,8 @@
 	],
 	"bloomstack_core/js/min/license_search.min.js": [
 		"public/js/bloomstack_core/license_search/license_search.js"
+	],
+	"css/reports.min.css": [
+		"public/css/reports.css"
 	]
 }
