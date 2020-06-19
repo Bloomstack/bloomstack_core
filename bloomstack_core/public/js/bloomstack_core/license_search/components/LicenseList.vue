@@ -8,7 +8,7 @@
 <script>
     import License from "./License.vue";
     import Paginate from "./../../components/paginate.vue";
-    import Vuex from 'vuex/dist/vuex';
+    import Vuex from './../../../../node_modules/vuex/dist/vuex';
 
     export default {
         components: {
@@ -23,6 +23,7 @@
         },
         methods: {
             refreshView(page=1) {
+
                 this.$store.dispatch('updatePage', page);
             }
         }

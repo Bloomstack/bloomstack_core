@@ -1,4 +1,4 @@
-import Vuex from 'vuex/dist/vuex.js';
+import Vuex from './../../../node_modules/vuex/dist/vuex';
 import license from './modules/license';
 
 
