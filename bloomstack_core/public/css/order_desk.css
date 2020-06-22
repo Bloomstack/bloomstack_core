@@ -19,6 +19,7 @@ body[data-route="order-desk"] .cart-wrapper table.cart-items {
   height: 200px;
   table-layout: fixed;
   margin: 0;
+  position: relative;
 }
 
 body[data-route="order-desk"] .cart-wrapper table.cart-items tbody tr {
@@ -39,8 +40,8 @@ body[data-route="order-desk"] .cart-wrapper table tbody div.selected-items {
 }
 
 body[data-route="order-desk"] .empty-state span {
-  top: 47%;
-  left: 25%;
+  top: 55%;
+  left: 45%;
 }
 
 body[data-route="order-desk"] .table > tbody > tr > td {
