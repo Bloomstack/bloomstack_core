@@ -25,7 +25,7 @@ def get_context(context):
 
 	context.print_doc = print_doc[print_doc.find('<body>') + len('<body>'):len(print_doc) - len('</body>')]
 	context.doc = frappe.get_doc(auth_req.linked_doctype, auth_req.linked_docname)
-	context.company = context.doc.company if hasattr(context.doc, 'company') else get_default_company()
+	context.company = context.doc.company_name
 	context.auth_req_docname = docname
 	context.authorizer_email = auth_req.authorizer_email
 	context.status = auth_req.status

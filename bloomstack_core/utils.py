@@ -131,7 +131,7 @@ def email_authorized_doc(authorization_request_name):
 	authorization_request = frappe.get_doc("Authorization Request", authorization_request_name)
 	authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
 	recipients = [authorization_request.authorizer_email]
-	company = authorized_doc.company if hasattr(authorized_doc, 'company') else get_default_company()
+	company = authorized_doc.company_name
 	subject = "Your signed {0} with {1}".format(authorized_doc.doctype, company)
 	message = frappe.render_template("templates/emails/authorization_request.html", {
 			"authorization_request": authorization_request,
