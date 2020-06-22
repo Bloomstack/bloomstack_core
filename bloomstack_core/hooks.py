@@ -184,10 +184,7 @@ doc_events = {
 		"before_submit": [
 			"bloomstack_core.hook_events.delivery_note.make_sales_invoice_for_delivery",
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
-		],
-		"on_submit": [
 			"bloomstack_core.hook_events.delivery_note.create_metrc_transfer_template",
-		],
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 			"bloomstack_core.compliance.package.create_package_from_delivery"
 		]
@@ -235,7 +232,7 @@ doc_events = {
 	},
 	"Sales Invoice": {
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status",
-		"on_submit": [
+		"before_submit": [
 			"bloomstack_core.hook_events.delivery_note.create_sales_receipt",
 		],
 	},

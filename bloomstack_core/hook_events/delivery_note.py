@@ -5,7 +5,7 @@
 from __future__ import unicode_literals
 
 import frappe
-from bloomstack_core.utils import get_metrc
+from bloomstack_core.utils import get_metrc, log_request
 from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
 from frappe import _
 from frappe.utils import get_link_to_form
@@ -36,6 +36,7 @@ def create_metrc_transfer_template(delivery_note, method):
 			return
 
 		response = metrc.transfers.templates.post(json = metrc_payload)
+		log_request(response.url, metrc_payload, response, "Delivery Note", delivery_note.name)
 
 		if not response.ok:
 			frappe.throw(_(response.raise_for_status()))
@@ -61,12 +62,14 @@ def map_metrc_payload(delivery_note):
 	return [{
 		"Name": delivery_note.name,
 		"TransporterFacilityLicenseNumber": settings.metrc_license_no,
+		"EstimatedDepartureDateTime": frappe.utils.now(),
+        "EstimatedArrivalDateTime": frappe.utils.now(),
 		"Destinations": [
 			{
 				"RecipientLicenseNumber": "DRIVER-0001",
 				"TransferTypeName": "Transfer",
-				"EstimatedDepartureDateTime": datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
-				"EstimatedArrivalDateTime": datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
+				"EstimatedDepartureDateTime": frappe.utils.now(),
+				"EstimatedArrivalDateTime": frappe.utils.now(),
 				"Packages": packages
 			}
 		]

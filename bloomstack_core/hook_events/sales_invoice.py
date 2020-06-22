@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 import frappe
 from frappe import _
-from bloomstack_core.utils import get_metrc
+from bloomstack_core.utils import get_metrc, log_request
 from datetime import datetime
 
 
@@ -27,6 +27,7 @@ def create_sales_receipt(sales_invoice, methods):
 			return
 
 		response = metrc.sales.receipts.post(json = metrc_payload)
+		log_request(response.url, metrc_payload, response, "Sales Invoice", sales_invoice.name)
 
 		if not response.ok:
 			frappe.throw(_(response.raise_for_status()))
@@ -52,7 +53,7 @@ def map_metrc_payload(sales_invoice):
 		return False
 
 	return [{
-		"SalesDateTime": datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
+		"SalesDateTime": frappe.utils.now(),
 		"SalesCustomerType": "Consumer",
 		"Transactions": transactions
 	}]
