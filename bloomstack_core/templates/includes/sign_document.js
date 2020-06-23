@@ -22,7 +22,7 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
-		var type = $("#signedDetails input").val();
+		var type = $("#signeeDetails input[name='type']:checked").val();
 		var designation = $("#signee_designation").val();
 
 		// proceed only if user has put signature and signee name.
