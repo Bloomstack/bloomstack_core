@@ -202,11 +202,13 @@ def get_existing_licensees(license, party_type):
 
 
 @frappe.whitelist(allow_guest=True)
-def authorize_document(sign=None, signee=None, docname=None):
+def authorize_document(sign=None, signee=None, docname=None, type=None, designation=None):
 	if frappe.db.exists("Authorization Request", docname):
 		authorization_request = frappe.get_doc("Authorization Request", docname)
 		authorization_request.signature = sign
 		authorization_request.signee_name = signee
+		authorization_request.type = type
+		authorization_request.designation = designation
 		authorization_request.status = "Approved"
 		authorization_request.flags.ignore_permissions = True
 		authorization_request.save()

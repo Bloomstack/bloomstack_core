@@ -22,6 +22,8 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
+		var type = $("#signedDetails input").val();
+		var designation = $("#signee_designation").val();
 
 		// proceed only if user has put signature and signee name.
 		if (signee && $sigdiv.jSignature('getData', 'native').length != 0) {
@@ -31,7 +33,9 @@ $(document).ready(function () {
 				args: {
 					sign: sign,
 					signee: signee,
-					docname: "{{ auth_req_docname }}"
+					docname: "{{ auth_req_docname }}",
+					type: type,
+					designation: designation
 				},
 				freeze: true,
 				callback: (r) => {
