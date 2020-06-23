@@ -125,7 +125,7 @@ def set_contract_company(contract, method):
 	contract.signed_by_company = frappe.session.user
 	company = frappe.db.get_value("Employee", {"user_id": contract.signed_by_company}, "company")
 	if company:
-		contract.db_set("company_name", company)
+		contract.db_set("company", company)
 	else:
-		contract.db_set("company_name", get_default_company())
+		contract.db_set("company", get_default_company())
 	
