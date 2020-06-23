@@ -8,6 +8,13 @@ $(document).ready(function () {
 	});   // inits the jSignature widget.
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
+	$('#signeeDetails input[type="radio"]').click(function(){
+		var inputValue = $(this).attr("value");
+		var targetBox = $("." + inputValue);
+		$(".box").not(targetBox).hide();
+		$(targetBox).show();
+	});
+
 	$(".refresh_signature").on("click", function () {
 		$sigdiv.jSignature("reset"); 
 	});

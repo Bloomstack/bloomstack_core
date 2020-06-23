@@ -205,6 +205,32 @@ table td div {
     font-size: 12px;
 }
 
+#signeeName input::placeholder,
+#signeeDetails input::placeholder {
+    color: #ececec;
+}
+
+#signeeDetails div.company_individual label {
+    display: block;
+}
+
+#signeeDetails p {
+    margin-bottom: 0;
+}
+
+#signeeDetails div input[type="radio"] {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+#signeeDetails div input[type='radio']:checked:after {
+    background-color: rgb(120, 184, 152);
+}
+
+#signeeDetails div.box {
+    display: none;
+}
+
 .btn {
     border-radius: 20px;
 }
@@ -241,7 +267,8 @@ table td div {
     padding: 0;
 }
 
-#signee {
+#signee,
+#signee_designation {
     border-radius: 3px;
     border: 1px solid #ececec;
     width: 100%;
