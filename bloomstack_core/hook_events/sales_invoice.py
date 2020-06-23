@@ -27,10 +27,22 @@ def create_sales_receipt(sales_invoice, methods):
 			return
 
 		response = metrc.sales.receipts.post(json = metrc_payload)
-		log_request(response.url, metrc_payload, response, "Sales Invoice", sales_invoice.name)
+
+		integration_request = frappe.new_doc("Integration Request")
+		integration_request.update({
+			"integration_type": "Remote",
+			"integration_request_service": "Metrc",
+			"reference_doctype": "Sales Invoice",
+			"reference_docname": sales_invoice.get("name")
+		})
 
 		if not response.ok:
+			integration_request.status = "Failed"
+			integration_request.error = response.text
 			frappe.throw(_(response.raise_for_status()))
+
+		integration_request.status = "Completed"
+		integration_request.save(ignore_permissions=True)
 
 def map_metrc_payload(sales_invoice):
 	settings = frappe.get_single("Compliance Settings")

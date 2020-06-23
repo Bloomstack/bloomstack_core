@@ -36,10 +36,22 @@ def create_metrc_transfer_template(delivery_note, method):
 			return
 
 		response = metrc.transfers.templates.post(json = metrc_payload)
-		log_request(response.url, metrc_payload, response, "Delivery Note", delivery_note.get("name"))
+
+		integration_request = frappe.new_doc("Integration Request")
+		integration_request.update({
+			"integration_type": "Remote",
+			"integration_request_service": "Metrc",
+			"reference_doctype": "Delivery Note",
+			"reference_docname": delivery_note.get("name")
+		})
 
 		if not response.ok:
+			integration_request.status = "Failed"
+			integration_request.error = response.text
 			frappe.throw(_(response.raise_for_status()))
+
+		integration_request.status = "Completed"
+		integration_request.save(ignore_permissions=True)
 
 
 def map_metrc_payload(delivery_note):
