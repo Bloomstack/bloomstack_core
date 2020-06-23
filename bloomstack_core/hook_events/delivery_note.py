@@ -24,7 +24,7 @@ def link_invoice_against_delivery_note(delivery_note, method):
 
 
 def create_metrc_transfer_template(delivery_note, method):
-	if delivery_note.is_return:
+	if delivery_note.get("is_return"):
 		return
 
 	metrc_payload = map_metrc_payload(delivery_note)
@@ -36,7 +36,7 @@ def create_metrc_transfer_template(delivery_note, method):
 			return
 
 		response = metrc.transfers.templates.post(json = metrc_payload)
-		log_request(response.url, metrc_payload, response, "Delivery Note", delivery_note.name)
+		log_request(response.url, metrc_payload, response, "Delivery Note", delivery_note.get("name"))
 
 		if not response.ok:
 			frappe.throw(_(response.raise_for_status()))
@@ -50,23 +50,23 @@ def map_metrc_payload(delivery_note):
 
 	packages = []
 
-	for item in delivery_note.items:
-		if item.package_tag:
+	for item in delivery_note.get("items"):
+		if item.get("package_tag"):
 			packages.append({
-				"PackageLabel": item.package_tag
+				"PackageLabel": item.get("package_tag")
 			})
 
 	if packages.__len__ == 0:
 		return False
 
 	return [{
-		"Name": delivery_note.name,
+		"Name": delivery_note.get("name"),
 		"TransporterFacilityLicenseNumber": settings.metrc_license_no,
 		"EstimatedDepartureDateTime": frappe.utils.now(),
-        "EstimatedArrivalDateTime": frappe.utils.now(),
+		"EstimatedArrivalDateTime": frappe.utils.now(),
 		"Destinations": [
 			{
-				"RecipientLicenseNumber": "DRIVER-0001",
+				"RecipientLicenseNumber": settings.metrc_license_no,
 				"TransferTypeName": "Transfer",
 				"EstimatedDepartureDateTime": frappe.utils.now(),
 				"EstimatedArrivalDateTime": frappe.utils.now(),

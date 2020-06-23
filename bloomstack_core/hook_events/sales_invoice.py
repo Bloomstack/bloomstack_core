@@ -15,7 +15,7 @@ def set_invoice_status(sales_invoice, method):
 	sales_invoice.set_indicator()
 
 def create_sales_receipt(sales_invoice, methods):
-	if sales_invoice.is_return:
+	if sales_invoice.get("is_return"):
 		return
 
 	metrc_payload = map_metrc_payload(sales_invoice)
@@ -40,13 +40,13 @@ def map_metrc_payload(sales_invoice):
 
 	transactions = []
 
-	for item in sales_invoice.items:
-		if item.package_tag:
+	for item in sales_invoice.get("items"):
+		if item.get("package_tag"):
 			transactions.append({
-				"PackageLabel": item.package_tag,
-				"Quantity": item.qty,
+				"PackageLabel": item.get("package_tag"),
+				"Quantity": item.get("qty"),
 				"UnitOfMeasure": "Grams",
-				"TotalAmount": item.amount
+				"TotalAmount": item.get("amount")
 			})
 
 	if len(transactions) == 0:
