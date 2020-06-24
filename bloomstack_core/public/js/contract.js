@@ -71,4 +71,13 @@ frappe.ui.form.on("Contract", {
 			frm.set_value("employee_name", null);
 		}
 	},
+
+	onload: (frm) => {
+		// Setting company field as Empty by default (Only for draft Contracts), 
+		// so that it only populates on submit
+		if (frm.doc.docstatus == 0){
+			frm.set_value("company", "")
+		}
+	}
+
 });
