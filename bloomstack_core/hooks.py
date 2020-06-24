@@ -233,7 +233,7 @@ doc_events = {
 	"Sales Invoice": {
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status",
 		"before_submit": [
-			"bloomstack_core.hook_events.delivery_note.create_sales_receipt"
+			"bloomstack_core.hook_events.sales_invoice.create_sales_receipt"
 		],
 	},
 	"Stock Entry": {
