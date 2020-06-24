@@ -4,9 +4,11 @@
 
 from __future__ import unicode_literals
 
+import json
+
 import frappe
-from frappe import _
 from bloomstack_core.utils import get_metrc
+from frappe import _
 
 
 def set_invoice_status(sales_invoice, method):
@@ -38,9 +40,12 @@ def create_metrc_sales_receipt(sales_invoice, methods):
 
 	if not response.ok:
 		integration_request.status = "Failed"
-		integration_request.error = response.text
+		integration_request.error = json.dumps(json.loads(response.text), indent=4, sort_keys=True)
 		integration_request.save(ignore_permissions=True)
-		frappe.throw(_(response.raise_for_status()))
+		frappe.db.commit()
+
+		for error in response.json():
+			frappe.throw(_(error.get("message")))
 	else:
 		integration_request.status = "Completed"
 		integration_request.save(ignore_permissions=True)

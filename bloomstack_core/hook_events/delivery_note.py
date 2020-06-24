@@ -4,6 +4,8 @@
 
 from __future__ import unicode_literals
 
+import json
+
 import frappe
 from bloomstack_core.utils import get_metrc
 from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
@@ -46,9 +48,12 @@ def create_metrc_transfer_template(delivery_note, method):
 
 	if not response.ok:
 		integration_request.status = "Failed"
-		integration_request.error = response.text
+		integration_request.error = json.dumps(json.loads(response.text), indent=4, sort_keys=True)
 		integration_request.save(ignore_permissions=True)
-		frappe.throw(_(response.raise_for_status()))
+		frappe.db.commit()
+
+		for error in response.json():
+			frappe.throw(_(error.get("message")))
 	else:
 		integration_request.status = "Completed"
 		integration_request.save(ignore_permissions=True)
