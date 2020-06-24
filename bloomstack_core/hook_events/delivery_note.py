@@ -4,12 +4,13 @@
 
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 import frappe
 from bloomstack_core.utils import get_metrc, log_request
 from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
 from frappe import _
 from frappe.utils import get_link_to_form
-from datetime import datetime
 
 
 def link_invoice_against_delivery_note(delivery_note, method):
@@ -24,34 +25,35 @@ def link_invoice_against_delivery_note(delivery_note, method):
 
 
 def create_metrc_transfer_template(delivery_note, method):
-	if delivery_note.get("is_return"):
+	if delivery_note.is_return:
 		return
 
-	metrc_payload = map_metrc_payload(delivery_note)
+	metrc = get_metrc()
+	if not metrc:
+		return
 
-	if metrc_payload:
-		metrc = get_metrc()
+	payload = map_metrc_payload(delivery_note)
+	if not payload:
+		return
 
-		if not metrc:
-			return
+	response = metrc.transfers.templates.post(json=payload)
 
-		response = metrc.transfers.templates.post(json = metrc_payload)
+	integration_request = frappe.new_doc("Integration Request")
+	integration_request.update({
+		"integration_type": "Remote",
+		"integration_request_service": "Metrc",
+		"reference_doctype": "Delivery Note",
+		"reference_docname": delivery_note.name
+	})
 
-		integration_request = frappe.new_doc("Integration Request")
-		integration_request.update({
-			"integration_type": "Remote",
-			"integration_request_service": "Metrc",
-			"reference_doctype": "Delivery Note",
-			"reference_docname": delivery_note.get("name")
-		})
-
-		if not response.ok:
-			integration_request.status = "Failed"
-			integration_request.error = response.text
-			frappe.throw(_(response.raise_for_status()))
-
+	if not response.ok:
+		integration_request.status = "Failed"
+		integration_request.error = response.text
+		frappe.throw(_(response.raise_for_status()))
+	else:
 		integration_request.status = "Completed"
-		integration_request.save(ignore_permissions=True)
+
+	integration_request.save(ignore_permissions=True)
 
 
 def map_metrc_payload(delivery_note):
@@ -61,18 +63,17 @@ def map_metrc_payload(delivery_note):
 		return
 
 	packages = []
-
-	for item in delivery_note.get("items"):
-		if item.get("package_tag"):
+	for item in delivery_note.items:
+		if item.package_tag:
 			packages.append({
-				"PackageLabel": item.get("package_tag")
+				"PackageLabel": item.package_tag
 			})
 
-	if packages.__len__ == 0:
-		return False
+	if not packages:
+		return
 
 	return [{
-		"Name": delivery_note.get("name"),
+		"Name": delivery_note.name,
 		"TransporterFacilityLicenseNumber": settings.metrc_license_no,
 		"EstimatedDepartureDateTime": frappe.utils.now(),
 		"EstimatedArrivalDateTime": frappe.utils.now(),
