@@ -83,7 +83,7 @@ def calculate_excise_tax(doc, compliance_items):
 			if tax.get("account_head") == get_company_default(doc.get("company"), "default_shipping_account"):
 				total_shipping_charge += tax.tax_amount
 
-	for item in doc.get("items"):
+	for item in doc.get("items", default=[]):
 		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
 		if not compliance_item:
 			continue
@@ -117,7 +117,7 @@ def calculate_excise_tax(doc, compliance_items):
 
 
 def set_taxes(doc, tax_row):
-	if not tax_row.get("tax_amount"):
+	if not tax_row or not tax_row.get("tax_amount"):
 		return
 
 	existing_tax_row = doc.get("taxes", filters={"account_head": tax_row.get('account_head')})
