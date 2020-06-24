@@ -4,10 +4,8 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime
-
 import frappe
-from bloomstack_core.utils import get_metrc, log_request
+from bloomstack_core.utils import get_metrc
 from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
 from frappe import _
 from frappe.utils import get_link_to_form
@@ -49,11 +47,11 @@ def create_metrc_transfer_template(delivery_note, method):
 	if not response.ok:
 		integration_request.status = "Failed"
 		integration_request.error = response.text
+		integration_request.save(ignore_permissions=True)
 		frappe.throw(_(response.raise_for_status()))
 	else:
 		integration_request.status = "Completed"
-
-	integration_request.save(ignore_permissions=True)
+		integration_request.save(ignore_permissions=True)
 
 
 def map_metrc_payload(delivery_note):

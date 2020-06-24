@@ -6,8 +6,7 @@ from __future__ import unicode_literals
 
 import frappe
 from frappe import _
-from bloomstack_core.utils import get_metrc, log_request
-from datetime import datetime
+from bloomstack_core.utils import get_metrc
 
 
 def set_invoice_status(sales_invoice, method):
@@ -40,11 +39,11 @@ def create_metrc_sales_receipt(sales_invoice, methods):
 	if not response.ok:
 		integration_request.status = "Failed"
 		integration_request.error = response.text
+		integration_request.save(ignore_permissions=True)
 		frappe.throw(_(response.raise_for_status()))
 	else:
 		integration_request.status = "Completed"
-
-	integration_request.save(ignore_permissions=True)
+		integration_request.save(ignore_permissions=True)
 
 
 def get_metrc_payload(sales_invoice):
