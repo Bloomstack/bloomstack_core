@@ -1,5 +1,6 @@
 import frappe
 from erpnext.selling.doctype.quotation.quotation import make_sales_order
+from erpnext import get_default_company
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import add_days, getdate, now
@@ -118,3 +119,9 @@ def get_data(data):
 			}
 		]
 	})
+
+
+def set_contract_company(contract, method):
+	contract.signed_by_company = frappe.session.user
+	company = frappe.db.get_value("Employee", {"user_id": contract.signed_by_company}, "company")
+	contract.company = company or get_default_company()
