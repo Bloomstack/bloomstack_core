@@ -189,6 +189,11 @@ table td div {
     border-bottom: 0px !important;
 }
 
+.third-party-sign,
+.Company.box {
+    margin-top: 15px;
+}
+
 #signature {
     border: 1px solid #ececec;
     position: relative;
@@ -311,4 +316,5 @@ ul.actions li a.approveBtn {
 
 #signeeName {
     text-align: center;
+    margin-bottom: 15px;
 }

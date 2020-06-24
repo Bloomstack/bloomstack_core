@@ -22,11 +22,11 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
-		var type = $("#signeeDetails input[name='type']:checked").val();
+		var type_of_party = $("#signeeDetails input[name='type']:checked").val();
 		var designation = $("#signee_designation").val();
 
 		// proceed only if user has put signature and signee name.
-		if (signee && $sigdiv.jSignature('getData', 'native').length != 0) {
+		if (signee && $sigdiv.jSignature('getData', 'native').length && designation != 0) {
 			$(".user-signature").hide();
 			frappe.call({
 				method: "bloomstack_core.utils.authorize_document",
@@ -34,7 +34,7 @@ $(document).ready(function () {
 					sign: sign,
 					signee: signee,
 					docname: "{{ auth_req_docname }}",
-					type: type,
+					type_of_party: type_of_party,
 					designation: designation
 				},
 				freeze: true,
@@ -54,7 +54,7 @@ $(document).ready(function () {
 			});
 		}
 		else {
-			frappe.throw(__("Please enter your name and signature"));
+			frappe.throw(__("Please enter your name and signature and designation"));
 		}
 	});
 
