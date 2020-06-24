@@ -1,4 +1,12 @@
 frappe.ui.form.on("Contract", {
+	onload: (frm) => {
+		// Setting company field as Empty by default (Only for draft Contracts),
+		// so that it only populates on submit
+		if (frm.doc.docstatus == 0) {
+			frm.set_value("company", "");
+		}
+	},
+
 	refresh: (frm) => {
 		// pull users for the set party
 		frm.set_query("party_user", (doc) => {
@@ -10,7 +18,7 @@ frappe.ui.form.on("Contract", {
 				}
 			}
 		});
-		
+
 		if (frm.doc.docstatus === 1 && !frm.doc.customer_signature) {
 			frm.add_custom_button(__("Authorize"), () => {
 				frappe.prompt([
@@ -50,14 +58,14 @@ frappe.ui.form.on("Contract", {
 			}).addClass("btn-primary");
 		}
 	},
-	
+
 	before_submit: (frm) => {
 		if(!frm.doc.signee_company) {
 			frm.scroll_to_field('signee_company');
 			frappe.throw("Please sign the contract before submiting it.")
 		}
 	},
-	
+
 	party_name: (frm) => {
 		if (frm.doc.party_type == 'Employee' && frm.doc.party_name) {
 			frappe.db.get_value("Employee", { "name": frm.doc.party_name }, "employee_name", (r) => {
@@ -70,5 +78,5 @@ frappe.ui.form.on("Contract", {
 		} else {
 			frm.set_value("employee_name", null);
 		}
-	},
+	}
 });
