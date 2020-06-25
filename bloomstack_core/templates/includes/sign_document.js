@@ -8,7 +8,7 @@ $(document).ready(function () {
 	});   // inits the jSignature widget.
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
-	$('#signeeDetails input[type="radio"]').click(function(){
+	$("#signeeDetails input[type='radio']").click(function(){
 		var inputValue = $(this).attr("value").toLowerCase();
 		var targetBox = $("." + inputValue);
 		$(".box").not(targetBox).hide();
@@ -23,11 +23,12 @@ $(document).ready(function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
 		var party_business_type = $("#signeeDetails input[name='type']:checked").val();
+		var designation;
 		if(party_business_type == "PartyTypeIndividual") {
-			var designation = "NA"
+			designation = "NA";
 		}
 		else {
-			var designation = $("#signee_designation").val();
+			designation = $("#signee_designation").val();
 		}
 
 		// proceed only if user has put signature and signee name.
@@ -59,8 +60,6 @@ $(document).ready(function () {
 			});
 		}
 		else {
-			console.log(signee);
-			console.log(designation);
 			frappe.throw(__("Please enter your name, signature and designation"));
 		}
 	});
