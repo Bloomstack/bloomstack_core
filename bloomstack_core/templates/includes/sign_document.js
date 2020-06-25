@@ -9,7 +9,7 @@ $(document).ready(function () {
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
 	$('#signeeDetails input[type="radio"]').click(function(){
-		var inputValue = $(this).attr("value");
+		var inputValue = $(this).attr("value").toLowerCase();
 		var targetBox = $("." + inputValue);
 		$(".box").not(targetBox).hide();
 		$(targetBox).show();
@@ -22,11 +22,11 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
-		var type_of_party = $("#signeeDetails input[name='type']:checked").val();
+		var party_business_type = $("#signeeDetails input[name='type']:checked").val();
 		var designation = $("#signee_designation").val();
 
 		// proceed only if user has put signature and signee name.
-		if (signee && $sigdiv.jSignature('getData', 'native').length && designation != 0) {
+		if (signee && $sigdiv.jSignature('getData', 'native').length && designation) {
 			$(".user-signature").hide();
 			frappe.call({
 				method: "bloomstack_core.utils.authorize_document",
@@ -34,7 +34,7 @@ $(document).ready(function () {
 					sign: sign,
 					signee: signee,
 					docname: "{{ auth_req_docname }}",
-					type_of_party: type_of_party,
+					party_business_type: party_business_type,
 					designation: designation
 				},
 				freeze: true,
@@ -54,7 +54,7 @@ $(document).ready(function () {
 			});
 		}
 		else {
-			frappe.throw(__("Please enter your name and signature and designation"));
+			frappe.throw(__("Please enter your name, signature and designation"));
 		}
 	});
 
