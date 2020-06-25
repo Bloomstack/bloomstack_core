@@ -212,7 +212,7 @@ table td div {
 
 #signeeName input::placeholder,
 #signeeDetails input::placeholder {
-    color: #ececec;
+    color: #cfcfcf;
 }
 
 #signeeDetails div.company_individual label {

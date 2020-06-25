@@ -23,7 +23,12 @@ $(document).ready(function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
 		var party_business_type = $("#signeeDetails input[name='type']:checked").val();
-		var designation = $("#signee_designation").val();
+		if(party_business_type == "PartyTypeIndividual") {
+			var designation = "NA"
+		}
+		else {
+			var designation = $("#signee_designation").val();
+		}
 
 		// proceed only if user has put signature and signee name.
 		if (signee && $sigdiv.jSignature('getData', 'native').length && designation) {
@@ -54,6 +59,8 @@ $(document).ready(function () {
 			});
 		}
 		else {
+			console.log(signee);
+			console.log(designation);
 			frappe.throw(__("Please enter your name, signature and designation"));
 		}
 	});
