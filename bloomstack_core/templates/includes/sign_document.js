@@ -9,13 +9,14 @@ $(document).ready(function () {
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
 	$("#signeeDetails input[type='radio']").click(function(){
-		var inputValue = $(this).attr("value").toLowerCase();
-		var targetBox = $("." + inputValue);
-		$(".box").not(targetBox).hide();
-		$(targetBox).show();
+		if ( $(this).attr('value') == 'PartyTypeCompany' ) {
+			$('.partytypecompany').show();
+		} else {
+			$('.partytypecompany').hide();
+		}
 	});
 
-	$(".refresh_signature").on("click", function () {
+	$(".refresh-signature").on("click", function () {
 		$sigdiv.jSignature("reset"); 
 	});
 
@@ -24,15 +25,15 @@ $(document).ready(function () {
 		var signee = $("#signee").val();
 		var party_business_type = $("#signeeDetails input[name='type']:checked").val();
 		var designation;
-		if(party_business_type == "PartyTypeIndividual") {
+		if(party_business_type === "PartyTypeIndividual") {
 			designation = "NA";
 		}
 		else {
-			designation = $("#signee_designation").val();
+			designation = $("#signee-designation").val();
 		}
 
 		// proceed only if user has put signature and signee name.
-		if (signee && $sigdiv.jSignature('getData', 'native').length && designation) {
+		if (signee && $sigdiv.jSignature("getData", "native").length > 0 && designation) {
 			$(".user-signature").hide();
 			frappe.call({
 				method: "bloomstack_core.utils.authorize_document",

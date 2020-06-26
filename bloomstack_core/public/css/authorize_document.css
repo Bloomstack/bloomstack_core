@@ -199,7 +199,7 @@ table td div {
     position: relative;
 }
 
-#signature .refresh_signature {
+#signature .refresh-signature {
     position: absolute;
     bottom: 3px;
     right: 5px;
@@ -215,7 +215,7 @@ table td div {
     color: #cfcfcf;
 }
 
-#signeeDetails div.company_individual label {
+#signeeDetails div.company-individual label {
     display: block;
 }
 
@@ -232,7 +232,7 @@ table td div {
     background-color: rgb(120, 184, 152);
 }
 
-#signeeDetails div.box {
+#signeeDetails div.partytypecompany {
     display: none;
 }
 
@@ -273,7 +273,7 @@ table td div {
 }
 
 #signee,
-#signee_designation {
+#signee-designation {
     border-radius: 3px;
     border: 1px solid #ececec;
     width: 100%;

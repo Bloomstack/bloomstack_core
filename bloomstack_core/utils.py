@@ -214,7 +214,11 @@ def authorize_document(sign=None, signee=None, docname=None, party_business_type
 		authorization_request.save()
 
 		authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
-		if hasattr(authorized_doc, "is_signed") and hasattr(authorized_doc, "customer_signature") and hasattr(authorized_doc, "signee") and hasattr(authorized_doc, "party_business_type") and hasattr(authorized_doc, "designation"):
+		if hasattr(authorized_doc, "is_signed") and \
+			 hasattr(authorized_doc, "customer_signature") and \
+			 hasattr(authorized_doc, "signee") and \
+			 hasattr(authorized_doc, "party_business_type") and \
+			 hasattr(authorized_doc, "designation"):
 			if authorized_doc.is_signed == 0:
 				authorized_doc.is_signed = 1
 				authorized_doc.customer_signature = sign
