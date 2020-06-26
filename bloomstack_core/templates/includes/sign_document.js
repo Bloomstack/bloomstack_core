@@ -9,7 +9,7 @@ $(document).ready(function () {
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
 	$("#signeeDetails input[type='radio']").click(function(){
-		if ( $(this).attr("value") === "PartyTypeCompany" ) {
+		if ( $(this).data("party-type") === "PartyTypeCompany" ) {
 			$(".partytypecompany").show();
 		} else {
 			$(".partytypecompany").hide();
@@ -23,7 +23,7 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
-		var party_business_type = $("#signeeDetails input[name='type']:checked").val();
+		var party_business_type = $("#signeeDetails input[name='type']:checked").data("party-type");
 		var designation;
 		if(party_business_type === "PartyTypeIndividual") {
 			designation = "NA";
