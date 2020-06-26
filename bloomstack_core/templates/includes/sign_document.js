@@ -10,7 +10,6 @@ $(document).ready(function () {
 
 	$("#signeeDetails input[type='radio']").click(function(){
 		if ( $(this).data("party-type") === "party-type-company" ) {
-			console.log($(this).data("party-type"));
 			$(".party-type-company").show();
 		} else {
 			$(".party-type-company").hide();
