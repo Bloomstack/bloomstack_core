@@ -22,26 +22,26 @@
 			<div class="col-lg-5">
 				<ul class="user-signature">
 					{% if status not in ("Approved", "Rejected") %}
-						<div>Your Name:</div>
+						<div>Full Name:</div>
 						<div id="signeeName">
-							<input type="text" id="signee" value="" required placeholder="Please enter full name"/>
+							<input type="text" id="signee" value="" placeholder="Please enter your full name" required/>
 						</div>
 						<div id="signeeDetails">
-							<p>Please tell us are you an individual or a company</p>
+							<p>Are you part of a company?</p>
 							<div class="company-individual">
-								<label><input type="radio" name="type" value="Individual" required checked data-party-type = "party-type-individual"> Individual</label>
-								<label><input type="radio" name="type" value="Company" required data-party-type = "party-type-company"> Company</label>
+								<label><input type="radio" name="type" value="Individual" data-party-type="Individual" required checked>Individual</label>
+								<label><input type="radio" name="type" value="Company" data-party-type="Company" required>Company</label>
 							</div>
 							<div class="party-type-company">
-								<div>Your Designation:</div>
-								<input type="text" id="signee-designation" required placeholder="Please enter designation"/>
+								<div>Designation:</div>
+								<input type="text" id="signee-designation" placeholder="Please enter your designation" required/>
 							</div>
 						</div>
 						<div class="third-party-sign">
 						<div>Signature:</div>
 							<div id="signature">
 								<a href="#" type="button" class="signature-reset btn refresh-signature">
-									<i class = "fa fa-repeat"></i>
+									<i class="fa fa-repeat"></i>
 								</a>
 						</div>
 						</div></br>
