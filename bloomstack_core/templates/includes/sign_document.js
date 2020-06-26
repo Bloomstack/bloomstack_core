@@ -9,10 +9,11 @@ $(document).ready(function () {
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
 	$("#signeeDetails input[type='radio']").click(function(){
-		if ( $(this).data("party-type") === "PartyTypeCompany" ) {
-			$(".partytypecompany").show();
+		if ( $(this).data("party-type") === "party-type-company" ) {
+			console.log($(this).data("party-type"));
+			$(".party-type-company").show();
 		} else {
-			$(".partytypecompany").hide();
+			$(".party-type-company").hide();
 		}
 	});
 
@@ -23,9 +24,9 @@ $(document).ready(function () {
 	$("#approveDocument").on("click", function () {
 		var sign = $sigdiv.jSignature("getData");
 		var signee = $("#signee").val();
-		var party_business_type = $("#signeeDetails input[name='type']:checked").data("party-type");
+		var party_business_type = $("#signeeDetails input[name='type']:checked").val();
 		var designation;
-		if(party_business_type === "PartyTypeIndividual") {
+		if(party_business_type === "Individual") {
 			designation = "NA";
 		}
 		else {
