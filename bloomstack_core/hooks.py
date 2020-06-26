@@ -185,7 +185,8 @@ doc_events = {
 		]
 	},
 	"Sales Order": {
-		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item"
+		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item",
+		"on_update_after_submit": "bloomstack_core.hook_events.sales_order.check_overdue_status"
 	},
 	"Delivery Trip": {
 		"validate": [
@@ -258,13 +259,14 @@ doc_events = {
 # ---------------
 
 scheduler_events = {
-	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
-	],
 	"all": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request"
+	],
+	"daily": [
+		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract",
+		"bloomstack_core.hook_events.sales_order.update_order_status"
 	]
 }
 

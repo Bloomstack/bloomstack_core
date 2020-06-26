@@ -4,7 +4,7 @@ import frappe
 from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
 from erpnext.stock.doctype.batch.batch import get_batch_qty
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import flt, getdate, today
 
 
 def create_sales_invoice_against_contract():
@@ -78,3 +78,35 @@ def validate_batch_item(sales_order, method):
 					batch that has more than {3} qty available, or split the row to sell
 					from multiple batches.
 				""").format(item.idx, item.batch_no, batch_qty, qty))
+
+
+def check_overdue_status(sales_order, method):
+	overdue_conditions = [
+		sales_order.docstatus == 1,
+		sales_order.status not in ["On Hold", "Closed", "Completed"],
+		sales_order.skip_delivery_note == 0,
+		flt(sales_order.per_delivered, 6) < 100,
+		getdate(sales_order.delivery_date) < getdate(today()),
+	]
+
+	is_overdue = all(overdue_conditions)
+	sales_order.db_set("is_overdue", is_overdue)
+
+
+def update_order_status():
+	"""
+		Daily scheduler to check if a Sales Order has become overdue
+	"""
+
+	frappe.db.sql("""
+		UPDATE
+			`tabSales Order`
+		SET
+			is_overdue = 1
+		WHERE
+			docstatus = 1
+				AND delivery_date < CURDATE()
+				AND status NOT IN ("On Hold", "Closed", "Completed")
+				AND skip_delivery_note = 0
+				AND per_delivered < 100
+	""")
