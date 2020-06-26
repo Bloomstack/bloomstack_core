@@ -9,10 +9,10 @@ $(document).ready(function () {
 	$sigdiv.jSignature("reset");   // clears the canvas and rerenders the decor on it.
 
 	$("#signeeDetails input[type='radio']").click(function(){
-		if ( $(this).attr('value') == 'PartyTypeCompany' ) {
-			$('.partytypecompany').show();
+		if ( $(this).attr("value") === "PartyTypeCompany" ) {
+			$(".partytypecompany").show();
 		} else {
-			$('.partytypecompany').hide();
+			$(".partytypecompany").hide();
 		}
 	});
 
