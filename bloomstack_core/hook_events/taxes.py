@@ -50,7 +50,12 @@ def calculate_cannabis_tax(doc, method):
 def calculate_cultivation_tax_for_raw_material(doc, compliance_items):
 	cultivation_tax = 0
 
+
 	for item in doc.get("items"):
+		# compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
+		# if not compliance_item.based_on_compostion:
+		# 	continue
+
 		flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
 		leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
 		plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
