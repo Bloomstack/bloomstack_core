@@ -14,7 +14,6 @@
   "requires_lab_tests",
   "enable_cultivation_tax",
   "enable_metrc",
-  "based_on_composition",
   "sb_item_details",
   "metrc_id",
   "metrc_item_category",
@@ -105,14 +104,13 @@
    "fieldname": "item_category",
    "fieldtype": "Select",
    "label": "Item Category",
-   "options": "\nDry Flower\nDry Leaf\nFresh Plant"
+   "options": "\nDry Flower\nDry Leaf\nFresh Plant\nBased on Raw Materials"
   },
   {
    "fieldname": "bloomtrace_id",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Bloomtrace ID"
-  },
   {
    "default": "0",
    "fieldname": "requires_lab_tests",
@@ -123,12 +121,6 @@
  "links": [],
  "modified": "2020-06-18 08:53:12.376502",
  "modified_by": "Administrator",
- "module": "Bloomstack Core",
- "name": "Compliance Item",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
    "delete": 1,
    "email": 1,
    "export": 1,

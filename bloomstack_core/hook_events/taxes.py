@@ -52,20 +52,21 @@ def calculate_cultivation_tax_for_raw_material(doc, compliance_items):
 
 
 	for item in doc.get("items"):
-		# compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
-		# if not compliance_item.based_on_compostion:
-		# 	continue
+		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
+		if not compliance_item or not compliance_item.enable_cultivation_tax:
+			continue
 
 		flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
 		leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
 		plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
 
-		if item.get("flower_weight"):
-			cultivation_tax += (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
-		if item.get("leave_weight"):
-			cultivation_tax += (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
-		if item.get("plant_weight"):
-			cultivation_tax += (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
+		if compliance_item.item_category == "Based on Raw Materials":
+			if item.get("flower_weight"):
+				cultivation_tax += (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
+			if item.get("leave_weight"):
+				cultivation_tax += (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
+			if item.get("plant_weight"):
+				cultivation_tax += (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
 
 	raw_material_cultivation_tax_row = {
 		'category': 'Total',
