@@ -202,21 +202,29 @@ def get_existing_licensees(license, party_type):
 
 
 @frappe.whitelist(allow_guest=True)
-def authorize_document(sign=None, signee=None, docname=None):
+def authorize_document(sign=None, signee=None, docname=None, party_business_type=None, designation=None):
 	if frappe.db.exists("Authorization Request", docname):
 		authorization_request = frappe.get_doc("Authorization Request", docname)
 		authorization_request.signature = sign
 		authorization_request.signee_name = signee
+		authorization_request.party_business_type = party_business_type
+		authorization_request.designation = designation
 		authorization_request.status = "Approved"
 		authorization_request.flags.ignore_permissions = True
 		authorization_request.save()
 
 		authorized_doc = frappe.get_doc(authorization_request.linked_doctype, authorization_request.linked_docname)
-		if hasattr(authorized_doc, "is_signed") and hasattr(authorized_doc, "customer_signature") and hasattr(authorized_doc, "signee"):
+		if hasattr(authorized_doc, "is_signed") and \
+			 hasattr(authorized_doc, "customer_signature") and \
+			 hasattr(authorized_doc, "signee") and \
+			 hasattr(authorized_doc, "party_business_type") and \
+			 hasattr(authorized_doc, "designation"):
 			if authorized_doc.is_signed == 0:
 				authorized_doc.is_signed = 1
 				authorized_doc.customer_signature = sign
 				authorized_doc.signee = signee
+				authorized_doc.party_business_type = party_business_type
+				authorized_doc.designation = designation
 				authorized_doc.signed_on = frappe.utils.now()
 
 		authorized_doc.flags.ignore_permissions = True
