@@ -14,6 +14,7 @@
   "requires_lab_tests",
   "enable_cultivation_tax",
   "enable_metrc",
+  "based_on_composition",
   "sb_item_details",
   "metrc_id",
   "metrc_item_category",
