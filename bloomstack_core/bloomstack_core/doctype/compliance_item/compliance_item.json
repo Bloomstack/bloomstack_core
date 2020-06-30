@@ -111,6 +111,7 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Bloomtrace ID"
+  },
   {
    "default": "0",
    "fieldname": "requires_lab_tests",
@@ -119,8 +120,14 @@
   }
  ],
  "links": [],
- "modified": "2020-06-18 08:53:12.376502",
+ "modified": "2020-06-30 02:10:55.742394",
  "modified_by": "Administrator",
+ "module": "Bloomstack Core",
+ "name": "Compliance Item",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
    "delete": 1,
    "email": 1,
    "export": 1,
