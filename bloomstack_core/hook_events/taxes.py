@@ -20,8 +20,6 @@ def calculate_cannabis_tax(doc, method):
 
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt"):
 		# calculate cultivation tax for buying cycle
-		raw_material_cultivation_tax_row = calculate_cultivation_tax_for_raw_material(doc, compliance_items)
-		set_taxes(doc, raw_material_cultivation_tax_row)
 		cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items)
 		set_taxes(doc, cultivation_tax_row)
 	elif doc.doctype in ("Quotation", "Sales Order", "Sales Invoice", "Delivery Note"):
@@ -47,39 +45,6 @@ def calculate_cannabis_tax(doc, method):
 			excise_tax_row = calculate_excise_tax(doc, compliance_items)
 			set_taxes(doc, excise_tax_row)
 
-def calculate_cultivation_tax_for_raw_material(doc, compliance_items):
-	cultivation_tax = 0
-
-
-	for item in doc.get("items"):
-		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
-		if not compliance_item or not compliance_item.enable_cultivation_tax:
-			continue
-
-		flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
-		leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
-		plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
-
-		if compliance_item.item_category == "Based on Raw Materials":
-			if item.get("flower_weight"):
-				cultivation_tax += (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
-			if item.get("leave_weight"):
-				cultivation_tax += (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
-			if item.get("plant_weight"):
-				cultivation_tax += (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
-
-	raw_material_cultivation_tax_row = {
-		'category': 'Total',
-		'charge_type': 'Actual',
-		'add_deduct_tax': 'Deduct',
-		'description': 'Cultivation Tax',
-		'account_head': get_company_default(doc.get("company"), "default_cultivation_tax_account"),
-		'tax_amount': cultivation_tax
-	}
-
-	return raw_material_cultivation_tax_row
-
-
 def calculate_cultivation_tax(doc, compliance_items):
 	cultivation_tax = 0
 
@@ -96,6 +61,19 @@ def calculate_cultivation_tax(doc, compliance_items):
 			cultivation_tax += (qty_in_ounces * DRY_LEAF_TAX_RATE)
 		elif compliance_item.item_category == "Fresh Plant":
 			cultivation_tax += (qty_in_ounces * FRESH_PLANT_TAX_RATE)
+		elif compliance_item.item_category == "Based on Raw Materials":
+			#calculate cultivation tax based on weight of raw material used for products.
+
+			flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
+			leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
+			plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
+
+			if item.get("flower_weight"):
+				cultivation_tax += (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
+			if item.get("leave_weight"):
+				cultivation_tax += (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
+			if item.get("plant_weight"):
+				cultivation_tax += (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
 
 	cultivation_tax_row = {
 		'category': 'Total',
