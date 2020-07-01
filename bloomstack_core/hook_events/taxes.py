@@ -62,6 +62,21 @@ def calculate_cultivation_tax(doc, compliance_items):
 			cultivation_tax += (qty_in_ounces * DRY_LEAF_TAX_RATE)
 		elif compliance_item.item_category == "Fresh Plant":
 			cultivation_tax += (qty_in_ounces * FRESH_PLANT_TAX_RATE)
+		elif compliance_item.item_category == "Based on Raw Materials":
+			# calculate cultivation tax based on weight of raw materials
+
+			if not item.get("cultivation_weight_uom"):
+				frappe.throw(_("Row #{0}: Please set a cultivation weight UOM".format(item.get("idx"))))
+
+			if item.get("flower_weight"):
+				flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
+				cultivation_tax += (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
+			if item.get("leave_weight"):
+				leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
+				cultivation_tax += (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
+			if item.get("plant_weight"):
+				plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
+				cultivation_tax += (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
 
 	cultivation_tax_row = {
 		'category': 'Total',
