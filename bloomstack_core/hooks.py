@@ -40,7 +40,8 @@ app_include_js = [
 	"/assets/bloomstack_core/js/query_report.js",
 	"/assets/bloomstack_core/js/banner.js",
 	"/assets/bloomstack_core/js/utils.js",
-	"/assets/js/address_and_contact.min.js"
+	"/assets/js/address_and_contact.min.js",
+	"/assets/js/bloomstack_desk.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
