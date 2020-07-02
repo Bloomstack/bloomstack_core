@@ -208,6 +208,10 @@ doc_events = {
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
 	},
+	"Payment Entry": {
+		"on_submit": "bloomstack_core.hook_events.payment_entry.update_delivery_note_status",
+		"on_cancel": "bloomstack_core.hook_events.payment_entry.update_delivery_note_status"
+	},
 	"Pick List": {
 		"on_submit": [
 			"bloomstack_core.hook_events.pick_list.update_order_package_tag",
