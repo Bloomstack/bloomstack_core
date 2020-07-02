@@ -253,6 +253,10 @@ doc_events = {
 			'bloomstack_core.hook_events.utils.validate_license_expiry',
 			'bloomstack_core.hook_events.taxes.calculate_cannabis_tax'
 		]
+	},
+	("Sales Order", "Delivery Note"): {
+		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
+		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
 	}
 }
 

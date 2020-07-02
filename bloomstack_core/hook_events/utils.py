@@ -1,8 +1,8 @@
 import frappe
 from frappe import _
 from frappe.core.utils import find
-from frappe.utils import date_diff, getdate, nowdate, today
 from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
+from frappe.utils import date_diff, getdate, nowdate, to_timedelta, today
 
 
 def validate_license_expiry(doc, method):
@@ -60,6 +60,22 @@ def validate_expired_licenses(doc, method):
 			expired_since = date_diff(getdate(today()), getdate(row.license_expiry_date))
 			frappe.msgprint(_("Row #{0}: License {1} has expired {2} days ago".format(
 				row.idx, frappe.bold(row.license), frappe.bold(expired_since))))
+
+
+def validate_delivery_window(doc, method):
+	if not (doc.get("delivery_start_time") and doc.get("delivery_end_time")):
+		return
+
+	if doc.get("customer"):
+		delivery_start_time = frappe.db.get_value("Customer", doc.get("customer"), "delivery_start_time")
+		delivery_end_time = frappe.db.get_value("Customer", doc.get("customer"), "delivery_end_time")
+
+		if not (delivery_start_time and delivery_end_time):
+			return
+
+		if to_timedelta(doc.delivery_start_time) < delivery_start_time \
+			or to_timedelta(doc.delivery_end_time) > delivery_end_time:
+			frappe.throw(_("This document's delivery window is outside the customer's default timings"))
 
 
 def get_default_license(party_type, party_name):
