@@ -262,6 +262,9 @@ doc_events = {
 	("Sales Order", "Delivery Note"): {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
+	},
+	"Production Plan": {
+		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
 	}
 }
 
