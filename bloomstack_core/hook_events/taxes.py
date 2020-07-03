@@ -74,25 +74,54 @@ def calculate_cultivation_tax(doc, compliance_items):
 
 			if item.get("flower_weight"):
 				flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
-				cultivation_tax += (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
-			if item.get("leave_weight"):
+				cultivation_tax_flower = (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
+				cultivation_tax_row_flower = {
+					'category': 'Total',
+					'charge_type': 'Actual',
+					'add_deduct_tax': 'Deduct',
+					'description': 'Cultivation Tax',
+					'account_head': get_company_default(doc.get("company"), "default_cultivation_tax_account_flower"),
+					'tax_amount': cultivation_tax_flower
+				}
+				set_taxes(doc, cultivation_tax_row_flower)
+
+			if item.get("leaf_weight"):
 				leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
-				cultivation_tax += (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
+				cultivation_tax_leaf = (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
+				cultivation_tax_row_leaf = {
+					'category': 'Total',
+					'charge_type': 'Actual',
+					'add_deduct_tax': 'Deduct',
+					'description': 'Cultivation Tax',
+					'account_head': get_company_default(doc.get("company"), "default_cultivation_tax_account_leaf"),
+					'tax_amount': cultivation_tax_leaf
+				}
+				set_taxes(doc, cultivation_tax_row_leaf)
+
 			if item.get("plant_weight"):
 				plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
-				cultivation_tax += (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
+				cultivation_tax_plant= (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
+				cultivation_tax_row_plant = {
+					'category': 'Total',
+					'charge_type': 'Actual',
+					'add_deduct_tax': 'Deduct',
+					'description': 'Cultivation Tax',
+					'account_head': get_company_default(doc.get("company"), "default_cultivation_tax_account_plant"),
+					'tax_amount': cultivation_tax_plant
+				}
+				set_taxes(doc, cultivation_tax_row_plant)
 
-	print("accounts", accounts)
-	cultivation_tax_row = {
-		'category': 'Total',
-		'charge_type': 'Actual',
-		'add_deduct_tax': 'Deduct',
-		'description': 'Cultivation Tax',
-		'account_head': accounts,
-		'tax_amount': cultivation_tax
-	}
+	if accounts:
+		cultivation_tax_row = {
+			'category': 'Total',
+			'charge_type': 'Actual',
+			'add_deduct_tax': 'Deduct',
+			'description': 'Cultivation Tax',
+			'account_head': accounts,
+			'tax_amount': cultivation_tax
+		}
 
-	return cultivation_tax_row
+		return cultivation_tax_row
 
 
 def calculate_excise_tax(doc, compliance_items):
