@@ -48,6 +48,7 @@ def calculate_cannabis_tax(doc, method):
 
 def calculate_cultivation_tax(doc, compliance_items):
 	cultivation_tax = 0
+	accounts = " "
 
 	for item in doc.get("items"):
 		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
@@ -58,10 +59,13 @@ def calculate_cultivation_tax(doc, compliance_items):
 
 		if compliance_item.item_category == "Dry Flower":
 			cultivation_tax += (qty_in_ounces * DRY_FLOWER_TAX_RATE)
+			accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_flower")
 		elif compliance_item.item_category == "Dry Leaf":
 			cultivation_tax += (qty_in_ounces * DRY_LEAF_TAX_RATE)
+			accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_leaf")
 		elif compliance_item.item_category == "Fresh Plant":
 			cultivation_tax += (qty_in_ounces * FRESH_PLANT_TAX_RATE)
+			accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_plant")
 		elif compliance_item.item_category == "Based on Raw Materials":
 			# calculate cultivation tax based on weight of raw materials
 
@@ -78,12 +82,13 @@ def calculate_cultivation_tax(doc, compliance_items):
 				plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
 				cultivation_tax += (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
 
+	print("accounts", accounts)
 	cultivation_tax_row = {
 		'category': 'Total',
 		'charge_type': 'Actual',
 		'add_deduct_tax': 'Deduct',
 		'description': 'Cultivation Tax',
-		'account_head': get_company_default(doc.get("company"), "default_cultivation_tax_account"),
+		'account_head': accounts,
 		'tax_amount': cultivation_tax
 	}
 
