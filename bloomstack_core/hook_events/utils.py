@@ -2,7 +2,8 @@ import frappe
 from frappe import _
 from frappe.core.utils import find
 from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
-from frappe.utils import date_diff, getdate, nowdate, to_timedelta, today
+from frappe.utils import date_diff, get_time, getdate, nowdate, to_timedelta, today, unique
+from frappe.utils.user import get_users_with_role
 
 
 def validate_license_expiry(doc, method):
@@ -73,9 +74,34 @@ def validate_delivery_window(doc, method):
 		if not (delivery_start_time and delivery_end_time):
 			return
 
-		if to_timedelta(doc.delivery_start_time) < delivery_start_time \
-			or to_timedelta(doc.delivery_end_time) > delivery_end_time:
-			frappe.throw(_("This document's delivery window is outside the customer's default timings"))
+		if method == "validate":
+			if to_timedelta(doc.delivery_start_time) < delivery_start_time \
+				or to_timedelta(doc.delivery_end_time) > delivery_end_time:
+				frappe.msgprint(_("The delivery window is set outside the customer's default timings"), indicator="orange", alert=True)
+		elif method == "on_submit":
+			# send an email notifying users that the document is outside the customer's delivery window
+			role_profiles = ["Fulfillment Manager"]
+			role_profile_users = frappe.get_all("User", filters={"role_profile_name": ["IN", role_profiles]}, fields=["email"])
+			role_profile_users = [user.email for user in role_profile_users]
+
+			accounts_managers = get_users_with_role("Accounts Manager")
+			recipients = unique(role_profile_users + accounts_managers)
+
+			if not recipients:
+				return
+
+			# form the email
+			subject = _("[Info] An order may be delivered outside a customer's preferred delivery window")
+			message = _("""An order ({name}) has the following delivery window: {doc_start} - {doc_end}<br><br>
+				While the customer's preferred delivery window is {customer_start} - {customer_end}""".format(
+					name=frappe.utils.get_link_to_form(doc.doctype, doc.name),
+					doc_start=get_time(doc.delivery_start_time).strftime("%I:%M %p"),
+					doc_end=get_time(doc.delivery_end_time).strftime("%I:%M %p"),
+					customer_start=get_time(delivery_start_time).strftime("%I:%M %p"),
+					customer_end=get_time(delivery_end_time).strftime("%I:%M %p"),
+				))
+
+			frappe.sendmail(recipients=recipients, subject=subject, message=message)
 
 
 def get_default_license(party_type, party_name):
