@@ -162,8 +162,9 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
 			"bloomstack_core.hook_events.contract.create_project_against_contract",
-			"bloomstack_core.hook_events.contract.create_order_against_contract"
+			"bloomstack_core.hook_events.contract.create_order_against_contract",
 		],
+		"on_submit": "bloomstack_core.hook_events.contract.create_event_against_contract",
 		"before_submit": "bloomstack_core.hook_events.contract.set_contract_company"
 	},
 	"Customer": {

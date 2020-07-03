@@ -87,6 +87,15 @@ def create_order_against_contract(contract, method):
 		sales_order.save()
 		sales_order.submit()
 
+def create_event_against_contract(contract, method):
+	if contract.end_date:
+		event = frappe.new_doc('Event')
+		event.subject = contract.name
+		event.start_on = contract.start_date
+		event.ends_on = contract.end_date
+		event.description = contract.contract_terms
+		
+		event.save()
 
 @frappe.whitelist()
 def get_party_users(doctype, txt, searchfield, start, page_len, filters):
