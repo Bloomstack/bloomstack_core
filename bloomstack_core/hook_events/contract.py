@@ -88,12 +88,17 @@ def create_order_against_contract(contract, method):
 		sales_order.submit()
 
 def create_event_against_contract(contract, method):
+	event_name = frappe.db.get_value('Event', {'subject': contract.name}, ['name'])
 	reference_data = {
 		"reference_doctype" : contract.party_type,
 		"reference_docname" : contract.party_name
 	}
 	if contract.end_date:
-		event = frappe.new_doc('Event')
+		event = None
+		if event_name:
+			event = frappe.get_doc('Event', event_name)
+		else:
+			event = frappe.new_doc('Event')
 		event.subject = contract.name
 		event.start_on = contract.end_date
 		event.ends_on = contract.end_date
