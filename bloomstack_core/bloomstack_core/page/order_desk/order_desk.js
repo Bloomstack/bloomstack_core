@@ -112,6 +112,13 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				on_delivery_date_change: (delivery_date) => {
 					this.delivery_date = delivery_date
 				},
+				on_delivery_window_change: (type, time) => {
+					if (type == "start") {
+						this.delivery_start_time = time;
+					} else if (type == "end") {
+						this.delivery_end_time = time;
+					}
+				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
 				},
@@ -833,6 +840,7 @@ class SalesOrderCart {
 		this.make_customer_field();
 		this.make_order_type_field();
 		this.make_delivery_date_field();
+		this.make_delivery_window_fields();
 	}
 
 	make_dom() {
@@ -937,7 +945,7 @@ class SalesOrderCart {
 		let total = this.get_total_template('Grand Total', 'grand-total-value');
 
 		if (!cint(frappe.sys_defaults.disable_rounded_total)) {
-			total += 
+			total +=
 			"</tr><tr class=\"grand-total\">" + this.get_total_template('Rounded Total', 'rounded-total-value');
 		}
 
@@ -1048,7 +1056,6 @@ class SalesOrderCart {
 				fieldname: 'order_type',
 				options: this.frm.get_field("order_type").df.options,
 				reqd: 1,
-				default: this.frm.doc.order_type,
 				onchange: () => {
 					this.events.on_order_type_change(this.order_type_field.get_value());
 				}
@@ -1056,6 +1063,7 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
+		this.order_type_field.set_value(this.frm.doc.order_type);
 	}
 
 	make_delivery_date_field() {
@@ -1074,6 +1082,36 @@ class SalesOrderCart {
 		});
 	}
 
+	make_delivery_window_fields() {
+		this.delivery_start_time_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Time',
+				label: 'Earliest Delivery Time',
+				fieldname: 'delivery_start_time',
+				onchange: () => {
+					this.events.on_delivery_window_change("start", this.delivery_start_time_field.get_value());
+				}
+			},
+			parent: this.wrapper.find('.customer-field'),
+			render_input: true
+		});
+		this.delivery_start_time_field.set_value(this.frm.doc.delivery_start_time);
+
+		this.delivery_end_time_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Time',
+				label: 'Latest Delivery Time',
+				fieldname: 'delivery_end_time',
+				onchange: () => {
+					this.events.on_delivery_window_change("end", this.delivery_end_time_field.get_value());
+				}
+			},
+			parent: this.wrapper.find('.customer-field'),
+			render_input: true
+		});
+		this.delivery_end_time_field.set_value(this.frm.doc.delivery_end_time);
+	}
+
 	make_customer_field() {
 		this.customer_field = frappe.ui.form.make_control({
 			df: {
@@ -1089,6 +1127,14 @@ class SalesOrderCart {
 				},
 				onchange: () => {
 					this.events.on_customer_change(this.customer_field.get_value());
+
+					if (this.delivery_start_time_field) {
+						this.delivery_start_time_field.set_value(this.frm.doc.delivery_start_time);
+					}
+
+					if (this.delivery_end_time_field) {
+						this.delivery_end_time_field.set_value(this.frm.doc.delivery_end_time);
+					}
 				}
 			},
 			parent: this.wrapper.find('.customer-field'),
@@ -1126,7 +1172,7 @@ class SalesOrderCart {
 			$item.find('.rate input').val(item.rate);
 			$item.children('.item').addClass(indicator_class);
 			$item.children('.item').removeClass(remove_class);
-		} else { 
+		} else {
 			$item.remove();
 		}
 	}
@@ -1155,8 +1201,8 @@ class SalesOrderCart {
 					}, 100)
 				}
 				);
-				
-				
+
+
 		})
 
 		$(document).on('click', '.list-item div', function (event) {
