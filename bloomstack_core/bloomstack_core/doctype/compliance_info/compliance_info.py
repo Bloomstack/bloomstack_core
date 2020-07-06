@@ -16,7 +16,7 @@ class ComplianceInfo(Document):
 			return
 		site_url = urlparse(get_url()).netloc
 
-		license_info = client.get_doc("License", self.license_number)
+		license_info = client.get_doc("License Info", self.license_number)
 		if not license_info:
 			frappe.msgprint("License Number not found in our database. Proceed with Caution")
 		else:
