@@ -20,8 +20,8 @@ def calculate_cannabis_tax(doc, method):
 
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt"):
 		# calculate cultivation tax for buying cycle
-		cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items)
-		set_taxes(doc, cultivation_tax_row)
+		for cultivation_tax_row in calculate_cultivation_tax(doc, compliance_items):
+			set_taxes(doc, cultivation_tax_row)
 	elif doc.doctype in ("Quotation", "Sales Order", "Sales Invoice", "Delivery Note"):
 		# customer license is required to inspect license type
 		if doc.doctype == "Quotation":
@@ -38,8 +38,8 @@ def calculate_cannabis_tax(doc, method):
 		license_for = frappe.db.get_value("Compliance Info", default_customer_license, "license_for")
 		if license_for == "Distributor":
 			# calculate cultivation tax for selling cycle if customer is a distributor
-			cultivation_tax_row = calculate_cultivation_tax(doc, compliance_items)
-			set_taxes(doc, cultivation_tax_row)
+			for cultivation_tax_row in calculate_cultivation_tax(doc, compliance_items):
+				set_taxes(doc, cultivation_tax_row)
 		elif license_for == "Retailer":
 			# calculate excise tax for selling cycle is customer is a retailer or end-consumer
 			excise_tax_row = calculate_excise_tax(doc, compliance_items)
@@ -75,34 +75,31 @@ def calculate_cultivation_tax(doc, compliance_items):
 			if item.get("flower_weight"):
 				flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
 				flower_tax_accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_flower")
-				cultivation_tax_flower = (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
-				cultivation_tax_row = set_cultivation_tax_row(doc, flower_tax_accounts, cultivation_tax_flower)
-				set_taxes(doc, cultivation_tax_row)
+				flower_cultivation_tax_amount = (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
+				yield get_cultivation_tax_row(flower_tax_accounts, flower_cultivation_tax_amount)
 
 			if item.get("leaf_weight"):
 				leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
 				leaf_tax_accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_leaf")
-				cultivation_tax_leaf = (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
-				cultivation_tax_row = set_cultivation_tax_row(doc, leaf_tax_accounts, cultivation_tax_leaf)
-				set_taxes(doc, cultivation_tax_row)
+				leaf_cultivation_tax_amount = (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
+				yield get_cultivation_tax_row(leaf_tax_accounts, leaf_cultivation_tax_amount)
 
 			if item.get("plant_weight"):
 				plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
 				plant_tax_accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_plant")
-				cultivation_tax_plant= (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
-				cultivation_tax_row = set_cultivation_tax_row(doc, plant_tax_accounts, cultivation_tax_plant)
-				set_taxes(doc, cultivation_tax_row)
+				plant_cultivation_tax_amount= (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
+				yield get_cultivation_tax_row(plant_tax_accounts, plant_cultivation_tax_amount)
 
 	if tax_account:
-		return set_cultivation_tax_row(doc, tax_account, cultivation_tax)
+		yield get_cultivation_tax_row(tax_account, cultivation_tax)
 
-def set_cultivation_tax_row(doc, default_cultivation_tax_account, cultivation_tax_amount):
+def get_cultivation_tax_row(cultivation_tax_account, cultivation_tax_amount):
 	cultivation_tax_row = {
 		'category': 'Total',
 		'charge_type': 'Actual',
 		'add_deduct_tax': 'Deduct',
 		'description': 'Cultivation Tax',
-		'account_head': default_cultivation_tax_account,
+		'account_head': cultivation_tax_account,
 		'tax_amount': cultivation_tax_amount
 	}
 	return cultivation_tax_row
