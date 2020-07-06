@@ -8,4 +8,4 @@ def execute():
 
 	for batch in batches:
 		item_group = frappe.db.get_value("Item", batch.item, "item_group")
-		frappe.db.set_value("Batch", batch, "item_group", item_group, update_modified=False)
+		frappe.db.set_value("Batch", batch.name, "item_group", item_group, update_modified=False)
