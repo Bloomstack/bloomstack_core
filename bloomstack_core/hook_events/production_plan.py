@@ -5,10 +5,8 @@
 import frappe
 
 def set_workstations(doc, method):
-	boms = frappe.get_all("BOM Operation" , fields=["*"])
-	workstation_value = []
-	for bom in doc.get("po_items"):
-		for operation in boms:
-			if operation.parent == bom.bom_no:
-			   workstation_value.append(operation.workstation)
-		bom.workstations = ', '.join(workstation_value)
+	for item in doc.get("po_items"):
+		bom_operations = frappe.get_all("BOM Operation", filters={"parent": item.bom_no}, fields=["workstation"])
+		if bom_operations:
+			workstations = [operation.workstation for operation in bom_operations if operation.workstation]
+			item.workstations = '\n'.join(workstations)
