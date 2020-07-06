@@ -114,9 +114,9 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				},
 				on_delivery_window_change: (type, time) => {
 					if (type == "start") {
-						this.delivery_start_time = time;
+						this.frm.set_value("delivery_start_time", time);
 					} else if (type == "end") {
-						this.delivery_end_time = time;
+						this.frm.set_value("delivery_end_time", time);
 					}
 				},
 				on_field_change: (item_code, field, value, batch_no) => {
