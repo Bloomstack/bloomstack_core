@@ -89,7 +89,8 @@ doctype_js = {
 	"Task": "public/js/task.js",
 	"Timesheet": "public/js/timesheet.js",
 	"User": "public/js/user.js",
-	"Work Order": "public/js/work_order.js"
+	"Work Order": "public/js/work_order.js",
+	"Production Plan": "public/js/production_plan.js"
 }
 
 doctype_list_js = {
@@ -261,6 +262,9 @@ doc_events = {
 	("Sales Order", "Delivery Note"): {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
+	},
+	"Production Plan": {
+		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
 	}
 }
 
