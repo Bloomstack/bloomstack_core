@@ -6,9 +6,6 @@
 		{% if(contact_list[i].is_primary_contact) { %}
 		<span class="text-muted">({%= __("Primary") %})</span>
 		{% } %}
-		{% if(contact_list[i].designation){ %}
-		<span class="text-muted">&ndash; {%= contact_list[i].designation %}</span>
-		{% } %}
 
 		<a href="#Form/Contact/{%= encodeURIComponent(contact_list[i].name) %}" class="btn btn-xs btn-default pull-right"
 			style="margin-top:-3px; margin-right: -5px;" title="Edit">
@@ -25,27 +22,35 @@
 	{% if (contact_list[i].phones || contact_list[i].email_ids) { %}
 	<p>
 		{% if(contact_list[i].phone) { %}
-		{%= __("Phone") %}: {%= contact_list[i].phone %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
+		<strong>{%= __("Phone") %}:</strong> {%= contact_list[i].phone %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
 		{% endif %}
 		{% if(contact_list[i].mobile_no) { %}
-		{%= __("Mobile No") %}: {%= contact_list[i].mobile_no %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
+		<strong>{%= __("Mobile No") %}:</strong> {%= contact_list[i].mobile_no %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
 		{% endif %}
 		{% if(contact_list[i].phone_nos) { %}
 		{% for(var j=0, k=contact_list[i].phone_nos.length; j<k; j++) { %}
-		{%= __("Phone") %}: {%= contact_list[i].phone_nos[j].phone %}<br>
+		<strong>{%= __("Phone") %}:</strong> {%= contact_list[i].phone_nos[j].phone %}<br>
 		{% } %}
 		{% endif %}
 	</p>
+
 	<p>
 		{% if(contact_list[i].email_id) { %}
-		{%= __("Email") %}: {%= contact_list[i].email_id %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
+		<strong>{%= __("Email") %}: </strong>{%= contact_list[i].email_id %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
 		{% endif %}
 		{% if(contact_list[i].email_ids) { %}
 		{% for(var j=0, k=contact_list[i].email_ids.length; j<k; j++) { %}
-		{%= __("Email") %}: {%= contact_list[i].email_ids[j].email_id %}<br>
+		<strong>{%= __("Email") %}:</strong> {%= contact_list[i].email_ids[j].email_id %}<br>
 		{% } %}
 		{% endif %}
 	</p>
+
+	<p>
+		{% if(contact_list[i].designation){ %}
+			<strong>{%= __("Designation") %}:</strong> {%= contact_list[i].designation %}<br>
+		{% } %}
+	</p> 
+
 	{% endif %}
 	<p>
 		{% if (contact_list[i].address) { %}
