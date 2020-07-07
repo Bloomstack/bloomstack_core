@@ -166,7 +166,8 @@ doc_events = {
 			"bloomstack_core.hook_events.contract.create_event_against_contract"
 		],
 		"on_submit": "bloomstack_core.hook_events.contract.create_event_against_contract",
-		"before_submit": "bloomstack_core.hook_events.contract.set_contract_company"
+		"before_submit": "bloomstack_core.hook_events.contract.set_contract_company",
+		"on_cancel": "bloomstack_core.hook_events.contract.create_event_against_contract"
 	},
 	"Customer": {
 		"validate": [

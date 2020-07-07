@@ -3,6 +3,8 @@ from erpnext.selling.doctype.quotation.quotation import make_sales_order
 from erpnext import get_default_company
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
+from datetime import timedelta
+import datetime
 from frappe.utils import add_days, getdate, now
 from frappe.utils.jinja import render_template
 
@@ -89,22 +91,24 @@ def create_order_against_contract(contract, method):
 
 def create_event_against_contract(contract, method):
 	event_name = frappe.db.get_value('Event', {'subject': contract.name}, ['name'])
-	reference_data = {
-		"reference_doctype" : contract.party_type,
-		"reference_docname" : contract.party_name
-	}
-	if contract.end_date:
-		event = None
+	if method == "on_cancel":
 		if event_name:
-			event = frappe.get_doc('Event', event_name)
-		else:
-			event = frappe.new_doc('Event')
-		event.subject = contract.name
-		event.start_on = contract.end_date
-		event.ends_on = contract.end_date
-		event.description = contract.contract_terms
-		event.append("event_participants", reference_data)
-		event.save()
+			frappe.delete_doc('Event', event_name)
+	else:
+		if contract.end_date:
+			if event_name:
+				event = frappe.get_doc('Event', event_name)
+			else:
+				event = frappe.new_doc('Event')
+			event.subject = contract.name
+			event.starts_on = contract.end_date
+			event.ends_on = contract.end_date + str(datetime.timedelta(hours=8))
+			event.description = contract.contract_terms
+			event.append("event_participants", {
+				"reference_doctype" : contract.party_type,
+				"reference_docname" : contract.party_name
+			})
+			event.save()
 
 @frappe.whitelist()
 def get_party_users(doctype, txt, searchfield, start, page_len, filters):
