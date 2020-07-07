@@ -22,32 +22,32 @@
 	{% if (contact_list[i].phones || contact_list[i].email_ids) { %}
 	<p>
 		{% if(contact_list[i].phone) { %}
-		<span class="bold">{%= __("Phone") %}:</span> {%= contact_list[i].phone %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
+		<strong>{%= __("Phone") %}:</strong> {%= contact_list[i].phone %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
 		{% endif %}
 		{% if(contact_list[i].mobile_no) { %}
-		<span class="bold">{%= __("Mobile No") %}:</span> {%= contact_list[i].mobile_no %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
+		<strong>{%= __("Mobile No") %}:</strong> {%= contact_list[i].mobile_no %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
 		{% endif %}
 		{% if(contact_list[i].phone_nos) { %}
 		{% for(var j=0, k=contact_list[i].phone_nos.length; j<k; j++) { %}
-		<span class="bold">{%= __("Phone") %}:</span> {%= contact_list[i].phone_nos[j].phone %}<br>
+		<strong>{%= __("Phone") %}:</strong> {%= contact_list[i].phone_nos[j].phone %}<br>
 		{% } %}
 		{% endif %}
 	</p>
 
 	<p>
 		{% if(contact_list[i].email_id) { %}
-		<span class="bold">{%= __("Email") %}: </span>{%= contact_list[i].email_id %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
+		<strong>{%= __("Email") %}: </strong>{%= contact_list[i].email_id %}<span class="text-muted"> ({%= __("Primary") %})</span><br>
 		{% endif %}
 		{% if(contact_list[i].email_ids) { %}
 		{% for(var j=0, k=contact_list[i].email_ids.length; j<k; j++) { %}
-		<span class="bold">{%= __("Email") %}:</span> {%= contact_list[i].email_ids[j].email_id %}<br>
+		<strong>{%= __("Email") %}:</strong> {%= contact_list[i].email_ids[j].email_id %}<br>
 		{% } %}
 		{% endif %}
 	</p>
 
 	<p>
 		{% if(contact_list[i].designation){ %}
-			<span class="bold">{%= __("Designation") %}:</span> {%= contact_list[i].designation %}<br>
+			<strong>{%= __("Designation") %}:</strong> {%= contact_list[i].designation %}<br>
 		{% } %}
 	</p> 
 
