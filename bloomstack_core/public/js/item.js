@@ -17,7 +17,6 @@ frappe.ui.form.on('Item', {
 				};
 			})
 		}
-		frm.set_value("is_sales_item", 0);
 	},
 
 	item_name: (frm) => {
