@@ -3,9 +3,8 @@
 
 frappe.views.calendar["Contract"] = {
 	field_map: {
-		"start": "start_date",
+		"start": "end_date",
 		"end": "end_date",
-		"allDay": "allDay",
 		"title": "name"
 	},
 	filters: [

@@ -91,6 +91,7 @@ def create_order_against_contract(contract, method):
 
 def create_event_against_contract(contract, method):
 	event_name = frappe.db.get_value('Event', {'subject': contract.name}, ['name'])
+	employee_id = frappe.db.get_value('Employee', {'user_id': contract.signed_by_company}, ['name'])
 	if method == "on_cancel":
 		if event_name:
 			frappe.delete_doc('Event', event_name)
@@ -107,7 +108,7 @@ def create_event_against_contract(contract, method):
 			})
 			event.append("event_participants", {
 				"reference_doctype" : 'Employee',
-				"reference_docname" : contract.signed_by_company
+				"reference_docname" : employee_id
 			})
 			event.save()
 
@@ -160,9 +161,9 @@ def get_events(start, end, filters=None):
 	from frappe.desk.calendar import get_event_conditions
 	conditions = get_event_conditions("Contract", filters)
 
-	return frappe.db.sql("""select name
+	return frappe.db.sql("""select name, start_date, end_date
 		from `tabContract` where
-		end_date between %(start)s and %(end)s
+		(start_date <= %(end)s and end_date >= %(start)s)
 		and docstatus < 2 {conditions}""".format(conditions=conditions),
 		{
 			"start": start,
