@@ -21,6 +21,7 @@ def calculate_cannabis_tax(doc, method):
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt"):
 		# calculate cultivation tax for buying cycle
 		for cultivation_tax_row in calculate_cultivation_tax(doc, compliance_items):
+
 			set_taxes(doc, cultivation_tax_row)
 	elif doc.doctype in ("Quotation", "Sales Order", "Sales Invoice", "Delivery Note"):
 		# customer license is required to inspect license type
@@ -153,7 +154,7 @@ def set_taxes(doc, tax_row):
 
 	# update an existing tax row, or create a new one
 	if existing_tax_row:
-		existing_tax_row[-1].tax_amount = tax_row.get('tax_amount', 0)
+		existing_tax_row[-1].tax_amount = existing_tax_row[-1].tax_amount + tax_row.get('tax_amount', 0)
 	else:
 		doc.append('taxes', tax_row)
 
