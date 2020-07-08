@@ -2,6 +2,7 @@ import frappe
 from erpnext.selling.doctype.quotation.quotation import make_sales_order
 from erpnext import get_default_company
 from frappe import _
+import json
 from frappe.model.mapper import get_mapped_doc
 import datetime
 from frappe.utils import add_days, getdate, now
@@ -95,17 +96,18 @@ def create_event_against_contract(contract, method):
 			frappe.delete_doc('Event', event_name)
 	elif method == "on_submit":
 		if contract.end_date:
-			if event_name:
-				event = frappe.get_doc('Event', event_name)
-			else:
-				event = frappe.new_doc('Event')
+			event = frappe.new_doc('Event')
 			event.subject = contract.name
-			event.starts_on = contract.end_date
-			event.ends_on = contract.end_date + ' ' + str(datetime.timedelta(hours=8))
+			event.ends_on = contract.end_date
 			event.description = contract.contract_terms
+			event.all_day = 1
 			event.append("event_participants", {
 				"reference_doctype" : contract.party_type,
 				"reference_docname" : contract.party_name
+			})
+			event.append("event_participants", {
+				"reference_doctype" : 'Employee',
+				"reference_docname" : contract.signed_by_company
 			})
 			event.save()
 
@@ -146,3 +148,23 @@ def set_contract_company(contract, method):
 	contract.signed_by_company = frappe.session.user
 	company = frappe.db.get_value("Employee", {"user_id": contract.signed_by_company}, "company")
 	contract.company = company or get_default_company()
+
+@frappe.whitelist()
+def get_events(start, end, filters=None):
+	"""Returns events for Gantt / Calendar view rendering.
+	:param start: Start date-time.
+	:param end: End date-time.
+	:param filters: Filters (JSON).
+	"""
+	filters = json.loads(filters)
+	from frappe.desk.calendar import get_event_conditions
+	conditions = get_event_conditions("Contract", filters)
+
+	return frappe.db.sql("""select name
+		from `tabContract` where
+		end_date between %(start)s and %(end)s
+		and docstatus < 2 {conditions}""".format(conditions=conditions),
+		{
+			"start": start,
+			"end": end
+		}, as_dict=True, update={"allDay": 0})
