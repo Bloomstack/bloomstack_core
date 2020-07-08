@@ -107,7 +107,7 @@ override_doctype_dashboards = {
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+doctype_calendar_js = {"Contract" : "public/js/contract_calendar.js"}
 
 # Home Pages
 # ----------

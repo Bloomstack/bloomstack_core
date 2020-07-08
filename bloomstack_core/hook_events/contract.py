@@ -3,7 +3,6 @@ from erpnext.selling.doctype.quotation.quotation import make_sales_order
 from erpnext import get_default_company
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
-from datetime import timedelta
 import datetime
 from frappe.utils import add_days, getdate, now
 from frappe.utils.jinja import render_template
@@ -94,7 +93,7 @@ def create_event_against_contract(contract, method):
 	if method == "on_cancel":
 		if event_name:
 			frappe.delete_doc('Event', event_name)
-	else:
+	elif method == "on_submit":
 		if contract.end_date:
 			if event_name:
 				event = frappe.get_doc('Event', event_name)
@@ -102,7 +101,7 @@ def create_event_against_contract(contract, method):
 				event = frappe.new_doc('Event')
 			event.subject = contract.name
 			event.starts_on = contract.end_date
-			event.ends_on = contract.end_date + str(datetime.timedelta(hours=8))
+			event.ends_on = contract.end_date + ' ' + str(datetime.timedelta(hours=8))
 			event.description = contract.contract_terms
 			event.append("event_participants", {
 				"reference_doctype" : contract.party_type,
