@@ -4,7 +4,6 @@ from erpnext import get_default_company
 from frappe import _
 import json
 from frappe.model.mapper import get_mapped_doc
-import datetime
 from frappe.utils import add_days, getdate, now
 from frappe.utils.jinja import render_template
 
@@ -106,10 +105,11 @@ def create_event_against_contract(contract, method):
 				"reference_doctype" : contract.party_type,
 				"reference_docname" : contract.party_name
 			})
-			event.append("event_participants", {
-				"reference_doctype" : 'Employee',
-				"reference_docname" : employee_id
-			})
+			if employee_id:
+				event.append("event_participants", {
+					"reference_doctype" : 'Employee',
+					"reference_docname" : employee_id
+				})
 			event.save()
 
 @frappe.whitelist()
