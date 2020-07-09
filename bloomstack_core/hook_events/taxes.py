@@ -74,22 +74,43 @@ def calculate_cultivation_tax(doc, compliance_items):
 				frappe.throw(_("Row #{0}: Please set a cultivation weight UOM".format(item.get("idx"))))
 
 			if item.get("flower_weight"):
-				flower_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
-				flower_tax_accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_flower")
-				flower_cultivation_tax_amount = (flower_weight_in_ounces * DRY_FLOWER_TAX_RATE)
-				yield get_cultivation_tax_row(flower_tax_accounts, flower_cultivation_tax_amount)
+				flower_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
+				flower_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_flower")
+				flower_cultivation_tax_amount = (flower_weight_in_ounce * DRY_FLOWER_TAX_RATE)
+				if tax_account:
+					if tax_account == flower_tax_account:
+						cultivation_tax = cultivation_tax + flower_cultivation_tax_amount
+					else:
+						yield get_cultivation_tax_row(flower_tax_account, flower_cultivation_tax_amount)
+				else:
+					tax_account = flower_tax_account
+					cultivation_tax = flower_cultivation_tax_amount
 
 			if item.get("leaf_weight"):
-				leaves_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
-				leaf_tax_accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_leaf")
-				leaf_cultivation_tax_amount = (leaves_weight_in_ounces * DRY_LEAF_TAX_RATE)
-				yield get_cultivation_tax_row(leaf_tax_accounts, leaf_cultivation_tax_amount)
+				leaf_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
+				leaf_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_leaf")
+				leaf_cultivation_tax_amount = (leaf_weight_in_ounce * DRY_LEAF_TAX_RATE)
+				if tax_account:
+					if tax_account == leaf_tax_account:
+						cultivation_tax = cultivation_tax + leaf_cultivation_tax_amount
+					else:
+						yield get_cultivation_tax_row(leaf_tax_account, leaf_cultivation_tax_amount)
+				else:
+					tax_account = leaf_tax_account
+					cultivation_tax = leaf_cultivation_tax_amount
 
 			if item.get("plant_weight"):
-				plant_weight_in_ounces = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
-				plant_tax_accounts = get_company_default(doc.get("company"), "default_cultivation_tax_account_plant")
-				plant_cultivation_tax_amount= (plant_weight_in_ounces * FRESH_PLANT_TAX_RATE)
-				yield get_cultivation_tax_row(plant_tax_accounts, plant_cultivation_tax_amount)
+				plant_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
+				plant_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_plant")
+				plant_cultivation_tax_amount= (plant_weight_in_ounce * FRESH_PLANT_TAX_RATE)
+				if tax_account:
+					if tax_account == plant_tax_account:
+						cultivation_tax = cultivation_tax + plant_cultivation_tax_amount
+					else:
+						yield get_cultivation_tax_row(plant_tax_account, plant_cultivation_tax_amount)
+				else:
+					tax_account = plant_tax_account
+					cultivation_tax = plant_cultivation_tax_amount
 
 	if tax_account:
 		yield get_cultivation_tax_row(tax_account, cultivation_tax)
@@ -154,7 +175,7 @@ def set_taxes(doc, tax_row):
 
 	# update an existing tax row, or create a new one
 	if existing_tax_row:
-		existing_tax_row[-1].tax_amount = existing_tax_row[-1].tax_amount + tax_row.get('tax_amount', 0)
+		existing_tax_row[-1].tax_amount =  tax_row.get('tax_amount', 0)
 	else:
 		doc.append('taxes', tax_row)
 
