@@ -86,10 +86,12 @@ doctype_js = {
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
+	"Stock Entry": "public/js/stock_entry.js",
 	"Task": "public/js/task.js",
 	"Timesheet": "public/js/timesheet.js",
 	"User": "public/js/user.js",
-	"Work Order": "public/js/work_order.js"
+	"Work Order": "public/js/work_order.js",
+	"Production Plan": "public/js/production_plan.js"
 }
 
 doctype_list_js = {
@@ -107,7 +109,7 @@ override_doctype_dashboards = {
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+doctype_calendar_js = {"Contract" : "public/js/contract_calendar.js"}
 
 # Home Pages
 # ----------
@@ -164,7 +166,9 @@ doc_events = {
 			"bloomstack_core.hook_events.contract.create_project_against_contract",
 			"bloomstack_core.hook_events.contract.create_order_against_contract"
 		],
-		"before_submit": "bloomstack_core.hook_events.contract.set_contract_company"
+		"on_submit": "bloomstack_core.hook_events.contract.create_event_against_contract",
+		"before_submit": "bloomstack_core.hook_events.contract.set_contract_company",
+		"on_cancel": "bloomstack_core.hook_events.contract.create_event_against_contract"
 	},
 	"Customer": {
 		"validate": [
@@ -261,6 +265,9 @@ doc_events = {
 	("Sales Order", "Delivery Note"): {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
+	},
+	"Production Plan": {
+		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
 	}
 }
 
