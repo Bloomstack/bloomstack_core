@@ -7,17 +7,18 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
-
+from bloomstack_core.bloomtrace import make_integration_request
 
 class PackageTag(Document):
 	def validate(self):
 		if self.source_package_tag:
 			self.validate_source_package_tag()
 			self.update_coa_batch_no()
-		self.make_bloomtrace_integration_request()
+		if  not self.is_new():
+			make_integration_request(self.doctype, self.name)
 
 	def after_insert(self):
-		self.make_bloomtrace_integration_request()
+		make_integration_request(self.doctype, self.name)
 
 	def validate_source_package_tag(self):
 		source_package_tag = frappe.db.get_value("Package Tag", self.source_package_tag, "source_package_tag")
@@ -27,14 +28,3 @@ class PackageTag(Document):
 	def update_coa_batch_no(self):
 		self.coa_batch_no = frappe.db.get_value("Package Tag", self.source_package_tag, "coa_batch_no")
 
-	def make_bloomtrace_integration_request(self):
-		if frappe.get_conf().enable_bloomtrace and not self.is_new():
-			integration_request = frappe.new_doc("Integration Request")
-			integration_request.update({
-				"integration_type": "Remote",
-				"integration_request_service": "BloomTrace",
-				"status": "Queued",
-				"reference_doctype": "Package Tag",
-				"reference_docname": self.name
-			})
-			integration_request.save(ignore_permissions=True)
