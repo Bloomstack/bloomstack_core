@@ -1,8 +1,7 @@
 import frappe
 from erpnext.accounts.utils import get_fiscal_year
-from frappe.utils import nowdate
-from frappe.utils import (add_days, getdate, formatdate, date_diff,
-	add_years, get_timestamp, nowdate, flt)	
+from frappe.utils import (nowdate, flt)
+from erpnext.accounts.party import get_party_account
 
 def update_lead_acc_open_date(customer, method):
 	"""update lead account opend date"""
@@ -30,11 +29,11 @@ def get_dashboard_info(party_type, party):
 			'docstatus': 1,
 			party_type.lower(): party,
 			'order_type': 'Marketing',
+			'status': 'Completed',
 			'transaction_date': ('between', [current_fiscal_year.year_start_date, current_fiscal_year.year_end_date])
 			},
 			group_by="company",
-			fields=["company", "sum(grand_total) as grand_total", "sum(base_grand_total) as base_grand_total"],
-		debug=True)
+			fields=["company", "sum(grand_total) as grand_total", "sum(base_grand_total) as base_grand_total"])
 
 	company_wise_billing_this_year = frappe._dict()
 
