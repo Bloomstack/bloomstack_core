@@ -1,5 +1,4 @@
 export default {
-    baseUrl: "https://bloomtrace.io",
     getLicenses({ pageNum, perPage, filters }) {
         return new Promise(function (resolve, reject) {
             frappe.call({

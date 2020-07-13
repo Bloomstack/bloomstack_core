@@ -37,7 +37,10 @@ def get_all_licenses(page_number, per_page, filters):
 		"city",
 		"license_number",
 		"email_id",
-		"expiration_date"
+		"expiration_date",
+		"business_structure",
+		"business_owner",
+		"license_for"
 	]
 
 	limit_start = (int(page_number)-1) * int(per_page)

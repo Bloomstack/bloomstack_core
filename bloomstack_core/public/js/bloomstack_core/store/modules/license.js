@@ -1,4 +1,5 @@
 import LicenseService from '../../license_search/services/license_service';
+import FrappeService from "../../license_search/services/frappe_service";
 
 export default {
    state:{
@@ -7,7 +8,11 @@ export default {
       licenses: [],
       perPage: 20,
       currentPage: 1,
-      totalPages: null
+      totalPages: null,
+
+      leads: [],
+      customers: [],
+      suppliers: []
    },
    mutations:{
       SET_FILTER(state, filters) {
@@ -20,6 +25,16 @@ export default {
       },
       SET_PAGE(state, page) {
          state.currentPage = page;
+      },
+
+      ADD_LEAD(state, lead) {
+         state.leads.push(lead);
+      },
+      ADD_CUSTOMER(state, customer) {
+         state.customers.push(customer);
+      },
+      ADD_SUPPLIER(state, supplier) {
+         state.suppliers.push(supplier);
       }
    },
    actions:{
@@ -40,6 +55,30 @@ export default {
          data.perPage = state.perPage;
          LicenseService.getLicenses(data).then(function(response) {
             commit('SET_LICENSES', response);
+         });
+      },
+      makeLead({ commit, dispatch, state }, lead) {
+         FrappeService.insertDoc({
+            doc: lead,
+            isFieldExist: "customer_name"
+         }).then(function(response) {
+            commit('ADD_LEAD', response);
+         });
+      },
+      makeCustomer({ commit, dispatch }, customer) {
+         FrappeService.insertDoc({
+            doc: customer,
+            isFieldExist: "customer_name"
+         }).then(function(response) {
+            commit('ADD_CUSTOMER', response);
+         });
+      },
+      makeSupplier({ commit, state }, supplier) {
+         FrappeService.insertDoc({
+            doc: supplier,
+            isFieldExist: "customer_name"
+         }).then(function(response) {
+            commit('ADD_SUPPLIER', response);
          });
       }
    }

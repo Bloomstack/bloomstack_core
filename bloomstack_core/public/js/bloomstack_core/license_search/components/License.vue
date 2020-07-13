@@ -1,7 +1,7 @@
 <template>
     <div class="license-card">
-        <div class="">
-
+        <div class="" @click="makeCustomer()">
+            Click me to add a new customer
         </div>
         <div class="">
             <div class="">
@@ -19,9 +19,45 @@
 </template>
 
 <script>
+    // import Vuex from './../../../../node_modules/vuex/dist/vuex';
+
     export default {
         props: {
             license: Object
+        },
+        methods: {
+            makeCustomer() {
+                const customer = {
+                    "doctype": "Customer",
+                    "customer_name": this.license.business_owner || this.license.legal_name,
+                    "customer_group": "Individual",
+                    "territory": "All Territories",
+                    "customer_type": "Company"
+                };
+                this.$store.dispatch('makeCustomer', customer);
+            },
+
+            makeLead() {
+                const lead = {
+                    "doctype": "Customer",
+                    "customer_name": this.license.business_owner || this.license.legal_name,
+                    "customer_group": "Individual",
+                    "territory": "All Territories",
+                    "customer_type": "Company"
+                };
+                this.$store.dispatch('makeCustomer', lead);
+            },
+
+            makeSupplier() {
+                const supplier = {
+                    "doctype": "Customer",
+                    "customer_name": this.license.business_owner || this.license.legal_name,
+                    "customer_group": "Individual",
+                    "territory": "All Territories",
+                    "customer_type": "Company"
+                };
+                this.$store.dispatch('makeCustomer', supplier);
+            }
         }
     }
 </script>
