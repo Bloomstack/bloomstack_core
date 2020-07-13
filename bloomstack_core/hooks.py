@@ -173,7 +173,8 @@ doc_events = {
 	"Customer": {
 		"validate": [
 			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
-		]
+		],
+		"onload": "bloomstack_core.hook_events.customer.update_customer_dashboard"
 	},
 	("Company", "Supplier", "Customer"): {
 		"validate": [
