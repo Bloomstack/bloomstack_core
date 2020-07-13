@@ -1,11 +1,12 @@
 <template>
-    <div class="paginate">
-        <ul>
-            <li v-if="pageNum!=1" @click="changePage(pageNum-1)" class="prev">Prev</li>
-            <li @click="changePage(page)" v-for="page in pages" :key="page">{{ page }}</li>
-            <li @click="changePage(pageNum+1)" class="next">Next</li>
-        </ul>
-    </div>
+    <paginate
+    :page-count="totalPages"
+    :click-handler="changePage"
+    :prev-text="'Prev'"
+    :next-text="'Next'"
+    :container-class="'paginate'"
+    :page-class="'page-item'">
+    </paginate>
 </template>
 
 <script>

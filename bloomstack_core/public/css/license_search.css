@@ -64,8 +64,16 @@
   margin-left: 60px;
 }
 
-.paginate ul li {
+ul.paginate {
+  padding-left: 0;
+  text-align: center;
+}
+
+.paginate li {
   display: inline-block;
+  border: 1px solid #000;
+  padding: 10px 15px;
+  margin-right: 5px;
 }
 
 .license-filter {
