@@ -34,7 +34,7 @@
   text-align: center;
 }
 
-.actions .conversion_actions {
+.actions .conversion-actions {
   display: inline-block;
   border: 1px solid #000;
   border-radius: 20px;
@@ -45,7 +45,7 @@
   transition: 0.2s all;
 }
 
-.actions .conversion_actions:hover {
+.actions .conversion-actions:hover {
   background-color: #000;
   color: #fff;
 }
@@ -80,50 +80,50 @@ ul.paginate {
   margin-top: 30px;
 }
 
-.license-filter .search_box {
+.license-filter .search-box {
   padding-left: 0;
 }
 
-.license-filter .search_box input,
-.license-filter .zip_box input,
-.license-filter .type_select select {
+.license-filter .search-box input,
+.license-filter .zip-box input,
+.license-filter .type-select select {
   width: 100%;
   outline: 0;
 }
 
-.license-filter .search_box input,
-.license-filter .zip_box input {
+.license-filter .search-box input,
+.license-filter .zip-box input {
   background: url('/assets/bloomstack_core/images/search.png') no-repeat;
   background-position: center right;
   padding: 5px 8px;
 }
 
-.license-filter .search_box input {
+.license-filter .search-box input {
   background-size: 3%;
 }
 
-.license-filter .zip_box input {
+.license-filter .zip-box input {
   background-size: 11%;
 }
 
-.license-filter .type_select select {
+.license-filter .type-select select {
   padding: 7px 0;
 }
 
-.license-card .license_info p {
+.license-card .license-info p {
   margin: 30px 0;
 }
 
-.license_info .col-md-4:first-child {
+.license-info .col-md-4:first-child {
   padding-left: 0;
 }
 
 @media screen and (max-width: 992px) {
-  .license-filter .search_box,
-  .license-filter .zip_box {
+  .license-filter .search-box,
+  .license-filter .zip-box {
     padding-left: 15px;
   }
-  .license-filter .search_box {
+  .license-filter .search-box {
     margin-bottom: 30px;
   }
   .license-filter .col-md-1 {
@@ -132,13 +132,13 @@ ul.paginate {
   .license-list .row.license-card {
     margin: 0 0px 30px;
   }
-  .license-card .license_info p {
+  .license-card .license-info p {
     margin: 0 0 10px;
   }
-  .license_info .license_number {
+  .license-info .license-number {
     text-align: right;
   }
-  .license_info .license_type {
+  .license-info .license-type {
     padding-left: 0;
     margin: 5px 0;
   }

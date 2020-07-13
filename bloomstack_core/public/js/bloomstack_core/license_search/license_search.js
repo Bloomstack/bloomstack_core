@@ -1,9 +1,5 @@
 import Home from './Home.vue';
 import store from "../store/store";
-import Paginate from 'vuejs-paginate';
-
-
-Vue.component('paginate', Paginate)
 
 frappe.provide('bloomstack_core.license_seach');
 
