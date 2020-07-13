@@ -16,9 +16,9 @@
   width: 100%;
 }
 
-.actions,
 .map {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .map img {
@@ -32,10 +32,6 @@
 .map span {
   display: block;
   text-align: center;
-}
-
-.license-card .actions {
-  display: none;
 }
 
 .actions .conversion_actions {
@@ -54,8 +50,18 @@
   color: #fff;
 }
 
-.show {
+.license-card.row {
+  cursor: pointer;
+}
+
+.license-card.row .actions {
+  display: none;
+}
+
+.license-card.row.is-open .actions {
   display: block;
+  clear: both;
+  margin-left: 60px;
 }
 
 .paginate ul li {
@@ -127,5 +133,22 @@
   .license_info .license_type {
     padding-left: 0;
     margin: 5px 0;
+  }
+  .license-card.row.is-open .actions {
+    margin-left: 10px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .license-card.row.is-open .actions {
+    text-align: center;
+    margin-left: 0;
+  }
+  .license-card.row.is-open .actions p {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .license-card.row.is-open .actions p:last-child {
+    margin-right: 0;
   }
 }
