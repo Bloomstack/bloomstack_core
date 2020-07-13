@@ -8,18 +8,19 @@ import frappe
 from bloomstack_core.compliance.item import create_item, update_item
 from frappe import _
 from frappe.model.document import Document
-
+from bloomstack_core.bloomtrace import make_integration_request
 
 class ComplianceItem(Document):
 	def validate(self):
 		self.validate_item_category()
 		self.validate_existing_metrc_item()
-		if not self.is_new() and self.enable_metrc:
-			self.sync_metrc_item()
-		self.make_bloomtrace_integration_request()
+		if not self.is_new():
+			if self.enable_metrc:
+				self.sync_metrc_item()
+			make_integration_request(self.doctype, self.name)
 
 	def after_insert(self):
-		self.make_bloomtrace_integration_request()
+		make_integration_request(self.doctype, self.name)
 		if self.enable_metrc:
 			self.sync_metrc_item()
 
@@ -48,18 +49,6 @@ class ComplianceItem(Document):
 		else:
 			update_item(item)
 			frappe.msgprint(_("{} was successfully updated in METRC.".format(item.item_name)))
-
-	def make_bloomtrace_integration_request(self):
-		if frappe.get_conf().enable_bloomtrace and not self.is_new():
-			integration_request = frappe.new_doc("Integration Request")
-			integration_request.update({
-				"integration_type": "Remote",
-				"integration_request_service": "BloomTrace",
-				"status": "Queued",
-				"reference_doctype": "Compliance Item",
-				"reference_docname": self.name
-			})
-			integration_request.save(ignore_permissions=True)
 
 def metrc_item_category_query(doctype, txt, searchfield, start, page_len, filters):
 	metrc_uom = filters.get("metrc_uom")
