@@ -12,6 +12,7 @@
   "dependencies": {
     "chart.js": "^2.9.0",
     "chartjs-plugin-datalabels": "^0.7.0",
+    "vuejs-paginate": "^2.1.0",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
