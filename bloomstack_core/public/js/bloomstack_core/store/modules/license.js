@@ -8,7 +8,7 @@ export default {
       licenses: [],
       perPage: 20,
       currentPage: 1,
-      totalPages: null,
+      totalPages: 0,
 
       leads: [],
       customers: [],

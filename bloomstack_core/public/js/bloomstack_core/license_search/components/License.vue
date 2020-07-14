@@ -1,29 +1,42 @@
 <template>
-    <div class="license-card">
-        <div class="" @click="makeCustomer()">
-            Click me to add a new customer
-        </div>
-        <div class="">
-            <div class="">
-                <h4>{{ license.legal_name }}</h4>
-                <p>{{ license.license_number }}</p>
-                <p>{{ license.license_type }}</p>
+    <div class="license-card row" v-bind:class="{ 'is-open': toggle }" @click="toggle = !toggle">
+        <div class="col-md-3 col-sm-3 col-xs-3">
+            <div class="map">
+              <a href="">
+                <img src="assets/bloomstack_core/images/map.png" alt="">
+                <span>view map</span>
+              </a>
             </div>
-            <div class="">
+        </div>
+        <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="row license-info">
+                <div class="col-md-4 col-sm-6 col-xs-6 legal-name">{{ license.legal_name }}</div>
+                <div class="col-md-4 col-sm-6 col-xs-6 license-number">{{ license.license_number }}</div>
+                <div class="col-md-4 col-sm-12 col-xs-12 license-type">{{ license.license_type }}</div>
+            </div>
+            <div class="row license-info">
                 <p>{{ license.zip_code }}|{{ license.county }}|{{ license.city }}</p>
                 <p>{{ license.email_id }}</p>
                 <p>License expiry: {{ license.expiration_date }}</p>
             </div>
         </div>
+        <div class="actions">
+                <p><a href="" class="conversion-actions">Convert to lead</a></p>
+                <p><a href="" class="conversion-actions">Convert to customer</a></p>
+                <p><a href="" class="conversion-actions">Convert to supplier</a></p>
+        </div>
     </div>
 </template>
 
 <script>
-    // import Vuex from './../../../../node_modules/vuex/dist/vuex';
-
     export default {
         props: {
             license: Object
+        },
+        data() {
+            return {
+                toggle: false
+            }
         },
         methods: {
             makeCustomer() {
