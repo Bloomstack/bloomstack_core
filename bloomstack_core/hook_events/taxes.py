@@ -134,7 +134,7 @@ def calculate_excise_tax(doc, compliance_items):
 			if tax.get("account_head") == get_company_default(doc.get("company"), "default_shipping_account"):
 				total_shipping_charge += tax.tax_amount
 
-	for item in doc.get("items"):
+	for item in (doc.get("items") or []):
 		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
 		if not compliance_item:
 			continue

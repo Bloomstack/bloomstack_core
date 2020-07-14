@@ -16,29 +16,24 @@ class ComplianceInfo(Document):
 			return
 		site_url = urlparse(get_url()).netloc
 
-		license_info = client.get_doc("License", self.license_number)
+		license_info = client.get_doc("License Info", self.license_number)
 		if not license_info:
 			frappe.msgprint("License Number not found in our database. Proceed with Caution")
 		else:
 			self.status = license_info.get("status")
-			self.license_issuer = license_info.get('license_issuer')
+			self.license_issuer = license_info.get('issued_by')
 			self.license_type = license_info.get('license_type')
 			self.license_category = license_info.get('license_category')
-			self.license_expiry_date = license_info.get('license_expiry_date')
+			self.license_expiry_date = license_info.get('expiration_date')
 			self.license_for = license_info.get('license_for')
 			self.legal_name = license_info.get('legal_name')
 			self.county = license_info.get('county')
 			self.city = license_info.get('city')
 
-
-		client_records = client.get_doc("Client", filters={"bloomstack_instance": site_url})
-		if client_records:
-			client_name = client_records[0].get("name")
-
-			client_customer = {
-				"doctype": "Client Customer",
-				"client": client_name,
-				"license": self.license_number,
+			bloomstack_site_license = {
+				"doctype": "Bloomstack Site License",
+				"bloomstack_site": site_url,
+				"license_info": self.license_number,
 				"status": "Active"
 			}
-			client.insert(client_customer)
+			client.insert(bloomstack_site_license)

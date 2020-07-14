@@ -120,7 +120,8 @@ body[data-route="order-desk"] .pos section.cart-container .frappe-control:first-
   width: 100%;
 }
 
-body[data-route="order-desk"] .pos section.cart-container .frappe-control:last-child {
+body[data-route="order-desk"] .pos section.cart-container .frappe-control:last-child,
+body[data-route="order-desk"] .pos section.cart-container .frappe-control:nth-child(3) {
   margin-right: 0;
 }
 
