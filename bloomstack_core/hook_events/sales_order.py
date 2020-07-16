@@ -88,7 +88,7 @@ def create_multiple_sales_invoices(orders):
 				sales_invoices = [order_doc.name]
 				created = True
 			else:
-				pick_lists = []
+				sales_invoices = []
 
 		created_orders.append({
 			"sales_order": order,
@@ -127,7 +127,7 @@ def create_muliple_delivery_notes(orders):
 				delivery_notes = [order_doc.name]
 				created = True
 			else:
-				pick_lists = []
+				delivery_notes = []
 
 		created_orders.append({
 			"sales_order": order,
