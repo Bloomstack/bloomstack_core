@@ -66,6 +66,11 @@ $(document).on('app_ready', function() {
 
 				// set excise tax if customer has license number
 				set_and_update_excise_tax(frm);
+			},
+			order_type: (frm) => {
+				if (frm.doc.order_type === 'Sample') {
+					set_and_update_excise_tax(frm);
+				}
 			}
 		});
 	});
@@ -185,7 +190,7 @@ $(document).on('app_ready', function() {
 
 set_and_update_excise_tax = function(frm) {
 	cur_frm.cscript.calculate_taxes_and_totals();
-	if (frm.doc.license) {
+	if (frm.doc.license && frm.doc.order_type === "Sample") {
 		frappe.db.get_value("Compliance Info", { "name": frm.doc.license }, "license_for", (r) => {
 			if (r && r.license_for == "Retailer") {
 				frappe.call({

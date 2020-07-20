@@ -93,6 +93,10 @@ def calculate_cultivation_tax(doc, compliance_items):
 def calculate_excise_tax(doc, compliance_items):
 	total_excise_tax = total_shipping_charge = 0
 
+	# Do not calculate excise tax when order type is Sample
+	if doc.get("order_type") == "Sample":
+		return
+
 	if doc.get("taxes"):
 		for tax in doc.get("taxes"):
 			if tax.get("account_head") == get_company_default(doc.get("company"), "default_shipping_account"):
