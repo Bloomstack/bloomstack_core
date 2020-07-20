@@ -31,5 +31,43 @@ frappe.ui.form.on("Work Order", {
 					label: label
 				});
 			};
-	}
+	},
+	// refresh: (frm) => {
+	// 	frm.add_custom_button(__('Start Job Cards'), function(){
+	// 		frappe.call({
+	// 			method: "bloomstack_core.hook_events.work_order.start_job_cards",
+	// 			args: {
+	// 				doctype: frm.doc.doctype,
+	// 				name: frm.doc.name
+	// 			},
+	// 			freeze: true,
+	// 			callback: (r) => {
+	// 				console.log("message", r);
+	// 				if(!r.message.length){
+	// 					frappe.msgprint("There is nothing open job card to start");
+	// 				} else {
+	// 					frappe.msgprint("Following Job card started");
+	// 				}
+	// 			}
+	// 		})
+	// 	}).addClass('btn-primary');
+	// 	frm.add_custom_button(__('Stop Job Cards'), function(){
+	// 		frappe.call({
+	// 			method: "bloomstack_core.hook_events.work_order.stop_job_cards",
+	// 			args: {
+	// 				doctype: frm.doc.doctype,
+	// 				name: frm.doc.name
+	// 			},
+	// 			freeze: true,
+	// 			callback: (r) => {
+	// 				console.log("message", r.message)
+	// 				if(!r.message.length){
+	// 					frappe.msgprint("There is nothing open job card to stop");
+	// 				} else {
+	// 					frappe.msgprint("Following Job card stoped");
+	// 				}
+	// 			}
+	// 		})
+	// 	}).addClass('btn-primary');
+	// }
 });
