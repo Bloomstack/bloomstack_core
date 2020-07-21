@@ -206,6 +206,6 @@ def set_cultivation_tax(doc, items):
 
 	for item in items:
 		tax = sum(calculate_item_cultivation_tax(doc, item).values())
-		item['amount'] += tax
+		item['amount'] = float(item.get("amount")) + tax
 
 	return items
