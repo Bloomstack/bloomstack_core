@@ -15,7 +15,11 @@
   "cb_item",
   "batch_no",
   "coa_batch_no",
-  "source_package_tag"
+  "source_package_tag",
+  "sb_metrc",
+  "metrc_stock_qty",
+  "cb_metrc",
+  "metrc_stock_uom"
  ],
  "fields": [
   {
@@ -82,10 +86,32 @@
    "label": "COA Batch No",
    "options": "Batch",
    "read_only": 1
+  },
+  {
+   "fieldname": "sb_metrc",
+   "fieldtype": "Section Break",
+   "label": "METRC Details"
+  },
+  {
+   "fieldname": "metrc_stock_qty",
+   "fieldtype": "Float",
+   "label": "METRC Stock Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_metrc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "metrc_stock_uom",
+   "fieldtype": "Link",
+   "label": "METRC Stock UOM",
+   "options": "UOM",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2020-06-16 10:03:45.408426",
+ "modified": "2020-07-21 04:21:27.966697",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Package Tag",
