@@ -199,7 +199,6 @@ set_and_update_excise_tax = function(frm) {
 						doc: frm.doc
 					},
 					callback: (r) => {
-						console.log("r.message", r.message);
 						if (r.message && r.message.tax_amount > 0) {
 							let excise_tax_row = r.message;
 							let taxes = frm.doc.taxes;
@@ -213,9 +212,8 @@ set_and_update_excise_tax = function(frm) {
 									}
 								});
 							} else {
-								console.log("else", excise_tax_row);
 								frm.add_child('taxes', excise_tax_row);
-								frm.refresh_field('taxes')
+								frm.refresh_field('taxes');
 								cur_frm.cscript.calculate_taxes_and_totals();
 							}
 						} else if ((r.message && r.message.tax_amount == 0)) {
