@@ -9,3 +9,4 @@ bloomstack_core.patches.v0_0_1.rename_compliance_info_name
 bloomstack_core.patches.v0_0_1.set_batch_in_package_tags
 bloomstack_core.patches.v0_0_1.update_overdue_sales_orders
 bloomstack_core.patches.v0_0_1.set_item_group_in_batch
+bloomstack_core.patches.v0_0_1.set_task_name_in_timesheet
