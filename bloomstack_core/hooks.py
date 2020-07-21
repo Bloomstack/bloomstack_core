@@ -83,7 +83,6 @@ doctype_js = {
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
 	"Project": "public/js/project.js",
-	"Purchase Order": "public/js/purchase_order.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
