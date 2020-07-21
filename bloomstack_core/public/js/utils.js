@@ -181,15 +181,14 @@ $(document).on('app_ready', function() {
 			}
 		});
 	});
-});
 
-$(document).on('app_ready', function() {
 	$.each(["Purchase Order", "Purchase Invoice"], function(i, doctype) {
 		frappe.ui.form.on(doctype, {
 			reverse_calculate: function(frm) {
 				let data = [];
 				for (let row of frm.doc.items) {
 					data.push({
+						"doctype": row.doctype,
 						"docname": row.name,
 						"item_code": row.item_code,
 						"item_name": row.item_name,
@@ -274,12 +273,7 @@ $(document).on('app_ready', function() {
 								let items = r.message;
 								items.forEach(item => {
 									let rate = item.amount / item.qty;
-									if(doctype == "Purchase Order"){
-										frappe.model.set_value("Purchase Order Item", item.docname, "rate", rate);
-									}
-									else if(doctype == "Purchase Invoice"){
-										frappe.model.set_value("Purchase Invoice Item", item.docname, "rate", rate);
-									}
+									frappe.model.set_value(item.doctype, item.docname, "rate", rate);
 								});
 							}
 						})

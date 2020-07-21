@@ -204,7 +204,8 @@ def get_cultivation_tax(doc, items):
 	items = json.loads(items)
 
 	for item in items:
-		tax = sum(calculate_item_cultivation_tax(doc, item).values())
-		item['amount'] = float(item.get("amount")) + tax
+		tax = calculate_item_cultivation_tax(doc, item)
+		if tax:
+			item['amount'] = float(item.get("amount")) + sum(tax.values())
 
 	return items
