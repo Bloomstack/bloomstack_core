@@ -1,143 +1,115 @@
 {% extends "templates/web.html" %}
 
 {% block title %}{{ _('Products') }}{% endblock %}
-{% block header %}
-<h1>{{ _('Products') }}</h1>
-{% endblock header %}
 
 {% block style %}
+<link rel="stylesheet" href="https://use.typekit.net/ybv2gcc.css">
 <link rel="stylesheet" href="/assets/erpnext/css/products.css">
 <link rel="stylesheet" href="/assets/bloomstack_core/css/products.css">
 {% endblock %}
 
 {% block page_content %}
+<div class="row page-header">
+	<div class="col-1">
+		<p></p>
+	</div>
+	<div class="col-11">
+		<h1>{{ _('Products') }}</h1>
+	</div>
+</div>
+
 <div class="row">
-	<div class="col-8">
+	<div class="col-1"></div>
+	<div class="col-5">
 		<div class="input-group input-group-sm mb-3">
 			<input type="search" class="form-control" placeholder="{{_('Search')}}"
-				aria-label="{{_('Product Search')}}" aria-describedby="product-search"
-				value="{{ frappe.form_dict.search or '' }}"
-			>
+			aria-label="{{_('Product Search')}}" aria-describedby="product-search"
+			value="{{ frappe.form_dict.search or '' }}">
 		</div>
 	</div>
+		{% for field_filter in field_filters %}
+		{%- set item_field =  field_filter[0] %}
+		{%- set values =  field_filter[1] %}
+		<div class="col-1">
+			{% if values %}
+			<select class="filter-options">
+				<option value="" disabled selected>{{item_field.label}}</option>
+				{% for value in values %}
+				<option class="custom-control custom-checkbox" data-value="{{ value }}" id="{{value}}" data-filter-name="{{ item_field.fieldname }}" data-filter-value="{{ value }}"> {{value}} </option>
+				{% endfor %}
+			</select>
+			{% else %}
+			<i class="text-muted">{{ _('No values') }}</i>
+			{% endif %}
+		</div>
+		{% endfor %}
+		
+		{% for attribute in attribute_filters %}
+		<div class="col-1">
+			{% if attribute.item_attribute_values %}
+			<select class="filter-options">
+				<option value="" disabled selected>{{ attribute.name }}</option>
+				{% for attr_value in attribute.item_attribute_values %}
+				<option class="custom-control custom-checkbox" data-value="{{ value }}" id="{{attr_value.name}}" data-attribute-name="{{ attribute.name }}" data-attribute-value="{{ attr_value.attribute_value }}">
+					{{ attr_value.attribute_value }}
+				</option>
+				{% endfor %}
+			</select>
+			{% else %}
+			<i class="text-muted">{{ _('No values') }}</i>
+			{% endif %}
+		</div>
+		{% endfor %}
+	<script>
+		frappe.ready(() => {
+			$('.filter-options').on('change', frappe.utils.debounce((e) => {
+				const $input = $(e.target);
+				const keyword = ($input.children("option:selected"). val() || '').toLowerCase();
+				console.log(keyword);
+				const $filter_options = $input;
 
-	<div class="col-4 pl-0">
+				$filter_options.find('.custom-control').show();
+				$filter_options.find('.custom-control').each((i, el) => {
+					const $el = $(el);
+					const value = $el.data('value').toLowerCase();
+					console.log(value);
+					if (!value.includes(keyword)) {
+						$el.hide();
+					}
+				});
+			}, 300));
+		})
+	</script>
+
+	
+	<!-- <div class="col-4 pl-0 d-md-none">
 		<button class="btn btn-light btn-sm btn-block d-md-none"
-			type="button"
-			data-toggle="collapse"
-			data-target="#product-filters"
-			aria-expanded="false"
-			aria-controls="product-filters"
-			style="white-space: nowrap;"
+		type="button"
+		data-toggle="collapse"
+		data-target="#product-filters"
+		aria-expanded="false"
+		aria-controls="product-filters"
+		style="white-space: nowrap;"
 		>
-			{{ _('Toggle Filters') }}
-		</button>
-	</div>
+		{{ _('Toggle Filters') }}
+	</button>
+</div> -->
 </div>
 
 <div class="row">
-	<div class="col-12 order-2 col-md-8 order-md-1 products-list row no-gutters">
+	<div class="col-12 order-2 col-md-12 order-md-1 products-list row no-gutters">
 		{% if items %}
-			{% for item in items %}
-				{% include "bloomstack_core/www/all-products/item_row.html" %}
-			{% endfor %}
+		{% for item in items %}
+		{% include "bloomstack_core/www/all-products/item_row.html" %}
+		{% endfor %}
 		{% else %}
-			{% include "bloomstack_core/www/all-products/not_found.html" %}
+		{% include "bloomstack_core/www/all-products/not_found.html" %}
 		{% endif %}
 	</div>
-	<div class="col-12 order-1 col-md-4 order-md-2">
 
-		{% if frappe.form_dict.start or frappe.form_dict.field_filters or frappe.form_dict.attribute_filters or frappe.form_dict.search %}
-		<a class="mb-3 d-inline-block" href="/all-products">{{ _('Clear filters') }}</a>
-		{% endif  %}
-
-		<div class="collapse d-md-block" id="product-filters">
-			{% for field_filter in field_filters %}
-				{%- set item_field =  field_filter[0] %}
-				{%- set values =  field_filter[1] %}
-				<div class="mb-4">
-					<h6>{{ item_field.label }}</h6>
-
-					{% if values | len > 20 %}
-					<!-- show inline filter if values more than 20 -->
-					<input type="text" class="form-control form-control-sm mb-2 product-filter-filter"/>
-					{% endif %}
-
-					{% if values %}
-					<div class="filter-options">
-						{% for value in values %}
-						<div class="custom-control custom-checkbox" data-value="{{ value }}">
-							<input type="checkbox"
-								class="product-filter field-filter custom-control-input"
-								id="{{value}}"
-								data-filter-name="{{ item_field.fieldname }}"
-								data-filter-value="{{ value }}"
-							>
-							<label class="custom-control-label" for="{{value}}">
-								{{ value }}
-							</label>
-						</div>
-						{% endfor %}
-					</div>
-					{% else %}
-					<i class="text-muted">{{ _('No values') }}</i>
-					{% endif %}
-				</div>
-			{% endfor %}
-
-			{% for attribute in attribute_filters %}
-				<div class="mb-4">
-					<h6>{{ attribute.name }}</h6>
-
-					{% if values | len > 20 %}
-					<!-- show inline filter if values more than 20 -->
-					<input type="text" class="form-control form-control-sm mb-2 product-filter-filter"/>
-					{% endif %}
-
-					{% if attribute.item_attribute_values %}
-					<div class="filter-options">
-						{% for attr_value in attribute.item_attribute_values %}
-						<div class="custom-control custom-checkbox" data-value="{{ value }}">
-							<input type="checkbox"
-								class="product-filter attribute-filter custom-control-input"
-								id="{{attr_value.name}}"
-								data-attribute-name="{{ attribute.name }}"
-								data-attribute-value="{{ attr_value.attribute_value }}"
-								{% if attr_value.checked %} checked {% endif %}
-							>
-							<label class="custom-control-label" for="{{attr_value.name}}">
-								{{ attr_value.attribute_value }}
-							</label>
-						</div>
-						{% endfor %}
-					</div>
-					{% else %}
-					<i class="text-muted">{{ _('No values') }}</i>
-					{% endif %}
-				</div>
-			{% endfor %}
-		</div>
-
-		<script>
-			frappe.ready(() => {
-				$('.product-filter-filter').on('keydown', frappe.utils.debounce((e) => {
-					const $input = $(e.target);
-					const keyword = ($input.val() || '').toLowerCase();
-					const $filter_options = $input.next('.filter-options');
-
-					$filter_options.find('.custom-control').show();
-					$filter_options.find('.custom-control').each((i, el) => {
-						const $el = $(el);
-						const value = $el.data('value').toLowerCase();
-						if (!value.includes(keyword)) {
-							$el.hide();
-						}
-					});
-				}, 300));
-			})
-		</script>
-	</div>
+	
 </div>
+
 <div class="row">
 	<div class="col-12">
 		{% if frappe.form_dict.start|int > 0 %}

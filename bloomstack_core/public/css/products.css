@@ -1,5 +1,36 @@
-.products-list .card {
-  border: 1px solid rgba(0, 0, 0, 0.125);
+.page-header h1 {
+  font: 32px/43px 'futura-pt', sans-serif;
+  letter-spacing: 3.2px;
+  color: #000000E8;
+  text-transform: uppercase;
+}
+
+.products-list .card:nth-child(2n+1) {
+  margin-right: 0;
+}
+
+.products-list .info {
+  font: 10px/21px 'futura-pt', sans-serif;
+  letter-spacing: 0.8px;
+  color: #FFFFFFE8;
+}
+
+.products-list .info p {
+  margin-bottom: 5px;
+  background: #F05E23;
+  border-radius: 35px;
+  width: 76px;
+  height: 20px;
+  text-align: center;
+}
+
+.products-list .info-image {
+  text-align: center;
+  min-height: 140px;
+}
+
+.products-list img {
+  width: 50%;
 }
 
 .products-list img:after {
@@ -8,6 +39,19 @@
 
 .products-list .card-body {
   text-align: center;
+}
+
+.products-list .card-body h5 a {
+  font: 14px/19px 'futura-pt', sans-serif;
+  letter-spacing: 1.4px;
+  color: #000000;
+}
+
+.products-list .card-body .item-price {
+  font: 16px/21px 'futura-pt', sans-serif;
+  font-weight: bold;
+  letter-spacing: 1.6px;
+  color: #000000;
 }
 
 .products-list a.btn.btn-light {
@@ -30,10 +74,10 @@
   text-overflow: ellipsis;
   max-width: 100%;
   vertical-align: middle;
+  margin-bottom: 5px;
 }
 
-@media screen and (max-width: 992px) {
-  .products-list .card:nth-child(2n+1) {
-    margin-right: 5px;
-  }
+.filter-options {
+  width: 100%;
 }
+
