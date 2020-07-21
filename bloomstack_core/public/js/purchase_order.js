@@ -8,7 +8,12 @@ frappe.ui.form.on('Purchase Order', {
 				"item_name": row.item_name,
 				"qty": row.qty,
 				"rate": row.rate,
-				"amount": row.amount
+				"amount": row.amount,
+				"flower_weight": row.flower_weight,
+				"leaf_weight": row.leaf_weight,
+				"plant_weight": row.plant_weight,
+				"uom": row.uom,
+				"cultivation_weight_uom": row.cultivation_weight_uom
 			})
 		}
 
@@ -71,19 +76,31 @@ frappe.ui.form.on('Purchase Order', {
 			],
 			primary_action: function () {
 				const values = dialog.get_values().items;
-				values.forEach(d => {
-					let rate = d.amount / d.qty;
-					frappe.model.set_value("Purchase Order Item", d.docname, "rate", rate);
-				});
-
+				frappe.call({
+					method: "bloomstack_core.hook_events.taxes.set_cultivation_tax",
+					freeze: true,
+					args: {
+						"doc": frm.doc,
+						"items": values
+					},
+					callback: function(r) {
+						let items = r.message;
+						items.forEach(item => {
+							let rate = item.amount / item.qty;
+							frappe.model.set_value("Purchase Order Item", item.docname, "rate", rate);
+						});
+					}
+				})
 				dialog.hide();
 				frappe.show_alert({
 					indicator: 'green',
 					message: __("The amount have been successfully set")
 				});
 			},
-			primary_action_label: __('Set Amount')
+			primary_action_label: __('Set Amounts')
 		})
-		dialog.show();
+		if(frm.doc.docstatus != 1){
+			dialog.show();
+		}
 	}
 })

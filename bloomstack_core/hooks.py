@@ -83,6 +83,7 @@ doctype_js = {
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
 	"Project": "public/js/project.js",
+	"Purchase Order": "public/js/purchase_order.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
@@ -109,14 +110,10 @@ override_doctype_dashboards = {
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-<<<<<<< HEAD
-doctype_calendar_js = {"Contract" : "public/js/contract_calendar.js"}
-=======
 doctype_calendar_js = {
 	"Contract" : "public/js/contract_calendar.js",
 	"Work Order": "public/js/work_order_calendar.js"
 }
->>>>>>> 2ac5637c0f5adb9a8c3dfd04daaddaa93872ef87
 
 # Home Pages
 # ----------
