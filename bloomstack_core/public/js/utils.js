@@ -274,7 +274,12 @@ $(document).on('app_ready', function() {
 								let items = r.message;
 								items.forEach(item => {
 									let rate = item.amount / item.qty;
-									frappe.model.set_value("Purchase Order Item", item.docname, "rate", rate);
+									if(doctype == "Purchase Order"){
+										frappe.model.set_value("Purchase Order Item", item.docname, "rate", rate);
+									}
+									else if(doctype == "Purchase Invoice"){
+										frappe.model.set_value("Purchase Invoice Item", item.docname, "rate", rate);
+									}
 								});
 							}
 						})
@@ -286,11 +291,11 @@ $(document).on('app_ready', function() {
 					},
 					primary_action_label: __('Set Amounts')
 				})
-				if(frm.doc.docstatus != 1){
-					dialog.show();
-				}
+				dialog.show();
 			}
-		})})})
+		})
+	})
+});
 
 set_and_update_excise_tax = function(frm) {
 	cur_frm.cscript.calculate_taxes_and_totals();
