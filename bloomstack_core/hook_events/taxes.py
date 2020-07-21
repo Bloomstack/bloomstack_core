@@ -198,19 +198,6 @@ def set_excise_tax(doc):
 
 
 @frappe.whitelist()
-def set_tax(doc):
-	if isinstance(doc, str):
-		doc = frappe._dict(json.loads(doc))
-
-	compliance_items = frappe.get_all('Compliance Item', fields=['item_code'])
-	if not compliance_items:
-		return
-
-	excise_tax_row = calculate_excise_tax(doc, compliance_items)
-	return excise_tax_row
-
-
-@frappe.whitelist()
 def set_cultivation_tax(doc, items):
 	if isinstance(doc, str):
 		doc = frappe._dict(json.loads(doc))

@@ -9,6 +9,7 @@ def get_bloomtrace_client():
 
 	if not url:
 		return
+
 	try:
 		client = FrappeClient(url, username=username, password=password, verify=True)
 	except ConnectionError:
