@@ -62,7 +62,7 @@ def calculate_item_cultivation_tax(doc, item, cultivation_taxes=None):
 	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
 	compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
 	if not compliance_item or not compliance_item.enable_cultivation_tax:
-		return
+		return cultivation_taxes
 
 	flower_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_flower")
 	leaf_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_leaf")
