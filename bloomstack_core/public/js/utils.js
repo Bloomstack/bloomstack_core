@@ -31,7 +31,7 @@ $(document).on('app_ready', function() {
 		});
 	});
 
-	$.each(["Sales Order", "Sales Invoice", "Delivery Note"], function (i, doctype) {
+	$.each(["Quotation", "Sales Order", "Sales Invoice", "Delivery Note"], function (i, doctype) {
 		frappe.ui.form.on(doctype, {
 			onload: (frm) => {
 				frm.set_query("license", () => {
@@ -68,7 +68,7 @@ $(document).on('app_ready', function() {
 				set_and_update_excise_tax(frm);
 			},
 			order_type: (frm) => {
-				if (frm.doc.order_type === 'Sample') {
+				if (frm.doc.order_type) {
 					set_and_update_excise_tax(frm);
 				}
 			}
@@ -190,7 +190,7 @@ $(document).on('app_ready', function() {
 
 set_and_update_excise_tax = function(frm) {
 	cur_frm.cscript.calculate_taxes_and_totals();
-	if (frm.doc.license && frm.doc.order_type === "Sample") {
+	if (frm.doc.license) {
 		frappe.db.get_value("Compliance Info", { "name": frm.doc.license }, "license_for", (r) => {
 			if (r && r.license_for == "Retailer") {
 				frappe.call({
@@ -199,6 +199,7 @@ set_and_update_excise_tax = function(frm) {
 						doc: frm.doc
 					},
 					callback: (r) => {
+						console.log("r.message", r.message);
 						if (r.message && r.message.tax_amount > 0) {
 							let excise_tax_row = r.message;
 							let taxes = frm.doc.taxes;
@@ -212,7 +213,10 @@ set_and_update_excise_tax = function(frm) {
 									}
 								});
 							} else {
+								console.log("else", excise_tax_row);
 								frm.add_child('taxes', excise_tax_row);
+								frm.refresh_field('taxes')
+								cur_frm.cscript.calculate_taxes_and_totals();
 							}
 						} else if ((r.message && r.message.tax_amount == 0)) {
 							let taxes = frm.doc.taxes;

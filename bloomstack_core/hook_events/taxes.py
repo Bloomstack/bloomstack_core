@@ -93,10 +93,6 @@ def calculate_cultivation_tax(doc, compliance_items):
 def calculate_excise_tax(doc, compliance_items):
 	total_excise_tax = total_shipping_charge = 0
 
-	# Do not calculate excise tax when order type is Sample
-	if doc.get("order_type") == "Sample":
-		return
-
 	if doc.get("taxes"):
 		for tax in doc.get("taxes"):
 			if tax.get("account_head") == get_company_default(doc.get("company"), "default_shipping_account"):
@@ -122,6 +118,10 @@ def calculate_excise_tax(doc, compliance_items):
 		item_cost_with_shipping = (max_item_rate * item.get("qty")) + item_shipping_charge
 		item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
 		total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
+
+	# if order type is sample then pass tax_ammount zero to remove excise tax row automatically.
+	if doc.get("order_type") == "Sample":
+		total_excise_tax = 0
 
 	excise_tax_row = {
 		'category': 'Total',
