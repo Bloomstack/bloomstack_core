@@ -30,10 +30,11 @@ class ComplianceInfo(Document):
 			self.county = license_info.get('county')
 			self.city = license_info.get('city')
 
-			bloomstack_site_license = {
-				"doctype": "Bloomstack Site License",
-				"bloomstack_site": site_url,
-				"license_info": self.license_number,
-				"status": "Active"
-			}
-			client.insert(bloomstack_site_license)
+			if not frappe.get_conf().developer_mode:
+				bloomstack_site_license = {
+					"doctype": "Bloomstack Site License",
+					"bloomstack_site": site_url,
+					"license_info": self.license_number,
+					"status": "Active"
+				}
+				client.insert(bloomstack_site_license)
