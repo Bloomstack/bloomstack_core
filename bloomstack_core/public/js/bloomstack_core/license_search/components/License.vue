@@ -21,14 +21,17 @@
             </div>
         </div>
         <div class="actions">
-                <p><a href="" class="conversion-actions">Convert to lead</a></p>
-                <p><a href="" class="conversion-actions">Convert to customer</a></p>
-                <p><a href="" class="conversion-actions">Convert to supplier</a></p>
+                <p><a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to lead</a></p>
+                <p><a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to customer</a></p>
+                <p><a href="#" @click.prevent="make_compliance_info(make_supplier)" class="conversion-actions">Convert to supplier</a></p>
         </div>
     </div>
 </template>
 
 <script>
+
+    import FrappeService from "../services/frappe_service";
+
     export default {
         props: {
             license: Object
@@ -39,37 +42,64 @@
             }
         },
         methods: {
-            makeCustomer() {
-                const customer = {
-                    "doctype": "Customer",
-                    "customer_name": this.license.business_owner || this.license.legal_name,
-                    "customer_group": "Individual",
-                    "territory": "All Territories",
-                    "customer_type": "Company"
-                };
-                this.$store.dispatch('makeCustomer', customer);
+            quick_entry(doctype, fieldMap) {
+                const mapper = {};
+                for(let customerField in fieldMap) {
+                    let licenseField = fieldMap[customerField];
+                    mapper[customerField] = this.license[licenseField];
+                }
+
+                frappe.new_doc("Customer", false, function(dialog) {
+                    dialog.set_values(mapper);
+                });
             },
 
-            makeLead() {
-                const lead = {
-                    "doctype": "Customer",
-                    "customer_name": this.license.business_owner || this.license.legal_name,
-                    "customer_group": "Individual",
-                    "territory": "All Territories",
-                    "customer_type": "Company"
-                };
-                this.$store.dispatch('makeCustomer', lead);
+            make_compliance_info: function(callee) {
+                const complianceInfo = {
+                    "doctype": "Compliance Info",
+                    "license_number": this.license.license_number
+                }
+                return FrappeService.insertDoc({
+                    doc: complianceInfo,
+                    isFieldExist: "license_number"
+                 }).then(res => {
+                     callee();
+                }).catch(err => {
+                    callee();
+                });
             },
 
-            makeSupplier() {
-                const supplier = {
-                    "doctype": "Customer",
-                    "customer_name": this.license.business_owner || this.license.legal_name,
-                    "customer_group": "Individual",
-                    "territory": "All Territories",
-                    "customer_type": "Company"
-                };
-                this.$store.dispatch('makeCustomer', supplier);
+            make_customer() {
+                const fieldMap = {
+                    customer_name: "legal_name",
+                    email_id: "email_id",
+                    mobile_no: "phone",
+                    license: "license_number"
+			    };
+
+                this.quick_entry("Customer", fieldMap);
+            },
+
+            make_lead() {
+                const fieldMap = {
+                    customer_name: "legal_name",
+                    email_id: "email_id",
+                    mobile_no: "phone",
+                    license: "license_number"
+			    };
+
+                this.quick_entry("Lead", fieldMap);
+            },
+
+            make_supplier() {
+                const fieldMap = {
+                    customer_name: "legal_name",
+                    email_id: "email_id",
+                    mobile_no: "phone",
+                    license: "license_number"
+			    };
+
+                this.quick_entry("Supplier", fieldMap);
             }
         }
     }

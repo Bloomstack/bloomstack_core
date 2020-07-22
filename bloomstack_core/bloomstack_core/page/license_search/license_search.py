@@ -1,9 +1,6 @@
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url, cstr
-from urllib.parse import urlparse
 import json
-
 
 @frappe.whitelist()
 def get_all_licenses(page_number, per_page, filters):
