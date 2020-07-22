@@ -2,13 +2,16 @@
 # Copyright (c) 2019, Bloom Stack, Inc and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
+from urllib.parse import urlparse
 
 import frappe
+from bloomstack_core.bloomtrace import get_bloomtrace_client
 from bloomstack_core.utils import get_metrc
 from frappe.model.document import Document
 from frappe.utils.background_jobs import enqueue
 from frappe.utils.nestedset import get_root_of
+from frappe.utils import get_url
+
 
 METRC_UOMS = {
 	"Each": "Each",
@@ -27,9 +30,28 @@ METRC_UOMS = {
 
 
 class ComplianceSettings(Document):
+	def validate(self):
+		if self.is_compliance_enabled:
+			self.sync_bloomtrace()
+
 	def sync_data(self):
 		enqueue(pull_metrc_item_categories)
 		enqueue(pull_metrc_uoms)
+
+	def sync_bloomtrace(self):
+		frappe_client = get_bloomtrace_client()
+		if not frappe_client:
+			return
+
+		site_url = urlparse(get_url()).netloc
+		frappe_client.update({
+			"doctype": "Bloomstack Site",
+			"name": site_url,
+			"metrc_url": self.metrc_url,
+			"metrc_user_key": self.get_password("metrc_user_key"),
+			"metrc_push_data": self.metrc_push_data,
+			"metrc_pull_data": self.metrc_pull_data
+		})
 
 
 def pull_metrc_item_categories():

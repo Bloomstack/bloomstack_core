@@ -9,6 +9,7 @@ from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe.utils import get_url, cstr
 from urllib.parse import urlparse
 
+
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
@@ -35,11 +36,13 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
+
 def insert_compliance_item(compliance_item, site_url, frappe_client):
 	bloomtrace_compliance_item_dict = make_compliance_item(compliance_item, site_url)
 	bloomtrace_compliance_item = frappe_client.insert(bloomtrace_compliance_item_dict)
 	bloomtrace_id = bloomtrace_compliance_item.get('name')
 	frappe.db.set_value("Compliance Item", compliance_item.name, "bloomtrace_id", bloomtrace_id)
+
 
 def update_compliance_item(compliance_item, site_url, frappe_client):
 	bloomtrace_compliance_item_dict = make_compliance_item(compliance_item, site_url)
@@ -47,7 +50,8 @@ def update_compliance_item(compliance_item, site_url, frappe_client):
 		"name": compliance_item.bloomtrace_id
 	})
 	frappe_client.update(bloomtrace_compliance_item_dict)
- 
+
+
 def make_compliance_item(compliance_item, site_url):
 	bloomtrace_compliance_item_dict = {
 		"doctype": "Compliance Item",

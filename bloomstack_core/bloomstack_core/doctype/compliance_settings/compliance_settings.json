@@ -13,7 +13,10 @@
   "metrc_sync_data",
   "cb_metrc",
   "metrc_vendor_key",
-  "metrc_user_key"
+  "metrc_user_key",
+  "sb_sync",
+  "metrc_push_data",
+  "metrc_pull_data"
  ],
  "fields": [
   {
@@ -65,11 +68,28 @@
    "fieldtype": "Password",
    "in_list_view": 1,
    "label": "User Key"
+  },
+  {
+   "depends_on": "eval:doc.is_compliance_enabled",
+   "fieldname": "sb_sync",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "metrc_push_data",
+   "fieldtype": "Check",
+   "label": "Push Data"
+  },
+  {
+   "default": "0",
+   "fieldname": "metrc_pull_data",
+   "fieldtype": "Check",
+   "label": "Pull Data"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2020-05-05 02:24:25.877691",
+ "modified": "2020-07-22 03:52:35.196313",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Settings",
