@@ -5,6 +5,10 @@
   text-transform: uppercase;
 }
 
+.products-list .card {
+  border: 0
+}
+
 .products-list .card:nth-child(2n+1) {
   margin-right: 0;
 }
@@ -81,3 +85,8 @@
   width: 100%;
 }
 
+@media screen and (max-width: 575px){
+  .products-list.row.no-gutters .card {
+      padding: 0 20%;
+  }
+}

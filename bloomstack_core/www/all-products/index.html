@@ -13,20 +13,21 @@
 	<div class="col-1">
 		<p></p>
 	</div>
-	<div class="col-11">
+	<div class="col-md-11 col-sm-12 col-xs-12">
 		<h1>{{ _('Products') }}</h1>
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-1"></div>
-	<div class="col-5">
+	<div class="col-md-1"></div>
+	<div class="col-md-5 col-sm-12 col-xs-12">
 		<div class="input-group input-group-sm mb-3">
 			<input type="search" class="form-control" placeholder="{{_('Search')}}"
 			aria-label="{{_('Product Search')}}" aria-describedby="product-search"
 			value="{{ frappe.form_dict.search or '' }}">
 		</div>
 	</div>
+		<!-- Filters code, Need it Later 
 		{% for field_filter in field_filters %}
 		{%- set item_field =  field_filter[0] %}
 		{%- set values =  field_filter[1] %}
@@ -59,8 +60,8 @@
 			<i class="text-muted">{{ _('No values') }}</i>
 			{% endif %}
 		</div>
-		{% endfor %}
-	<script>
+		{% endfor %} -->
+	<!-- <script>
 		frappe.ready(() => {
 			$('.filter-options').on('change', frappe.utils.debounce((e) => {
 				const $input = $(e.target);
@@ -79,7 +80,7 @@
 				});
 			}, 300));
 		})
-	</script>
+	</script> -->
 
 	
 	<!-- <div class="col-4 pl-0 d-md-none">
