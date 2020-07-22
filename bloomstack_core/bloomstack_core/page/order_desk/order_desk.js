@@ -110,7 +110,8 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.submit_sales_order()
 				},
 				on_delivery_date_change: (delivery_date) => {
-					this.delivery_date = delivery_date
+					this.delivery_date = delivery_date;
+					this.frm.set_value("delivery_date", delivery_date);
 				},
 				on_delivery_window_change: (type, time) => {
 					if (type == "start") {
