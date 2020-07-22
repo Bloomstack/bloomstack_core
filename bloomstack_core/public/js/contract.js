@@ -65,6 +65,11 @@ frappe.ui.form.on("Contract", {
 			frappe.throw("Please sign the contract before submiting it.")
 		}
 	},
+	
+	signee_company: (frm) =>{
+		frm.set_value("signed_by_company_date", frappe.datetime.nowdate());
+
+	},
 
 	party_name: (frm) => {
 		if (frm.doc.party_type == 'Employee' && frm.doc.party_name) {
