@@ -9,6 +9,7 @@
  "field_order": [
   "item_code",
   "item_name",
+  "strain_type",
   "item_category",
   "cb_compliance_item",
   "requires_lab_tests",
@@ -117,10 +118,15 @@
    "fieldname": "requires_lab_tests",
    "fieldtype": "Check",
    "label": "Requires Lab Tests"
+  },
+  {
+   "fieldname": "strain_type",
+   "fieldtype": "Data",
+   "label": "Strain Type"
   }
  ],
  "links": [],
- "modified": "2020-06-30 02:10:55.742394",
+ "modified": "2020-07-20 23:15:42.681875",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Compliance Item",

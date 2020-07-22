@@ -20,7 +20,7 @@ def calculate_cannabis_tax(doc, method):
 
 	if doc.doctype in ("Purchase Order", "Purchase Invoice", "Purchase Receipt"):
 		# calculate cultivation tax for buying cycle
-		cultivation_taxes = calculate_cultivation_tax(doc, compliance_items)
+		cultivation_taxes = calculate_cultivation_tax(doc)
 		for account, tax in cultivation_taxes.items():
 			cultivation_tax_row = get_cultivation_tax_row(account, tax)
 			set_taxes(doc, cultivation_tax_row)
@@ -40,7 +40,7 @@ def calculate_cannabis_tax(doc, method):
 		license_for = frappe.db.get_value("Compliance Info", default_customer_license, "license_for")
 		if license_for == "Distributor":
 			# calculate cultivation tax for selling cycle if customer is a distributor
-			cultivation_taxes = calculate_cultivation_tax(doc, compliance_items)
+			cultivation_taxes = calculate_cultivation_tax(doc)
 			for account, tax in cultivation_taxes.items():
 				cultivation_tax_row = get_cultivation_tax_row(account, tax)
 				set_taxes(doc, cultivation_tax_row)
@@ -50,48 +50,57 @@ def calculate_cannabis_tax(doc, method):
 			set_taxes(doc, excise_tax_row)
 
 
-def calculate_cultivation_tax(doc, compliance_items):
+def calculate_cultivation_tax(doc):
+	cultivation_taxes = {}
+	for item in doc.get("items"):
+		cultivation_taxes = calculate_item_cultivation_tax(doc, item, cultivation_taxes)
+
+	return cultivation_taxes
+
+
+def calculate_item_cultivation_tax(doc, item, cultivation_taxes=None):
+	compliance_items = frappe.get_all('Compliance Item', fields=['item_code', 'enable_cultivation_tax', 'item_category'])
+	compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
+	if not compliance_item or not compliance_item.enable_cultivation_tax:
+		return cultivation_taxes
+
 	flower_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_flower")
 	leaf_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_leaf")
 	plant_tax_account = get_company_default(doc.get("company"), "default_cultivation_tax_account_plant")
 
-	cultivation_taxes = dict.fromkeys([flower_tax_account, leaf_tax_account, plant_tax_account], float())
+	if not cultivation_taxes:
+		cultivation_taxes = dict.fromkeys([flower_tax_account, leaf_tax_account, plant_tax_account], float())
 
-	for item in doc.get("items"):
-		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
-		if not compliance_item or not compliance_item.enable_cultivation_tax:
-			continue
+	qty_in_ounces = convert_to_ounces(item.get("uom"), item.get("qty"))
 
-		qty_in_ounces = convert_to_ounces(item.get("uom"), item.get("qty"))
+	if compliance_item.item_category == "Dry Flower":
+		cultivation_tax = qty_in_ounces * DRY_FLOWER_TAX_RATE
+		cultivation_taxes[flower_tax_account] += cultivation_tax
+	elif compliance_item.item_category == "Dry Leaf":
+		cultivation_tax = qty_in_ounces * DRY_LEAF_TAX_RATE
+		cultivation_taxes[leaf_tax_account] += cultivation_tax
+	elif compliance_item.item_category == "Fresh Plant":
+		cultivation_tax = qty_in_ounces * FRESH_PLANT_TAX_RATE
+		cultivation_taxes[plant_tax_account] += cultivation_tax
+	elif compliance_item.item_category == "Based on Raw Materials":
+		# calculate cultivation tax based on weight of raw materials
+		if not item.get("cultivation_weight_uom"):
+			frappe.throw(_("Row #{0}: Please set a cultivation weight UOM".format(item.get("idx"))))
 
-		if compliance_item.item_category == "Dry Flower":
-			cultivation_tax = qty_in_ounces * DRY_FLOWER_TAX_RATE
-			cultivation_taxes[flower_tax_account] += cultivation_tax
-		elif compliance_item.item_category == "Dry Leaf":
-			cultivation_tax = qty_in_ounces * DRY_LEAF_TAX_RATE
-			cultivation_taxes[leaf_tax_account] += cultivation_tax
-		elif compliance_item.item_category == "Fresh Plant":
-			cultivation_tax = qty_in_ounces * FRESH_PLANT_TAX_RATE
-			cultivation_taxes[plant_tax_account] += cultivation_tax
-		elif compliance_item.item_category == "Based on Raw Materials":
-			# calculate cultivation tax based on weight of raw materials
-			if not item.get("cultivation_weight_uom"):
-				frappe.throw(_("Row #{0}: Please set a cultivation weight UOM".format(item.get("idx"))))
+		if item.get("flower_weight"):
+			flower_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
+			flower_cultivation_tax = (flower_weight_in_ounce * DRY_FLOWER_TAX_RATE)
+			cultivation_taxes[flower_tax_account] += flower_cultivation_tax
 
-			if item.get("flower_weight"):
-				flower_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("flower_weight"))
-				flower_cultivation_tax = (flower_weight_in_ounce * DRY_FLOWER_TAX_RATE)
-				cultivation_taxes[flower_tax_account] += flower_cultivation_tax
+		if item.get("leaf_weight"):
+			leaf_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
+			leaf_cultivation_tax = (leaf_weight_in_ounce * DRY_LEAF_TAX_RATE)
+			cultivation_taxes[leaf_tax_account] += leaf_cultivation_tax
 
-			if item.get("leaf_weight"):
-				leaf_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("leaf_weight"))
-				leaf_cultivation_tax = (leaf_weight_in_ounce * DRY_LEAF_TAX_RATE)
-				cultivation_taxes[leaf_tax_account] += leaf_cultivation_tax
-
-			if item.get("plant_weight"):
-				plant_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
-				plant_cultivation_tax = (plant_weight_in_ounce * FRESH_PLANT_TAX_RATE)
-				cultivation_taxes[plant_tax_account] += plant_cultivation_tax
+		if item.get("plant_weight"):
+			plant_weight_in_ounce = convert_to_ounces(item.get("cultivation_weight_uom"), item.get("plant_weight"))
+			plant_cultivation_tax = (plant_weight_in_ounce * FRESH_PLANT_TAX_RATE)
+			cultivation_taxes[plant_tax_account] += plant_cultivation_tax
 
 	return cultivation_taxes
 
@@ -185,3 +194,18 @@ def set_excise_tax(doc):
 
 	excise_tax_row = calculate_excise_tax(doc, compliance_items)
 	return excise_tax_row
+
+
+@frappe.whitelist()
+def get_cultivation_tax(doc, items):
+	if isinstance(doc, str):
+		doc = frappe._dict(json.loads(doc))
+
+	items = json.loads(items)
+
+	for item in items:
+		tax = calculate_item_cultivation_tax(doc, item)
+		if tax:
+			item['amount'] = float(item.get("amount")) + sum(tax.values())
+
+	return items
