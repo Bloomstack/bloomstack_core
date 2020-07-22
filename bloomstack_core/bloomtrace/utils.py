@@ -19,6 +19,7 @@ def get_bloomtrace_client():
 
 	return client
 
+
 def make_integration_request(doctype, docname):
 	if frappe.get_conf().enable_bloomtrace:
 		integration_request = frappe.new_doc("Integration Request")
@@ -30,4 +31,3 @@ def make_integration_request(doctype, docname):
 			"reference_docname": docname
 		})
 		integration_request.save(ignore_permissions=True)
-
