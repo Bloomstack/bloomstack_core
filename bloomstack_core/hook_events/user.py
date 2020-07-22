@@ -17,7 +17,7 @@ def validate_if_bloomstack_user(user, method):
 		frappe.throw("Please contact support to disable Bloomstack Users.")
 
 def update_bloomtrace_user(user, method):
-	if frappe.get_conf().enable_bloomtrace and not user.is_new():
+	if not frappe.get_conf().developer_mode and not user.is_new():
 		if user.user_type == "System User" and user.name not in ["Administrator", "Guest"] and not user.works_with_bloomstack:
 			make_integration_request(user.doctype, user.name)
 
