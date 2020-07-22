@@ -1,3 +1,4 @@
+frappe.provide("bloomstack_core.utils");
 frappe.ui.form.on('Quotation', {
 	refresh: (frm) => {
 		if (!frm.is_new() && frm.doc.docstatus === 0) {
@@ -75,7 +76,10 @@ frappe.ui.form.on('Quotation', {
 						frm.set_value("license", r.message)
 					}
 				}
-			})
+			});
+
+			// set excise tax if customer party has license number
+			bloomstack_core.utils.set_and_update_excise_tax(frm);
 		}
 	},
 	no_charge_order: (frm) => {
@@ -96,5 +100,10 @@ frappe.ui.form.on('Quotation', {
 			indicator: 'green',
 			message: __(`${percentage_discount}% discount applied`)
 		});
+	},
+	order_type: (frm) => {
+		if (frm.doc.order_type) {
+			bloomstack_core.utils.set_and_update_excise_tax(frm);
+		}
 	}
 });
