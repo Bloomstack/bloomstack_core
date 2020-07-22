@@ -89,7 +89,6 @@ doctype_js = {
 	"Stock Entry": "public/js/stock_entry.js",
 	"Task": "public/js/task.js",
 	"Timesheet": "public/js/timesheet.js",
-	"User": "public/js/user.js",
 	"Work Order": "public/js/work_order.js",
 	"Production Plan": "public/js/production_plan.js"
 }
