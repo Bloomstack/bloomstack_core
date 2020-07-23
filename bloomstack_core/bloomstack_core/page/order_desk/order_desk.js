@@ -111,7 +111,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				},
 				on_delivery_date_change: (delivery_date) => {
 					this.delivery_date = delivery_date;
-					this.frm.set_value("delivery_date", delivery_date);
 				},
 				on_delivery_window_change: (type, time) => {
 					if (type == "start") {
@@ -403,6 +402,9 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	submit_sales_order() {
+		// hack to set delivery date in the Sales Order during submit
+		// trying to set before it causes problems selecting items
+		this.frm.doc.delivery_date = this.delivery_date;
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
 		});
@@ -1081,6 +1083,7 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
+		this.delivery_date_field.set_value(this.frm.doc.delivery_date);
 	}
 
 	make_delivery_window_fields() {
