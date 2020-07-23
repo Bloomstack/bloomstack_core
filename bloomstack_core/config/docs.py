@@ -12,20 +12,3 @@ import frappe
 
 def get_context(context):
 	context.brand_html = "Bloomstack Core"
-
-
-@frappe.whitelist()
-def get_growth_guide_articles(doc_type):
-	articles = frappe.db.sql("""
-		SELECT
-			article.name,
-			article.route
-		FROM
-			`tabGrowth Guide Article` AS article
-				JOIN `tabGrowth Guide Article Reference` AS ref
-					ON ref.parent = article.name
-		WHERE
-			ref.doc_type = %s
-	""", (doc_type), as_dict=1)
-
-	return articles
