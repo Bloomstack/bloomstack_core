@@ -34,7 +34,7 @@ def trips(driver_email):
 def get_filters(email):
 	return {
 		"docstatus": 1,
-		"driver": frappe.db.get_value("Driver", { "user_id": email }, "name"),
+		"driver": frappe.db.get_value("Driver", {"user_id": email}, "name"),
 		"departure_time": ["BETWEEN", [add_days(getdate(nowdate()), -60), getdate(nowdate())]]
 	}
 
@@ -69,6 +69,7 @@ def build_stop_data(trip):
 def build_trip_data(trip):
 	return {
 		"name": trip.name,
+		"status": trip.status,
 		"vehicle": trip.vehicle,
 		"company": trip.company,
 		"stops": build_stop_data(trip)
