@@ -6,7 +6,8 @@ from __future__ import unicode_literals
 
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import cstr
+from frappe.utils import get_url, cstr
+from urllib.parse import urlparse
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
@@ -20,12 +21,12 @@ def execute_bloomtrace_integration_request():
 	for request in pending_requests:
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		package_tag = frappe.get_doc("Package Tag", integration_request.reference_docname)
-		uid = frappe_client.get_doc("UID", integration_request.reference_docname)
+		bloomtrace_package_tag = frappe_client.get_doc("Package Tag", integration_request.reference_docname)
 		try:
-			if not uid:
-				insert_uid(package_tag, frappe_client)
+			if not bloomtrace_package_tag:
+				insert_pakage_tag(package_tag)
 			else:
-				update_uid(package_tag, frappe_client)
+				update_pakage_tag(package_tag)
 			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
@@ -34,29 +35,30 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
-def insert_uid(package_tag, frappe_client):
-	uid = make_uid(package_tag)
-	frappe_client.insert(uid)
+def insert_pakage_tag(package_tag, frappe_client):
+	bloomtrace_package_tag = make_pakage_tag(package_tag)
+	frappe_client.insert(bloomtrace_package_tag)
 
-def update_uid(package_tag, frappe_client):
-	uid = make_uid(package_tag)
-	uid.update({
+def update_pakage_tag(package_tag, frappe_client):
+	bloomtrace_package_tag = make_pakage_tag(package_tag)
+	bloomtrace_package_tag.update({
 		"name": package_tag.name
 	})
-	frappe_client.update(uid)
+	frappe_client.update(bloomtrace_package_tag)
 
-def make_uid(package_tag):
+def make_pakage_tag(package_tag):
+	site_url = urlparse(get_url()).netloc
 	item = frappe.db.get_value("Compliance Item", package_tag.item_code, "bloomtrace_id")
 	manufacturing_date = frappe.db.get_value("Batch", package_tag.batch_no, "manufacturing_date") if package_tag.batch_no else None
 	expiry_date = frappe.db.get_value("Batch", package_tag.batch_no, "expiry_date") if package_tag.batch_no else None
 
-	uid = {
-		"doctype": "UID",
+	bloomtrace_package_tag = {
+		"doctype": "Package Tag",
+		"bloomstack_site": site_url,
 		"item": item,
-		"uid_type": "Package",
 		"uid_number": package_tag.name,
 		"batch_number": package_tag.batch_no,
 		"manufacturing_date": manufacturing_date,
 		"expiry_date": expiry_date
 	}
-	return uid
+	return bloomtrace_package_tag

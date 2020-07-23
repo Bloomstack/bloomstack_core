@@ -15,7 +15,6 @@ def execute_bloomtrace_integration_request():
 	if not frappe_client:
 			return
 
-	site_url = urlparse(get_url()).netloc
 	pending_requests = frappe.get_all("Integration Request",
 		filters={"status": ["IN", ["Queued", "Failed"]], "reference_doctype": "Compliance Item", "integration_request_service": "BloomTrace"},
 		order_by="creation ASC", limit=50)
@@ -25,9 +24,9 @@ def execute_bloomtrace_integration_request():
 		compliance_item = frappe.get_doc("Compliance Item", integration_request.reference_docname)
 		try:
 			if not compliance_item.bloomtrace_id:
-				insert_compliance_item(compliance_item, site_url, frappe_client)
+				insert_compliance_item(compliance_item, frappe_client)
 			else:
-				update_compliance_item(compliance_item, site_url, frappe_client)
+				update_compliance_item(compliance_item, frappe_client)
 			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
@@ -37,22 +36,23 @@ def execute_bloomtrace_integration_request():
 			integration_request.save(ignore_permissions=True)
 
 
-def insert_compliance_item(compliance_item, site_url, frappe_client):
-	bloomtrace_compliance_item_dict = make_compliance_item(compliance_item, site_url)
+def insert_compliance_item(compliance_item, frappe_client):
+	bloomtrace_compliance_item_dict = make_compliance_item(compliance_item)
 	bloomtrace_compliance_item = frappe_client.insert(bloomtrace_compliance_item_dict)
 	bloomtrace_id = bloomtrace_compliance_item.get('name')
 	frappe.db.set_value("Compliance Item", compliance_item.name, "bloomtrace_id", bloomtrace_id)
 
 
-def update_compliance_item(compliance_item, site_url, frappe_client):
-	bloomtrace_compliance_item_dict = make_compliance_item(compliance_item, site_url)
+def update_compliance_item(compliance_item, frappe_client):
+	bloomtrace_compliance_item_dict = make_compliance_item(compliance_item)
 	bloomtrace_compliance_item_dict.update({
 		"name": compliance_item.bloomtrace_id
 	})
 	frappe_client.update(bloomtrace_compliance_item_dict)
 
 
-def make_compliance_item(compliance_item, site_url):
+def make_compliance_item(compliance_item):
+	site_url = urlparse(get_url()).netloc
 	bloomtrace_compliance_item_dict = {
 		"doctype": "Compliance Item",
 		"bloomstack_site": site_url,
