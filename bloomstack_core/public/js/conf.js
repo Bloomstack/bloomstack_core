@@ -28,19 +28,14 @@ $(document).bind('toolbar_setup', () => {
 		// .click(report_issue)
 		.insertAfter($bcc_site);
 
-	// link to Growth Guide
-	const $guide_menu_item = $(`<li><a href=${frappe.boot.growth_guide_link} target="_blank">${__('Growth Guide')}</a></li>`)
-		.insertAfter($report_issue_menu_item);
-
 	const $keyboard_shortcuts = $(`<li><a href="#" onclick="return frappe.ui.toolbar.show_shortcuts(event)" >${__('Keyboard Shortcuts')}</a></li>`)
-		.insertAfter($guide_menu_item);
+		.insertAfter($report_issue_menu_item);
 
 	// Hack to remove all but the above elements
 	$('.dropdown-help ul li')
 		.not($bcc_site)
 		.not($article_links)
 		.not($help_menu)
-		.not($guide_menu_item)
 		.not($report_issue_menu_item)
 		.not($keyboard_shortcuts)
 		.remove();
@@ -86,7 +81,6 @@ $(document).bind('toolbar_setup', () => {
 $(document).on("page-change", () => {
 	const [view, doc_type, doc_name] = frappe.get_route();
 
-	bloomstack_core.get_growth_guide_articles(doc_type);
 	bloomstack_core.update_item_column_label(view, doc_type);
 })
 
@@ -101,29 +95,6 @@ frappe.form.link_formatters['Item'] = (value, doc) => {
 	} else {
 		return value;
 	}
-}
-
-bloomstack_core.get_growth_guide_articles = (doc_type) => {
-	frappe.call({
-		method: "bloomstack_core.config.docs.get_growth_guide_articles",
-		args: {
-			"doc_type": doc_type || ""
-		},
-		callback: (r) => {
-			if (!r.exc) {
-				// Empty out existing article links and append results
-				let $article_links = $(".dropdown-help #help-links").empty();
-
-				for (let article of r.message) {
-					$("<a>", {
-						href: article.route,
-						text: article.name,
-						target: "_blank"
-					}).appendTo($article_links);
-				}
-			}
-		}
-	})
 }
 
 bloomstack_core.update_item_column_label = (view, doc_type) => {
