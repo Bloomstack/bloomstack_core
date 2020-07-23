@@ -52,8 +52,11 @@ def create_metrc_transfer_template(delivery_note, method):
 		integration_request.save(ignore_permissions=True)
 		frappe.db.commit()
 
-		for error in response.json():
-			frappe.throw(_(error.get("message")))
+		if isinstance(response.json(), list):
+			for error in response.json():
+				frappe.throw(_(error.get("message")))
+		elif isinstance(response.json(), dict):
+			frappe.throw(_(response.json().get("Message")))
 	else:
 		integration_request.status = "Completed"
 		integration_request.save(ignore_permissions=True)
