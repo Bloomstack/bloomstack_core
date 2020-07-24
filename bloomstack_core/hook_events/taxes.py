@@ -125,26 +125,28 @@ def calculate_excise_tax(doc, compliance_items):
 			if tax.get("account_head") == get_company_default(doc.get("company"), "default_shipping_account"):
 				total_shipping_charge += tax.tax_amount
 
-	for item in (doc.get("items") or []):
-		compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
-		if not compliance_item:
-			continue
+	# if order type is sample then pass tax_ammount zero to remove excise tax row automatically.
+	if not doc.get("order_type") == "Sample":
+		for item in (doc.get("items") or []):
+			compliance_item = next((data for data in compliance_items if data.get("item_code") == item.get("item_code")), None)
+			if not compliance_item:
+				continue
 
-		# fetch either the transaction rate or price list rate, whichever is higher
-		price_list_rate = item.get("price_list_rate") or 0
-		rate = item.get("rate") or 0
-		max_item_rate = max([price_list_rate, rate])
-		if max_item_rate == 0:
-			continue
+			# fetch either the transaction rate or price list rate, whichever is higher
+			price_list_rate = item.get("price_list_rate") or 0
+			rate = item.get("rate") or 0
+			max_item_rate = max([price_list_rate, rate])
+			if max_item_rate == 0:
+				continue
 
-		if not doc.net_total:
-			return
+			if not doc.net_total:
+				return
 
-		# calculate the total excise tax for each item
-		item_shipping_charge = (total_shipping_charge / doc.net_total) * (max_item_rate * item.get("qty"))
-		item_cost_with_shipping = (max_item_rate * item.get("qty")) + item_shipping_charge
-		item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
-		total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
+			# calculate the total excise tax for each item
+			item_shipping_charge = (total_shipping_charge / doc.net_total) * (max_item_rate * item.get("qty"))
+			item_cost_with_shipping = (max_item_rate * item.get("qty")) + item_shipping_charge
+			item_cost_after_markup = item_cost_with_shipping + (item_cost_with_shipping * MARKUP_PERCENTAGE / 100)
+			total_excise_tax += item_cost_after_markup * EXCISE_TAX_RATE / 100
 
 	excise_tax_row = {
 		'category': 'Total',
