@@ -35,16 +35,16 @@ def execute_bloomtrace_integration_request():
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		user = frappe.get_doc("User", integration_request.reference_docname)
 		try:
-			bloomstack_site_user = frappe_client.get_doc("Bloomstack Site User", filters={
+			bloomstack_site_user = frappe_client.get_doc("Bloomstack Site User", fields=['name', 'works_with_bloomstack'], filters={
 					"bloomstack_site": site_url,
 					"email": user.email
 				})
 			if not bloomstack_site_user:
 				bloomstack_site_user = insert_bloomstack_site_user(user, site_url, frappe_client)
-			else:
+			elif not bloomstack_site_user[0].get('works_with_bloomstack'):
 				doc_name = bloomstack_site_user[0].get('name')
 				bloomstack_site_user = update_bloomstack_site_user(user, doc_name, site_url, frappe_client)
-			frappe.db.set_value("User", user.name, "works_with_bloomstack", bloomstack_site_user.get('works_with_bloomstack'))
+			frappe.db.set_value("User", user.name, "works_with_bloomstack", bloomstack_site_user[0].get('works_with_bloomstack'))
 			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
