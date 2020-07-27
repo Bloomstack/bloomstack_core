@@ -24,9 +24,9 @@ def execute_bloomtrace_integration_request():
 		bloomtrace_package_tag = frappe_client.get_doc("Package Tag", integration_request.reference_docname)
 		try:
 			if not bloomtrace_package_tag:
-				insert_pakage_tag(package_tag)
+				insert_pakage_tag(package_tag, frappe_client)
 			else:
-				update_pakage_tag(package_tag)
+				update_pakage_tag(package_tag, frappe_client)
 			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
