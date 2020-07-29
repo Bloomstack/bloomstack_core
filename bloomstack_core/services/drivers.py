@@ -57,11 +57,16 @@ def build_stop_data(trip):
 		stops_data.append({
 			"name": stop.name,
 			"address": get_address_display(stop.address),
+			"customer": stop.customer,
 			"amountToCollect": stop.grand_total,
 			"deliveryNote": stop.delivery_note,
-			"customerPhoneNumber": frappe.db.get_value("Address", stop.address, "phone"),
 			"salesInvoice": stop.sales_invoice,
-			"items": build_item_data(stop)
+			"items": build_item_data(stop),
+			"distance": stop.distance,
+			"earliestDeliveryTime": stop.delivery_start_time,
+			"latestDeliveryTime": stop.delivery_end_time,
+			"estimatedArrival": stop.estimated_arrival,
+			"customerPhoneNumber": frappe.db.get_value("Address", stop.address, "phone")
 		})
 	return stops_data
 
