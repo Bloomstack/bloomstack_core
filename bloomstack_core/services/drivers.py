@@ -61,6 +61,7 @@ def build_stop_data(trip):
 			"deliveryNote": stop.delivery_note,
 			"customerPhoneNumber": frappe.db.get_value("Address", stop.address, "phone"),
 			"salesInvoice": stop.sales_invoice,
+			"visited": bool(stop.visited),
 			"items": build_item_data(stop)
 		})
 	return stops_data
