@@ -1,6 +1,15 @@
 {% extends "templates/web.html" %}
 
 {% block title %}{{ _('Products') }}{% endblock %}
+
+{% block banner %}
+	{% if banner_image -%}
+	<div class="banner_image">
+		<img src="{{banner_image}}" alt="Banner Image">
+	</div>
+	{%- endif %}
+{% endblock %}
+
 {% block header %}
 <h1>{{ _('Products') }}</h1>
 {% endblock header %}
