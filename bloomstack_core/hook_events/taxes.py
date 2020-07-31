@@ -22,6 +22,8 @@ def calculate_cannabis_tax(doc, method):
 		# calculate cultivation tax for buying cycle
 		cultivation_taxes = calculate_cultivation_tax(doc)
 		for account, tax in cultivation_taxes.items():
+			if not tax:
+				continue
 			cultivation_tax_row = get_cultivation_tax_row(account, tax)
 			set_taxes(doc, cultivation_tax_row)
 	elif doc.doctype in ("Quotation", "Sales Order", "Sales Invoice", "Delivery Note"):
