@@ -1,6 +1,6 @@
 import frappe
+from erpnext.compliance.utils import get_default_license
 from frappe.modules.utils import sync_customizations
-from bloomstack_core.hook_events.utils import get_default_license
 
 
 def execute():
@@ -17,7 +17,7 @@ def execute():
 	supplier_quotations = frappe.get_all("Supplier Quotation",fields=["supplier", "name"])
 	purchase_orders = frappe.get_all("Purchase Order",fields=["supplier", "name"])
 	purchase_invoices = frappe.get_all("Purchase Invoice",fields=["supplier", "name"])
-	purchase_receipts = frappe.get_all("Purchase Receipt",fields=["supplier", "name"]) 
+	purchase_receipts = frappe.get_all("Purchase Receipt",fields=["supplier", "name"])
 
 	for doc in sales_orders:
 		license = get_default_license("Customer", doc.customer)
@@ -49,22 +49,21 @@ def execute():
 		if not license:
 			continue
 		frappe.db.set_value("Supplier Quotation", doc.name, "license", license)
-	
+
 	for doc in purchase_orders:
 		license = get_default_license("Supplier", doc.supplier)
 		if not license:
 			continue
 		frappe.db.set_value("Purchase Order", doc.name, "license", license)
-	
+
 	for doc in purchase_invoices:
 		license = get_default_license("Supplier", doc.supplier)
 		if not license:
 			continue
 		frappe.db.set_value("Purchase Invoice", doc.name, "license", license)
-	
+
 	for doc in purchase_receipts:
 		license = get_default_license("Supplier", doc.supplier)
 		if not license:
 			continue
 		frappe.db.set_value("Purchase Receipt", doc.name, "license", license)
-
