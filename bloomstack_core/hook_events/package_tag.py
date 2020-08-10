@@ -2,21 +2,22 @@
 # Copyright (c) 2020, Bloomstack Inc. and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
+from urllib.parse import urlparse
 
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url, cstr
-from urllib.parse import urlparse
+from frappe.utils import cstr, get_url
+
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
-			return
+		return
 
 	pending_requests = frappe.get_all("Integration Request",
 		filters={"status": ["IN", ["Queued", "Failed"]], "reference_doctype": "Package Tag", "integration_request_service": "BloomTrace"},
-		order_by="creation ASC", limit=50)
+		order_by="creation ASC",
+		limit=50)
 
 	for request in pending_requests:
 		integration_request = frappe.get_doc("Integration Request", request.name)
@@ -35,9 +36,11 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
+
 def insert_pakage_tag(package_tag, frappe_client):
 	bloomtrace_package_tag = make_pakage_tag(package_tag)
 	frappe_client.insert(bloomtrace_package_tag)
+
 
 def update_pakage_tag(package_tag, frappe_client):
 	bloomtrace_package_tag = make_pakage_tag(package_tag)
@@ -45,6 +48,7 @@ def update_pakage_tag(package_tag, frappe_client):
 		"name": package_tag.name
 	})
 	frappe_client.update(bloomtrace_package_tag)
+
 
 def make_pakage_tag(package_tag):
 	site_url = urlparse(get_url()).netloc

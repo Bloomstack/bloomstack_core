@@ -2,12 +2,41 @@
 # Copyright (c) 2020, Bloomstack Inc. and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
+from urllib.parse import urlparse
 
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url, cstr
-from urllib.parse import urlparse
+from bloomstack_core.compliance.item import create_item, update_item
+from frappe import _
+from frappe.utils import cstr, get_url
+
+
+def sync_metrc_item(compliance_item, method):
+	if compliance_item.enable_metrc:
+		if method == "validate":
+			if not compliance_item.is_new():
+				_sync_metrc_item(compliance_item)
+		elif method == "after_insert":
+			_sync_metrc_item(compliance_item)
+
+
+def _sync_metrc_item(compliance_item):
+	item = frappe.get_doc("Item", compliance_item.item_code)
+
+	# Merge Item and Compliance Item data
+	item.update(compliance_item.as_dict())
+
+	if not compliance_item.metrc_id:
+		metrc_id = create_item(item)
+
+		if metrc_id:
+			frappe.db.set_value("Compliance Item", compliance_item.name, "metrc_id", metrc_id)
+			frappe.msgprint(_("{} was successfully created in METRC (ID number: {}).".format(item.item_name, metrc_id)))
+		else:
+			frappe.msgprint(_("{} was successfully created in METRC.".format(item.item_name)))
+	else:
+		update_item(item)
+		frappe.msgprint(_("{} was successfully updated in METRC.".format(item.item_name)))
 
 
 def execute_bloomtrace_integration_request():

@@ -6,11 +6,13 @@ from erpnext import get_default_company
 from erpnext.accounts.utils import get_company_default
 from frappe.utils import cstr
 
+
 @frappe.whitelist()
 def autoname_item(item):
 	item = frappe._dict(json.loads(item))
-	item_code = autoname(item)	
+	item_code = autoname(item)
 	return item_code
+
 
 def autoname(item, method=None):
 	"""
@@ -39,17 +41,10 @@ def autoname(item, method=None):
 	count = len(frappe.get_all("Item", filters={"name": ["like", "%{}%".format(item_code)]}))
 
 	if count > 0:
-		item_code = "-".join([item_code, cstr(count+1)])
-	
+		item_code = "-".join([item_code, cstr(count + 1)])
+
 	# Set item document name
 	item.name = item.item_code = item_code
 
 	if not method:
 		return item.item_code
-
-def get_data(data):
-	for transaction in data.transactions:
-		if transaction.get("label") == "Traceability":
-			transaction.get("items", []).append("Compliance Item")
-
-	return data

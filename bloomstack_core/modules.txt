@@ -1,3 +1,2 @@
 Bloomstack Core
-Compliance
 Analytics

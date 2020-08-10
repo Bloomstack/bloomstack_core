@@ -1,36 +1,11 @@
 import frappe
+from bloomstack_core.bloomtrace import make_integration_request
 from erpnext.stock.doctype.delivery_trip.delivery_trip import get_delivery_window
 from frappe import _
 from frappe.core.utils import find
+from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
 from frappe.utils import date_diff, get_time, getdate, nowdate, today
 from frappe.utils.user import get_users_with_role
-
-
-def validate_license_expiry(doc, method):
-	if doc.doctype in ("Sales Order", "Sales Invoice", "Delivery Note"):
-		validate_entity_license("Customer", doc.customer)
-	elif doc.doctype in ("Supplier Quotation", "Purchase Order", "Purchase Invoice", "Purchase Receipt"):
-		validate_entity_license("Supplier", doc.supplier)
-	elif doc.doctype == "Quotation" and doc.quotation_to == "Customer":
-		validate_entity_license("Customer", doc.party_name)
-
-
-@frappe.whitelist()
-def validate_entity_license(party_type, party_name):
-	license_record = get_default_license(party_type, party_name)
-	if not license_record:
-		return
-
-	license_expiry_date, license_number = frappe.db.get_value(
-		"Compliance Info", license_record, ["license_expiry_date", "license_number"])
-
-	if not license_expiry_date:
-		frappe.msgprint(_("We could not verify the status of license number {0}, Proceed with Caution.").format(frappe.bold(license_number)))
-	elif license_expiry_date < getdate(nowdate()):
-		frappe.msgprint(_("Our records indicate {0}'s license number {1} has expired on {2}, Proceed with Caution.").format(
-			frappe.bold(party_name), frappe.bold(license_number), frappe.bold(license_expiry_date)))
-
-	return license_record
 
 
 def validate_default_license(doc, method):
@@ -110,6 +85,14 @@ def validate_delivery_window(doc, method):
 				))
 
 			frappe.sendmail(recipients=recipients, subject=subject, message=message)
+
+
+def create_integration_request(doc, method):
+	if method == "validate":
+		if not doc.is_new():
+			make_integration_request(doc.doctype, doc.name)
+	elif method == "after_insert":
+		make_integration_request(doc.doctype, doc.name)
 
 
 def get_default_license(party_type, party_name):

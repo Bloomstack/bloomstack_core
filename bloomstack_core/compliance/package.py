@@ -1,5 +1,5 @@
 import frappe
-from bloomstack_core.utils import get_metrc, log_request
+from bloomstack_core.compliance.utils import get_metrc, log_request
 from frappe import _
 
 
