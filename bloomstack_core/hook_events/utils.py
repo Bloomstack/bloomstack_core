@@ -1,5 +1,4 @@
 import frappe
-from erpnext.stock.doctype.delivery_trip.delivery_trip import get_delivery_window
 from frappe import _
 from frappe.core.utils import find
 from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
@@ -65,6 +64,7 @@ def validate_expired_licenses(doc, method):
 
 
 def validate_delivery_window(doc, method):
+	from erpnext.stock.doctype.delivery_trip.delivery_trip import get_delivery_window
 	if not frappe.db.get_single_value("Delivery Settings", "send_delivery_window_warning"):
 		return
 
