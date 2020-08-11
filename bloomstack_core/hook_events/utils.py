@@ -4,7 +4,7 @@ from erpnext.stock.doctype.delivery_trip.delivery_trip import get_delivery_windo
 from frappe import _
 from frappe.core.utils import find
 from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
-from frappe.utils import date_diff, get_time, getdate, nowdate, today
+from frappe.utils import date_diff, get_time, getdate, nowdate, to_timedelta, today
 from frappe.utils.user import get_users_with_role
 
 
@@ -55,8 +55,8 @@ def validate_delivery_window(doc, method):
 	if not (delivery_start_time and delivery_end_time):
 		return
 
-	if doc.delivery_start_time < delivery_start_time \
-		or doc.delivery_end_time > delivery_end_time:
+	if to_timedelta(doc.delivery_start_time) < to_timedelta(delivery_start_time) \
+		or to_timedelta(doc.delivery_end_time) > to_timedelta(delivery_end_time):
 		if method == "validate":
 			frappe.msgprint(_("The delivery window is set outside the customer's default timings"), indicator="orange", alert=True)
 		elif method == "on_submit":
