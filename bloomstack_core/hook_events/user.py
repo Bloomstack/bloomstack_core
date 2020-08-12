@@ -12,15 +12,18 @@ from frappe.utils import cstr, get_url
 def set_works_with_bloomstack_false(user, method):
 	user.works_with_bloomstack = False
 
+
 def validate_if_bloomstack_user(user, method):
-	#To compare local and db values
+	# compare local and db values
 	if user.works_with_bloomstack and not user.enabled and frappe.db.get_value("User", user.name, 'enabled'):
 		frappe.throw("Please contact support to disable Bloomstack Users.")
+
 
 def update_bloomtrace_user(user, method):
 	if not frappe.get_conf().developer_mode and not user.is_new():
 		if user.user_type == "System User" and user.name not in ["Administrator", "Guest"] and not user.works_with_bloomstack:
 			make_integration_request(user.doctype, user.name)
+
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
