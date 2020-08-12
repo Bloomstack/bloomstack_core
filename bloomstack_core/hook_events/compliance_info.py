@@ -6,12 +6,12 @@ from frappe.utils import get_url
 
 
 def create_bloomtrace_license(compliance_info, method):
-	client = get_bloomtrace_client()
-	if not client:
+	frappe_client = get_bloomtrace_client()
+	if not frappe_client:
 		return
 	site_url = urlparse(get_url()).netloc
 
-	license_info = client.get_doc("License Info", compliance_info.license_number)
+	license_info = frappe_client.get_doc("License Info", compliance_info.license_number)
 	if not license_info:
 		frappe.msgprint(
 			"License Number not found in our database. Proceed with Caution")
@@ -25,12 +25,14 @@ def create_bloomtrace_license(compliance_info, method):
 		compliance_info.legal_name = license_info.get('legal_name')
 		compliance_info.county = license_info.get('county')
 		compliance_info.city = license_info.get('city')
+		make_bloomstack_site_license(frappe_client, site_url, compliance_info.license_number, 'Active')
 
-		if not frappe.get_conf().developer_mode:
-			bloomstack_site_license = {
-				"doctype": "Bloomstack Site License",
-				"bloomstack_site": site_url,
-				"license_info": compliance_info.license_number,
-				"status": "Active"
-			}
-			client.insert(bloomstack_site_license)
+def make_bloomstack_site_license(frappe_client, site_url, license_number, status='Pending Update'):
+	if not frappe.get_conf().developer_mode:
+		bloomstack_site_license = {
+			"doctype": "Bloomstack Site License",
+			"bloomstack_site": site_url,
+			"license_info": license_number,
+			"status": status
+		}
+		frappe_client.insert(bloomstack_site_license)
