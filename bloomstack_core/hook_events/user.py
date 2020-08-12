@@ -14,7 +14,8 @@ def set_works_with_bloomstack_false(user, method):
 
 
 def validate_if_bloomstack_user(user, method):
-	if user.works_with_bloomstack and not user.enabled:
+	# compare local and db values
+	if user.works_with_bloomstack and not user.enabled and frappe.db.get_value("User", user.name, 'enabled'):
 		frappe.throw("Please contact support to disable Bloomstack Users.")
 
 
