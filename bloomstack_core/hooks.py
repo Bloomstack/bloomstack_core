@@ -277,7 +277,3 @@ after_migrate = [
 
 # Overriding Whitelisted Methods
 # ------------------------------
-
-override_whitelisted_methods = {
-	"erpnext.selling.doctype.sales_order.sales_order.create_pick_list": "bloomstack_core.hook_events.pick_list.create_pick_list"
-}
