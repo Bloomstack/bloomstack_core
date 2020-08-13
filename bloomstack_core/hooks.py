@@ -196,7 +196,6 @@ doc_events = {
 		"before_submit": [
 			"bloomstack_core.hook_events.delivery_note.make_sales_invoice_for_delivery",
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
-			"bloomstack_core.hook_events.delivery_note.create_metrc_transfer_template",
 			"bloomstack_core.compliance.package.create_package_from_delivery"
 		]
 	},
@@ -216,6 +215,7 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
 			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
 		],
+		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
 	"Driver": {
@@ -258,7 +258,8 @@ scheduler_events = {
 	"all": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract",
