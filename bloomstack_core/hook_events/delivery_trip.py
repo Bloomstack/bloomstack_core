@@ -51,7 +51,10 @@ def link_invoice_against_trip(delivery_trip, method):
 def make_transfer_templates(delivery_trip, method):
 	for stop in delivery_trip.delivery_stops:
 		if stop.delivery_note:
-			make_integration_request("Delivery Note", stop.delivery_note)
+			for item in frappe.get_doc("Delivery Note", stop.delivery_note).items:
+				if frappe.db.exists("Compliance Item", item.item_code):
+					make_integration_request("Delivery Note", stop.delivery_note)
+					break
 
 @frappe.whitelist()
 def make_payment_entry(payment_amount, sales_invoice):
