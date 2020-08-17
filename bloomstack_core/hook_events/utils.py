@@ -93,32 +93,3 @@ def create_integration_request(doc, method):
 			make_integration_request(doc.doctype, doc.name)
 	elif method == "after_insert":
 		make_integration_request(doc.doctype, doc.name)
-
-
-def get_default_license(party_type, party_name):
-	"""get default license from customer or supplier"""
-
-	doc = frappe.get_doc(party_type, party_name)
-
-	licenses = doc.get("licenses")
-	if not licenses:
-		return
-
-	default_license = find(licenses, lambda license: license.get("is_default")) or ''
-
-	if default_license:
-		default_license = default_license.get("license")
-
-	return default_license
-
-
-@frappe.whitelist()
-def filter_license(doctype, txt, searchfield, start, page_len, filters):
-	"""filter license"""
-
-	return frappe.get_all('Compliance License Detail',
-		filters={
-			'parent': filters.get("party_name")
-		},
-		fields=["license", "is_default", "license_type"],
-		as_list=1)
