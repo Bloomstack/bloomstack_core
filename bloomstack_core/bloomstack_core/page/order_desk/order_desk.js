@@ -112,14 +112,13 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				on_delivery_date_change: (delivery_date) => {
 					this.delivery_date = delivery_date;
 					delivery_date = new Date(delivery_date);
-					let options = {weekday : 'long'}
-					let day = new Intl.DateTimeFormat('en-US', options).format(delivery_date);
 					if (this.frm.doc.customer) {
 						frappe.db.get_value("Customer", { "name" : this.frm.doc.customer}, "delivery_days", (r) => {
-							if (r.delivery_days){
+							if (r.delivery_days) {
+								let day = moment(delivery_date).format('dddd');
 								let weekdays = r.delivery_days.split(",")
-								if(! weekdays.includes(day)){
-									frappe.msgprint(__("You have selected wrong delivery day '{0}',\n Delivery is accepted on {1}", [day, weekdays]));
+								if(!weekdays.includes(day)){
+									frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}", [day, this.frm.doc.customer, weekdays]));
 								}
 							}
 						})
