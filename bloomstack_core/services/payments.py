@@ -92,7 +92,7 @@ def make_return_delivery(delivery_note, returned_items):
 			if not returned_item:
 				item.qty = 0
 			else:
-				item.qty = -(returned_item.get("qty") or item.qty or 0)
+				item.qty = -(returned_item.get("qty") or item.qty) or 0
 				item.reason_for_return = returned_item.get("reason")
 
 		return_delivery.save()
