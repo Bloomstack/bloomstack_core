@@ -44,7 +44,7 @@ def collect(amount, delivery_note, sales_invoice=None, returned_items=None):
 			sales_invoice = invoices[0].against_sales_invoice
 
 	if not sales_invoice:
-		return {"error": "No invoice found to make payment against"}
+		frappe.throw(_("No invoice found to make payment against"))
 
 	payment_id = make_payment_entry(amount, sales_invoice)
 
@@ -100,3 +100,5 @@ def make_return_delivery(delivery_note, returned_items):
 		return_delivery_id = return_delivery.name
 
 		return return_delivery_id
+
+	frappe.throw(_("Invalid format for returned items"), frappe.CSRFTokenError)
