@@ -84,7 +84,6 @@ def make_return_delivery(delivery_note, returned_items):
 		returned_items = json.loads(returned_items)
 
 	if isinstance(returned_items, list):
-		returned_items_map = {d.get("item_code"): d.get("qty") for d in returned_items}
 		return_delivery = make_sales_return(delivery_note)
 
 		for item in return_delivery.items:
@@ -93,7 +92,7 @@ def make_return_delivery(delivery_note, returned_items):
 			if not returned_item:
 				item.qty = 0
 			else:
-				item.qty = -returned_item.get("qty") or -item.qty
+				item.qty = -(returned_item.get("qty") or item.qty) or 0
 				item.reason_for_return = returned_item.get("reason")
 
 		return_delivery.save()
