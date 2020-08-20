@@ -166,9 +166,6 @@ doc_events = {
 			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
 		]
 	},
-	"Compliance Settings": {
-		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
-	},
 	"Contract": {
 		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
 		"on_update_after_submit": [
