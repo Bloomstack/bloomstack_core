@@ -158,12 +158,10 @@ doc_events = {
 	},
 	"Compliance Item": {
 		"validate": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
+			"bloomstack_core.hook_events.utils.create_integration_request"
 		],
 		"after_insert": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
+			"bloomstack_core.hook_events.utils.create_integration_request"
 		]
 	},
 	"Contract": {
