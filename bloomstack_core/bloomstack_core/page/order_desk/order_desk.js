@@ -340,7 +340,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				const item = this.frm.add_child('items', success);
 				this.frm.script_manager.trigger('item_code', item.doctype, item.name)
 					.then(() => {
-						console.log("after check", this.frm.doc.items);
 						this.frm.doc.items.forEach(item => {
 							this.update_item_in_frm(item, 'qty', item.qty)
 								.then(() => {
