@@ -51,37 +51,7 @@ frappe.ui.form.on('Quotation', {
 			}, __("Create"));
 		}
 	},
-	onload: (frm) => {
-		frm.set_query("license", () => {
-			if (frm.doc.quotation_to === "Customer" && frm.doc.party_name) {
-				return {
-					query: "bloomstack_core.hook_events.utils.filter_license",
-					filters: {
-						party_name: frm.doc.party_name
-					}
-				};
-			}
-		});
-	},
-	party_name: (frm) => {
-		if (frm.doc.quotation_to === "Customer" && frm.doc.party_name) {
-			frappe.call({
-				method: "bloomstack_core.hook_events.utils.validate_entity_license",
-				args: {
-					party_type: "Customer",
-					party_name: frm.doc.party_name
-				},
-				callback: (r) => {
-					if(r.message){
-						frm.set_value("license", r.message)
-					}
-				}
-			});
 
-			// set excise tax if customer party has license number
-			bloomstack_core.utils.set_and_update_excise_tax(frm);
-		}
-	},
 	no_charge_order: (frm) => {
 		frm.trigger("set_promotional_discount");
 	},
@@ -100,10 +70,5 @@ frappe.ui.form.on('Quotation', {
 			indicator: 'green',
 			message: __(`${percentage_discount}% discount applied`)
 		});
-	},
-	order_type: (frm) => {
-		if (frm.doc.order_type) {
-			bloomstack_core.utils.set_and_update_excise_tax(frm);
-		}
 	}
 });

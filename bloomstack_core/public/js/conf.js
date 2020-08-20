@@ -24,7 +24,7 @@ $(document).bind('toolbar_setup', () => {
 		.insertAfter($help_menu)
 
 	// replace Report Issue menu item
-	const $report_issue_menu_item = $(`<li><a href="https://corp.bloomstack.com/issues" target="_blank">${__('Contact Support')}</a></li>`)
+	const $report_issue_menu_item = $(`<li><a href="https://bloomstack.com/issues" target="_blank">${__('Contact Support')}</a></li>`)
 		// .click(report_issue)
 		.insertAfter($bcc_site);
 
@@ -34,8 +34,6 @@ $(document).bind('toolbar_setup', () => {
 	// Hack to remove all but the above elements
 	$('.dropdown-help ul li')
 		.not($bcc_site)
-		.not($article_links)
-		.not($help_menu)
 		.not($report_issue_menu_item)
 		.not($keyboard_shortcuts)
 		.remove();

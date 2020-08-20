@@ -1,5 +1,5 @@
 import frappe
-from bloomstack_core.utils import get_metrc, log_request
+from bloomstack_core.compliance.utils import get_metrc, log_request
 from frappe import _
 
 
@@ -117,3 +117,30 @@ def build_payload(item):
 
 	payload = [item_data]
 	return payload
+
+
+def metrc_item_category_query(doctype, txt, searchfield, start, page_len, filters):
+	metrc_uom = filters.get("metrc_uom")
+	quantity_type = frappe.db.get_value("Compliance UOM", metrc_uom, "quantity_type")
+
+	return frappe.get_all("Compliance Item Category", filters={"quantity_type": quantity_type}, as_list=1)
+
+
+def metrc_uom_query(doctype, txt, searchfield, start, page_len, filters):
+	metrc_item_category = filters.get("metrc_item_category")
+	quantity_type = frappe.db.get_value("Compliance Item Category", metrc_item_category, "quantity_type")
+
+	return frappe.get_all("Compliance UOM", filters={"quantity_type": quantity_type}, as_list=1)
+
+
+def metrc_unit_uom_query(doctype, txt, searchfield, start, page_len, filters):
+	metrc_item_category = filters.get("metrc_item_category")
+	mandatory_unit = frappe.db.get_value("Compliance Item Category", metrc_item_category, "mandatory_unit")
+
+	quantity_type = None
+	if mandatory_unit == "Volume":
+		quantity_type = "VolumeBased"
+	elif mandatory_unit == "Weight":
+		quantity_type = "WeightBased"
+
+	return frappe.get_all("Compliance UOM", filters={"quantity_type": quantity_type}, as_list=1)

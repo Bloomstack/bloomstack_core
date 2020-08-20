@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019, Bloom Stack and contributors
+# Copyright (c) 2020, Bloom Stack and contributors
 # For license information, please see license.txt
-
-from __future__ import unicode_literals
 
 import json
 
 import frappe
-from bloomstack_core.utils import get_metrc
+from bloomstack_core.compliance.utils import get_metrc
 from frappe import _
+from frappe.utils import now
 
 
 def set_invoice_status(sales_invoice, method):
@@ -16,7 +15,7 @@ def set_invoice_status(sales_invoice, method):
 	sales_invoice.set_indicator()
 
 
-def create_metrc_sales_receipt(sales_invoice, methods):
+def create_metrc_sales_receipt(sales_invoice, method):
 	if sales_invoice.is_return:
 		return
 
@@ -34,7 +33,7 @@ def create_metrc_sales_receipt(sales_invoice, methods):
 	integration_request.update({
 		"integration_type": "Remote",
 		"integration_request_service": "Metrc",
-		"reference_doctype": "Sales Invoice",
+		"reference_doctype": sales_invoice.doctype,
 		"reference_docname": sales_invoice.name
 	})
 
@@ -74,7 +73,7 @@ def get_metrc_payload(sales_invoice):
 		return
 
 	return [{
-		"SalesDateTime": frappe.utils.now(),
+		"SalesDateTime": now(),
 		"SalesCustomerType": "Consumer",
 		"Transactions": transactions
 	}]

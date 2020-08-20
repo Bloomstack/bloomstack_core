@@ -17,19 +17,3 @@ def add_comment_to_batch(stock_entry, method):
 			comment.save()
 
 	frappe.db.commit()
-
-def update_coa_batch_no(stock_entry, method):
-	stock_entry_purpose = frappe.db.get_value("Stock Entry Type", stock_entry.stock_entry_type, "purpose")
-	if stock_entry_purpose == "Material Receipt":
-		for item in stock_entry.items:
-			if item.package_tag:
-				frappe.db.set_value("Package Tag", item.package_tag, "coa_batch_no", item.batch_no)
-	elif stock_entry_purpose in ["Manufacture", "Repack"]:
-		source_item =  next((item for item in stock_entry.items if item.s_warehouse), None)
-		for item in stock_entry.items:
-			if item.package_tag and item.t_warehouse:
-				if frappe.db.get_value("Compliance Item", item.item_code, "requires_lab_tests"):
-					frappe.db.set_value("Package Tag", item.package_tag, "coa_batch_no", item.batch_no)
-				else:
-					coa_batch_no = frappe.db.get_value("Package Tag", source_item.package_tag, "coa_batch_no")
-					frappe.db.set_value("Package Tag", item.package_tag, "coa_batch_no", coa_batch_no)
