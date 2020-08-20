@@ -338,26 +338,25 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				this.update_item_in_frm(updated_item)
 			}else{
 				const item = this.frm.add_child('items', success);
-
-                this.frm.script_manager.trigger('item_code', item.doctype, item.name)
-                .then(() => {
-                    console.log("after check", this.frm.doc.items);
-                    this.frm.doc.items.forEach(item => {
-                    this.update_item_in_frm(item, 'qty', item.qty)
-                        .then(() => {
-                            // update cart
-                            frappe.run_serially([
-                                () => {
-                                    if (item.qty === 0) {
-                                        frappe.model.clear_doc(item.doctype, item.name);
-                                    }
-                                },
-                                () => this.update_cart_data(item),
-                                () => this.post_qty_change(item)
-                            ]);
-                        });
-                    })
-                });
+				this.frm.script_manager.trigger('item_code', item.doctype, item.name)
+					.then(() => {
+						console.log("after check", this.frm.doc.items);
+						this.frm.doc.items.forEach(item => {
+							this.update_item_in_frm(item, 'qty', item.qty)
+								.then(() => {
+									// update cart
+									frappe.run_serially([
+										() => {
+											if (item.qty === 0) {
+												frappe.model.clear_doc(item.doctype, item.name);
+											}
+										},
+										() => this.update_cart_data(item),
+										() => this.post_qty_change(item)
+									]);
+								});
+						})
+					});
 			}
 		}, () => {
 			this.on_close(row);
