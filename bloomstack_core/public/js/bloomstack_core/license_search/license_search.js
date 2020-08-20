@@ -1,5 +1,6 @@
 import Home from './Home.vue';
 import store from "../store/store";
+import 'nprogress/nprogress.css';
 
 frappe.provide('bloomstack_core.license_seach');
 

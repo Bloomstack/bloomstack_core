@@ -2,10 +2,8 @@
     <div class="license-card row" v-bind:class="{ 'is-open': toggle }" @click="toggle = !toggle">
         <div class="col-md-3 col-sm-3 col-xs-3">
             <div class="map">
-              <a href="">
                 <img src="assets/bloomstack_core/images/map.png" alt="">
-                <span>view map</span>
-              </a>
+                <span>Click here to convert</span>
             </div>
         </div>
         <div class="col-md-9 col-sm-9 col-xs-9">
@@ -21,9 +19,9 @@
             </div>
         </div>
         <div class="actions">
-                <p><a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to lead</a></p>
-                <p><a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to customer</a></p>
-                <p><a href="#" @click.prevent="make_compliance_info(make_supplier)" class="conversion-actions">Convert to supplier</a></p>
+                <a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to lead</a>
+                <a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to customer</a>
+                <a href="#" @click.prevent="make_compliance_info(make_supplier)" class="conversion-actions">Convert to supplier</a>
         </div>
     </div>
 </template>

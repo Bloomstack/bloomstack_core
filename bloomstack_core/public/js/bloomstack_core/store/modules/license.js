@@ -1,5 +1,8 @@
 import LicenseService from '../../license_search/services/license_service';
 import FrappeService from "../../license_search/services/frappe_service";
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css'
+
 
 export default {
    state:{
@@ -14,6 +17,8 @@ export default {
       customers: [],
       suppliers: []
    },
+
+
    mutations:{
       SET_FILTER(state, filters) {
          state.filters = filters;
@@ -51,10 +56,13 @@ export default {
          })
       },
       fetchLicenses({ commit, state }, data) {
+         console.log("Starting NProgress");
+         NProgress.start();
          data.filters = state.filters;
          data.perPage = state.perPage;
          LicenseService.getLicenses(data).then(function(response) {
             commit('SET_LICENSES', response);
+            NProgress.done();
          });
       },
       makeLead({ commit, dispatch, state }, lead) {
