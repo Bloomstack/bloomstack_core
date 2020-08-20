@@ -9,6 +9,10 @@ from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe import _
 from frappe.utils import cstr, get_url
 
+def validate_metrc_id(doc, method):
+	if doc.enable_metrc and not doc.metrc_id:
+		frappe.msgprint(_("You have not entered an METRC ID. A new item will be created on METRC"))
+
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:

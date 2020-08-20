@@ -158,6 +158,7 @@ doc_events = {
 	},
 	"Compliance Item": {
 		"validate": [
+			"bloomstack_core.hook_events.compliance_item.validate_metrc_id",
 			"bloomstack_core.hook_events.utils.create_integration_request"
 		],
 		"after_insert": [
