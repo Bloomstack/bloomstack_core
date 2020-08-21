@@ -123,6 +123,9 @@ erpnext.pos.OrderDesk = class OrderDesk {
 							}
 						})
 					}
+					else if(!this.frm.doc.customer){
+						frappe.throw(__('Please select a customer'));
+					}
 				},
 				on_delivery_window_change: (type, time) => {
 					if (type == "start") {
@@ -1095,7 +1098,9 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
-		this.delivery_date_field.set_value(this.frm.doc.delivery_date);
+		if(this.frm.doc.delivery_date){
+			this.delivery_date_field.set_value(this.frm.doc.delivery_date);
+		}
 	}
 
 	make_delivery_window_fields() {
