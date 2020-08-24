@@ -13,7 +13,7 @@
                 <div class="col-md-4 col-sm-12 col-xs-12 license-type">{{ license.license_type }}</div>
             </div>
             <div class="row license-info">
-                <p>{{ license.zip_code }}|{{ license.county }}|{{ license.city }}</p>
+                <p>{{ print_address() }}</p>
                 <p>{{ license.email_id }}</p>
                 <p>License expiry: {{ license.expiration_date }}</p>
             </div>
@@ -39,7 +39,29 @@
                 toggle: false
             }
         },
+
         methods: {
+
+            print_address() {
+								var address = {}
+								var print_address = [];
+                if(this.license.zip_code != "") {
+                  address["zip"] = this.license.zip_code;
+                }
+
+               	if(this.license.city != "") {
+                	address["city"] = this.license.city;
+                }
+
+              	if(this.license.county != "") {
+                  address["county"] = this.license.county;
+								}
+								$.each(address, function (name, value) {
+									print_address.push(String(value));
+								});
+								return (print_address.join(' | '));
+            },
+
             quick_entry(doctype, fieldMap) {
                 const mapper = {};
                 for(let customerField in fieldMap) {

@@ -56,7 +56,6 @@ export default {
          })
       },
       fetchLicenses({ commit, state }, data) {
-         console.log("Starting NProgress");
          NProgress.start();
          data.filters = state.filters;
          data.perPage = state.perPage;
