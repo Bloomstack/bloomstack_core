@@ -89,7 +89,28 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			wrapper: this.wrapper.find('.cart-container'),
 			events: {
 				on_customer_change: (customer) => {
-					this.frm.set_value('customer', customer);
+					this.frm.set_value('customer', customer)
+						.then((response) => {
+							this.frm.doc.items.forEach(item => {
+								this.frm.script_manager.trigger('item_code', item.doctype, item.name)
+									.then(() => {
+										this.frm.doc.taxes = [];
+										this.update_item_in_frm(item, 'qty', item.qty)
+											.then(() => {
+												// update cart
+												frappe.run_serially([
+													() => {
+													if (item.qty === 0) {
+														frappe.model.clear_doc(item.doctype, item.name);
+													}
+													},
+													() => this.update_cart_data(item),
+													() => this.post_qty_change(item)
+												]);
+											});
+									});
+							})
+						});
 				},
 				on_order_type_change: (order_type) => {
 					this.frm.set_value('order_type', order_type)
@@ -183,6 +204,9 @@ erpnext.pos.OrderDesk = class OrderDesk {
 							() => {}
 						);
 					}
+				},
+				post_qty_change: (item) => {
+					this.post_qty_change(item);
 				}
 			}
 		});
@@ -1020,6 +1044,7 @@ class SalesOrderCart {
 		this.$taxes_and_totals.find('.net-total')
 			.html(format_currency(this.frm.doc.total, currency));
 
+
 		// Update taxes
 		const taxes_html = this.frm.doc.taxes.map(tax => {
 			return `
@@ -1134,7 +1159,6 @@ class SalesOrderCart {
 				},
 				onchange: () => {
 					this.events.on_customer_change(this.customer_field.get_value());
-
 					if (this.delivery_start_time_field) {
 						this.delivery_start_time_field.set_value(this.frm.doc.delivery_start_time);
 					}
