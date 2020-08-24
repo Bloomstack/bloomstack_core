@@ -204,9 +204,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 							() => {}
 						);
 					}
-				},
-				post_qty_change: (item) => {
-					this.post_qty_change(item);
 				}
 			}
 		});
