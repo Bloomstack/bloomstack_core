@@ -432,7 +432,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
 		});
-		this.frm.savesubmit()
+		this.frm.save()
 			.then((r) => {
 				if (r && r.doc) {
 					this.frm.doc.docstatus = r.doc.docstatus;
