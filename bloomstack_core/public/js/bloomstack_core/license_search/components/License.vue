@@ -43,8 +43,8 @@
         methods: {
 
             print_address() {
-								var address = {}
-								var print_address = [];
+							var address = {}
+							var print_address = [];
                 if(this.license.zip_code != "") {
                   address["zip"] = this.license.zip_code;
                 }
