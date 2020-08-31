@@ -18,6 +18,7 @@
     import Vuex from './../../../../node_modules/vuex/dist/vuex';
     import Paginate from 'vuejs-paginate';
 
+
     export default {
         components: {
             License,

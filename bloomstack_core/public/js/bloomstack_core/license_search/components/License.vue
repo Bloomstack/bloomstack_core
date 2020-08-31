@@ -2,10 +2,8 @@
     <div class="license-card row" v-bind:class="{ 'is-open': toggle }" @click="toggle = !toggle">
         <div class="col-md-3 col-sm-3 col-xs-3">
             <div class="map">
-              <a href="">
                 <img src="assets/bloomstack_core/images/map.png" alt="">
-                <span>view map</span>
-              </a>
+                <span>Click here to convert</span>
             </div>
         </div>
         <div class="col-md-9 col-sm-9 col-xs-9">
@@ -15,15 +13,15 @@
                 <div class="col-md-4 col-sm-12 col-xs-12 license-type">{{ license.license_type }}</div>
             </div>
             <div class="row license-info">
-                <p>{{ license.zip_code }}|{{ license.county }}|{{ license.city }}</p>
+                <p>{{ print_address() }}</p>
                 <p>{{ license.email_id }}</p>
                 <p>License expiry: {{ license.expiration_date }}</p>
             </div>
         </div>
         <div class="actions">
-                <p><a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to lead</a></p>
-                <p><a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to customer</a></p>
-                <p><a href="#" @click.prevent="make_compliance_info(make_supplier)" class="conversion-actions">Convert to supplier</a></p>
+                <a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to lead</a>
+                <a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to customer</a>
+                <a href="#" @click.prevent="make_compliance_info(make_supplier)" class="conversion-actions">Convert to supplier</a>
         </div>
     </div>
 </template>
@@ -41,7 +39,29 @@
                 toggle: false
             }
         },
+
         methods: {
+
+            print_address() {
+							var address = {}
+							var print_address = [];
+                if(this.license.zip_code != "") {
+                  address["zip"] = this.license.zip_code;
+                }
+
+               	if(this.license.city != "") {
+                	address["city"] = this.license.city;
+                }
+
+              	if(this.license.county != "") {
+                  address["county"] = this.license.county;
+								}
+								$.each(address, function (name, value) {
+									print_address.push(String(value));
+								});
+								return (print_address.join(' | '));
+            },
+
             quick_entry(doctype, fieldMap) {
                 const mapper = {};
                 for(let customerField in fieldMap) {
