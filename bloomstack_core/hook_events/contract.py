@@ -1,4 +1,7 @@
+import json
+
 import frappe
+from erpnext import get_default_company
 from erpnext.selling.doctype.quotation.quotation import make_sales_order
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
@@ -87,6 +90,35 @@ def create_order_against_contract(contract, method):
 		sales_order.submit()
 
 
+def create_event_against_contract(contract, method):
+	if method == "on_cancel":
+		event_name = frappe.db.exists('Event', {'subject': contract.name})
+		if event_name:
+			frappe.delete_doc('Event', event_name)
+	elif method == "on_submit":
+		if not contract.end_date:
+			return
+
+		employee_id = frappe.db.get_value('Employee', {'user_id': contract.signed_by_company}, 'name')
+		event = frappe.new_doc('Event')
+		event.subject = contract.name
+		event.ends_on = contract.end_date
+		event.description = contract.contract_terms
+		event.all_day = 1
+		event.append("event_participants", {
+			"reference_doctype": contract.party_type,
+			"reference_docname": contract.party_name
+		})
+
+		if employee_id:
+			event.append("event_participants", {
+				"reference_doctype": 'Employee',
+				"reference_docname": employee_id
+			})
+
+		event.save()
+
+
 @frappe.whitelist()
 def get_party_users(doctype, txt, searchfield, start, page_len, filters):
 	if filters.get("party_type") in ("Customer", "Supplier"):
@@ -118,3 +150,49 @@ def get_data(data):
 			}
 		]
 	})
+
+
+def set_contract_company(contract, method):
+	contract.signed_by_company = frappe.session.user
+	company = frappe.db.get_value("Employee", {"user_id": contract.signed_by_company}, "company")
+	contract.company = company or get_default_company()
+
+
+@frappe.whitelist()
+def get_events(start, end, filters=None):
+	"""
+	Returns events for Gantt / Calendar view rendering.
+
+	Args:
+		start (str): Start date-time.
+		end (str): End date-time.
+		filters (str, optional): Filters (JSON). Defaults to None.
+
+	Returns:
+		list of dict: The list of Contract events
+	"""
+
+	filters = json.loads(filters)
+	from frappe.desk.calendar import get_event_conditions
+	conditions = get_event_conditions("Contract", filters)
+
+	events = frappe.db.sql("""
+		SELECT
+			name,
+			start_date,
+			end_date
+		FROM
+			`tabContract`
+		WHERE
+			(start_date <= %(end)s
+				AND end_date >= %(start)s)
+				AND docstatus < 2
+				{conditions}
+		""".format(conditions=conditions), {
+			"start": start,
+			"end": end
+		},
+		as_dict=True,
+		update={"allDay": 0}
+	)
+	return events

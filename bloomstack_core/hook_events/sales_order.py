@@ -1,10 +1,10 @@
 import json
 
 import frappe
-from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice
+from erpnext.selling.doctype.sales_order.sales_order import create_pick_list, make_sales_invoice, make_delivery_note
 from erpnext.stock.doctype.batch.batch import get_batch_qty
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import flt, getdate, today
 
 
 def create_sales_invoice_against_contract():
@@ -60,6 +60,84 @@ def create_multiple_pick_lists(orders):
 
 	return created_orders
 
+@frappe.whitelist()
+def create_multiple_sales_invoices(orders):
+	orders = json.loads(orders)
+
+	created_orders = []
+	for order in orders:
+		created = False
+		customer = frappe.db.get_value("Sales Order", order, "customer")
+
+		# check if a Sales Invoice already exists against the order
+		sales_invoices = frappe.get_all("Sales Invoice",
+			filters=[
+				["Sales Invoice", "docstatus", "<", 2],
+				["Sales Invoice Item", "sales_order", "=", order]
+			],
+			distinct=True)
+		sales_invoices = [item.name for item in sales_invoices if item.name]
+
+		# if none are found, then create a new Sales Invoice
+		if not sales_invoices:
+			order_doc = make_sales_invoice(order)
+
+			# if no items can be avilable, do not create an empty Sales Invoice
+			if order_doc.get("items"):
+				order_doc.save()
+				sales_invoices = [order_doc.name]
+				created = True
+			else:
+				sales_invoices = []
+
+		created_orders.append({
+			"sales_order": order,
+			"customer": customer,
+			"sales_invoices": sales_invoices,
+			"created": created
+		})
+
+	return created_orders
+
+@frappe.whitelist()
+def create_muliple_delivery_notes(orders):
+	orders = json.loads(orders)
+
+	created_orders = []
+	for order in orders:
+		created = False
+		customer = frappe.db.get_value("Sales Order", order, "customer")
+
+		# check if a Delivery Note already exists against the order
+		delivery_notes = frappe.get_all("Delivery Note",
+			filters=[
+				["Delivery Note", "docstatus", "<", 2],
+				["Delivery Note Item", "against_sales_order", "=", order]
+			],
+			distinct=True)
+		delivery_notes = [item.name for item in delivery_notes if item.name]
+
+		# if none are found, then create a new Pick List
+		if not delivery_notes:
+			order_doc = make_delivery_note(order)
+
+			# if no items can be picked, do not create an empty Pick List
+			if order_doc.get("items"):
+				order_doc.save()
+				delivery_notes = [order_doc.name]
+				created = True
+			else:
+				delivery_notes = []
+
+		created_orders.append({
+			"sales_order": order,
+			"customer": customer,
+			"delivery_notes": delivery_notes,
+			"created": created
+		})
+
+	return created_orders
+
 
 def validate_batch_item(sales_order, method):
 	for item in sales_order.items:
@@ -78,3 +156,35 @@ def validate_batch_item(sales_order, method):
 					batch that has more than {3} qty available, or split the row to sell
 					from multiple batches.
 				""").format(item.idx, item.batch_no, batch_qty, qty))
+
+
+def check_overdue_status(sales_order, method):
+	overdue_conditions = [
+		sales_order.docstatus == 1,
+		sales_order.status not in ["On Hold", "Closed", "Completed"],
+		sales_order.skip_delivery_note == 0,
+		flt(sales_order.per_delivered, 6) < 100,
+		getdate(sales_order.delivery_date) < getdate(today()),
+	]
+
+	is_overdue = all(overdue_conditions)
+	sales_order.db_set("is_overdue", is_overdue)
+
+
+def update_order_status():
+	"""
+		Daily scheduler to check if a Sales Order has become overdue
+	"""
+
+	frappe.db.sql("""
+		UPDATE
+			`tabSales Order`
+		SET
+			is_overdue = 1
+		WHERE
+			docstatus = 1
+				AND delivery_date < CURDATE()
+				AND status NOT IN ("On Hold", "Closed", "Completed")
+				AND skip_delivery_note = 0
+				AND per_delivered < 100
+	""")

@@ -189,12 +189,17 @@ table td div {
     border-bottom: 0px !important;
 }
 
+.third-party-sign,
+.company.box {
+    margin-top: 15px;
+}
+
 #signature {
     border: 1px solid #ececec;
     position: relative;
 }
 
-#signature .refresh_signature {
+#signature .refresh-signature {
     position: absolute;
     bottom: 3px;
     right: 5px;
@@ -203,6 +208,32 @@ table td div {
     border-radius: 4px;
     padding: 5px 10px;
     font-size: 12px;
+}
+
+#signeeName input::placeholder,
+#signeeDetails input::placeholder {
+    color: #cfcfcf;
+}
+
+#signeeDetails div.company-individual label {
+    display: block;
+}
+
+#signeeDetails p {
+    margin-bottom: 0;
+}
+
+#signeeDetails div input[type="radio"] {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+#signeeDetails div input[type='radio']:checked:after {
+    background-color: rgb(120, 184, 152);
+}
+
+#signeeDetails div.party-type-company {
+    display: none;
 }
 
 .btn {
@@ -241,7 +272,8 @@ table td div {
     padding: 0;
 }
 
-#signee {
+#signee,
+#signee-designation {
     border-radius: 3px;
     border: 1px solid #ececec;
     width: 100%;
@@ -284,4 +316,5 @@ ul.actions li a.approveBtn {
 
 #signeeName {
     text-align: center;
+    margin-bottom: 15px;
 }

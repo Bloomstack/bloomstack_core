@@ -22,15 +22,26 @@
 			<div class="col-lg-5">
 				<ul class="user-signature">
 					{% if status not in ("Approved", "Rejected") %}
-						<div>Your Name:</div>
+						<div>Full Name:</div>
 						<div id="signeeName">
-							<input type="text" id="signee" value="" required />
-						</div></br>
-						<div>Signature:</div>
+							<input type="text" id="signee" value="" placeholder="Please enter your full name" required/>
+						</div>
+						<div id="signeeDetails">
+							<p>Are you part of a company?</p>
+							<div class="company-individual">
+								<label><input type="radio" name="type" value="Individual" data-party-type="Individual" required checked>Individual</label>
+								<label><input type="radio" name="type" value="Company" data-party-type="Company" required>Company</label>
+							</div>
+							<div class="party-type-company">
+								<div>Designation:</div>
+								<input type="text" id="signee-designation" placeholder="Please enter your designation" required/>
+							</div>
+						</div>
 						<div class="third-party-sign">
+						<div>Signature:</div>
 							<div id="signature">
-								<a href="#" type="button" class="signature-reset btn refresh_signature">
-									<i class = "fa fa-repeat"></i>
+								<a href="#" type="button" class="signature-reset btn refresh-signature">
+									<i class="fa fa-repeat"></i>
 								</a>
 						</div>
 						</div></br>

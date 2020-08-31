@@ -1,0 +1,39 @@
+.products-list .card {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.products-list img:after {
+  display: none;
+}
+
+.products-list .card-body {
+  text-align: center;
+}
+
+.products-list a.btn.btn-light {
+  background-color: #757575;
+  color: #fff;
+}
+
+.products-list a.btn.btn-light:hover {
+  background-color: #e2e8ee;
+  color: #757575;
+}
+
+.products-list .website-image[src*="no-image.jpg"] {
+  padding: 0;
+}
+
+.products-list h5.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+@media screen and (max-width: 992px) {
+  .products-list .card:nth-child(2n+1) {
+    margin-right: 5px;
+  }
+}

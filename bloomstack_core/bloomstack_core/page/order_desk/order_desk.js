@@ -89,7 +89,28 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			wrapper: this.wrapper.find('.cart-container'),
 			events: {
 				on_customer_change: (customer) => {
-					this.frm.set_value('customer', customer);
+					this.frm.set_value('customer', customer)
+						.then((response) => {
+							this.frm.doc.items.forEach(item => {
+								this.frm.script_manager.trigger('item_code', item.doctype, item.name)
+									.then(() => {
+										this.frm.doc.taxes = [];
+										this.update_item_in_frm(item, 'qty', item.qty)
+											.then(() => {
+												// update cart
+												frappe.run_serially([
+													() => {
+													if (item.qty === 0) {
+														frappe.model.clear_doc(item.doctype, item.name);
+													}
+													},
+													() => this.update_cart_data(item),
+													() => this.post_qty_change(item)
+												]);
+											});
+									});
+							})
+						});
 				},
 				on_order_type_change: (order_type) => {
 					this.frm.set_value('order_type', order_type)
@@ -110,7 +131,14 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.submit_sales_order()
 				},
 				on_delivery_date_change: (delivery_date) => {
-					this.delivery_date = delivery_date
+					this.delivery_date = delivery_date;
+				},
+				on_delivery_window_change: (type, time) => {
+					if (type == "start") {
+						this.frm.set_value("delivery_start_time", time);
+					} else if (type == "end") {
+						this.frm.set_value("delivery_end_time", time);
+					}
 				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
@@ -330,23 +358,26 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			if(updated_item){
 				this.update_item_in_frm(updated_item)
 			}else{
-				this.frm.add_child('items',success)
-			}
-			this.frm.doc.items.forEach(item => {
-				this.update_item_in_frm(item, 'qty', item.qty)
+				const item = this.frm.add_child('items', success);
+				this.frm.script_manager.trigger('item_code', item.doctype, item.name)
 					.then(() => {
-						// update cart
-						frappe.run_serially([
-							() => {
-								if (item.qty === 0) {
-									frappe.model.clear_doc(item.doctype, item.name);
-								}
-							},
-							() => this.update_cart_data(item),
-							() => this.post_qty_change(item)
-						]);
+						this.frm.doc.items.forEach(item => {
+							this.update_item_in_frm(item, 'qty', item.qty)
+								.then(() => {
+									// update cart
+									frappe.run_serially([
+										() => {
+											if (item.qty === 0) {
+												frappe.model.clear_doc(item.doctype, item.name);
+											}
+										},
+										() => this.update_cart_data(item),
+										() => this.post_qty_change(item)
+									]);
+								});
+						})
 					});
-			})
+			}
 		}, () => {
 			this.on_close(row);
 		}, true);
@@ -395,10 +426,13 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	}
 
 	submit_sales_order() {
+		// hack to set delivery date in the Sales Order during submit
+		// trying to set before it causes problems selecting items
+		this.frm.doc.delivery_date = this.delivery_date;
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
 		});
-		this.frm.savesubmit()
+		this.frm.save()
 			.then((r) => {
 				if (r && r.doc) {
 					this.frm.doc.docstatus = r.doc.docstatus;
@@ -833,6 +867,7 @@ class SalesOrderCart {
 		this.make_customer_field();
 		this.make_order_type_field();
 		this.make_delivery_date_field();
+		this.make_delivery_window_fields();
 	}
 
 	make_dom() {
@@ -937,7 +972,7 @@ class SalesOrderCart {
 		let total = this.get_total_template('Grand Total', 'grand-total-value');
 
 		if (!cint(frappe.sys_defaults.disable_rounded_total)) {
-			total += 
+			total +=
 			"</tr><tr class=\"grand-total\">" + this.get_total_template('Rounded Total', 'rounded-total-value');
 		}
 
@@ -961,7 +996,7 @@ class SalesOrderCart {
 		return `
 			<td colspan="6">
 				<div class="list-item">
-					<div class="list-item__content list-item__content--flex-2 text-muted">${__('Discount')}</div>
+					<div class="list-item__content text-muted">${__('Discount')}</div>
 					<div class="list-item__content discount-inputs">
 						<input type="text" class="form-control additional_discount_percentage text-right" placeholder="% 0.00">
 						<input type="text" class="form-control discount_amount text-right" placeholder="${get_currency_symbol(this.frm.doc.currency)} 0.00">
@@ -974,11 +1009,11 @@ class SalesOrderCart {
 		return `
 		<td colspan="6">
 			<div class="list-item">
-				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Net Total')}</div>
+				<div class="list-item__content text-muted">${__('Net Total')}</div>
 				<div class="list-item__content net-total">0.00</div>
 			</div>
 			<div class="list-item">
-				<div class="list-item__content list-item__content--flex-2 text-muted">${__('Taxes')}</div>
+				<div class="list-item__content text-muted">${__('Taxes')}</div>
 				<div class="list-item__content taxes">0.00</div>
 			</div>
 			</td>
@@ -1005,6 +1040,7 @@ class SalesOrderCart {
 		// Update totals
 		this.$taxes_and_totals.find('.net-total')
 			.html(format_currency(this.frm.doc.total, currency));
+
 
 		// Update taxes
 		const taxes_html = this.frm.doc.taxes.map(tax => {
@@ -1048,7 +1084,6 @@ class SalesOrderCart {
 				fieldname: 'order_type',
 				options: this.frm.get_field("order_type").df.options,
 				reqd: 1,
-				default: this.frm.doc.order_type,
 				onchange: () => {
 					this.events.on_order_type_change(this.order_type_field.get_value());
 				}
@@ -1056,6 +1091,7 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
+		this.order_type_field.set_value(this.frm.doc.order_type);
 	}
 
 	make_delivery_date_field() {
@@ -1072,6 +1108,37 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
+		this.delivery_date_field.set_value(this.frm.doc.delivery_date);
+	}
+
+	make_delivery_window_fields() {
+		this.delivery_start_time_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Time',
+				label: 'Earliest Delivery Time',
+				fieldname: 'delivery_start_time',
+				onchange: () => {
+					this.events.on_delivery_window_change("start", this.delivery_start_time_field.get_value());
+				}
+			},
+			parent: this.wrapper.find('.customer-field'),
+			render_input: true
+		});
+		this.delivery_start_time_field.set_value(this.frm.doc.delivery_start_time);
+
+		this.delivery_end_time_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Time',
+				label: 'Latest Delivery Time',
+				fieldname: 'delivery_end_time',
+				onchange: () => {
+					this.events.on_delivery_window_change("end", this.delivery_end_time_field.get_value());
+				}
+			},
+			parent: this.wrapper.find('.customer-field'),
+			render_input: true
+		});
+		this.delivery_end_time_field.set_value(this.frm.doc.delivery_end_time);
 	}
 
 	make_customer_field() {
@@ -1089,6 +1156,13 @@ class SalesOrderCart {
 				},
 				onchange: () => {
 					this.events.on_customer_change(this.customer_field.get_value());
+					if (this.delivery_start_time_field) {
+						this.delivery_start_time_field.set_value(this.frm.doc.delivery_start_time);
+					}
+
+					if (this.delivery_end_time_field) {
+						this.delivery_end_time_field.set_value(this.frm.doc.delivery_end_time);
+					}
 				}
 			},
 			parent: this.wrapper.find('.customer-field'),
@@ -1126,7 +1200,7 @@ class SalesOrderCart {
 			$item.find('.rate input').val(item.rate);
 			$item.children('.item').addClass(indicator_class);
 			$item.children('.item').removeClass(remove_class);
-		} else { 
+		} else {
 			$item.remove();
 		}
 	}
@@ -1155,8 +1229,8 @@ class SalesOrderCart {
 					}, 100)
 				}
 				);
-				
-				
+
+
 		})
 
 		$(document).on('click', '.list-item div', function (event) {
