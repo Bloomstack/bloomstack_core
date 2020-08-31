@@ -10,8 +10,17 @@
     "url": "https://github.com/DigiThinkIT/bloomstack_core/issues"
   },
   "dependencies": {
+    "@cubejs-client/core": "^0.20.0",
+    "@cubejs-client/vue": "^0.20.0",
     "chart.js": "^2.9.0",
-    "chartjs-plugin-datalabels": "^0.7.0"
+    "chartjs-plugin-datalabels": "^0.7.0",
+    "crypto": "^1.0.1",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "laue": "^0.2.1",
+    "stream": "^0.0.2",
+    "url": "^0.11.0",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "chart.js": "^2.9.0",
