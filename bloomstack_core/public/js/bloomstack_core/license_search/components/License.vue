@@ -13,15 +13,15 @@
                 <div class="col-md-4 col-sm-12 col-xs-12 license-type">{{ license.license_type }}</div>
             </div>
             <div class="row license-info">
-                <p>{{ print_address() }}</p>
-                <p>{{ license.email_id }}</p>
+                <p v-if="address">{{ address }}</p>
+                <p v-if="license.email_id">{{ license.email_id }}</p>
                 <p>License expiry: {{ license.expiration_date }}</p>
             </div>
         </div>
         <div class="actions">
-                <a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to lead</a>
-                <a href="#" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to customer</a>
-                <a href="#" @click.prevent="make_compliance_info(make_supplier)" class="conversion-actions">Convert to supplier</a>
+                <a href="#" v-if="!conversion['Lead']" @click.prevent="make_compliance_info(make_lead)" class="conversion-actions">Convert to lead</a>
+                <a href="#" v-if="!conversion['Customer']" @click.prevent="make_compliance_info(make_customer)" class="conversion-actions">Convert to customer</a>
+                <a href="#" v-if="!conversion['Supplier']" @click.prevent="make_compliance_info(make_supplier)" class="conversion-actions">Convert to supplier</a>
         </div>
     </div>
 </template>
@@ -34,34 +34,35 @@
         props: {
             license: Object
         },
+        mounted() {
+            this.check_entry("Customer");
+            this.check_entry("Lead");
+            this.check_entry("Supplier");
+        },
         data() {
             return {
-                toggle: false
+                toggle: false,
+                conversion: {
+                    "Customer": false,
+                    "Lead": false,
+                    "Supplier": false
+                }
             }
         },
+        computed: {
+            address() {
+                const addressKeys = ["zip_code", "city", "country"];
+                let address = [];
+                addressKeys.forEach((key) => {
+                    if(this.license[key] != "") {
+                        address.push(this.license[key]);
+                    }
+              	});
 
+              	return (address.join(' | '));
+            }
+        },
         methods: {
-
-            print_address() {
-							var address = {}
-							var print_address = [];
-                if(this.license.zip_code != "") {
-                  address["zip"] = this.license.zip_code;
-                }
-
-               	if(this.license.city != "") {
-                	address["city"] = this.license.city;
-                }
-
-              	if(this.license.county != "") {
-                  address["county"] = this.license.county;
-								}
-								$.each(address, function (name, value) {
-									print_address.push(String(value));
-								});
-								return (print_address.join(' | '));
-            },
-
             quick_entry(doctype, fieldMap) {
                 const mapper = {};
                 for(let customerField in fieldMap) {
@@ -69,9 +70,15 @@
                     mapper[customerField] = this.license[licenseField];
                 }
 
-                frappe.new_doc("Customer", false, function(dialog) {
+                frappe.new_doc(doctype, false, function(dialog) {
                     dialog.set_values(mapper);
                 });
+            },
+
+            check_entry(doctype) {
+                frappe.db.exists(doctype, this.license.legal_name).then((response) => {
+                    this.conversion[doctype] = response;
+                })
             },
 
             make_compliance_info: function(callee) {

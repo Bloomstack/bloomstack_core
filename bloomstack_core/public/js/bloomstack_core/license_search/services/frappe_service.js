@@ -6,6 +6,7 @@ export default {
                 console.log(response);
                 if(response) {
                     reject(response);
+                    return;
                 }
 
                 console.log("let's insert", doc);
