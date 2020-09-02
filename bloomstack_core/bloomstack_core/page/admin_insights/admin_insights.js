@@ -15,7 +15,7 @@ frappe.views.InsightsFactory = class InsightsFactory extends frappe.views.Factor
 		];
 
 		frappe.require(assets, () => {
-			bloomstack_core.insights = new bloomstack_core.insights({
+			bloomstack_core.admin_insights = new bloomstack_core.admin_insights({
 				parent: this.make_page(true, page_name)
 			});
 		});

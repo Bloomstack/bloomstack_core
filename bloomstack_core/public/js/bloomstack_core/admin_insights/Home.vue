@@ -1,27 +1,42 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <select v-model="selected" id="granularitySelect" :key="selected.value">
-        <option
-          v-for="granular in granularity"
-          :value="granular"
-          v-bind:key="granular.value"
-        >{{ granular.text }}</option>
-      </select>
-    </div>
-    <br />
-    <br />
-    <div class="row">
-      <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="tabsalesQuery" :key="selected.value">
-          <template v-slot="{ loading, resultSet }">
-            <Chart title="Tab Sales Query" type="line" :loading="loading" :result-set="resultSet" />
-          </template>
-        </query-builder>
-      </div>
-    </div>
+  <div id="app">
+    <h1> Hello, {{ formatName(user) }}! </h1>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'app',
+  data() {
+    return {
+      user: {
+        firstName: 'Harry',
+        lastName: 'Manchanda'
+      }
+    };
+  },
+  methods: {
+    formatName(user) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+</style>
+
+
+<!-- 
+<template>
+  <div id="app-2">
+    <span v-bind:title="message">
+      Hover your mouse over me for a few seconds
+      to see my dynamically bound title!
+    </span>
+  </div>
+</template>
+
 
 <script>
 import cubejs from "@cubejs-client/core";
@@ -92,3 +107,4 @@ body {
   background: #f5f6f7;
 }
 </style>
+ -->
