@@ -44,10 +44,12 @@ export default {
   computed: {
     values: function() {
       if (this.loading) return [];
+      console.log("qqqqqq....", this.loading, this.title, this.type);
       return this.resultSet.chartPivot();
     },
     metrics: function() {
       if (this.loading) return [""];
+      console.log("asaasss....", this.loading, this.title, this.type);
       return this.resultSet.seriesNames().map(x => x.key);
     }
   },
