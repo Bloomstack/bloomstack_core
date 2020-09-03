@@ -12,8 +12,8 @@
           v-if="!loading && type === 'number'"
           height="300"
         >{{ parseFloat(values[0][metrics[0]]).toLocaleString() }}</h1>
-        <line-chart v-if="!loading && type === 'line'" :values="values" :metrics="metrics" />
-        <bar-chart v-if="!loading && type === 'stackedBar'" :values="values" :metrics="metrics" />
+        <line-chart v-if="!loading && type === 'line'" :values="values" :metrics="metrics"/>
+        <bar-chart v-if="!loading && type === 'stackedBar'" :values="values" :metrics="metrics"/>
       </div>
     </div>
   </div>
@@ -23,32 +23,33 @@
 import moment from "moment";
 import LineChart from "./LineChart.vue";
 import BarChart from "./BarChart.vue";
+
 export default {
   components: {
     LineChart,
-    BarChart,
+    BarChart
   },
   name: "Chart",
   props: {
     resultSet: Object,
     loading: Boolean,
     title: String,
-    type: String,
+    type: String
   },
   methods: {
-    dateFormatter: function (value) {
+    dateFormatter: function(value) {
       return moment(value).format("MMM YY");
-    },
+    }
   },
   computed: {
-    values: function () {
+    values: function() {
       if (this.loading) return [];
       return this.resultSet.chartPivot();
     },
-    metrics: function () {
+    metrics: function() {
       if (this.loading) return [""];
-      return this.resultSet.seriesNames().map((x) => x.key);
-    },
+      return this.resultSet.seriesNames().map(x => x.key);
+    }
   },
   data() {
     return {
@@ -59,10 +60,10 @@ export default {
         "#FED3D0",
         "#6F76D9",
         "#9ADFB4",
-        "#2E7987",
-      ],
+        "#2E7987"
+      ]
     };
-  },
+  }
 };
 </script>
 

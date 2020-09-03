@@ -1,4 +1,4 @@
-<template>
+ <template>
   <la-cartesian autoresize :data="values" :colors="colors" :padding="[0, 0, 5, 0]">
     <la-line curve :width="2" color="#7DB3FF" :prop="metrics[0]" />
     <la-y-axis :nbTicks="4"></la-y-axis>

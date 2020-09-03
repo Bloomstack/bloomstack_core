@@ -1,54 +1,72 @@
 <template>
-  <div id="app">
-    <h1> Hello, {{ formatName(user) }}! </h1>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="usersQuery">
+          <template v-slot="{ loading, resultSet }">
+            <Chart title="Total Users" type="number" :loading="loading" :result-set="resultSet" />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="totalOrdersQuery">
+          <template v-slot="{ loading, resultSet }">
+            <Chart title="Total Orders" type="number" :loading="loading" :result-set="resultSet" />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="shippedOrdersQuery">
+          <template v-slot="{ loading, resultSet }">
+            <Chart title="Shipped Users" type="number" :loading="loading" :result-set="resultSet" />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="lineQuery">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title="New Users Over Time"
+              type="line"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="barQuery">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title="Orders by Status Over time"
+              type="stackedBar"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'app',
-  data() {
-    return {
-      user: {
-        firstName: 'Harry',
-        lastName: 'Manchanda'
-      }
-    };
-  },
-  methods: {
-    formatName(user) {
-      return `${user.firstName} ${user.lastName}`;
-    }
-  }
-}
-</script>
-
-<style lang="scss">
-</style>
-
-
-<!-- 
-<template>
-  <div id="app-2">
-    <span v-bind:title="message">
-      Hover your mouse over me for a few seconds
-      to see my dynamically bound title!
-    </span>
-  </div>
-</template>
-
 
 <script>
 import cubejs from "@cubejs-client/core";
 import { QueryBuilder } from "@cubejs-client/vue";
+
 import Chart from "./Chart.vue";
-const API_URL = "http://localhost:4000"; // change to your actual endpoint
+
 const cubejsApi = cubejs(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTc4Mzk2MDYsImV4cCI6MTU5NzkyNjAwNn0.eyS33ppbBdPZsb9K7ymkhKrHS-l2x_hf25lXFVk5m30",
-  { apiUrl: API_URL + "/cubejs-api/v1" }
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ2NjY4OTR9.0fdi5cuDZ2t3OSrPOMoc3B1_pwhnWj4ZmM3FHEX7Aus",
+  { apiUrl: "https://ecom.cubecloudapp.dev/cubejs-api/v1" }
 );
+
 export default {
-  name: "Home",
+  name: "App",
   components: {
     Chart,
     QueryBuilder,
@@ -56,43 +74,40 @@ export default {
   data() {
     return {
       cubejsApi,
-      selected: { value: 2, text: "day" },
-      granularity: [
-        { value: 1, text: "hour" },
-        { value: 2, text: "day" },
-        { value: 3, text: "week" },
-        { value: 4, text: "month" },
-        { value: 5, text: "year" },
-      ],
-    };
-  },
-  computed: {
-    tabsalesQuery() {
-      return {
-        order: {},
-        measures: [
-          "TabSalesInvoice.total",
-          // "TabSalesInvoice.totalSalesMonthly",
-          "TabSalesInvoice.outstandingAmount",
-          "TabSalesInvoice.totalQty",
-          "TabSalesInvoice.discountAmount",
-        ],
-        timeDimensions: [
-          {
-            dimension: "TabSalesInvoice.creation",
-            granularity: this.selected.text,
-            // dateRange: dateRange ? dateRange : [startDate, endDate],
-          },
-        ],
+      usersQuery: { measures: ["Users.count"] },
+      totalOrdersQuery: { measures: ["Orders.count"] },
+      shippedOrdersQuery: {
+        measures: ["Orders.count"],
         filters: [
           {
-            dimension: "TabTerritory.name",
+            dimension: "Orders.status",
             operator: "equals",
-            values: ["Northern California"],
+            values: ["shipped"],
           },
         ],
-      };
-    },
+      },
+      lineQuery: {
+        measures: ["Users.count"],
+        timeDimensions: [
+          {
+            dimension: "Users.createdAt",
+            dateRange: ["2019-01-01", "2020-12-31"],
+            granularity: "month",
+          },
+        ],
+      },
+      barQuery: {
+        measures: ["Orders.count"],
+        dimensions: ["Orders.status"],
+        timeDimensions: [
+          {
+            dimension: "Orders.createdAt",
+            dateRange: ["2019-01-01", "2020-12-31"],
+            granularity: "month",
+          },
+        ],
+      },
+    };
   },
 };
 </script>
@@ -101,10 +116,10 @@ export default {
 html {
   -webkit-font-smoothing: antialiased;
 }
+
 body {
   padding-top: 30px;
   padding-bottom: 30px;
   background: #f5f6f7;
 }
 </style>
- -->
