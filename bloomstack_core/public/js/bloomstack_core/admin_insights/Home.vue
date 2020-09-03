@@ -1,54 +1,61 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="usersQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart title="Total Users" type="number" :loading="loading" :result-set="resultSet" />
-          </template>
-        </query-builder>
+  <div id="home">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4">
+          <query-builder :cubejs-api="cubejsApi" :query="usersQuery">
+            <template v-slot="{ loading, resultSet }">
+              <Chart title="Total Users" type="number" :loading="loading" :result-set="resultSet" />
+            </template>
+          </query-builder>
+        </div>
+        <div class="col-sm-4">
+          <query-builder :cubejs-api="cubejsApi" :query="totalOrdersQuery">
+            <template v-slot="{ loading, resultSet }">
+              <Chart title="Total Orders" type="number" :loading="loading" :result-set="resultSet" />
+            </template>
+          </query-builder>
+        </div>
+        <div class="col-sm-4">
+          <query-builder :cubejs-api="cubejsApi" :query="shippedOrdersQuery">
+            <template v-slot="{ loading, resultSet }">
+              <Chart
+                title="Shipped Users"
+                type="number"
+                :loading="loading"
+                :result-set="resultSet"
+              />
+            </template>
+          </query-builder>
+        </div>
       </div>
-      <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="totalOrdersQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart title="Total Orders" type="number" :loading="loading" :result-set="resultSet" />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="shippedOrdersQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart title="Shipped Users" type="number" :loading="loading" :result-set="resultSet" />
-          </template>
-        </query-builder>
-      </div>
-    </div>
-    <br />
-    <br />
-    <div class="row">
-      <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="lineQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title="New Users Over Time"
-              type="line"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="barQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title="Orders by Status Over time"
-              type="stackedBar"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-sm-6">
+          <query-builder :cubejs-api="cubejsApi" :query="lineQuery">
+            <template v-slot="{ loading, resultSet }">
+              <Chart
+                title="New Users Over Time"
+                type="line"
+                :loading="loading"
+                :result-set="resultSet"
+              />
+            </template>
+          </query-builder>
+        </div>
+        <div class="col-sm-6">
+          <query-builder :cubejs-api="cubejsApi" :query="barQuery">
+            <template v-slot="{ loading, resultSet }">
+              <Chart
+                title="Orders by Status Over time"
+                type="stackedBar"
+                :loading="loading"
+                :result-set="resultSet"
+              />
+            </template>
+          </query-builder>
+        </div>
       </div>
     </div>
   </div>
@@ -58,7 +65,7 @@
 import cubejs from "@cubejs-client/core";
 import { QueryBuilder } from "@cubejs-client/vue";
 
-import Chart from "./Chart.vue";
+import Chart from "./components/Chart.vue";
 
 const cubejsApi = cubejs(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ2NjY4OTR9.0fdi5cuDZ2t3OSrPOMoc3B1_pwhnWj4ZmM3FHEX7Aus",
@@ -66,7 +73,7 @@ const cubejsApi = cubejs(
 );
 
 export default {
-  name: "App",
+  name: "Home",
   components: {
     Chart,
     QueryBuilder,
