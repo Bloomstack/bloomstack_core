@@ -16,8 +16,8 @@ def setup():
 	{
 		... other site_config fields ...
 		"cognito": {
-			"client_id": "<client id provided by aws",
-			"client_secret": "<client secret provided by aws"
+			"client_id": "<client id provided by aws>",
+			"client_secret": "<client secret provided by aws>"
 		}
 	}
 	```
@@ -97,5 +97,3 @@ def setup():
 		print("!! Cognito login has been disabled...")
 
 	bloomstack_social_key.save()
-
-		
