@@ -10,6 +10,7 @@ app_icon = "octicon octicon-gear"
 app_color = "light green"
 app_email = "developers@bloomstack.com"
 app_license = "MIT"
+app_logo_url = '/assets/bloomstack_core/images/icon.png'
 
 
 # Set setup defaults
