@@ -173,18 +173,10 @@ def check_overdue_status(sales_order, method):
 
 def update_order_status():
 	"""
-		Daily scheduler to check if a Sales Order has become overdue
+		Hourly scheduler to check if a Sales Order has become overdue
 	"""
 
-	frappe.db.sql("""
-		UPDATE
-			`tabSales Order`
-		SET
-			is_overdue = 1
-		WHERE
-			docstatus = 1
-				AND delivery_date < CURDATE()
-				AND status NOT IN ("On Hold", "Closed", "Completed")
-				AND skip_delivery_note = 0
-				AND per_delivered < 100
-	""")
+	orders = frappe.get_all("Sales Order", filters={"docstatus": 1})
+
+	for order in orders:
+		check_overdue_status(frappe.get_doc("Sales Order", order), method=None)
