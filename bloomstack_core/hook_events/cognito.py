@@ -65,37 +65,37 @@ def setup():
 
 	# Find cognito keys on site_config
 	config = frappe.conf.get("cognito", False)
-
-	if config:
-		print("Updating cognito integration...")
-		# Find bloomstack social login key record
-		if frappe.db.exists('Social Login Key', BLOOMSTACK_SOCIAL_LOGIN_NAME):
-			bloomstack_social_key = frappe.get_doc('Social Login Key', BLOOMSTACK_SOCIAL_LOGIN_NAME)
-		else:
-			bloomstack_social_key = frappe.new_doc('Social Login Key')
-			bloomstack_social_key.provider_name = BLOOMSTACK_SOCIAL_LOGIN_NAME
-
-		site_name = cstr(frappe.local.site)
-
-		# update social key values
-		bloomstack_social_key.client_id = config.get("client_id")
-		bloomstack_social_key.client_secret = config.get("client_secret")
-		bloomstack_social_key.base_url = config.get("base_url", "https://auth.bloomstack.com")
-		bloomstack_social_key.authorize_url = config.get("authorize_url", "/oauth2/authorize")
-		bloomstack_social_key.redirect_url = config.get("redirect_url", \
-			"https://{}/api/method/frappe.integrations.oauth2_logins.custom/bloomstack".format(site_name))
-		bloomstack_social_key.access_token_url = config.get("access_token_url", "/oauth2/token")
-		bloomstack_social_key.api_endpoint = config.get("api_endpoint", "/oauth2/userInfo")
-		bloomstack_social_key.auth_url_data = config.get("auth_url_data", \
-			'{ "response_type": "code", "scope": "email openid profile" }')
-		bloomstack_social_key.user_id_property = config.get("user_id_property", "email")
-		bloomstack_social_key.enable_social_login = 0 if cint(config.get("disable", 0)) == 1 else 1
-
-		if bloomstack_social_key.enable_social_login == 0:
-			print("!! Cognito login has been disabled...")
-
-		bloomstack_social_key.save()
-	else:
+	if not config:
 		print("Missing cognito configuration on site_config.json")
+		return
+
+	print("Updating cognito integration...")
+	# Find bloomstack social login key record
+	if frappe.db.exists('Social Login Key', BLOOMSTACK_SOCIAL_LOGIN_NAME):
+		bloomstack_social_key = frappe.get_doc('Social Login Key', BLOOMSTACK_SOCIAL_LOGIN_NAME)
+	else:
+		bloomstack_social_key = frappe.new_doc('Social Login Key')
+		bloomstack_social_key.provider_name = BLOOMSTACK_SOCIAL_LOGIN_NAME
+
+	site_name = cstr(frappe.local.site)
+
+	# update social key values
+	bloomstack_social_key.client_id = config.get("client_id")
+	bloomstack_social_key.client_secret = config.get("client_secret")
+	bloomstack_social_key.base_url = config.get("base_url", "https://auth.bloomstack.com")
+	bloomstack_social_key.authorize_url = config.get("authorize_url", "/oauth2/authorize")
+	bloomstack_social_key.redirect_url = config.get("redirect_url", \
+		"https://{}/api/method/frappe.integrations.oauth2_logins.custom/bloomstack".format(site_name))
+	bloomstack_social_key.access_token_url = config.get("access_token_url", "/oauth2/token")
+	bloomstack_social_key.api_endpoint = config.get("api_endpoint", "/oauth2/userInfo")
+	bloomstack_social_key.auth_url_data = config.get("auth_url_data", \
+		'{ "response_type": "code", "scope": "email openid profile" }')
+	bloomstack_social_key.user_id_property = config.get("user_id_property", "email")
+	bloomstack_social_key.enable_social_login = 0 if cint(config.get("disable", 0)) == 1 else 1
+
+	if bloomstack_social_key.enable_social_login == 0:
+		print("!! Cognito login has been disabled...")
+
+	bloomstack_social_key.save()
 
 		
