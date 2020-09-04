@@ -6,8 +6,7 @@ from urllib.parse import urlparse
 
 import frappe
 from frappe import _
-from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
-from frappe.utils import get_link_to_form, cstr, get_url
+from frappe.utils import cstr, get_url
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 
 def link_invoice_against_delivery_note(delivery_note, method):
@@ -19,38 +18,6 @@ def link_invoice_against_delivery_note(delivery_note, method):
 
 			if sales_invoice and len(sales_invoice) == 1:
 				item.against_sales_invoice = sales_invoice[0].parent
-
-def make_sales_invoice_for_delivery(delivery_note, method):
-	if not frappe.db.get_single_value("Accounts Settings", "auto_create_invoice_on_delivery_note_submit"):
-		return
-
-	# If the delivery is already billed, don't create a Sales Invoice
-	if delivery_note.per_billed == 100:
-		return
-
-	# Picking up sales orders for 2 reasons:
-	# 1. A Delivery Note can be made against multiple orders, so they all need to be invoiced
-	# 2. Using the `make_sales_invoice` in `delivery_note.py` doesn't consider already invoiced orders
-	sales_orders = [item.against_sales_order for item in delivery_note.items if item.against_sales_order]
-	sales_orders = list(set(sales_orders))
-
-	new_invoices = []
-	for order in sales_orders:
-		invoice = make_sales_invoice(order)
-
-		if len(invoice.items) > 0:
-			invoice.set_posting_time = True
-			invoice.posting_date = delivery_note.posting_date
-			invoice.posting_time = delivery_note.posting_time
-
-			invoice.save()
-			invoice.submit()
-
-			new_invoices.append(get_link_to_form("Sales Invoice", invoice.name))
-
-	if new_invoices:
-		new_invoices = ", ".join(str(invoice) for invoice in new_invoices)
-		frappe.msgprint(_("The following Sales Invoice(s) were automatically created: {0}".format(new_invoices)))
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
