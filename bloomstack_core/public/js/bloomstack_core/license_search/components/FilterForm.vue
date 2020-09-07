@@ -14,7 +14,7 @@
 <script>
     import Input from './../../components/input.vue';
     import Select from './../../components/select.vue';
-    import Vuex from './../../../../node_modules/vuex/dist/vuex';
+    import Vuex from 'vuex/dist/vuex';
 
     export default {
         components: {

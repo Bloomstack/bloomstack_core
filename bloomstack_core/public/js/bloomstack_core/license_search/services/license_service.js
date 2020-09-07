@@ -9,7 +9,6 @@ export default {
                     filters: filters
                 },
                 callback: function(response) {
-                    // console.log(response.message)
                     resolve(response.message);
                 }
             })

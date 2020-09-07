@@ -2,7 +2,7 @@
     <div class="license-card row" v-bind:class="{ 'is-open': toggle }" @click="toggle = !toggle">
         <div class="col-md-3 col-sm-3 col-xs-3">
             <div class="map">
-                <img src="assets/bloomstack_core/images/map.png" alt="">
+                <img src="./assets/bloomstack_core/images/map.png" alt="">
                 <span>Click here to convert</span>
             </div>
         </div>
