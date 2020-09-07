@@ -40,6 +40,8 @@ def get_filters(email):
 
 
 def build_item_data(stop):
+	if not stop.delivery_note:
+		return []
 	items_data = []
 	dn_doc = frappe.get_doc("Delivery Note", stop.delivery_note)
 	for item in dn_doc.items:

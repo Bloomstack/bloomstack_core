@@ -10,6 +10,7 @@ app_icon = "octicon octicon-gear"
 app_color = "light green"
 app_email = "developers@bloomstack.com"
 app_license = "MIT"
+app_logo_url = '/assets/bloomstack_core/images/icon.png'
 
 
 # Set setup defaults
@@ -267,7 +268,8 @@ scheduler_events = {
 }
 
 after_migrate = [
-	'bloomstack_core.hook_events.lead.rearrange_standard_fields'
+	'bloomstack_core.hook_events.lead.rearrange_standard_fields',
+	'bloomstack_core.hook_events.cognito.setup'
 ]
 
 # Testing

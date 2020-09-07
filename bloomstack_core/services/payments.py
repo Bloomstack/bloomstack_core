@@ -1,8 +1,8 @@
 import json
 
 import frappe
-from bloomstack_core.hook_events.delivery_trip import make_payment_entry
 from erpnext.stock.doctype.delivery_note.delivery_note import make_sales_return
+from erpnext.stock.doctype.delivery_trip.delivery_trip import make_payment_entry
 
 
 @frappe.whitelist()
