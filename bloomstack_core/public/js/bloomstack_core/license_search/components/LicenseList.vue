@@ -15,7 +15,7 @@
 
 <script>
     import License from "./License.vue";
-    import Vuex from './../../../../node_modules/vuex/dist/vuex';
+    import Vuex from 'vuex/dist/vuex';
     import Paginate from 'vuejs-paginate';
 
 
