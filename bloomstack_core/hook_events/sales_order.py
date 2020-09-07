@@ -173,7 +173,7 @@ def check_overdue_status(sales_order, method):
 
 def update_order_status():
 	"""
-		Hourly scheduler to check if a Sales Order has become overdue
+		Daily scheduler to check if a Sales Order has become overdue
 	"""
 
 	orders = frappe.get_all("Sales Order", filters={"docstatus": 1})
