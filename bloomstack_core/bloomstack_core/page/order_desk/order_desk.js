@@ -111,12 +111,11 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				},
 				on_delivery_date_change: (delivery_date) => {
 					this.delivery_date = delivery_date;
-					delivery_date = new Date(delivery_date);
 					if (this.frm.doc.customer) {
 						frappe.db.get_value("Customer", { "name" : this.frm.doc.customer}, "delivery_days", (r) => {
 							if (r.delivery_days) {
 								let day = moment(delivery_date).format('dddd');
-								let weekdays = JSON.parse(r.delivery_days)
+								let weekdays = JSON.parse(r.delivery_days);
 								if(!weekdays.includes(day)){
 									frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}", [day, this.frm.doc.customer, weekdays]));
 								}
