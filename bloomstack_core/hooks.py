@@ -69,7 +69,6 @@ webform_include_js = {
 # include js in doctype views
 doctype_js = {
 	"Batch": "public/js/batch.js",
-	"Compliance Item": "public/js/compliance_item.js",
 	"Compliance Settings": "public/js/compliance_settings.js",
 	"Contract": "public/js/contract.js",
 	"Delivery Note": "public/js/delivery_note.js",
@@ -157,16 +156,6 @@ doc_events = {
 	"Compliance Info": {
 		"before_insert": "bloomstack_core.hook_events.compliance_info.create_bloomtrace_license",
 	},
-	"Compliance Item": {
-		"validate": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
-		],
-		"after_insert": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
-		]
-	},
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},
@@ -224,7 +213,15 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
 	"Item": {
-		"autoname": "bloomstack_core.hook_events.item.autoname"
+		"autoname": "bloomstack_core.hook_events.item.autoname",
+		"validate": [
+			"bloomstack_core.hook_events.utils.create_integration_request",
+			"bloomstack_core.hook_events.item.sync_metrc_item"
+		],
+		"after_insert": [
+			"bloomstack_core.hook_events.utils.create_integration_request",
+			"bloomstack_core.hook_events.item.sync_metrc_item"
+		]
 	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
