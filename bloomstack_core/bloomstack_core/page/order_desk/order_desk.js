@@ -134,18 +134,19 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					if (!this.frm.doc.customer) {
 						frappe.throw(__('Please select a customer'));
 					}
-
 					this.delivery_date = delivery_date;
-					frappe.db.get_value("Customer", { "name": this.frm.doc.customer }, "delivery_days", (r) => {
-						if (r.delivery_days) {
-							let day = moment(delivery_date).format('dddd');
-							let weekdays = JSON.parse(r.delivery_days);
-							if (!weekdays.includes(day)) {
-								frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}",
-									[day, this.frm.doc.customer, weekdays]));
+					if (delivery_date) {
+						frappe.db.get_value("Customer", { "name": this.frm.doc.customer }, "delivery_days", (r) => {
+							if (r.delivery_days) {
+								let day = moment(delivery_date).format('dddd');
+								let weekdays = JSON.parse(r.delivery_days);
+								if (!weekdays.includes(day)) {
+									frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}",
+										[day, this.frm.doc.customer, weekdays]));
+								}
 							}
-						}
-					})
+						})
+					}
 				},
 				on_delivery_window_change: (type, time) => {
 					if (type == "start") {
