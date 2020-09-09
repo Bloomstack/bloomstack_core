@@ -89,7 +89,28 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			wrapper: this.wrapper.find('.cart-container'),
 			events: {
 				on_customer_change: (customer) => {
-					this.frm.set_value('customer', customer);
+					this.frm.set_value('customer', customer)
+						.then((response) => {
+							this.frm.doc.items.forEach(item => {
+								this.frm.script_manager.trigger('item_code', item.doctype, item.name)
+									.then(() => {
+										this.frm.doc.taxes = [];
+										this.update_item_in_frm(item, 'qty', item.qty)
+											.then(() => {
+												// update cart
+												frappe.run_serially([
+													() => {
+													if (item.qty === 0) {
+														frappe.model.clear_doc(item.doctype, item.name);
+													}
+													},
+													() => this.update_cart_data(item),
+													() => this.post_qty_change(item)
+												]);
+											});
+									});
+							})
+						});
 				},
 				on_order_type_change: (order_type) => {
 					this.frm.set_value('order_type', order_type)
@@ -110,20 +131,21 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.submit_sales_order()
 				},
 				on_delivery_date_change: (delivery_date) => {
+					if (!this.frm.doc.customer) {
+						frappe.throw(__('Please select a customer'));
+					}
 					this.delivery_date = delivery_date;
-					if (this.frm.doc.customer) {
-						frappe.db.get_value("Customer", { "name" : this.frm.doc.customer}, "delivery_days", (r) => {
+					if (delivery_date) {
+						frappe.db.get_value("Customer", { "name": this.frm.doc.customer }, "delivery_days", (r) => {
 							if (r.delivery_days) {
 								let day = moment(delivery_date).format('dddd');
 								let weekdays = JSON.parse(r.delivery_days);
-								if(!weekdays.includes(day)){
-									frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}", [day, this.frm.doc.customer, weekdays]));
+								if (!weekdays.includes(day)) {
+									frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}",
+										[day, this.frm.doc.customer, weekdays]));
 								}
 							}
 						})
-					}
-					else if(!this.frm.doc.customer){
-						frappe.throw(__('Please select a customer'));
 					}
 				},
 				on_delivery_window_change: (type, time) => {
@@ -351,23 +373,26 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			if(updated_item){
 				this.update_item_in_frm(updated_item)
 			}else{
-				this.frm.add_child('items',success)
-			}
-			this.frm.doc.items.forEach(item => {
-				this.update_item_in_frm(item, 'qty', item.qty)
+				const item = this.frm.add_child('items', success);
+				this.frm.script_manager.trigger('item_code', item.doctype, item.name)
 					.then(() => {
-						// update cart
-						frappe.run_serially([
-							() => {
-								if (item.qty === 0) {
-									frappe.model.clear_doc(item.doctype, item.name);
-								}
-							},
-							() => this.update_cart_data(item),
-							() => this.post_qty_change(item)
-						]);
+						this.frm.doc.items.forEach(item => {
+							this.update_item_in_frm(item, 'qty', item.qty)
+								.then(() => {
+									// update cart
+									frappe.run_serially([
+										() => {
+											if (item.qty === 0) {
+												frappe.model.clear_doc(item.doctype, item.name);
+											}
+										},
+										() => this.update_cart_data(item),
+										() => this.post_qty_change(item)
+									]);
+								});
+						})
 					});
-			})
+			}
 		}, () => {
 			this.on_close(row);
 		}, true);
@@ -422,7 +447,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
 		});
-		this.frm.savesubmit()
+		this.frm.save()
 			.then((r) => {
 				if (r && r.doc) {
 					this.frm.doc.docstatus = r.doc.docstatus;
@@ -1031,6 +1056,7 @@ class SalesOrderCart {
 		this.$taxes_and_totals.find('.net-total')
 			.html(format_currency(this.frm.doc.total, currency));
 
+
 		// Update taxes
 		const taxes_html = this.frm.doc.taxes.map(tax => {
 			return `
@@ -1097,7 +1123,8 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
-		if(this.frm.doc.delivery_date){
+
+		if (this.frm.doc.delivery_date) {
 			this.delivery_date_field.set_value(this.frm.doc.delivery_date);
 		}
 	}
@@ -1147,7 +1174,6 @@ class SalesOrderCart {
 				},
 				onchange: () => {
 					this.events.on_customer_change(this.customer_field.get_value());
-
 					if (this.delivery_start_time_field) {
 						this.delivery_start_time_field.set_value(this.frm.doc.delivery_start_time);
 					}

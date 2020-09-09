@@ -10,6 +10,7 @@ app_icon = "octicon octicon-gear"
 app_color = "light green"
 app_email = "developers@bloomstack.com"
 app_license = "MIT"
+app_logo_url = '/assets/bloomstack_core/images/icon.png'
 
 
 # Set setup defaults
@@ -34,7 +35,6 @@ app_include_js = [
 	"/assets/bloomstack_core/js/conf.js",
 	"/assets/bloomstack_core/js/query_report.js",
 	"/assets/bloomstack_core/js/banner.js",
-	"/assets/bloomstack_core/js/utils.js",
 	"/assets/js/address_and_contact.min.js",
 	"/assets/js/bloomstack_desk.js"
 ]
@@ -262,13 +262,16 @@ scheduler_events = {
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
 	],
 	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract",
+		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
+	],
+	"daily_long": [
 		"bloomstack_core.hook_events.sales_order.update_order_status"
 	]
 }
 
 after_migrate = [
-	'bloomstack_core.hook_events.lead.rearrange_standard_fields'
+	'bloomstack_core.hook_events.lead.rearrange_standard_fields',
+	'bloomstack_core.hook_events.cognito.setup'
 ]
 
 # Testing
