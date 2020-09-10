@@ -194,7 +194,6 @@ doc_events = {
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
-			"bloomstack_core.hook_events.delivery_note.make_sales_invoice_for_delivery",
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 			"bloomstack_core.compliance.package.create_package_from_delivery"
 		]
@@ -262,7 +261,9 @@ scheduler_events = {
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
 	],
 	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract",
+		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
+	],
+	"daily_long": [
 		"bloomstack_core.hook_events.sales_order.update_order_status"
 	]
 }
