@@ -29,8 +29,8 @@ def create_metrc_sales_receipt(sales_invoice, method):
 
 	response = metrc.sales.receipts.post(json=payload)
 
-	integration_request = frappe.new_doc("Integration Request")
-	integration_request.update({
+	integration_request = frappe.get_doc({
+		"doctype": "Integration Request",
 		"integration_type": "Remote",
 		"integration_request_service": "Metrc",
 		"reference_doctype": sales_invoice.doctype,
@@ -40,8 +40,6 @@ def create_metrc_sales_receipt(sales_invoice, method):
 	if not response.ok:
 		integration_request.status = "Failed"
 		integration_request.error = json.dumps(json.loads(response.text), indent=4, sort_keys=True)
-		integration_request.save(ignore_permissions=True)
-		frappe.db.commit()
 
 		if isinstance(response.json(), list):
 			for error in response.json():
@@ -50,16 +48,18 @@ def create_metrc_sales_receipt(sales_invoice, method):
 			frappe.throw(_(response.json().get("Message")))
 	else:
 		integration_request.status = "Completed"
-		integration_request.save(ignore_permissions=True)
+		integration_request.error
+
+	integration_request.save(ignore_permissions=True)
 
 
 def get_metrc_payload(sales_invoice):
-	settings = frappe.get_single("Compliance Settings")
 
-	if not settings.is_compliance_enabled:
+	if not frappe.get_single_value("Compliance Settings", "is_compliance_enabled"):
 		return
 
 	transactions = []
+
 	for item in sales_invoice.items:
 		if item.package_tag:
 			transactions.append({

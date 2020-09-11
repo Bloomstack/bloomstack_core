@@ -1,8 +1,11 @@
-from urllib.parse import urlparse
+
+# -*- coding: utf-8 -*-
+# Copyright (c) 2020, Bloomstack Inc. and contributors
+# For license information, please see license.txt
 
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url
+from frappe.utils import get_host_name
 
 
 def sync_bloomtrace(compliance_settings, method):
@@ -10,13 +13,13 @@ def sync_bloomtrace(compliance_settings, method):
 		return
 
 	frappe_client = get_bloomtrace_client()
+
 	if not frappe_client:
 		return
 
-	site_url = urlparse(get_url()).netloc
 	frappe_client.update({
 		"doctype": "Bloomstack Site",
-		"name": site_url,
+		"name": get_host_name(),
 		"metrc_url": compliance_settings.metrc_url,
 		"metrc_user_key": compliance_settings.get_password("metrc_user_key"),
 		"metrc_push_data": compliance_settings.metrc_push_data,

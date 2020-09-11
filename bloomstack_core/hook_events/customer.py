@@ -1,3 +1,8 @@
+
+# -*- coding: utf-8 -*-
+# Copyright (c) 2020, Bloomstack Inc. and contributors
+# For license information, please see license.txt
+
 import frappe
 
 def update_lead_acc_open_date(customer, method):

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2018, Bloom Stack and contributors
+# For license information, please see license.txt
+
 import json
 
 import frappe
@@ -10,8 +14,7 @@ from frappe.utils import cstr
 @frappe.whitelist()
 def autoname_item(item):
 	item = frappe._dict(json.loads(item))
-	item_code = autoname(item)
-	return item_code
+	return autoname(item)
 
 
 def autoname(item, method=None):

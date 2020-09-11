@@ -1,5 +1,8 @@
-import frappe
+# -*- coding: utf-8 -*-
+# Copyright (c) 2018, Bloom Stack and contributors
+# For license information, please see license.txt
 
+import frappe
 
 def get_employee_from_user(driver, method):
 	if method == "validate":

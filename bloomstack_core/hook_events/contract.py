@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2020, Bloomstack Inc. and contributors
+# For license information, please see license.txt
+
 import json
 
 import frappe
@@ -15,13 +19,7 @@ def generate_contract_terms_display(contract, method):
 
 
 def create_project_against_contract(contract, method):
-	if contract.project:
-		return
-
-	if not contract.project_template:
-		return
-
-	if not contract.is_signed:
+	if contract.project or not contract.project_template or not contract.is_signed:
 		return
 
 	# Get the tasks for the project
@@ -30,55 +28,47 @@ def create_project_against_contract(contract, method):
 
 	# Get project and party details
 	project_name = "{} - {}".format(contract.party_name, project_template.template_name)
+
 	if frappe.db.exists("Project", project_name):
 		count = len(frappe.get_all("Project", filters={"name": ["like", "%{}%".format(project_name)]}))
 		project_name = "{} - {}".format(project_name, count)
 
-	project = frappe.new_doc("Project")
-	project.update({
+	project = frappe.get_doc({
+		"doctype": "Project",
 		"project_name": project_name,
 		"customer": contract.party_name if contract.party_type == "Customer" else None,
-	})
-
-	project.insert(ignore_permissions=True)
+	}).insert(ignore_permissions=True)
 
 	project_dates = []
-	project_name = project.name
+
 	for task in project_template.tasks:
-		project_task = frappe.new_doc("Task")
 		start_date = add_days(base_date, task.days_to_task_start)
 		end_date = add_days(base_date, task.days_to_task_end)
-		project_task.update({
+		project_dates.extend([start_date, end_date])
+
+		project_task = frappe.get_doc({
+			"doctype": "Task",
 			"subject": task.task_name,
 			"start_date": start_date,
 			"end_date": end_date,
 			"task_weight": task.weight,
 			"description": task.description,
-			"project": project_name
-		})
-		project_task.insert(ignore_permissions=True)
-		project_dates.extend([start_date, end_date])
-
-	expected_start_date = min(project_dates)
-	expected_end_date = max(project_dates)
+			"project": project.name
+		}).insert(ignore_permissions=True)
 
 	project.update({
-		"expected_start_date": expected_start_date,
-		"expected_end_date": expected_end_date
+		"expected_start_date": min(project_dates),
+		"expected_end_date": max(project_dates)
 	})
 
 	project.save(ignore_permissions=True)
-
 
 	# Link the contract with the project
 	contract.db_set("project", project.name)
 
 
 def create_order_against_contract(contract, method):
-	if frappe.db.exists("Sales Order", {"contract": contract.name}):
-		return
-
-	if not contract.is_signed:
+	if frappe.db.exists("Sales Order", {"contract": contract.name}) or not contract.is_signed:
 		return
 
 	if contract.document_type == "Quotation" and contract.document_name:
@@ -100,38 +90,40 @@ def create_event_against_contract(contract, method):
 			return
 
 		employee_id = frappe.db.get_value('Employee', {'user_id': contract.signed_by_company}, 'name')
-		event = frappe.new_doc('Event')
-		event.subject = contract.name
-		event.ends_on = contract.end_date
-		event.description = contract.contract_terms
-		event.all_day = 1
-		event.append("event_participants", {
+
+		event_participants = [{
 			"reference_doctype": contract.party_type,
 			"reference_docname": contract.party_name
-		})
+		}]
 
 		if employee_id:
-			event.append("event_participants", {
+			event_participants.append({
 				"reference_doctype": 'Employee',
 				"reference_docname": employee_id
 			})
 
-		event.save()
+		event = frappe.get_doc({
+			"doctype": "Event",
+			"subject": contract.name,
+			"ends_on": contract.end_date,
+			"description": contract.contract_terms,
+			"all_day": 1,
+			"event_participants": event_participants
+		}).insert(ignore_permissions=True)
 
 
 @frappe.whitelist()
 def get_party_users(doctype, txt, searchfield, start, page_len, filters):
 	if filters.get("party_type") in ("Customer", "Supplier"):
-		party_links = frappe.get_all("Dynamic Link",
-			filters={"parenttype": "Contact",
-				"link_doctype": filters.get("party_type"),
-				"link_name": filters.get("party_name")},
-			fields=["parent"])
+
+		party_links = frappe.get_all("Dynamic Link", filters={
+			"parenttype": "Contact",
+			"link_doctype": filters.get("party_type"),
+			"link_name": filters.get("party_name")
+		}, fields=["parent"])
 
 		party_users = [frappe.db.get_value("Contact", link.parent, "user") for link in party_links]
-
 		return frappe.get_all("User", filters={"email": ["in", party_users]}, as_list=True)
-
 
 def get_data(data):
 	return frappe._dict({
