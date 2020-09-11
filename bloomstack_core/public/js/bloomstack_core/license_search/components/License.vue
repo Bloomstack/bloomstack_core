@@ -65,12 +65,12 @@
         methods: {
             quick_entry(doctype, fieldMap) {
                 const mapper = {};
-                for(let customerField in fieldMap) {
-                    let licenseField = fieldMap[customerField];
-                    mapper[customerField] = this.license[licenseField];
+                for(let field in fieldMap) {
+                    let licenseField = fieldMap[field];
+                    mapper[field] = this.license[licenseField];
                 }
 
-                frappe.new_doc(doctype, false, function(dialog) {
+                frappe.new_doc(doctype, mapper, function(dialog) {
                     dialog.set_values(mapper);
                 });
             },
@@ -109,10 +109,10 @@
 
             make_lead() {
                 const fieldMap = {
-                    customer_name: "legal_name",
+                    lead_name: "legal_name",
                     email_id: "email_id",
-                    mobile_no: "phone",
-                    license: "license_number"
+                    company_name: "legal_name",
+                    type_of_business: "business_structure"
 			    };
 
                 this.quick_entry("Lead", fieldMap);
@@ -120,9 +120,7 @@
 
             make_supplier() {
                 const fieldMap = {
-                    customer_name: "legal_name",
-                    email_id: "email_id",
-                    mobile_no: "phone",
+                    supplier_name: "legal_name",
                     license: "license_number"
 			    };
 
