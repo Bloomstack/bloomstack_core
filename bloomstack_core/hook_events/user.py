@@ -2,11 +2,9 @@
 # Copyright (c) 2020, Bloomstack Inc. and contributors
 # For license information, please see license.txt
 
-from urllib.parse import urlparse
-
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
-from frappe.utils import cstr, get_url
+from frappe.utils import cstr, get_host_name
 
 
 def set_works_with_bloomstack_false(user, method):
@@ -32,7 +30,7 @@ def execute_bloomtrace_integration_request():
 	if not frappe_client:
 		return
 
-	site_url = urlparse(get_url()).netloc
+	site_url = get_host_name()
 	pending_requests = frappe.get_all("Integration Request",
 		filters={
 			"status": ["IN", ["Queued", "Failed"]],

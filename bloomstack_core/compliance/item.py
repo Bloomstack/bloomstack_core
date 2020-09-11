@@ -1,10 +1,8 @@
-from urllib.parse import urlparse
-
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 from bloomstack_core.compliance.utils import get_metrc, log_request
 from frappe import _
-from frappe.utils import cstr, get_url
+from frappe.utils import cstr, get_host_name
 
 
 def get_item(item):
@@ -162,12 +160,12 @@ def _sync_metrc_item(item):
 		metrc_id = create_item(item)
 		if metrc_id:
 			frappe.db.set_value("Item", item.name, "metrc_id", metrc_id)
-			frappe.msgprint(_("{} was successfully created in METRC (ID number: {}).".format(item.item_name, metrc_id)))
+			frappe.msgprint(_("{0} was successfully created in METRC (ID number: {1}).").format(item.item_name, metrc_id))
 		else:
-			frappe.msgprint(_("{} was successfully created in METRC.".format(item.item_name)))
+			frappe.msgprint(_("{0} was successfully created in METRC.").format(item.item_name))
 	else:
 		update_item(item)
-		frappe.msgprint(_("{} was successfully updated in METRC.".format(item.item_name)))
+		frappe.msgprint(_("{0} was successfully updated in METRC.").format(item.item_name))
 
 
 def execute_bloomtrace_integration_request():
@@ -217,7 +215,7 @@ def update_compliance_item(item, frappe_client):
 
 
 def make_compliance_item(item):
-	site_url = urlparse(get_url()).netloc
+	site_url = get_host_name()
 	bloomtrace_compliance_item_dict = {
 		"doctype": "Compliance Item",
 		"bloomstack_site": site_url,

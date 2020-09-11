@@ -2,11 +2,9 @@
 # Copyright (c) 2020, Bloomstack Inc. and contributors
 # For license information, please see license.txt
 
-from urllib.parse import urlparse
-
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import cstr, get_url
+from frappe.utils import cstr, get_host_name
 
 
 def execute_bloomtrace_integration_request():
@@ -51,7 +49,7 @@ def update_package_tag(package_tag, frappe_client):
 
 
 def make_package_tag(package_tag):
-	site_url = urlparse(get_url()).netloc
+	site_url = get_host_name()
 	item = frappe.db.get_value("Item", package_tag.item_code, "bloomtrace_id")
 	manufacturing_date = frappe.db.get_value("Batch", package_tag.batch_no, "manufacturing_date") if package_tag.batch_no else None
 	expiry_date = frappe.db.get_value("Batch", package_tag.batch_no, "expiry_date") if package_tag.batch_no else None
