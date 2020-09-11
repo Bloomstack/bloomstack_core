@@ -3,6 +3,7 @@ import json
 import frappe
 from erpnext.stock.doctype.delivery_note.delivery_note import make_sales_return
 from erpnext.stock.doctype.delivery_trip.delivery_trip import make_payment_entry
+from frappe import _
 
 
 @frappe.whitelist()
