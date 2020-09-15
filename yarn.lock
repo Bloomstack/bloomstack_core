@@ -9,27 +9,26 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@cubejs-client/core@^0.20.0":
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/@cubejs-client/core/-/core-0.20.0.tgz#4c94931752a7777b4c7d3f04b3ab66e33cb254d7"
-  integrity sha512-BRTByUfiok8Bl/Glg8oRRM/G/JbuAz4vXaNKTCH63JStkIchu5+OkOoHCDHn19GRNdyKNUcKh9Ww4UIz35PZbA==
+"@cubejs-client/core@^0.9.0":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@cubejs-client/core/-/core-0.9.12.tgz#d8aea508afd6b26d73b2543ab381c5ccbe838d24"
+  integrity sha512-uTl8nFO1pKEQazPadcmjTCiV2FqKMqrzhc5FynoyCb2nmJqgpM45uKHKW3Q8qYKumm2Dy5F/OMu7+YlySggjWg==
   dependencies:
     "@babel/runtime" "^7.1.2"
-    core-js "^3.6.5"
+    core-js "^2.5.3"
     cross-fetch "^3.0.2"
     moment "^2.22.2"
     moment-range "^4.0.1"
-    ramda "^0.27.0"
-    url-search-params-polyfill "^7.0.0"
-    uuid "^3.4.0"
+    ramda "^0.25.0"
 
-"@cubejs-client/vue@^0.20.0":
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/@cubejs-client/vue/-/vue-0.20.0.tgz#95c79866906c20aa7728fd017f8c2c1416a335cd"
-  integrity sha512-74DD4gZkx7EOdxX+mlZdbPAU22ZoTkSX5P+vAXsPOPHgkQ+o+LGSQD8twz8Lve4wjvd5XUfPsqtjCw+JFBZvRQ==
+"@cubejs-client/vue@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@cubejs-client/vue/-/vue-0.9.0.tgz#f97393e070ced495437e915dd41bcbc74122c16e"
+  integrity sha512-gkwv70EkQh0SNiKDcxUL3OTjZqzGVqcJ7aMDwRiJ1ia3nlB+nIgdTIBhgX9hSbftQeb9ixq8DGsLiSvN7o4ZFw==
   dependencies:
-    core-js "^3.6.5"
-    ramda "^0.27.0"
+    core-js "^2.6.5"
+    ramda "^0.26.1"
+    vue "^2.6.6"
 
 chart.js@^2.9.0:
   version "2.9.3"
@@ -76,10 +75,10 @@ color-name@^1.0.0:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-core-js@^3.6.5:
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
-  integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
+core-js@^2.5.3, core-js@^2.6.5:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
+  integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
 cross-fetch@^3.0.2:
   version "3.0.5"
@@ -211,10 +210,15 @@ querystring@0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
-ramda@^0.27.0:
-  version "0.27.1"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.27.1.tgz#66fc2df3ef873874ffc2da6aa8984658abacf5c9"
-  integrity sha512-PgIdVpn5y5Yns8vqb8FzBUEYn98V3xcPgawAkkgj0YJ0qDsnHCiNmZYfOGMgOvoB0eWFLpYbhxUR3mxfDIMvpw==
+ramda@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
+  integrity sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
+
+ramda@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
+  integrity sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ==
 
 regenerator-runtime@^0.13.4:
   version "0.13.7"
@@ -238,11 +242,6 @@ type@^2.0.0:
   resolved "https://registry.yarnpkg.com/type/-/type-2.1.0.tgz#9bdc22c648cf8cf86dd23d32336a41cfb6475e3f"
   integrity sha512-G9absDWvhAWCV2gmF1zKud3OyC61nZDwWvBL2DApaVFogI07CprggiQAOOjvp2NRjYWFzPyu7vwtDrQFq8jeSA==
 
-url-search-params-polyfill@^7.0.0:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/url-search-params-polyfill/-/url-search-params-polyfill-7.0.1.tgz#b900cd9a0d9d2ff757d500135256f2344879cbff"
-  integrity sha512-bAw7L2E+jn9XHG5P9zrPnHdO0yJub4U+yXJOdpcpkr7OBd9T8oll4lUos0iSGRcDvfZoLUKfx9a6aNmIhJ4+mQ==
-
 url@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
@@ -251,10 +250,10 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-uuid@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
-  integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+vue@^2.6.6:
+  version "2.6.12"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
+  integrity sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==
 
 zlib@^1.0.5:
   version "1.0.5"
