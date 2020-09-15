@@ -139,25 +139,6 @@ def create_muliple_delivery_notes(orders):
 	return created_orders
 
 
-def validate_batch_item(sales_order, method):
-	for item in sales_order.items:
-		qty = item.stock_qty or item.transfer_qty or item.qty or 0
-		has_batch_no = frappe.db.get_value('Item', item.item_code, 'has_batch_no')
-		warehouse = item.warehouse
-
-		if has_batch_no and warehouse and qty > 0:
-			if not item.batch_no:
-				return
-
-			batch_qty = get_batch_qty(batch_no=item.batch_no, warehouse=warehouse)
-			if flt(batch_qty, item.precision("qty")) < flt(qty, item.precision("qty")):
-				frappe.throw(_("""
-					Row #{0}: The batch {1} has only {2} qty. Either select a different
-					batch that has more than {3} qty available, or split the row to sell
-					from multiple batches.
-				""").format(item.idx, item.batch_no, batch_qty, qty))
-
-
 def check_overdue_status(sales_order, method=None):
 	overdue_conditions = [
 		sales_order.docstatus == 1,

@@ -10,11 +10,6 @@ from frappe import _
 from frappe.utils import now
 
 
-def set_invoice_status(sales_invoice, method):
-	sales_invoice.set_status()
-	sales_invoice.set_indicator()
-
-
 def create_metrc_sales_receipt(sales_invoice, method):
 	if sales_invoice.is_return:
 		return

@@ -158,11 +158,7 @@ doc_events = {
 		"before_insert": "bloomstack_core.hook_events.compliance_info.create_bloomtrace_license",
 	},
 	"Compliance Item": {
-		"validate": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
-		],
-		"after_insert": [
+		"on_update": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
 			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
 		]
@@ -170,83 +166,27 @@ doc_events = {
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},
-	"Contract": {
-		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
-		"on_update_after_submit": [
-			"bloomstack_core.hook_events.contract.create_project_against_contract",
-			"bloomstack_core.hook_events.contract.create_order_against_contract"
-		],
-		"on_submit": "bloomstack_core.hook_events.contract.create_event_against_contract",
-		"before_submit": "bloomstack_core.hook_events.contract.set_contract_company",
-		"on_cancel": "bloomstack_core.hook_events.contract.create_event_against_contract"
-	},
-	"Customer": {
-		"validate": [
-			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
-		]
-	},
-	("Company", "Supplier", "Customer"): {
-		"validate": [
-			"bloomstack_core.hook_events.utils.validate_default_license",
-			"bloomstack_core.hook_events.utils.validate_expired_licenses"
-		]
-	},
 	"Delivery Note": {
-		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
-			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 			"bloomstack_core.compliance.package.create_package_from_delivery"
 		]
 	},
 	"Package Tag": {
-		"validate": "bloomstack_core.hook_events.utils.create_integration_request",
-		"after_insert": "bloomstack_core.hook_events.utils.create_integration_request"
-	},
-	"Sales Order": {
-		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item",
-		"on_update_after_submit": "bloomstack_core.hook_events.sales_order.check_overdue_status"
+		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package_from_stock"
 	},
 	"Delivery Trip": {
-		"validate": [
-			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
-			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
-		],
 		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
-	},
-	"Driver": {
-		"validate": "bloomstack_core.hook_events.driver.get_employee_from_user"
-	},
-	"Employee": {
-		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
-	},
-	"Item": {
-		"autoname": "bloomstack_core.hook_events.item.autoname"
-	},
-	"Packing Slip": {
-		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
 	},
 	"Sales Invoice": {
-		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt",
-		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
+		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt"
 	},
 	"User": {
-		"validate": [
-			"bloomstack_core.hook_events.user.validate_if_bloomstack_user",
-			"bloomstack_core.hook_events.user.update_bloomtrace_user"
-		],
+		"validate": "bloomstack_core.hook_events.user.validate_if_bloomstack_user",
 		"before_insert": "bloomstack_core.hook_events.user.set_works_with_bloomstack_false",
-		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
-	},
-	("Sales Order", "Delivery Note"): {
-		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
-		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
-	},
-	"Production Plan": {
-		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
+		"on_update": "bloomstack_core.hook_events.user.update_bloomtrace_user"
 	}
 }
 

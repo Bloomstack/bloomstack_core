@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.frappeclient import FrappeClient, AuthError
 
 
@@ -7,27 +8,27 @@ def get_bloomtrace_client():
 	username = frappe.conf.get("bloomtrace_username")
 	password = frappe.conf.get("bloomtrace_password")
 
-	if not url:
+	if not (url and username and password):
 		return
 
 	try:
 		client = FrappeClient(url, username=username, password=password, verify=True)
 	except ConnectionError:
-		return
+		frappe.throw(_("Could not connect to Bloomtrace."))
 	except AuthError:
-		return
+		frappe.throw(_("Authentication error while connecting to Bloomtrace."))
 
 	return client
 
 
 def make_integration_request(doctype, docname):
-	if frappe.get_conf().enable_bloomtrace or doctype=="User":
-		integration_request = frappe.new_doc("Integration Request")
-		integration_request.update({
+
+	if frappe.conf.get("enable_bloomtrace") or doctype == "User":
+		frappe.get_doc({
+			"doctype": "Integration Request",
 			"integration_type": "Remote",
 			"integration_request_service": "BloomTrace",
 			"status": "Queued",
 			"reference_doctype": doctype,
 			"reference_docname": docname
-		})
-		integration_request.save(ignore_permissions=True)
+		}).insert(ignore_permissions=True)
