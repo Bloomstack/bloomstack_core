@@ -9,16 +9,6 @@ from frappe import _
 from frappe.utils import cstr, get_url
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 
-def link_invoice_against_delivery_note(delivery_note, method):
-	for item in delivery_note.items:
-		if item.against_sales_order and not item.against_sales_invoice:
-			sales_invoice = frappe.get_all("Sales Invoice Item",
-				filters={"docstatus": 1, "sales_order": item.against_sales_order},
-				fields=["distinct(parent)"])
-
-			if sales_invoice and len(sales_invoice) == 1:
-				item.against_sales_invoice = sales_invoice[0].parent
-
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:

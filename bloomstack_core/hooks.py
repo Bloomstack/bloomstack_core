@@ -68,30 +68,8 @@ webform_include_js = {
 
 # include js in doctype views
 doctype_js = {
-	"Batch": "public/js/batch.js",
 	"Compliance Item": "public/js/compliance_item.js",
-	"Compliance Settings": "public/js/compliance_settings.js",
-	"Contract": "public/js/contract.js",
-	"Delivery Note": "public/js/delivery_note.js",
-	"Delivery Trip": "public/js/delivery_trip.js",
-	"Driver": "public/js/driver.js",
-	"Item": "public/js/item.js",
-	"Lead": "public/js/lead.js",
-	"Packing Slip": "public/js/packing_slip.js",
-	"Pick List": "public/js/pick_list.js",
-	"Quality Inspection": "public/js/quality_inspection.js",
-	"Quotation": "public/js/quotation.js",
-	"Sales Order": "public/js/sales_order.js",
-	"Stock Entry": "public/js/stock_entry.js",
-	"Work Order": "public/js/work_order.js",
-}
-
-doctype_list_js = {
-	"Delivery Trip": "public/js/delivery_trip_list.js",
-	"Sales Order": "public/js/sales_order_list.js",
-	"Sales Invoice": "public/js/sales_invoice_list.js",
-	"Purchase Order": "public/js/purchase_order_list.js",
-	"Purchase Invoice": "public/js/purchase_invoice_list.js"
+	"Compliance Settings": "public/js/compliance_settings.js"
 }
 
 override_doctype_dashboards = {
@@ -158,7 +136,11 @@ doc_events = {
 		"before_insert": "bloomstack_core.hook_events.compliance_info.create_bloomtrace_license",
 	},
 	"Compliance Item": {
-		"on_update": [
+		"validate": [
+			"bloomstack_core.hook_events.utils.create_integration_request",
+			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
+		],
+		"after_insert": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
 			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
 		]
@@ -172,7 +154,8 @@ doc_events = {
 		]
 	},
 	"Package Tag": {
-		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
+		"validate": "bloomstack_core.hook_events.utils.create_integration_request",
+		"after_insert": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.compliance.package.create_package_from_stock"
@@ -184,9 +167,12 @@ doc_events = {
 		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt"
 	},
 	"User": {
-		"validate": "bloomstack_core.hook_events.user.validate_if_bloomstack_user",
+		"validate": [
+			"bloomstack_core.hook_events.user.validate_if_bloomstack_user",
+			"bloomstack_core.hook_events.user.update_bloomtrace_user"
+		],
 		"before_insert": "bloomstack_core.hook_events.user.set_works_with_bloomstack_false",
-		"on_update": "bloomstack_core.hook_events.user.update_bloomtrace_user"
+		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
 	}
 }
 
@@ -199,17 +185,11 @@ scheduler_events = {
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
-	],
-	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
-	],
-	"daily_long": [
-		"bloomstack_core.hook_events.sales_order.update_order_status"
 	]
 }
 
 after_migrate = [
-	'bloomstack_core.hook_events.lead.rearrange_standard_fields',
+	'erpnext.crm.doctype.lead.lead.rearrange_standard_fields',
 	'bloomstack_core.hook_events.cognito.setup'
 ]
 

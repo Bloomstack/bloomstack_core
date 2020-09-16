@@ -4,12 +4,7 @@
 
 from __future__ import unicode_literals
 
-from requests.utils import quote
-
 import frappe
-from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
-from frappe.model.mapper import get_mapped_doc
-from frappe.utils import flt, nowdate, today
 from bloomstack_core.bloomtrace import make_integration_request
 
 def make_transfer_templates(delivery_trip, method):

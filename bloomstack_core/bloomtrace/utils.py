@@ -14,9 +14,9 @@ def get_bloomtrace_client():
 	try:
 		client = FrappeClient(url, username=username, password=password, verify=True)
 	except ConnectionError:
-		frappe.throw(_("Could not connect to Bloomtrace."))
+		return
 	except AuthError:
-		frappe.throw(_("Authentication error while connecting to Bloomtrace."))
+		return
 
 	return client
 
