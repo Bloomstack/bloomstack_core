@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    This is working now with the watch! hiii ofline 
+    This is working now with the watch! hiii ofline
     <div class="row">
       <div class="col-sm-4">
         <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceItemUniqueItemCode">
@@ -52,6 +52,35 @@
           </template>
         </query-builder>
       </div>
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="tabBinPieQuery">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Bin pie Query"
+              type="pieChart"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query="TabSalesInvoiceItemHorizontalBarChartByItemName"
+        >
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Sales Invoice Item Horizontal Bar Chart By Item Name Query 7"
+              type="TabSalesInvoiceItemHorizontalBarChartByItemName"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
     </div>
   </div>
 </template>
@@ -61,7 +90,7 @@ import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
 import QUERY from "./components/Query.js";
 import Chart from "./components/Chart.vue";
-import pieChartTerritory from"./components/Chart.vue";
+import pieChartTerritory from "./components/Chart.vue";
 const API_URL = "http://localhost:4000"; // change to your actual endpoint
 // const API_URL ="https://ecom.cubecloudapp.dev";
 
@@ -81,11 +110,14 @@ export default {
   data() {
     const dataObj = {
       cubejsApi,
-      TabSalesInvoiceItemUniqueItemCode:QUERY.TabSalesInvoiceItemUniqueItemCode,
-      TabCustomerCount:QUERY.TabCustomerCount,
-      TabSalesAverageInvoiceAmount:QUERY.TabSalesAverageInvoiceAmount,
-      tabBinPieTerritoryQuery:QUERY.tabBinPieTerritoryQuery,
-      PieChartTerritory:QUERY.PieChartTerritory
+      TabSalesInvoiceItemUniqueItemCode:
+        QUERY.TabSalesInvoiceItemUniqueItemCode,
+      TabCustomerCount: QUERY.TabCustomerCount,
+      TabSalesAverageInvoiceAmount: QUERY.TabSalesAverageInvoiceAmount,
+      tabBinPieTerritoryQuery: QUERY.tabBinPieTerritoryQuery,
+      PieChartTerritory: QUERY.PieChartTerritory,
+      TabSalesInvoiceItemHorizontalBarChartByItemName:QUERY.TabSalesInvoiceItemHorizontalBarChartByItemName,
+      tabBinPieQuery:QUERY.tabBinPieQuery
     };
     return { ...dataObj };
   },

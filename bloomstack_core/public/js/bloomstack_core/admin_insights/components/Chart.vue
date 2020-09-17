@@ -16,6 +16,8 @@
         <tab-customer-count v-if="!loading && type === 'TabCustomerCount'" :values="values" :metrics="metrics" />
         <tab-sales-average-invoice-amount v-if="!loading && type === 'TabSalesAverageInvoiceAmount'" :values="values" :metrics="metrics" />
         <pie-chart-territory v-if="!loading && type === 'pieChartTerritory'" :values="values" :metrics="metrics" />
+        <pie-chart v-if="!loading && type === 'pieChart'" :values="values" :metrics="metrics" />
+        <tab-sales-invoice-item-horizontal-bar-chart-by-item-name v-if="!loading && type === 'TabSalesInvoiceItemHorizontalBarChartByItemName'" :values="values" :metrics="metrics" />
         <!-- <pie-chart-customer-group v-if="!loading && type === 'test'" :values="values" :metrics="metrics" /> -->
       </div>
     </div>
@@ -28,6 +30,8 @@ import TabSalesInvoiceItemUniqueItemCode from "./TabSalesInvoiceItemUniqueItemCo
 import TabCustomerCount from "./TabCustomerCount.vue";
 import TabSalesAverageInvoiceAmount from "./TabSalesAverageInvoiceAmount.vue";
 import PieChartTerritory from "./PieChartTerritory.vue";
+import TabSalesInvoiceItemHorizontalBarChartByItemName from "./TabSalesInvoiceItemHorizontalBarChartByItemName.vue";
+import PieChart from "./PieChart.vue";
 // import PieChartCustomerGroup from "./PieChartCustomerGroup.vue";
 export default {
   components: {
@@ -35,6 +39,8 @@ export default {
     TabCustomerCount,
     TabSalesAverageInvoiceAmount,
     PieChartTerritory,
+    PieChart,
+    TabSalesInvoiceItemHorizontalBarChartByItemName
     // PieChartCustomerGroup
   },
   name: "Chart",
