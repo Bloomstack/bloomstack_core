@@ -5,10 +5,10 @@ import Home from "./Home.vue";
 Vue.use(Laue);
 Vue.config.productionTip = false;
 Vue.config.errorHandler = function (err) {
-	console.log("Error is..........", err.message); // "Oops"
-  };
-frappe.provide("bloomstack_core.admin_insights");
+  console.log("Error is..........", err.message); // "Oops"
+};
 
+frappe.provide("bloomstack_core.admin_insights");
 bloomstack_core.admin_insights = class AdminInsights {
   constructor({ parent }) {
     this.$parent = $(parent);
@@ -28,3 +28,4 @@ bloomstack_core.admin_insights = class AdminInsights {
     this.page.set_title(__("Admin Insights"));
   }
 };
+// console.log("hello", bloomstack_core.admin_insights);

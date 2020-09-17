@@ -1,4 +1,5 @@
 frappe.pages['admin_insights'].on_page_load = function(wrapper) {
+	console.log("hello");
 	new frappe.views.InsightsFactory().make('admin_insights');
 	// var page = frappe.ui.make_app_page({
 	// 	parent: wrapper,
@@ -9,13 +10,15 @@ frappe.pages['admin_insights'].on_page_load = function(wrapper) {
 
 frappe.views.InsightsFactory = class InsightsFactory extends frappe.views.Factory {
 	make(page_name) {
+		console.log("hola main bola!");
 		const assets = [
-			'assets/bloomstack_core/js/min/admin_insights.min.js',
-			// 'assets/bloomstack_core/css/admin_insights.css'
+			'assets/bloomstack_core/js/min/admin_insights.min.js'
 		];
 
+		console.log("namaste memsahab");
 		frappe.require(assets, () => {
-			bloomstack_core.admin_insights = new bloomstack_core.admin_insights({
+			console.log(bloomstack_core.admin_insights);
+			const say_what = new bloomstack_core.admin_insights({
 				parent: this.make_page(true, page_name)
 			});
 		});

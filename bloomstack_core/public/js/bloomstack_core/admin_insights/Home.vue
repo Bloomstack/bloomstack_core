@@ -1,5 +1,6 @@
 <template>
   <div class="container-fluid">
+    This is working now with the watch!
     <div class="row">
       <div class="col-sm-4">
         <query-builder :cubejs-api="cubejsApi" :query="usersQuery">
@@ -55,7 +56,7 @@
 </template>
 
 <script>
-import cubejs from "@cubejs-client/core";
+import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
 
 import Chart from "./components/Chart.vue";
