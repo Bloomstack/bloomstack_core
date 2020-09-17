@@ -1,50 +1,51 @@
 <template>
   <div class="container-fluid">
-    This is working now with the watch!
+    This is working now with the watch! hiii ofline 
     <div class="row">
       <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="usersQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart title="Total Users" type="number" :loading="loading" :result-set="resultSet" />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="totalOrdersQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart title="Total Orders" type="number" :loading="loading" :result-set="resultSet" />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="shippedOrdersQuery">
-          <template v-slot="{ loading, resultSet }">
-            <Chart title="Shipped Users" type="number" :loading="loading" :result-set="resultSet" />
-          </template>
-        </query-builder>
-      </div>
-    </div>
-    <br />
-    <br />
-    <div class="row">
-      <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="lineQuery">
-          <template v-slot="{ loading, resultSet }">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceItemUniqueItemCode">
+          <template v-slot="{loading, resultSet }">
             <Chart
-              title="New Users Over Time"
-              type="line"
+              title="Tab Sales Invoice Item Unique Item Code Query 11"
+              type="TabSalesInvoiceItemUniqueItemCode"
               :loading="loading"
               :result-set="resultSet"
             />
           </template>
         </query-builder>
       </div>
-      <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="barQuery">
-          <template v-slot="{ loading, resultSet }">
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="TabCustomerCount">
+          <template v-slot="{loading, resultSet }">
             <Chart
-              title="Orders by Status Over time"
-              type="stackedBar"
+              title="Tab Customer Count Query 10"
+              type="TabCustomerCount"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesAverageInvoiceAmount">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Sales Average Invoice Amount Query 5"
+              type="TabSalesAverageInvoiceAmount"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="tabBinPieTerritoryQuery">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Bin pie Territory Query 4"
+              type="pieChartTerritory"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -58,57 +59,35 @@
 <script>
 import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
-
+import QUERY from "./components/Query.js";
 import Chart from "./components/Chart.vue";
+import pieChartTerritory from"./components/Chart.vue";
+const API_URL = "http://localhost:4000"; // change to your actual endpoint
+// const API_URL ="https://ecom.cubecloudapp.dev";
 
 const cubejsApi = cubejs(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ2NjY4OTR9.0fdi5cuDZ2t3OSrPOMoc3B1_pwhnWj4ZmM3FHEX7Aus",
-  { apiUrl: "https://ecom.cubecloudapp.dev/cubejs-api/v1" }
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDAxNjkxOTMsImV4cCI6MTYwMjc2MTE5M30.M09WQCwOHkt-ZHhtdNk0Nk7IGi2krlEH-53y90RO-G4",
+  { apiUrl: API_URL + "/cubejs-api/v1" }
 );
 
 export default {
   name: "Home",
   components: {
+    QUERY,
     Chart,
+    pieChartTerritory,
     QueryBuilder,
   },
   data() {
-    return {
+    const dataObj = {
       cubejsApi,
-      usersQuery: { measures: ["Users.count"] },
-      totalOrdersQuery: { measures: ["Orders.count"] },
-      shippedOrdersQuery: {
-        measures: ["Orders.count"],
-        filters: [
-          {
-            dimension: "Orders.status",
-            operator: "equals",
-            values: ["shipped"],
-          },
-        ],
-      },
-      lineQuery: {
-        measures: ["Users.count"],
-        timeDimensions: [
-          {
-            dimension: "Users.createdAt",
-            dateRange: ["2019-01-01", "2020-12-31"],
-            granularity: "month",
-          },
-        ],
-      },
-      barQuery: {
-        measures: ["Orders.count"],
-        dimensions: ["Orders.status"],
-        timeDimensions: [
-          {
-            dimension: "Orders.createdAt",
-            dateRange: ["2019-01-01", "2020-12-31"],
-            granularity: "month",
-          },
-        ],
-      },
+      TabSalesInvoiceItemUniqueItemCode:QUERY.TabSalesInvoiceItemUniqueItemCode,
+      TabCustomerCount:QUERY.TabCustomerCount,
+      TabSalesAverageInvoiceAmount:QUERY.TabSalesAverageInvoiceAmount,
+      tabBinPieTerritoryQuery:QUERY.tabBinPieTerritoryQuery,
+      PieChartTerritory:QUERY.PieChartTerritory
     };
+    return { ...dataObj };
   },
 };
 </script>
