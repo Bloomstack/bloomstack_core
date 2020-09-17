@@ -1,3 +1,4 @@
+<!--
 <template>
   <la-cartesian autoresize narrow stacked :data="values" :colors="colors" :padding="[0, 0, 5, 0]">
     <template v-for="metric in metrics">
@@ -35,8 +36,68 @@ export default {
       ],
     };
   },
+  mounted(){
+    console.log("Bar Chart values",this.values),
+    console.log("BarChart metrics",this.metrics)
+  }
 };
 </script>
 
 <style scoped>
 </style>
+  
+-->
+<script>
+  import { Bar } from 'vue-chartjs';
+  import colour from "./colour";
+
+
+  export default {
+    name:"BarChart",
+    props: {
+    values: Array,
+    metrics: Array,
+    },
+    extends: Bar,
+    data() {
+      return {
+        chartData: {
+          labels: this.values.map(value=>value.category),
+          datasets: [{
+            label: 'Bar Chart',
+            borderWidth: 1,
+            backgroundColor: colour,
+            borderColor: colour,
+            pointBorderColor: '#2554FF',
+            data:this.values.map(value=>value["TabBin.actualQty"])
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              },
+              gridLines: {
+                display: true
+              }
+            }],
+            xAxes: [{
+              gridLines: {
+                display: false
+              }
+            }]
+          },
+          legend: {
+            display: true
+          },
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      }
+    },
+    mounted() {
+      this.renderChart(this.chartData, this.options)
+    }
+  }
+</script>

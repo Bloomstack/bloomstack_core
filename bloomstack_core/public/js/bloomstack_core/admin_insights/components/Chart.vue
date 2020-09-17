@@ -18,7 +18,15 @@
         <pie-chart-territory v-if="!loading && type === 'pieChartTerritory'" :values="values" :metrics="metrics" />
         <pie-chart v-if="!loading && type === 'pieChart'" :values="values" :metrics="metrics" />
         <tab-sales-invoice-item-horizontal-bar-chart-by-item-name v-if="!loading && type === 'TabSalesInvoiceItemHorizontalBarChartByItemName'" :values="values" :metrics="metrics" />
-        <!-- <pie-chart-customer-group v-if="!loading && type === 'test'" :values="values" :metrics="metrics" /> -->
+        <tab-sales-invoice-item-horizontal-bar-chart-by-item-group v-if="!loading && type === 'TabSalesInvoiceItemHorizontalBarChartByItemGroup'" :values="values" :metrics="metrics" />
+        <tab-purchase-invoice-horizontal-bar-chart-by-supplier v-if="!loading && type === 'TabPurchaseInvoiceHorizontalBarChartBySupplier'" :values="values" :metrics="metrics" />
+        <tab-customer-bar-chart-by-new-customer v-if="!loading && type === 'TabCustomerBarChartByNewCustomer'" :values="values" :metrics="metrics" />
+        <tab-sales-invoice-bar-chart-by-sales-partner v-if="!loading && type === 'TabSalesInvoiceBarChartBySalesPartner'" :values="values" :metrics="metrics" />
+        <pie-chart-customer-group v-if="!loading && type === 'pieChartCustomerGroup'" :values="values" :metrics="metrics" />
+        <pie-sales-invoice-by-status v-if="!loading && type === 'PieSalesInvoiceByStatus'" :values="values" :metrics="metrics" />
+        <bar-chart v-if="!loading && type === 'stackedBar'" :values="values" :metrics="metrics" />
+        <!-- <guage-chart v-if="!loading && type === 'GuageChart'" :values="values" :metrics="metrics" /> -->
+
       </div>
     </div>
   </div>
@@ -26,22 +34,37 @@
 
 <script>
 import moment from "moment";
+import BarChart from "./BarChart.vue";
 import TabSalesInvoiceItemUniqueItemCode from "./TabSalesInvoiceItemUniqueItemCode.vue";
 import TabCustomerCount from "./TabCustomerCount.vue";
 import TabSalesAverageInvoiceAmount from "./TabSalesAverageInvoiceAmount.vue";
 import PieChartTerritory from "./PieChartTerritory.vue";
 import TabSalesInvoiceItemHorizontalBarChartByItemName from "./TabSalesInvoiceItemHorizontalBarChartByItemName.vue";
 import PieChart from "./PieChart.vue";
-// import PieChartCustomerGroup from "./PieChartCustomerGroup.vue";
+import TabCustomerBarChartByNewCustomer from "./TabCustomerBarChartByNewCustomer.vue";
+import TabSalesInvoiceBarChartBySalesPartner from "./TabSalesInvoiceBarChartBySalesPartner.vue";
+import pieChartCustomerGroup from "./PieChartCustomerGroup.vue";
+import PieSalesInvoiceByStatus from "./PieSalesInvoiceByStatus.vue";
+import TabSalesInvoiceItemHorizontalBarChartByItemGroup from "./TabSalesInvoiceItemHorizontalBarChartByItemGroup.vue";
+import TabPurchaseInvoiceHorizontalBarChartBySupplier from "./TabPurchaseInvoiceHorizontalBarChartBySupplier.vue";
+import BarChartVue from './BarChart.vue';
+// import GuageChart from "./GuageChart.vue";
 export default {
   components: {
+    BarChart,
     TabSalesInvoiceItemUniqueItemCode,
     TabCustomerCount,
     TabSalesAverageInvoiceAmount,
     PieChartTerritory,
     PieChart,
-    TabSalesInvoiceItemHorizontalBarChartByItemName
-    // PieChartCustomerGroup
+    TabSalesInvoiceItemHorizontalBarChartByItemName,
+    TabCustomerBarChartByNewCustomer,
+    TabSalesInvoiceBarChartBySalesPartner,
+    pieChartCustomerGroup,
+    PieSalesInvoiceByStatus,
+    TabSalesInvoiceItemHorizontalBarChartByItemGroup,
+    TabPurchaseInvoiceHorizontalBarChartBySupplier,
+    // GuageChart
   },
   name: "Chart",
   props: {
