@@ -91,11 +91,11 @@ import { QueryBuilder } from "@cubejs-client/vue";
 import QUERY from "./components/Query.js";
 import Chart from "./components/Chart.vue";
 import pieChartTerritory from "./components/Chart.vue";
-import { CUBE_JS_HOST as API_URL } from "../../../../../config.js";
+import { CUBE_JS_HOST, CUBE_JS_SECRET } from "../../../../../config.js";
 
 const cubejsApi = cubejs(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDAxNjkxOTMsImV4cCI6MTYwMjc2MTE5M30.M09WQCwOHkt-ZHhtdNk0Nk7IGi2krlEH-53y90RO-G4",
-  { apiUrl: API_URL + "/cubejs-api/v1" }
+  CUBE_JS_SECRET,
+  { apiUrl: CUBE_JS_HOST + "/cubejs-api/v1" }
 );
 
 export default {
