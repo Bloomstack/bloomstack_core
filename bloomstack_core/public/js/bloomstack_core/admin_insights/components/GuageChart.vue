@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { GChart } from "vue-google-charts";
+import { default as GChart } from "vue-google-charts/index.js";
 export default {
   name: "GuageChart",
   components: {

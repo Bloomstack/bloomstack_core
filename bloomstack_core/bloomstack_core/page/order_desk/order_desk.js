@@ -131,7 +131,22 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.submit_sales_order()
 				},
 				on_delivery_date_change: (delivery_date) => {
+					if (!this.frm.doc.customer) {
+						frappe.throw(__('Please select a customer'));
+					}
 					this.delivery_date = delivery_date;
+					if (delivery_date) {
+						frappe.db.get_value("Customer", { "name": this.frm.doc.customer }, "delivery_days", (r) => {
+							if (r.delivery_days) {
+								let day = moment(delivery_date).format('dddd');
+								let weekdays = JSON.parse(r.delivery_days);
+								if (!weekdays.includes(day)) {
+									frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}",
+										[day, this.frm.doc.customer, weekdays]));
+								}
+							}
+						})
+					}
 				},
 				on_delivery_window_change: (type, time) => {
 					if (type == "start") {
@@ -1108,7 +1123,10 @@ class SalesOrderCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
-		this.delivery_date_field.set_value(this.frm.doc.delivery_date);
+
+		if (this.frm.doc.delivery_date) {
+			this.delivery_date_field.set_value(this.frm.doc.delivery_date);
+		}
 	}
 
 	make_delivery_window_fields() {

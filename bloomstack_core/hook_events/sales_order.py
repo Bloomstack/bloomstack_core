@@ -158,7 +158,7 @@ def validate_batch_item(sales_order, method):
 				""").format(item.idx, item.batch_no, batch_qty, qty))
 
 
-def check_overdue_status(sales_order, method):
+def check_overdue_status(sales_order, method=None):
 	overdue_conditions = [
 		sales_order.docstatus == 1,
 		sales_order.status not in ["On Hold", "Closed", "Completed"],
@@ -168,7 +168,8 @@ def check_overdue_status(sales_order, method):
 	]
 
 	is_overdue = all(overdue_conditions)
-	sales_order.db_set("is_overdue", is_overdue)
+	if is_overdue != sales_order.is_overdue:
+		sales_order.db_set("is_overdue", is_overdue)
 
 
 def update_order_status():
@@ -176,15 +177,7 @@ def update_order_status():
 		Daily scheduler to check if a Sales Order has become overdue
 	"""
 
-	frappe.db.sql("""
-		UPDATE
-			`tabSales Order`
-		SET
-			is_overdue = 1
-		WHERE
-			docstatus = 1
-				AND delivery_date < CURDATE()
-				AND status NOT IN ("On Hold", "Closed", "Completed")
-				AND skip_delivery_note = 0
-				AND per_delivered < 100
-	""")
+	orders = frappe.get_all("Sales Order", filters={"docstatus": 1})
+
+	for order in orders:
+		check_overdue_status(frappe.get_doc("Sales Order", order))
