@@ -22,7 +22,7 @@ bloomstack_core.admin_insights = class AdminInsights {
       data: {
         page: this.page,
       },
-    }).$mount("#content-row");
+    }).$mount(".layout-main")[0];
   }
   setup_header() {
     this.page.set_title(__("Admin Insights"));
