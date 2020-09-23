@@ -1,11 +1,10 @@
 <template>
   <div>
-    <GChart
-      :settings="{ packages: ['corechart', 'gauge'] }"
-      type="Gauge"
-      :data="chartData"
-      :options="chartOptions"
-    />
+  <GChart
+    type="ColumnChart"
+    :data="chartData"
+    :options="chartOptions"
+  />
   </div>
 </template>
 
@@ -25,7 +24,7 @@ export default {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData: [
         ["Label", "Value"],
-        ["Net_Total", this.values[0]["TabSalesInvoice.trueNetTotal"]],
+        ["Net_Total", 450000],
       ],
       chartOptions: {
         width: 400,
@@ -47,7 +46,7 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.values.map(value=>[value.category,value["TabBin.actualQty"]]))
+    console.log("aaaaaaaaaaaaaaaaaaaa",this.values.map(value=>[value.category,value["TabSalesInvoice.trueNetTotal"]]))
   },
 };
 </script>

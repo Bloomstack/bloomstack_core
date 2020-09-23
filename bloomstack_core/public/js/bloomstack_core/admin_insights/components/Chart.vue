@@ -25,7 +25,7 @@
         <pie-chart-customer-group v-if="!loading && type === 'pieChartCustomerGroup'" :values="values" :metrics="metrics" />
         <pie-sales-invoice-by-status v-if="!loading && type === 'PieSalesInvoiceByStatus'" :values="values" :metrics="metrics" />
         <bar-chart v-if="!loading && type === 'stackedBar'" :values="values" :metrics="metrics" />
-        <!-- <guage-chart v-if="!loading && type === 'GuageChart'" :values="values" :metrics="metrics" /> -->
+        <tab-bin-item-code-wise v-if="!loading && type === 'TabBinItemCodeWise'" :values="values" :metrics="metrics" />
 
       </div>
     </div>
@@ -48,7 +48,6 @@ import PieSalesInvoiceByStatus from "./PieSalesInvoiceByStatus.vue";
 import TabSalesInvoiceItemHorizontalBarChartByItemGroup from "./TabSalesInvoiceItemHorizontalBarChartByItemGroup.vue";
 import TabPurchaseInvoiceHorizontalBarChartBySupplier from "./TabPurchaseInvoiceHorizontalBarChartBySupplier.vue";
 import BarChartVue from './BarChart.vue';
-// import GuageChart from "./GuageChart.vue";
 export default {
   components: {
     BarChart,
@@ -64,7 +63,7 @@ export default {
     PieSalesInvoiceByStatus,
     TabSalesInvoiceItemHorizontalBarChartByItemGroup,
     TabPurchaseInvoiceHorizontalBarChartBySupplier,
-    // GuageChart
+
   },
   name: "Chart",
   props: {

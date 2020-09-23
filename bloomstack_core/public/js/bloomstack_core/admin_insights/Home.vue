@@ -192,7 +192,6 @@ import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
 import QUERY from "./components/Query.js";
 import Chart from "./components/Chart.vue";
-import pieChartTerritory from "./components/Chart.vue";
 import { CUBE_JS_HOST, CUBE_JS_SECRET } from "../../../../../config.js";
 
 const cubejsApi = cubejs(
@@ -205,7 +204,6 @@ export default {
   components: {
     QUERY,
     Chart,
-    pieChartTerritory,
     QueryBuilder,
   },
   data() {
@@ -226,7 +224,7 @@ export default {
       TabSalesInvoiceItemHorizontalBarChartByItemGroup:QUERY.TabSalesInvoiceItemHorizontalBarChartByItemGroup,
       TabPurchaseInvoiceHorizontalBarChartBySupplier:QUERY.TabPurchaseInvoiceHorizontalBarChartBySupplier,
       tabBinQuery:QUERY.tabBinQuery,
-      TabSalesInvoiceNetTotal:QUERY.TabSalesInvoiceNetTotal
+      TabSalesInvoiceNetTotal:QUERY.TabSalesInvoiceNetTotal,
 
     };
     return { ...dataObj };
