@@ -16,9 +16,3 @@ def make_transfer_templates(delivery_trip, method):
 			if frappe.db.get_value("Item", item.item_code, "is_compliance_item"):
 				make_integration_request("Delivery Note", stop.delivery_note)
 				break
-
-
-@frappe.whitelist()
-def get_address_display(address):
-	address_details = frappe.db.get_value("Address", address, "*", as_dict=True)
-	return frappe.render_template("erpnext/regional/united_states/address_template.html", address_details)

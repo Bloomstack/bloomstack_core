@@ -72,10 +72,7 @@ doctype_js = {
 	"Compliance Settings": "public/js/compliance_settings.js"
 }
 
-override_doctype_dashboards = {
-	"Contract": "bloomstack_core.hook_events.contract.get_data",
-	"Employee": "bloomstack_core.hook_events.employee.get_data"
-}
+# override_doctype_dashboards = {}
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 doctype_calendar_js = {
@@ -179,7 +176,6 @@ scheduler_events = {
 }
 
 after_migrate = [
-	'erpnext.crm.doctype.lead.lead.rearrange_standard_fields',
 	'bloomstack_core.hook_events.cognito.setup'
 ]
 
