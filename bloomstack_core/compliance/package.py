@@ -36,14 +36,14 @@ def build_stock_payload(stock_entry):
 		stock_entry (object): The `Stock Entry` Frappe object.
 
 	Returns:
-		payload (list of dict): The `Stock Entry` payload, if a Compliance Item is moved / created, otherwise `None`.
+		payload (list of dict): The `Stock Entry` payload, if an Item is moved / created, otherwise `None`.
 	"""
 
 	payload = {}
 	package_ingredients = []
 
 	for item in stock_entry.items:
-		if not frappe.db.exists("Compliance Item", item.item_code):
+		if not frappe.db.get_value("Item", item.item_code, "is_compliance_item"):
 			continue
 
 		if item.s_warehouse:
@@ -80,7 +80,7 @@ def create_package_from_delivery(delivery_note, method):
 		return
 
 	for item in delivery_note.items:
-		if not frappe.db.exists("Compliance Item", item.item_code):
+		if not frappe.db.get_value("Item", item.item_code, "is_compliance_item"):
 			continue
 
 		if not item.package_tag:
@@ -103,7 +103,7 @@ def build_delivery_payload(delivery_note, item):
 		item (object): The `Delivery Note Item` Frappe object.
 
 	Returns:
-		payload (list of dict): The `Delivery Note` payload, if a Compliance Item is moved / created, otherwise `None`.
+		payload (list of dict): The `Delivery Note` payload, if an Item is moved / created, otherwise `None`.
 	"""
 
 	payload = {}

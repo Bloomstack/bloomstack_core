@@ -58,7 +58,7 @@ def validate_delivery_window(doc, method):
 	if to_timedelta(doc.delivery_start_time) < to_timedelta(delivery_start_time) \
 		or to_timedelta(doc.delivery_end_time) > to_timedelta(delivery_end_time):
 		if method == "validate":
-			frappe.msgprint(_("The delivery window is set outside the customer's default timings"), indicator="orange", alert=True)
+			frappe.msgprint(_("The delivery window is set outside the customer's default timings"))
 		elif method == "on_submit":
 			# send an email notifying users that the document is outside the customer's delivery window
 			role_profiles = ["Fulfillment Manager"]

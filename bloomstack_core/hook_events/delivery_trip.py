@@ -42,17 +42,25 @@ def generate_directions_url(delivery_trip, method):
 def link_invoice_against_trip(delivery_trip, method):
 	for delivery_stop in delivery_trip.delivery_stops:
 		if delivery_stop.delivery_note:
-			sales_invoice = frappe.get_all("Delivery Note Item", filters={"docstatus":1, "parent": delivery_stop.delivery_note},fields=["distinct(against_sales_invoice)"])
-			if sales_invoice and len(sales_invoice)==1:
+			sales_invoice = frappe.get_all("Delivery Note Item",
+				filters={"docstatus": 1, "parent": delivery_stop.delivery_note},
+				fields=["against_sales_invoice"],
+				distinct=True)
+
+			if sales_invoice and len(sales_invoice) == 1:
 				delivery_stop.sales_invoice = sales_invoice[0].against_sales_invoice
+
 
 def make_transfer_templates(delivery_trip, method):
 	for stop in delivery_trip.delivery_stops:
-		if stop.delivery_note:
-			for item in frappe.get_doc("Delivery Note", stop.delivery_note).items:
-				if frappe.db.exists("Compliance Item", item.item_code):
-					make_integration_request("Delivery Note", stop.delivery_note)
-					break
+		if not stop.delivery_note:
+			continue
+
+		for item in frappe.get_doc("Delivery Note", stop.delivery_note).items:
+			if frappe.db.get_value("Item", item.item_code, "is_compliance_item"):
+				make_integration_request("Delivery Note", stop.delivery_note)
+				break
+
 
 def set_vehicle_last_odometer_value(trip, method):
 	if trip.actual_distance_travelled:
