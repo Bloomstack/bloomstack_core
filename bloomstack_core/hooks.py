@@ -135,16 +135,6 @@ doc_events = {
 	"Compliance Info": {
 		"before_insert": "bloomstack_core.hook_events.compliance_info.create_bloomtrace_license",
 	},
-	"Compliance Item": {
-		"validate": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
-		],
-		"after_insert": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
-		]
-	},
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},

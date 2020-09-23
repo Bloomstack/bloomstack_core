@@ -1,8 +1,5 @@
-from urllib.parse import urlparse
-
-import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url
+from frappe.utils import get_host_name
 
 
 def sync_bloomtrace(compliance_settings, method):
@@ -13,7 +10,7 @@ def sync_bloomtrace(compliance_settings, method):
 	if not frappe_client:
 		return
 
-	site_url = urlparse(get_url()).netloc
+	site_url = get_host_name()
 	frappe_client.update({
 		"doctype": "Bloomstack Site",
 		"name": site_url,
