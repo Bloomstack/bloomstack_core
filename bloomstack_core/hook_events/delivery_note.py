@@ -2,12 +2,11 @@
 # Copyright (c) 2020, Bloom Stack and contributors
 # For license information, please see license.txt
 
-from urllib.parse import urlparse
-
 import frappe
 from frappe import _
-from frappe.utils import cstr, get_url
+from frappe.utils import cstr, get_host_name
 from bloomstack_core.bloomtrace import get_bloomtrace_client
+
 
 def link_invoice_against_delivery_note(delivery_note, method):
 	for item in delivery_note.items:
@@ -19,13 +18,18 @@ def link_invoice_against_delivery_note(delivery_note, method):
 			if sales_invoice and len(sales_invoice) == 1:
 				item.against_sales_invoice = sales_invoice[0].parent
 
+
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
 		return
 
 	pending_requests = frappe.get_all("Integration Request",
-		filters={"status": ["IN", ["Queued", "Failed"]], "reference_doctype": "Delivery Note", "integration_request_service": "BloomTrace"},
+		filters={
+			"status": ["IN", ["Queued", "Failed"]],
+			"reference_doctype": "Delivery Note",
+			"integration_request_service": "BloomTrace"
+		},
 		order_by="creation ASC",
 		limit=50)
 
@@ -42,22 +46,23 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
+
 def insert_transfer_template(delivery_note, frappe_client):
-	site_url = urlparse(get_url()).netloc
 	delivery_trip = frappe.get_doc("Delivery Trip", delivery_note.lr_no)
 	estimated_arrival = ''
 	for stop in delivery_trip.delivery_stops:
-		if stop.delivery_note==delivery_note.name:
+		if stop.delivery_note == delivery_note.name:
 			estimated_arrival = stop.estimated_arrival
 
 	transfer_template_packages = []
 	for item in delivery_note.items:
 		if item.package_tag:
 			transfer_template_packages.append({
-				"package_tag" : item.package_tag,
+				"package_tag": item.package_tag,
 				"wholesale_price": item.rate
 			})
 
+	site_url = get_host_name()
 	transfer_template = {
 		"doctype": "Transfer Template",
 		"bloomstack_site": site_url,

@@ -1,15 +1,13 @@
-from urllib.parse import urlparse
-
 import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
-from frappe.utils import get_url
+from frappe.utils import get_host_name
 
 
 def create_bloomtrace_license(compliance_info, method):
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
 		return
-	site_url = urlparse(get_url()).netloc
+	site_url = get_host_name()
 
 	license_info = frappe_client.get_doc("License Info", compliance_info.license_number)
 	if not license_info:
@@ -26,6 +24,7 @@ def create_bloomtrace_license(compliance_info, method):
 		compliance_info.county = license_info.get('county')
 		compliance_info.city = license_info.get('city')
 		make_bloomstack_site_license(frappe_client, site_url, compliance_info.license_number, 'Active')
+
 
 def make_bloomstack_site_license(frappe_client, site_url, license_number, status='Pending Update'):
 	if not frappe.get_conf().developer_mode:
