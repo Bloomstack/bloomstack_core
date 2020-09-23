@@ -4,9 +4,9 @@ from frappe.frappeclient import FrappeClient, AuthError
 
 
 def get_bloomtrace_client():
-	url = frappe.conf.get("bloomtrace_server")
-	username = frappe.conf.get("bloomtrace_username")
-	password = frappe.conf.get("bloomtrace_password")
+	url = frappe.conf.bloomtrace_server
+	username = frappe.conf.bloomtrace_username
+	password = frappe.conf.bloomtrace_password
 
 	if not (url and username and password):
 		return
@@ -23,8 +23,8 @@ def get_bloomtrace_client():
 
 def make_integration_request(doctype, docname):
 
-	if frappe.conf.get("enable_bloomtrace") or doctype == "User":
-		frappe.get_doc({
+	if frappe.conf.enable_bloomtrace or doctype == "User":
+		request = frappe.get_doc({
 			"doctype": "Integration Request",
 			"integration_type": "Remote",
 			"integration_request_service": "BloomTrace",
