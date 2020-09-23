@@ -216,11 +216,11 @@ doc_events = {
 		"autoname": "bloomstack_core.hook_events.item.autoname",
 		"validate": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance.item.sync_metrc_item"
+			"bloomstack_core.compliance.item.sync_metrc_item"
 		],
 		"after_insert": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance.item.sync_metrc_item"
+			"bloomstack_core.compliance.item.sync_metrc_item"
 		]
 	},
 	"Packing Slip": {
