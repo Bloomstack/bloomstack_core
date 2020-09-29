@@ -17,5 +17,6 @@ def sync_bloomtrace(compliance_settings, method):
 		"metrc_url": compliance_settings.metrc_url,
 		"metrc_user_key": compliance_settings.get_password("metrc_user_key"),
 		"metrc_push_data": compliance_settings.metrc_push_data,
-		"metrc_pull_data": compliance_settings.metrc_pull_data
+		"metrc_pull_data": compliance_settings.metrc_pull_data,
+		"pull_incoming_transfer": compliance_settings.pull_incoming_transfer
 	})
