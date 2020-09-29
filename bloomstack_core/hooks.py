@@ -244,6 +244,9 @@ doc_events = {
 	},
 	"Production Plan": {
 		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
+	},
+	"Strain": {
+		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	}
 }
 
@@ -255,7 +258,8 @@ scheduler_events = {
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request"
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
