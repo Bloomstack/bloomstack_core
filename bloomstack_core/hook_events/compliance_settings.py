@@ -1,5 +1,3 @@
-
-import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe.utils import get_host_name
 

@@ -154,8 +154,8 @@ def get_data(data):
 
 def set_contract_company(contract, method):
 	contract.signed_by_company = frappe.session.user
-	company = frappe.db.get_value("Employee", {"user_id": contract.signed_by_company}, "company")
-	contract.company = company or get_default_company()
+	contract.company = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "company") or get_default_company()
+	contract.letter_head = frappe.db.get_value("Company", contract.company, "default_letter_head")
 
 
 @frappe.whitelist()

@@ -69,7 +69,6 @@ webform_include_js = {
 # include js in doctype views
 doctype_js = {
 	"Batch": "public/js/batch.js",
-	"Compliance Item": "public/js/compliance_item.js",
 	"Compliance Settings": "public/js/compliance_settings.js",
 	"Contract": "public/js/contract.js",
 	"Delivery Note": "public/js/delivery_note.js",
@@ -157,16 +156,6 @@ doc_events = {
 	"Compliance Info": {
 		"before_insert": "bloomstack_core.hook_events.compliance_info.create_bloomtrace_license",
 	},
-	"Compliance Item": {
-		"validate": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
-		],
-		"after_insert": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance_item.sync_metrc_item"
-		]
-	},
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},
@@ -224,7 +213,15 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
 	"Item": {
-		"autoname": "bloomstack_core.hook_events.item.autoname"
+		"autoname": "bloomstack_core.hook_events.item.autoname",
+		"validate": [
+			"bloomstack_core.hook_events.utils.create_integration_request",
+			"bloomstack_core.compliance.item.sync_metrc_item"
+		],
+		"after_insert": [
+			"bloomstack_core.hook_events.utils.create_integration_request",
+			"bloomstack_core.compliance.item.sync_metrc_item"
+		]
 	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
@@ -247,6 +244,15 @@ doc_events = {
 	},
 	"Production Plan": {
 		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
+	},
+	"Plant Batch": {
+		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
+	},
+	"Plant": {
+		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
+	},
+	"Strain": {
+		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	}
 }
 
@@ -258,7 +264,10 @@ scheduler_events = {
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request"
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
