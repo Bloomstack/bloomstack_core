@@ -247,7 +247,7 @@ doc_events = {
 	},
 	"Plant": {
 		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
-  },
+	},
 	"Strain": {
 		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	}
