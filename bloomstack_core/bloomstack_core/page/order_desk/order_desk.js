@@ -460,6 +460,12 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.set_form_action();
 					this.set_primary_action_in_modal();
 				}
+				frappe.confirm('Want to create New order',
+					() => {
+						window.location.reload();
+					}, () => {
+						frappe.set_route("Form", this.frm.doc.doctype, this.frm.doc.name);
+				})
 			});
 	}
 
