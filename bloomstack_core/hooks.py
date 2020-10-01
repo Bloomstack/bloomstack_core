@@ -216,11 +216,9 @@ doc_events = {
 		"autoname": "bloomstack_core.hook_events.item.autoname",
 		"validate": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.compliance.item.sync_metrc_item"
 		],
 		"after_insert": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.compliance.item.sync_metrc_item"
 		]
 	},
 	"Packing Slip": {
@@ -255,7 +253,9 @@ scheduler_events = {
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
+		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
+		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
