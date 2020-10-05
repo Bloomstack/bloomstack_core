@@ -441,7 +441,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			})
 	}
 	
-
 	submit_sales_order() {
 		// hack to set delivery date in the Sales Order during submit
 		// trying to set before it causes problems selecting items
@@ -464,25 +463,19 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.set_form_action();
 					this.set_primary_action_in_modal();
 				}
-				// frappe.confirm("Your order "+this.frm.doc.name+ " has been created",
-				// 	() => {
-				// 		window.location.reload();
-				// 	}, () => {
-				// 		frappe.set_route("Form", this.frm.doc.doctype, this.frm.doc.name);
-				// })
 				frappe.msgprint({
-					title: __("Your order "+this.frm.doc.name+ " has been created"),
+					title: __("Your order " + this.frm.doc.name + " has been created"),
 					message: __('Do you want to create a new order?'),
 					indicator: 'green',
-					primary_action:{
-						'label':'yes',
+					primary_action: {
+						'label': 'yes',
 						action() {
 							window.location.reload();
 						}
 					}
 				});
-				$('body').on('click','button.btn-modal-close', function(event) {
-					frappe.set_route("Form", DocType,Name);
+				$('body').on('click', 'button.btn-modal-close', function (event) {
+					frappe.set_route("Form", DocType, Name);
 				});
 			});
 	}
