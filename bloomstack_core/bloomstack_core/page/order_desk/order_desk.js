@@ -1,6 +1,7 @@
 /* global Clusterize */
 frappe.provide('erpnext.pos');
 
+
 frappe.pages['order-desk'].refresh = function(wrapper) {
 	if (wrapper.pos) {
 		wrapper.pos.make_new_order();
@@ -439,10 +440,13 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				}
 			})
 	}
+	
 
 	submit_sales_order() {
 		// hack to set delivery date in the Sales Order during submit
 		// trying to set before it causes problems selecting items
+		let Name=this.frm.doc.name;
+		let DocType =this.frm.doc.doctype;
 		this.frm.doc.delivery_date = this.delivery_date;
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
@@ -460,12 +464,26 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.set_form_action();
 					this.set_primary_action_in_modal();
 				}
-				frappe.confirm('Want to create New order',
-					() => {
-						window.location.reload();
-					}, () => {
-						frappe.set_route("Form", this.frm.doc.doctype, this.frm.doc.name);
-				})
+				// frappe.confirm("Your order "+this.frm.doc.name+ " has been created",
+				// 	() => {
+				// 		window.location.reload();
+				// 	}, () => {
+				// 		frappe.set_route("Form", this.frm.doc.doctype, this.frm.doc.name);
+				// })
+				frappe.msgprint({
+					title: __("Your order "+this.frm.doc.name+ " has been created"),
+					message: __('Do you want to create a new order?'),
+					indicator: 'green',
+					primary_action:{
+						'label':'yes',
+						action() {
+							window.location.reload();
+						}
+					}
+				});
+				$('body').on('click','button.btn-modal-close', function(event) {
+					frappe.set_route("Form", DocType,Name);
+				});
 			});
 	}
 
