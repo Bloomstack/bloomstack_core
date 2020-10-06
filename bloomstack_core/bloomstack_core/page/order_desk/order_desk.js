@@ -476,7 +476,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					secondary_action_label: "no",
 					secondary_action() {
 						frappe.set_route("Form", doctype, docname);
-						console.log("no");
 					}
 				});
 				dialog.show();
