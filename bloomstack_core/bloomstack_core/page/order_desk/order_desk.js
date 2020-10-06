@@ -444,8 +444,8 @@ erpnext.pos.OrderDesk = class OrderDesk {
 	submit_sales_order() {
 		// hack to set delivery date in the Sales Order during submit
 		// trying to set before it causes problems selecting items
-		let Name=this.frm.doc.name;
-		let DocType =this.frm.doc.doctype;
+		let docname=this.frm.doc.name;
+		let doctype =this.frm.doc.doctype;
 		this.frm.doc.delivery_date = this.delivery_date;
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
@@ -463,20 +463,23 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.set_form_action();
 					this.set_primary_action_in_modal();
 				}
-				frappe.msgprint({
-					title: __("Your order " + this.frm.doc.name + " has been created"),
-					message: __('Do you want to create a new order?'),
-					indicator: 'green',
-					primary_action: {
-						'label': 'yes',
-						action() {
-							window.location.reload();
-						}
+				let dialog = new frappe.ui.Dialog({
+					title: ("Your order " + this.frm.doc.name + " has been created"),
+					fields: [
+						{ fieldtype: "HTML", options: `<p>Do you want to create a new order?</p>` }
+					],
+					primary_action_label: "yes",
+					primary_action() {
+						window.location.reload();
+						dialog.hide();
+					},
+					secondary_action_label: "no",
+					secondary_action() {
+						frappe.set_route("Form", doctype, docname);
+						console.log("no");
 					}
 				});
-				$('body').on('click', 'button.btn-modal-close', function (event) {
-					frappe.set_route("Form", DocType, Name);
-				});
+				dialog.show();
 			});
 	}
 
