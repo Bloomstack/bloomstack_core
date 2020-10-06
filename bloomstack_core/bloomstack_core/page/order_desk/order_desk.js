@@ -471,7 +471,6 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					primary_action_label: "Yes",
 					primary_action() {
 						window.location.reload();
-						dialog.hide();
 					},
 					secondary_action_label: "No",
 					secondary_action() {
