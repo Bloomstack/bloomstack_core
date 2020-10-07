@@ -2,23 +2,14 @@
 # Copyright (c) 2020, Bloomstack Inc. and contributors
 # For license information, please see license.txt
 
-from urllib.parse import urlparse
 import frappe
 from frappe.utils import cstr, get_url
 from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.hook_events.utils import create_integration_request as make_integration_request
 
 
 def create_integration_request(doc, method):
-	integration_request = frappe.new_doc("Integration Request")
-	integration_request.update({
-		"integration_type": "Remote",
-		"integration_request_service": "BloomTrace",
-		"method": "POST",
-		"status": "Queued",
-		"reference_doctype": doc.doctype,
-		"reference_docname": doc.name
-	})
-	integration_request.save(ignore_permissions=True)
+	make_integration_request(doc, method)
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()

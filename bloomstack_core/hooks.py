@@ -255,7 +255,7 @@ doc_events = {
 		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	},
 	"Plant Additive Log": {
-		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
+		"validate": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
 	}
 }
 
