@@ -151,10 +151,7 @@ doc_events = {
 		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
 	},
 	"Item": {
-		"on_update": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.compliance.item.sync_metrc_item"
-		]
+		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Sales Invoice": {
 		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt"
@@ -189,7 +186,9 @@ scheduler_events = {
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
+		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
+		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
