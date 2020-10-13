@@ -263,15 +263,11 @@ scheduler_events = {
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
-<<<<<<< HEAD
-		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
-=======
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
->>>>>>> 8826ed30c96d2dbd257f160c9ae27613af1e314f
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
