@@ -145,8 +145,8 @@ erpnext.pos.OrderDesk = class OrderDesk {
 									 weekdays[i] = weekdays[i].bold();
 								}
 								if (!weekdays.includes(day)) {
-									frappe.msgprint(__("This order is set to be delivered on a '{0}', but Customer only accepts deliveries on {1}",
-										[day, weekdays]));
+									frappe.msgprint(__("This order is set to be delivered on a {0}, but Customer only accepts deliveries on {1}.",
+										[day, weekdays.join(", ")]));
 								}
 							}
 						})
