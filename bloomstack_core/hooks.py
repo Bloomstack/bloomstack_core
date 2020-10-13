@@ -216,11 +216,9 @@ doc_events = {
 		"autoname": "bloomstack_core.hook_events.item.autoname",
 		"validate": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance.item.sync_metrc_item"
 		],
 		"after_insert": [
 			"bloomstack_core.hook_events.utils.create_integration_request",
-			"bloomstack_core.hook_events.compliance.item.sync_metrc_item"
 		]
 	},
 	"Packing Slip": {
@@ -245,8 +243,14 @@ doc_events = {
 	"Production Plan": {
 		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
 	},
+	"Plant Batch": {
+		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
+	},
 	"Plant": {
 		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
+	},
+	"Strain": {
+		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	}
 }
 
@@ -259,7 +263,15 @@ scheduler_events = {
 		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
+<<<<<<< HEAD
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
+=======
+		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
+		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
+		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
+>>>>>>> 8826ed30c96d2dbd257f160c9ae27613af1e314f
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
