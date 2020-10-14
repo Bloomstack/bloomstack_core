@@ -269,9 +269,9 @@ scheduler_events = {
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request"
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
+		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request"
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
