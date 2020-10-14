@@ -351,6 +351,9 @@ erpnext.pos.OrderDesk = class OrderDesk {
 			this.on_close(item)
 			return;
 		}
+		if (item.qty === 0) {
+			this.on_close(item);
+		}
 		frappe.run_serially([
 			() => this.update_cart_data(item),
 		]);
@@ -1230,7 +1233,7 @@ class SalesOrderCart {
 		const batch_no = item.batch_no || '';
 
 		const me = this;
-		$(document).on('click', '.action a', function (event) {
+		$(document).on('click', `.action a[data-name="${item.item_name}"]`, function (event) {
 			event.stopImmediatePropagation(); // to prevent firing of multiple events
 			let item_name = $(this).data('name');
 			let item_code = $(this).data('item-code');
