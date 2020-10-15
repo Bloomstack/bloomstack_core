@@ -2,7 +2,6 @@
 # Copyright (c) 2020, Bloomstack Inc. and contributors
 # For license information, please see license.txt
 
-from urllib.parse import urlparse
 import frappe
 from frappe.utils import cstr, get_url
 from bloomstack_core.bloomtrace import get_bloomtrace_client
