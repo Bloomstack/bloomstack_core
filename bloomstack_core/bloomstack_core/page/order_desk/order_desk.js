@@ -439,10 +439,18 @@ erpnext.pos.OrderDesk = class OrderDesk {
 				}
 			})
 	}
+	
+	reset_form() {
+		this.cart.delivery_date_field.set_value("");
+		this.make_new_order();
+	}	
 
 	submit_sales_order() {
 		// hack to set delivery date in the Sales Order during submit
 		// trying to set before it causes problems selecting items
+		let docname = this.frm.doc.name;
+		let doctype = this.frm.doc.doctype;
+		const me = this;
 		this.frm.doc.delivery_date = this.delivery_date;
 		this.frm.doc.items.forEach((item) => {
 			item.delivery_date = this.delivery_date;
@@ -460,6 +468,21 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.set_form_action();
 					this.set_primary_action_in_modal();
 				}
+				let dialog = new frappe.ui.Dialog({
+					title: (`Your order ${docname} has been created`),
+					fields: [
+						{ fieldtype: "HTML", options: `<p>Do you want to create a new order?</p>` }
+					],
+					primary_action_label: "No",
+					primary_action() {
+						frappe.set_route("Form", doctype, docname);
+					},
+					secondary_action_label: "Yes",
+					secondary_action() {
+						me.reset_form();
+					}
+				});
+				dialog.show();
 			});
 	}
 
@@ -1117,13 +1140,15 @@ class SalesOrderCart {
 				fieldname: 'delivery_date',
 				reqd: 1,
 				onchange: () => {
-					this.events.on_delivery_date_change(this.delivery_date_field.get_value());
+					if(this.delivery_date_field.get_value()){
+						this.events.on_delivery_date_change(this.delivery_date_field.get_value());
+					}
+					
 				}
 			},
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
-
 		if (this.frm.doc.delivery_date) {
 			this.delivery_date_field.set_value(this.frm.doc.delivery_date);
 		}
