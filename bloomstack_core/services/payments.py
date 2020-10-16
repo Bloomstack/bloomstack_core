@@ -34,6 +34,10 @@ def collect(amount, delivery_note, sales_invoice=None, returned_items=None):
 				"return_delivery_id": "DN-0001"
 			}
 	"""
+	# set Delivery note as "Delivered"
+	delivery_note_doc = frappe.get_doc("Delivery Note", delivery_note)
+	delivery_note_doc.delivered = 1
+	delivery_note_doc.save()
 
 	# generate a payment entry for the delivered items
 	if not sales_invoice:
@@ -43,6 +47,14 @@ def collect(amount, delivery_note, sales_invoice=None, returned_items=None):
 
 		if invoices:
 			sales_invoice = invoices[0].against_sales_invoice
+
+	if not sales_invoice: # check for reverse linking
+		invoices = frappe.get_all("Sales Invoice Item",
+			filters={"docstatus": 1, "delivery_note": delivery_note},
+			fields=["distinct(parent)"])
+
+		if invoices:
+			sales_invoice = invoices[0].parent
 
 	if not sales_invoice:
 		frappe.throw(_("No invoice found to make payment against"))
