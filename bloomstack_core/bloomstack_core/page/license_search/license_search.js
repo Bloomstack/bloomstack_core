@@ -5,9 +5,8 @@ frappe.pages['license-search'].on_page_load = function(wrapper) {
 frappe.views.LicenseSearchFactory = class LicenseSearchFactory extends frappe.views.Factory {
 	make(page_name) {
 		const assets = [
-			'assets/bloomstack_core/js/min/license_search.min.js',
-			'assets/bloomstack_core/css/license_search.css',
-			'assets/bloomstack_core/css/nprogress.css'
+			'/assets/js/license_search.min.js',
+			'/assets/css/license_search.min.css'
 		];
 
 		frappe.require(assets, () => {
