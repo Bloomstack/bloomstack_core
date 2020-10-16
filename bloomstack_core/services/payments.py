@@ -86,6 +86,7 @@ def make_return_delivery(delivery_note, returned_items):
 
 	if isinstance(returned_items, list):
 		return_delivery = make_sales_return(delivery_note)
+		items_returned = []
 
 		for item in return_delivery.items:
 			returned_item = next((_item for _item in returned_items if _item.get("item_code") == item.item_code), None)
@@ -95,7 +96,9 @@ def make_return_delivery(delivery_note, returned_items):
 			else:
 				item.qty = -(returned_item.get("qty") or item.qty) or 0
 				item.reason_for_return = returned_item.get("reason")
+				items_returned.append(item)
 
+		return_delivery.items = items_returned
 		return_delivery.save()
 		return_delivery_id = return_delivery.name
 
