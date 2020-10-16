@@ -469,7 +469,7 @@ erpnext.pos.OrderDesk = class OrderDesk {
 					this.set_primary_action_in_modal();
 				}
 				let dialog = new frappe.ui.Dialog({
-					title: (`Your order ${docname} has been created`),
+					title: __("Your order {0} has been created", [docname]),
 					fields: [
 						{ fieldtype: "HTML", options: `<p>Do you want to create a new order?</p>` }
 					],
