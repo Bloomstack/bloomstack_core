@@ -141,8 +141,8 @@ erpnext.pos.OrderDesk = class OrderDesk {
 								let day = moment(delivery_date).format('dddd');
 								let weekdays = JSON.parse(r.delivery_days);
 								if (!weekdays.includes(day)) {
-									frappe.msgprint(__("This order is set to be delivered on a '{0}', but {1} only accepts deliveries on {2}",
-										[day, this.frm.doc.customer, weekdays]));
+									frappe.msgprint(__("This order is set to be delivered on a {0}, but Customer only accepts deliveries on {1}.",
+										[day.bold(), weekdays.join(", ").bold()]));
 								}
 							}
 						})
