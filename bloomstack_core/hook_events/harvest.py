@@ -51,17 +51,14 @@ def insert_harvest(harvest, frappe_client):
 	frappe_client.insert(bloomtrace_harvest)
 
 def update_harvest(harvest, frappe_client):
-	print("-----------------------------------------------", harvest.as_dict())
 	bloomtrace_harvest = make_harvest(harvest)
-	print("==========================================", bloomtrace_harvest)
 	bloomtrace_harvest.update({
 		"name": harvest.name
 	})
 	frappe_client.update(bloomtrace_harvest)
 
 def make_harvest(harvest):
-	# site_url = frappe.utils.get_host_name()
-	site_url = "http://bloomstack_demo:8000"
+	site_url = frappe.utils.get_host_name()
 	bloomtrace_harvest_dict = {
 		"doctype": "Harvest",
 		"bloomstack_site": site_url,
