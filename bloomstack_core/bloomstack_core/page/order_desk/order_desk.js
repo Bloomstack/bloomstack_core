@@ -1140,10 +1140,9 @@ class SalesOrderCart {
 				fieldname: 'delivery_date',
 				reqd: 1,
 				onchange: () => {
-					if(this.delivery_date_field.get_value()){
+					if (this.delivery_date_field.get_value()) {
 						this.events.on_delivery_date_change(this.delivery_date_field.get_value());
 					}
-					
 				}
 			},
 			parent: this.wrapper.find('.customer-field'),
