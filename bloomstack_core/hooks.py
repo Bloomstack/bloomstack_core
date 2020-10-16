@@ -251,6 +251,9 @@ doc_events = {
 	},
 	"Strain": {
 		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
+	},
+	"Harvest": {
+		"on_update": "bloomstack_core.hook_events.harvest.create_integration_request"
 	}
 }
 
