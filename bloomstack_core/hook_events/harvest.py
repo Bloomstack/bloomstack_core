@@ -4,7 +4,7 @@
 
 import frappe
 from frappe.utils import cstr, get_url
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
 
 def create_integration_request(doc, method):
@@ -71,3 +71,8 @@ def make_harvest(harvest):
 		"is_finished": harvest.is_finished
 	}
 	return bloomtrace_harvest_dict
+
+def finish_unfinish_harvest(doc, method):
+	is_finished = frappe.get_doc("Harvest", doc.name, "is_finished")
+	if doc.is_finished != is_finished:
+		make_integration_request("Harvest", doc.name)
