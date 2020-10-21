@@ -33,12 +33,12 @@ def execute_bloomtrace_integration_request():
 	for request in pending_requests:
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		plant = frappe.get_doc("Plant", integration_request.reference_docname)
-		bloomtrace_plant = frappe_client.get_doc("Plant", integration_request.reference_docname)
+		bloomtrace_plant = frappe_client.get_doc("Plant", filters={"label" : integration_request.reference_docname})
 		try:
 			if not bloomtrace_plant:
 				insert_plant(plant, frappe_client)
 			else:
-				update_plant(plant, frappe_client)
+				update_plant(plant, frappe_client, bloomtrace_plant)
 			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
@@ -51,19 +51,19 @@ def insert_plant(plant, frappe_client):
 	bloomtrace_plant = make_plant(plant)
 	frappe_client.insert(bloomtrace_plant)
 
-def update_plant(plant, frappe_client):
-	bloomtrace_plant = make_plant(plant)
-	bloomtrace_plant.update({
-		"name": plant.name
+def update_plant(plant, frappe_client, bloomtrace_plant):
+	plant_payload = make_plant(plant)
+	plant_payload.update({
+		"name": bloomtrace_plant[0].get("name")
 	})
-	frappe_client.update(bloomtrace_plant)
+	frappe_client.update(plant_payload)
 
 def make_plant(plant):
 	site_url = frappe.utils.get_host_name()
 	bloomtrace_plant_dict = {
 		"doctype": "Plant",
 		"bloomstack_site": site_url,
-		"label":plant.title,
+		"label":plant.name,
 		"plant_batch_name": plant.plant_batch,
 		"strain_name": plant.strain,
 		"location_name": plant.location,
