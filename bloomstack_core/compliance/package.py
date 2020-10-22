@@ -140,7 +140,7 @@ def build_delivery_payload(delivery_note, item):
 
 	return [payload]
 
-def execute_bloomtrace_integration_request_for_stock_entry():
+def execute_bloomtrace_integration_request_for_delivery_note():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
 		return
