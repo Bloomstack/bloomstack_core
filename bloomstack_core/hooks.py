@@ -253,6 +253,10 @@ doc_events = {
 	"Strain": {
 		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	},
+	"Harvest": {
+		"on_update": "bloomstack_core.hook_events.harvest.create_integration_request",
+		"before_update_after_submit": "bloomstack_core.hook_events.harvest.finish_unfinish_harvest"
+	},
 	"Plant Additive Log": {
 		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
 	}
