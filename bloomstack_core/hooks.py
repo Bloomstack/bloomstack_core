@@ -185,7 +185,8 @@ doc_events = {
 		"before_submit": [
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 			"bloomstack_core.compliance.package.create_package_from_delivery"
-		]
+		],
+		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
 	},
 	"Package Tag": {
 		"validate": "bloomstack_core.hook_events.utils.create_integration_request",
@@ -255,6 +256,9 @@ doc_events = {
 	"Harvest": {
 		"on_update": "bloomstack_core.hook_events.harvest.create_integration_request",
 		"before_update_after_submit": "bloomstack_core.hook_events.harvest.finish_unfinish_harvest"
+	},
+	"Plant Additive Log": {
+		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
 	}
 }
 
@@ -264,7 +268,7 @@ doc_events = {
 scheduler_events = {
 	"all": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.compliance_item.execute_bloomtrace_integration_request",
+		"bloomstack_core.compliance.item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
@@ -272,6 +276,7 @@ scheduler_events = {
 		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
+		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request"
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"

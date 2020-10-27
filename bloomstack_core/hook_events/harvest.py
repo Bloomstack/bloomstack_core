@@ -3,7 +3,7 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.utils import cstr, get_url
+from frappe.utils import cstr
 from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
 
@@ -73,6 +73,6 @@ def make_harvest(harvest):
 	return bloomtrace_harvest_dict
 
 def finish_unfinish_harvest(doc, method):
-	is_finished = frappe.get_doc("Harvest", doc.name, "is_finished")
+	is_finished = frappe.db.get_value("Harvest", doc.name, "is_finished")
 	if doc.is_finished != is_finished:
 		make_integration_request("Harvest", doc.name)
