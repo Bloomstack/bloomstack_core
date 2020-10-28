@@ -46,9 +46,17 @@ def link_invoice_against_trip(delivery_trip, method):
 				filters={"docstatus": 1, "parent": delivery_stop.delivery_note},
 				fields=["against_sales_invoice"],
 				distinct=True)
-
+            # set sale invoice for cycle sales order>>sales invoice>>delivery note>>delivery trip
 			if sales_invoice and len(sales_invoice) == 1:
 				delivery_stop.sales_invoice = sales_invoice[0].against_sales_invoice
+			# set sales invoice for cyecle sales order>>Delivery Note >>sales invoice>> then Delivery Trip from Delivery Note
+			if sales_invoice[0].against_sales_invoice==None:
+				sales_invoice = frappe.get_all("Sales Invoice Item",
+				filters={"docstatus": 1, "delivery_note": delivery_stop.delivery_note},
+				fields=["distinct(parent)"])
+				if len(sales_invoice)==1:
+					print("second cycle",sales_invoice)
+					delivery_stop.sales_invoice = sales_invoice[0].parent				
 
 
 def make_transfer_templates(delivery_trip, method):
