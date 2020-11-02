@@ -3,7 +3,7 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.utils import cstr, get_url, today
+from frappe.utils import cstr, today
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 
 
