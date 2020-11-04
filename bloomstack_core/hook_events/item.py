@@ -33,7 +33,8 @@ def autoname(item, method=None):
 		company_abbr = get_company_default(default_company, "abbr")
 		brand_abbr = get_abbr(item.brand, max_length=len(company_abbr))
 		brand_abbr = brand_abbr if company_abbr != brand_abbr else None
-	brand_abbr = get_abbr(item.brand)
+	if not default_company:
+		brand_abbr = get_abbr(item.brand)
 	item_group_abbr = get_abbr(item.item_group)
 	item_name_abbr = get_abbr(item.item_name, 3)
 
