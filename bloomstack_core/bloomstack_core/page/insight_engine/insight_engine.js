@@ -578,6 +578,7 @@ class InsightEngine {
 		});
 
 		// All invoice breakdown by status
+		console.log(this.dashboardData.paid_invoices)
 		new Chart($(".sales-partner-info .right-chart .graphics"), {
 			type: 'doughnut',
 			data: {

@@ -207,6 +207,7 @@ def get_revenue_by_date_range(start_date, end_date):
 
 def get_cash_on_hand():
 	cash_accounts = frappe.get_all("Account", filters={"account_type": "Cash", "root_type": "Asset", "is_group": 0})
+	print("cash_account....",cash_accounts)
 	cash_on_hand = sum([get_balance_on(account.name) for account in cash_accounts])
 	return cash_on_hand
 
