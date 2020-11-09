@@ -6,7 +6,15 @@ frappe.ui.form.on("Contract", {
 			frm.set_value("company", "");
 		}
 	},
-
+	setup: (frm) => {
+		frm.set_query('contract_template', (frm) => {
+			return {
+				filters: {
+					'company': frm.company
+				}
+			};
+		});
+	},
 	refresh: (frm) => {
 		// pull users for the set party
 		frm.set_query("party_user", (doc) => {
@@ -65,7 +73,7 @@ frappe.ui.form.on("Contract", {
 			frappe.throw("Please sign the contract before submiting it.")
 		}
 	},
-	
+
 	signee_company: (frm) =>{
 		frm.set_value("signed_by_company_date", frappe.datetime.nowdate());
 
