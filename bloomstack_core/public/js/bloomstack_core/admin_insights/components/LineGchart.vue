@@ -1,6 +1,12 @@
 <template>
   <div>
-    <h1>TOTAL REVENUE</h1>
+    <div class="section-heading">
+      <p class="heading">
+        {{ this.title }}
+        <span> {{ this.description }} </span>
+      </p>
+      <p class="period"></p>
+    </div>
     <GChart
       type="LineChart"
       :data="chartData"
@@ -31,7 +37,7 @@ export default {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData:[
           [this.xname, this.yname],
-          ...this.values.map((value,i,arr)=>[moment(value.category).format("MMM YYYY"),value[this.metrics[0]]])
+          ...this.values.map((value,i,arr)=>[moment(value.category).format("DD MMM YYYY"),value[this.metrics[0]]])
       ],
       chartOptions: {
         chart: {

@@ -39,12 +39,13 @@
         <kpi v-if="!loading && type === 'TabSalesInvoiceTrueCount'" :values="values" :metrics="metrics" title="TOTAL INVOICES" description="Raised from the start of business"/>
         <kpi v-if="!loading && type === 'TabSalesInvoiceItemTrueQty'" :values="values" :metrics="metrics" title="PRODUCTS SOLD" description="Sold from the start of business"/>
         <kpi v-if="!loading && type === 'TabItemProductCount'" :values="values" :metrics="metrics" title="TOTAL PRODUCTS" description="Number of products being sold"/>
-        <line-gchart v-if="!loading && type === 'TabSalesInvoiceRevnue'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="MONTHLY" xname="Posting Date" yname="Revenue"/>
+        <line-gchart v-if="!loading && type === 'TabSalesInvoiceRevnue'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="month-to-date" xname="Posting Date" yname="Revenue"/>
+        <line-gchart v-if="!loading && type === 'TabSalesInvoiceWeeklySales'" :values="values" :metrics="metrics" title="TOP SALES" description="by week" xname="Posting Date" yname="Sales"/>
         <line-cummulative-gchart v-if="!loading && type === 'TabSalesInvoiceCummulativeRevnue'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="MONTHLY" xname="Posting Date" yname="Revenue"/>
         <coloumn-gchart v-if="!loading && type === 'TabSalesInvoiceTopCustomerByRevenue'" :values="values" :metrics="metrics" title="TOP CUSTOMER" description="MONTHLY" xname="Customer Name" yname="Revenue"/>
         <coloumn-gchart v-if="!loading && type === 'TabSalesInvoiceTopCustomerGroupByRevenue'" :values="values" :metrics="metrics" title="TOTAL CUSTOMER GROUP" description="MONTHLY" xname="Customer Group" yname="Revenue"/>
         <bar-gchart v-if="!loading && type === 'TabSalesInvoiceTopsalesPartnerByRevenue'" :values="values" :metrics="metrics" title="TOP SALES PARTNERS" description="MONTHLY" xname="Customer Group" yname="Revenue"/>
-        <donut-gchart v-if="!loading && type === 'TabSalesInvoiceRevenueByTerritory'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="MONTHLY" xname="Customer Group" yname="Revenue"/>
+        <donut-gchart v-if="!loading && type === 'TabSalesInvoiceRevenueByTerritory'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="Territory" xname="Customer Group" yname="Revenue"/>
       </div>
     </div>
   </div>

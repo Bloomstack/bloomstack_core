@@ -3,7 +3,7 @@
     <div class="section-heading">
       <p class="heading">
         {{ this.title }}
-        <span> by Revenue </span>
+        <span> {{ this.description }} </span>
       </p>
       <p class="period"></p>
     </div>

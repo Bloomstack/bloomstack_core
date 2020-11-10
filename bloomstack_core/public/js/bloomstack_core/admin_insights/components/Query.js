@@ -276,9 +276,7 @@ const TabLeadByCityLocation = {
 
 //insight engine Query
 
-const TabPaymentEntryMonthlyRevnue = (DateRange,startDate) => {
-    console.log(DateRange,startDate);
-    return ({
+const TabPaymentEntryMonthlyRevnue =  {
         "measures": [
             "TabPaymentEntry.truePaidAmount"
         ],
@@ -290,7 +288,6 @@ const TabPaymentEntryMonthlyRevnue = (DateRange,startDate) => {
         ],
         "order": {},
         "filters": []
-    })
 }
 
 const TabPaymentEntryWeeklyRevnue = {
@@ -494,6 +491,20 @@ const TabSalesInvoiceRevenueByTerritory = {
         }
     ]
 }
+
+const TabSalesInvoiceWeeklySales = {
+    "measures": [
+        "TabSalesInvoice.trueGrandTotal"
+    ],
+    "timeDimensions": [
+        {
+            "dimension": "TabSalesInvoice.postingDate",
+            "granularity": "week"
+        }
+    ],
+    "order": {},
+    "filters": []
+}
 const QUERY = {
     tabsalesQuery: (selected) => tabsalesQuery(selected),
     tabBinQuery,
@@ -528,7 +539,8 @@ const QUERY = {
     TabSalesInvoiceTopCustomerByRevenue,
     TabSalesInvoiceTopCustomerGroupByRevenue,
     TabSalesInvoiceTopsalesPartnerByRevenue,
-    TabSalesInvoiceRevenueByTerritory
+    TabSalesInvoiceRevenueByTerritory,
+    TabSalesInvoiceWeeklySales
 
 };
 export default QUERY;
