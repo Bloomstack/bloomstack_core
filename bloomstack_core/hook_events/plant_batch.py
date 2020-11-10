@@ -68,8 +68,10 @@ def make_plant_batch(plant_batch):
 		"strain_name": plant_batch.strain,
 		"location_name": plant_batch.location,
 		"planted_date": plant_batch.start_date,
+		"growth_date": plant_batch.growth_date,
 		"untracked_count": plant_batch.untracked_count,
 		"tracked_count": plant_batch.tracked_count,
+		"growth_phase": plant_batch.growth_phase,
 		"packaged_count": plant_batch.packaged_count,
 		"harvested_count": plant_batch.harvested_count,
 		"destroyed_count": plant_batch.destroyed_count
