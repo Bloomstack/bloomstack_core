@@ -1,8 +1,9 @@
 import json
 
 import frappe
-from bloomstack_core.hook_events.delivery_trip import make_payment_entry
 from erpnext.stock.doctype.delivery_note.delivery_note import make_sales_return
+from erpnext.stock.doctype.delivery_trip.delivery_trip import make_payment_entry
+from frappe import _
 
 
 @frappe.whitelist()
@@ -33,6 +34,10 @@ def collect(amount, delivery_note, sales_invoice=None, returned_items=None):
 				"return_delivery_id": "DN-0001"
 			}
 	"""
+	# set Delivery note as "Delivered"
+	delivery_note_doc = frappe.get_doc("Delivery Note", delivery_note)
+	delivery_note_doc.delivered = 1
+	delivery_note_doc.save()
 
 	# generate a payment entry for the delivered items
 	if not sales_invoice:
@@ -43,8 +48,16 @@ def collect(amount, delivery_note, sales_invoice=None, returned_items=None):
 		if invoices:
 			sales_invoice = invoices[0].against_sales_invoice
 
+	if not sales_invoice: # check for reverse linking
+		invoices = frappe.get_all("Sales Invoice Item",
+			filters={"docstatus": 1, "delivery_note": delivery_note},
+			fields=["distinct(parent)"])
+
+		if invoices:
+			sales_invoice = invoices[0].parent
+
 	if not sales_invoice:
-		return {"error": "No invoice found to make payment against"}
+		frappe.throw(_("No invoice found to make payment against"))
 
 	payment_id = make_payment_entry(amount, sales_invoice)
 
@@ -84,8 +97,8 @@ def make_return_delivery(delivery_note, returned_items):
 		returned_items = json.loads(returned_items)
 
 	if isinstance(returned_items, list):
-		returned_items_map = {d.get("item_code"): d.get("qty") for d in returned_items}
 		return_delivery = make_sales_return(delivery_note)
+		items_returned = []
 
 		for item in return_delivery.items:
 			returned_item = next((_item for _item in returned_items if _item.get("item_code") == item.item_code), None)
@@ -93,10 +106,14 @@ def make_return_delivery(delivery_note, returned_items):
 			if not returned_item:
 				item.qty = 0
 			else:
-				item.qty = -returned_item.get("qty") or -item.qty
+				item.qty = -(returned_item.get("qty") or item.qty) or 0
 				item.reason_for_return = returned_item.get("reason")
+				items_returned.append(item)
 
+		return_delivery.items = items_returned
 		return_delivery.save()
 		return_delivery_id = return_delivery.name
 
 		return return_delivery_id
+
+	frappe.throw(_("Invalid format for returned items"), frappe.CSRFTokenError)

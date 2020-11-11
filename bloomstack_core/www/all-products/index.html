@@ -1,6 +1,15 @@
 {% extends "templates/web.html" %}
 
 {% block title %}{{ _('Products') }}{% endblock %}
+
+{% block banner %}
+	{% if banner_image -%}
+	<div class="banner_image">
+		<img src="{{banner_image}}" alt="Banner Image">
+	</div>
+	{%- endif %}
+{% endblock %}
+
 {% block header %}
 <h1>{{ _('Products') }}</h1>
 {% endblock header %}
@@ -37,8 +46,8 @@
 
 <div class="row">
 	<div class="col-12 order-2 col-md-8 order-md-1 products-list row no-gutters">
-		{% if items %}
-			{% for item in items %}
+		{% if products %}
+			{% for item in products %}
 				{% include "bloomstack_core/www/all-products/item_row.html" %}
 			{% endfor %}
 		{% else %}
@@ -143,7 +152,7 @@
 		{% if frappe.form_dict.start|int > 0 %}
 		<button class="btn btn-outline-secondary btn-prev" data-start="{{ frappe.form_dict.start|int - page_length }}">{{ _("Prev") }}</button>
 		{% endif %}
-		{% if items|length >= page_length %}
+		{% if products|length >= page_length %}
 		<button class="btn btn-outline-secondary btn-next" data-start="{{ frappe.form_dict.start|int + page_length }}">{{ _("Next") }}</button>
 		{% endif %}
 	</div>

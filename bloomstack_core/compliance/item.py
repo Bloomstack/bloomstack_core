@@ -1,119 +1,91 @@
 import frappe
-from bloomstack_core.utils import get_metrc, log_request
+from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe import _
+from frappe.utils import cstr, get_host_name
 
 
-def get_item(item):
-	"""
-	Get the METRC Item for a synced Bloomstack Item.
-
-	Args:
-		item (object): The `Item` data for fetching from METRC.
-
-	Returns:
-		dict: The METRC Item data, if it exists, otherwise `None`.
-	"""
-	metrc = get_metrc()
-
-	if not metrc:
+def execute_bloomtrace_integration_request():
+	frappe_client = get_bloomtrace_client()
+	if not frappe_client:
 		return
 
-	response = metrc.items.active.get()
+	pending_requests = frappe.get_all("Integration Request", filters={
+		"status": ["IN", ["Queued", "Failed"]],
+		"reference_doctype": "Item",
+		"integration_request_service": "BloomTrace"
+	}, order_by="creation ASC", limit=50)
 
-	if not response.ok:
-		frappe.throw(_("Could not fetch items from METRC. Please try again later."))
+	for request in pending_requests:
+		integration_request = frappe.get_doc("Integration Request", request.name)
+		item = frappe.get_doc("Item", integration_request.reference_docname)
 
-	metrc_item = next((_item for _item in response.json() if _item.get('Name') == item.item_name), None)
+		try:
+			if not item.bloomtrace_id:
+				insert_compliance_item(item, frappe_client)
+			else:
+				update_compliance_item(item, frappe_client)
 
-	return metrc_item
+			integration_request.error = ""
+			integration_request.status = "Completed"
+		except Exception as e:
+			integration_request.error = cstr(e)
+			integration_request.status = "Failed"
 
-
-def create_item(item):
-	"""
-	Create a Bloomstack item in METRC.
-
-	Args:
-		item (object): The `Item` data to create in METRC.
-
-	Returns:
-		int: The ID of the created METRC Item, if created, otherwise `None`.
-	"""
-
-	# Create the item record on METRC
-	metrc = get_metrc()
-
-	if not metrc:
-		return
-
-	payload = build_payload(item)
-	response = metrc.items.create.post(json=payload)
-	log_request(response.url, payload, response, "Item", item.name)
-
-	if not response.ok:
-		frappe.throw(_(response.raise_for_status()))
-
-	metrc_item = get_item(item)
-
-	if metrc_item:
-		return metrc_item.get("Id")
+		integration_request.save(ignore_permissions=True)
 
 
-def update_item(item):
-	"""
-	Update a Bloomstack item in METRC.
-
-	Args:
-		item (object): The `Item` data to update in METRC.
-	"""
-	metrc = get_metrc()
-
-	if not metrc:
-		return
-
-	payload = build_payload(item)
-	response = metrc.items.update.post(json=payload)
-	log_request(response.url, payload, response, "Item", item.name)
-
-	if not response.ok:
-		frappe.throw(_(response.raise_for_status()))
+def insert_compliance_item(item, frappe_client):
+	bloomtrace_compliance_item_dict = make_compliance_item(item)
+	bloomtrace_compliance_item = frappe_client.insert(bloomtrace_compliance_item_dict)
+	bloomtrace_id = bloomtrace_compliance_item.get('name')
+	frappe.db.set_value("Item", item.name, "bloomtrace_id", bloomtrace_id)
 
 
-def build_payload(item):
-	"""
-	Create the request body for the Item endpoint.
+def update_compliance_item(item, frappe_client):
+	bloomtrace_compliance_item_dict = make_compliance_item(item)
+	bloomtrace_compliance_item_dict.update({
+		"name": item.bloomtrace_id
+	})
+	frappe_client.update(bloomtrace_compliance_item_dict)
 
-	Args:
-		item (object): The `Item` data.
 
-	Returns:
-		list of dict: The `METRC Item` payload.
-	"""
-
-	compliance_item = frappe.get_doc("Compliance Item", item.item_code)
-
-	item_data = {
-		"Name": compliance_item.item_name,
-		"ItemCategory": compliance_item.metrc_item_category,
-		"UnitOfMeasure": compliance_item.metrc_uom
+def make_compliance_item(item):
+	bloomtrace_compliance_item_dict = {
+		"doctype": "Compliance Item",
+		"bloomstack_site": get_host_name(),
+		"item_code": item.item_code,
+		"item_name": item.item_name,
+		"enable_metrc": item.enable_metrc,
+		"metrc_id": item.metrc_id,
+		"metrc_item_category": item.metrc_item_category,
+		"metrc_unit_value": item.metrc_unit_value,
+		"metrc_uom": item.metrc_uom,
+		"metrc_unit_uom": item.metrc_unit_uom
 	}
+	return bloomtrace_compliance_item_dict
 
-	if compliance_item.metrc_id:
-		item_data.update({
-			"Id": compliance_item.metrc_id
-		})
 
-	mandatory_metrc_unit = frappe.db.get_value("Compliance Item Category", compliance_item.metrc_item_category, "mandatory_unit")
+# Search querries
+def metrc_item_category_query(doctype, txt, searchfield, start, page_len, filters):
+	metrc_uom = filters.get("metrc_uom")
+	quantity_type = frappe.db.get_value("Compliance UOM", metrc_uom, "quantity_type")
 
-	if mandatory_metrc_unit == "Volume":
-		item_data.update({
-			"UnitVolume": compliance_item.metrc_unit_value,
-			"UnitVolumeUnitOfMeasure": compliance_item.metrc_unit_uom
-		})
-	elif mandatory_metrc_unit == "Weight":
-		item_data.update({
-			"UnitWeight": compliance_item.metrc_unit_value,
-			"UnitWeightUnitOfMeasure": compliance_item.metrc_unit_uom
-		})
+	return frappe.get_all("Compliance Item Category", filters={"quantity_type": quantity_type}, as_list=1)
 
-	payload = [item_data]
-	return payload
+
+def metrc_uom_query(doctype, txt, searchfield, start, page_len, filters):
+	metrc_item_category = filters.get("metrc_item_category")
+	quantity_type = frappe.db.get_value("Compliance Item Category", metrc_item_category, "quantity_type")
+
+	return frappe.get_all("Compliance UOM", filters={"quantity_type": quantity_type}, as_list=1)
+
+
+def metrc_unit_uom_query(doctype, txt, searchfield, start, page_len, filters):
+	metrc_item_category = filters.get("metrc_item_category")
+	mandatory_unit = frappe.db.get_value("Compliance Item Category", metrc_item_category, "mandatory_unit")
+
+	quantity_type = "VolumeBased"
+	if mandatory_unit == "Weight":
+		quantity_type = "WeightBased"
+
+	return frappe.get_all("Compliance UOM", filters={"quantity_type": quantity_type}, as_list=1)

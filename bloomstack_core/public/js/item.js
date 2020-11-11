@@ -1,21 +1,57 @@
 /* global frappe, erpnext, _ */
 
 frappe.ui.form.on('Item', {
-	refresh: (frm) => {
-		if (frappe.boot.compliance_enabled && !frm.is_new()) {
-			frappe.db.get_value("Compliance Item", { "item_code": frm.doc.item_code }, "name", (r) => {
-				if (r && r.name) {
-					frm.add_custom_button(__("View / Update"), () => {
-						frappe.set_route("Form", "Compliance Item", r.name);
-					}, __("Compliance"));
+	onload: (frm) => {
+		frm.set_query("metrc_item_category", () => {
+			if (frm.doc.metrc_uom) {
+				return {
+					query: "bloomstack_core.compliance.item.metrc_item_category_query",
+					filters: {
+						metrc_uom: frm.doc.metrc_uom
+					}
 				};
+			}
+		});
 
-				if (!r || !r.name) {
-					frm.add_custom_button(__("Create"), () => {
-						frm.make_new("Compliance Item");
-					}, __("Compliance"));
+		frm.set_query("metrc_uom", () => {
+			if (frm.doc.metrc_item_category) {
+				return {
+					query: "bloomstack_core.compliance.item.metrc_uom_query",
+					filters: {
+						metrc_item_category: frm.doc.metrc_item_category
+					}
 				};
-			})
+			}
+		});
+
+		frm.set_query("metrc_unit_uom", () => {
+			if (frm.doc.metrc_item_category) {
+				return {
+					query: "bloomstack_core.compliance.item.metrc_unit_uom_query",
+					filters: {
+						metrc_item_category: frm.doc.metrc_item_category
+					}
+				};
+			}
+		});
+	},
+
+	refresh: (frm) => {
+		frm.trigger("toggle_metrc_fields_display");
+	},
+
+	metrc_uom: (frm) => {
+		frm.trigger("toggle_metrc_fields_display");
+	},
+
+	toggle_metrc_fields_display: (frm) => {
+		if (frm.doc.metrc_uom) {
+			frappe.db.get_value("Compliance UOM", { "name": frm.doc.metrc_uom }, "quantity_type", (r) => {
+				if (!r.exc) {
+					frm.toggle_display("metrc_unit_value", r.quantity_type === "CountBased");
+					frm.toggle_display("metrc_unit_uom", r.quantity_type === "CountBased");
+				}
+			});
 		}
 	},
 

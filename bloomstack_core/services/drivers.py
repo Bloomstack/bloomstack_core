@@ -40,6 +40,8 @@ def get_filters(email):
 
 
 def build_item_data(stop):
+	if not stop.delivery_note:
+		return []
 	items_data = []
 	dn_doc = frappe.get_doc("Delivery Note", stop.delivery_note)
 	for item in dn_doc.items:
@@ -56,12 +58,19 @@ def build_stop_data(trip):
 	for stop in trip.delivery_stops:
 		stops_data.append({
 			"name": stop.name,
+			"visited": bool(stop.visited),
 			"address": get_address_display(stop.address),
+			"customer": stop.customer,
 			"amountToCollect": stop.grand_total,
 			"deliveryNote": stop.delivery_note,
-			"customerPhoneNumber": frappe.db.get_value("Address", stop.address, "phone"),
 			"salesInvoice": stop.sales_invoice,
-			"items": build_item_data(stop)
+			"items": build_item_data(stop),
+			"distance": stop.distance,
+			"distanceUnit": stop.uom,
+			"earliestDeliveryTime": stop.delivery_start_time,
+			"latestDeliveryTime": stop.delivery_end_time,
+			"estimatedArrival": stop.estimated_arrival,
+			"customerPhoneNumber": frappe.db.get_value("Address", stop.address, "phone"),
 		})
 	return stops_data
 
