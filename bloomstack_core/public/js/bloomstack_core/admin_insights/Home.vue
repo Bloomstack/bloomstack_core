@@ -1,10 +1,16 @@
 <template>
   <div class="container-fluid">
-    <div>
+    <!-- <div>
       From
       <input type="date" v-model="state.startDate" format="yyyy-MM-dd" />
       To
       <input type="date" v-model="state.endDate" format="yyyy-MM-dd" />
+    </div> -->
+    <div>
+      <datepicker v-model="startDate" format="yyyy-MM-dd"></datepicker
+      >{{ startDate }}
+      <datepicker v-model="endDate" format="yyyy-MM-dd"></datepicker
+      >{{ endDate }}
     </div>
     <div class="row">
       <div class="col-sm-6">
@@ -20,11 +26,7 @@
         </query-builder>
       </div>
       <div class="col-sm-6">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceRevnue"
-          :key="state.endDate"
-        >
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceRevnue">
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
@@ -356,7 +358,7 @@
         </query-builder>
       </div>
     </div> -->
-     <div class="row">
+    <div class="row">
       <div class="col-sm-5">
         <query-builder
           :cubejs-api="cubejsApi"
@@ -478,7 +480,7 @@
           </template>
         </query-builder>
       </div>
-    </div> 
+    </div>
   </div>
 </template>
 
@@ -505,12 +507,14 @@ export default {
   },
   handleStartDate() {},
   data() {
-    var state = new Vue({
-      data: {
-        startDate: "2019-01-01",
-        endDate: "2020-12-31",
-      },
-    });
+    // var state = new Vue({
+    //   data: {
+    //     startDate: "2019-01-01",
+    //     endDate: "2020-12-31",
+    //   },
+    // });
+    var startDate = new Date("2019-01-01");
+    var endDate = new Date("2020-12-31");
     let DateRange = "This Week";
     const dataObj = {
       cubejsApi,
@@ -547,34 +551,80 @@ export default {
       TabSalesInvoiceTrueCount: QUERY.TabSalesInvoiceTrueCount,
       TabSalesInvoiceItemTrueQty: QUERY.TabSalesInvoiceItemTrueQty,
       TabItemProductCount: QUERY.TabItemProductCount,
-      // TabSalesInvoiceRevnue: QUERY.TabSalesInvoiceRevnue,
-      TabSalesInvoiceTopCustomerByRevenue:
-        QUERY.TabSalesInvoiceTopCustomerByRevenue,
-      TabSalesInvoiceTopCustomerGroupByRevenue:
-        QUERY.TabSalesInvoiceTopCustomerGroupByRevenue,
-      TabSalesInvoiceTopsalesPartnerByRevenue:
-        QUERY.TabSalesInvoiceTopsalesPartnerByRevenue,
-      TabSalesInvoiceRevenueByTerritory:
-        QUERY.TabSalesInvoiceRevenueByTerritory,
-      TabSalesInvoiceWeeklySales: QUERY.TabSalesInvoiceWeeklySales,
+      // TabSalesInvoiceRevnue: QUERY.TabSalesInvoiceRevnue(state.startDate,state.endDate),
+      // TabSalesInvoiceTopCustomerByRevenue:
+      //   QUERY.TabSalesInvoiceTopCustomerByRevenue,
+      // TabSalesInvoiceTopCustomerGroupByRevenue:
+      //   QUERY.TabSalesInvoiceTopCustomerGroupByRevenue,
+      // TabSalesInvoiceTopsalesPartnerByRevenue:
+      //   QUERY.TabSalesInvoiceTopsalesPartnerByRevenue,
+      // TabSalesInvoiceRevenueByTerritory:
+      //   QUERY.TabSalesInvoiceRevenueByTerritory,
+      // TabSalesInvoiceWeeklySales: QUERY.TabSalesInvoiceWeeklySales,
     };
-    return { ...dataObj, state };
+    return { ...dataObj, startDate, endDate };
+  },
+  watch: {
+    startDate: function () {
+      console.log("change captured ......", this.startDate, this.endDate);
+      this.dateRange();
+    },
+    endDate: function () {
+      console.log(
+        "change captured .end date.........",
+        this.startDate,
+        this.endDate
+      );
+      this.dateRange();
+    },
+    methods: {
+      dateRange: function () {
+        return {
+          startDate: this.startDate,
+          endDate: this.endDate,
+        };
+      },
+    },
   },
   computed: {
     TabSalesInvoiceRevnue() {
-      return {
-        measures: ["TabSalesInvoice.trueGrandTotal"],
-        timeDimensions: [
-          {
-            dimension: "TabSalesInvoice.postingDate",
-            granularity: "month",
-            dateRange: [this.state.startDate,this.state.endDate],
-          },
-        ],
-        order: {},
-        filters: [],
-      };
+      return QUERY.TabSalesInvoiceRevnue(this.startDate, this.endDate);
     },
+
+    TabSalesInvoiceTopCustomerByRevenue() {
+      return QUERY.TabSalesInvoiceTopCustomerByRevenue(
+        this.startDate,
+        this.endDate
+      );
+    },
+
+    TabSalesInvoiceTopCustomerGroupByRevenue() {
+      return QUERY.TabSalesInvoiceTopCustomerGroupByRevenue(
+        this.startDate,
+        this.endDate
+      )
+    },
+
+    TabSalesInvoiceTopsalesPartnerByRevenue() {
+      return QUERY.TabSalesInvoiceTopsalesPartnerByRevenue(
+        this.startDate,
+        this.endDate
+      );
+    },
+
+    TabSalesInvoiceRevenueByTerritory() {
+      return QUERY.TabSalesInvoiceRevenueByTerritory(
+        this.startDate,
+        this.endDate
+      );
+    },
+
+    TabSalesInvoiceWeeklySales(){
+      return QUERY.TabSalesInvoiceWeeklySales(
+        this.startDate,
+        this.endDate
+      );
+    }
   },
 };
 </script>

@@ -276,18 +276,18 @@ const TabLeadByCityLocation = {
 
 //insight engine Query
 
-const TabPaymentEntryMonthlyRevnue =  {
-        "measures": [
-            "TabPaymentEntry.truePaidAmount"
-        ],
-        "timeDimensions": [
-            {
-                "dimension": "TabPaymentEntry.postingDate",
-                "dateRange": "Last month"
-            }
-        ],
-        "order": {},
-        "filters": []
+const TabPaymentEntryMonthlyRevnue = {
+    "measures": [
+        "TabPaymentEntry.truePaidAmount"
+    ],
+    "timeDimensions": [
+        {
+            "dimension": "TabPaymentEntry.postingDate",
+            "dateRange": "Last month"
+        }
+    ],
+    "order": {},
+    "filters": []
 }
 
 const TabPaymentEntryWeeklyRevnue = {
@@ -383,127 +383,141 @@ const TabItemProductCount = {
     "filters": []
 }
 
-const TabSalesInvoiceRevnue = {
-    "measures": [
-        "TabSalesInvoice.trueGrandTotal"
-    ],
-    "timeDimensions": [
-        {
-            "dimension": "TabSalesInvoice.postingDate",
-            "granularity": "month",
-            "dateRange": "This year"
-        }
-    ],
-    "order": {},
-    "filters": []
+const TabSalesInvoiceRevnue = (startDate, endDate) => {
+    console.log("Query Js", startDate, endDate)
+    return ({
+        "measures": [
+            "TabSalesInvoice.trueGrandTotal"
+        ],
+        "timeDimensions": [
+            {
+                "dimension": "TabSalesInvoice.postingDate",
+                "granularity": "month",
+                "dateRange": [startDate, endDate]
+            }
+        ],
+        "order": {},
+        "filters": []
+    })
 }
 
-const TabSalesInvoiceTopCustomerByRevenue = {
-    "measures": [
-        "TabSalesInvoice.trueGrandTotal"
-    ],
-    "timeDimensions": [
-        {
-            "dimension": "TabSalesInvoice.postingDate",
-            "dateRange": "This year"
-        }
-    ],
-    "order": {
-        "TabSalesInvoice.trueGrandTotal": "desc"
-    },
-    "filters": [],
-    "dimensions": [
-        "TabSalesInvoice.customerName"
-    ],
-    limit: 10
-}
-
-const TabSalesInvoiceTopCustomerGroupByRevenue = {
-    "measures": [
-        "TabSalesInvoice.trueGrandTotal"
-    ],
-    "timeDimensions": [
-        {
-            "dimension": "TabSalesInvoice.postingDate",
-            "dateRange": "This year"
-        }
-    ],
-    "order": {
-        "TabSalesInvoice.trueGrandTotal": "desc"
-    },
-    "filters": [],
-    "dimensions": [
-        "TabSalesInvoice.customerGroup"
-    ],
-    limit: 10
-}
-
-const TabSalesInvoiceTopsalesPartnerByRevenue = {
-    "measures": [
-        "TabSalesInvoice.trueGrandTotal"
-    ],
-    "timeDimensions": [
-        {
-            "dimension": "TabSalesInvoice.postingDate",
-            "dateRange": "This year"
-        }
-    ],
-    "order": {
-        "TabSalesInvoice.trueGrandTotal": "desc"
-    },
-    "filters": [],
-    "dimensions": [
-        "TabSalesInvoice.salesPartner"
-    ],
-    limit: 5
-}
-
-const TabSalesInvoiceRevenueByTerritory = {
-    "measures": [
-        "TabSalesInvoice.trueGrandTotal"
-    ],
-    "timeDimensions": [
-        {
-            "dimension": "TabSalesInvoice.postingDate",
-            "dateRange": "This year"
-        }
-    ],
-    "order": {
-        "TabSalesInvoice.trueGrandTotal": "desc"
-    },
-    "dimensions": [
-        "TabSalesInvoice.territory"
-    ],
-    "filters": [
-        {
-            "dimension": "TabSalesInvoice.territory",
-            "operator": "notEquals",
-            "values": [
-                "All Territories"
-            ]
+const TabSalesInvoiceTopCustomerByRevenue = (startDate, endDate) => {
+    return ({
+        "measures": [
+            "TabSalesInvoice.trueGrandTotal"
+        ],
+        "timeDimensions": [
+            {
+                "dimension": "TabSalesInvoice.postingDate",
+                "dateRange": [startDate, endDate]
+            }
+        ],
+        "order": {
+            "TabSalesInvoice.trueGrandTotal": "desc"
         },
-        {
-            "dimension": "TabTerritory.is_group",
-            "operator": "equals",
-            "values": [
-                "1"
-            ]
-        }
-    ]
+        "filters": [],
+        "dimensions": [
+            "TabSalesInvoice.customerName"
+        ],
+        limit: 10
+    })
 }
 
-const TabSalesInvoiceWeeklySales = {
-    "measures": [
-        "TabSalesInvoice.trueGrandTotal"
-    ],
-    "timeDimensions": [
-        {
-            "dimension": "TabSalesInvoice.postingDate",
-            "granularity": "week"
-        }
-    ],
-    "order": {},
-    "filters": []
+const TabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate) => {
+    return ({
+        "measures": [
+            "TabSalesInvoice.trueGrandTotal"
+        ],
+        "timeDimensions": [
+            {
+                "dimension": "TabSalesInvoice.postingDate",
+                "dateRange": [startDate, endDate]
+            }
+        ],
+        "order": {
+            "TabSalesInvoice.trueGrandTotal": "desc"
+        },
+        "filters": [],
+        "dimensions": [
+            "TabSalesInvoice.customerGroup"
+        ],
+        limit: 10
+    })
+}
+
+const TabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate) => {
+    return ({
+        "measures": [
+            "TabSalesInvoice.trueGrandTotal"
+        ],
+        "timeDimensions": [
+            {
+                "dimension": "TabSalesInvoice.postingDate",
+                "dateRange": [startDate,endDate]
+            }
+        ],
+        "order": {
+            "TabSalesInvoice.trueGrandTotal": "desc"
+        },
+        "filters": [],
+        "dimensions": [
+            "TabSalesInvoice.salesPartner"
+        ],
+        limit: 5
+    })
+}
+
+const TabSalesInvoiceRevenueByTerritory = (startDate,endDate) => {
+    return ({
+        "measures": [
+            "TabSalesInvoice.trueGrandTotal"
+        ],
+        "timeDimensions": [
+            {
+                "dimension": "TabSalesInvoice.postingDate",
+                "dateRange": [startDate,endDate]
+            }
+        ],
+        "order": {
+            "TabSalesInvoice.trueGrandTotal": "desc"
+        },
+        "dimensions": [
+            "TabSalesInvoice.territory"
+        ],
+        "filters": [
+            {
+                "dimension": "TabSalesInvoice.territory",
+                "operator": "notEquals",
+                "values": [
+                    "All Territories"
+                ]
+            },
+            {
+                "dimension": "TabTerritory.is_group",
+                "operator": "equals",
+                "values": [
+                    "1"
+                ]
+            }
+        ]
+    })
+}
+
+const TabSalesInvoiceWeeklySales = (startDate,endDate) => {
+    return ({
+        "measures": [
+            "TabSalesInvoice.trueGrandTotal"
+        ],
+        "timeDimensions": [
+            {
+                "dimension": "TabSalesInvoice.postingDate",
+                "dateRange": [startDate,endDate],
+                "granularity": "week"
+            }
+        ],
+        "order": {},
+        "filters": []
+    })
 }
 const QUERY = {
     tabsalesQuery: (selected) => tabsalesQuery(selected),
