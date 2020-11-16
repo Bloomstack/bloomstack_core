@@ -1,5 +1,4 @@
 const tabsalesQuery = (selected) => {
-    console.log("selected is,......", selected.text);
     return ({
         order: {},
         measures: [
@@ -384,7 +383,6 @@ const TabItemProductCount = {
 }
 
 const TabSalesInvoiceRevnue = (startDate, endDate) => {
-    console.log("Query Js", startDate, endDate)
     return ({
         "measures": [
             "TabSalesInvoice.trueGrandTotal"

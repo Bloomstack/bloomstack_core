@@ -1,16 +1,10 @@
 <template>
   <div class="container-fluid">
-    <!-- <div>
+    <div style="display: flex">
       From
-      <input type="date" v-model="state.startDate" format="yyyy-MM-dd" />
+      <datepicker v-model="startDate" format="dd-MM-yyyy"></datepicker>
       To
-      <input type="date" v-model="state.endDate" format="yyyy-MM-dd" />
-    </div> -->
-    <div>
-      <datepicker v-model="startDate" format="yyyy-MM-dd"></datepicker
-      >{{ startDate }}
-      <datepicker v-model="endDate" format="yyyy-MM-dd"></datepicker
-      >{{ endDate }}
+      <datepicker v-model="endDate" format="dd-MM-yyyy"></datepicker>
     </div>
     <div class="row">
       <div class="col-sm-6">
@@ -493,26 +487,21 @@ import { CUBE_JS_HOST, CUBE_JS_SECRET } from "../../../../../config.js";
 import Datepicker from "vuejs-datepicker";
 import Vue from "vue/dist/vue.js";
 
-const cubejsApi = cubejs(CUBE_JS_SECRET, {
-  apiUrl: CUBE_JS_HOST + "/cubejs-api/v1",
-});
 
+let cube_js_host=localStorage.getItem("cube_js_host");
+let cube_js_secret=localStorage.getItem("cube_js_secret");
+const cubejsApi = cubejs(cube_js_secret, {
+  apiUrl: cube_js_host + "/cubejs-api/v1",
+});
 export default {
   name: "Home",
-  components: {
+components: {
     QUERY,
     Chart,
     QueryBuilder,
     Datepicker,
   },
-  handleStartDate() {},
   data() {
-    // var state = new Vue({
-    //   data: {
-    //     startDate: "2019-01-01",
-    //     endDate: "2020-12-31",
-    //   },
-    // });
     var startDate = new Date("2019-01-01");
     var endDate = new Date("2020-12-31");
     let DateRange = "This Week";
@@ -551,18 +540,8 @@ export default {
       TabSalesInvoiceTrueCount: QUERY.TabSalesInvoiceTrueCount,
       TabSalesInvoiceItemTrueQty: QUERY.TabSalesInvoiceItemTrueQty,
       TabItemProductCount: QUERY.TabItemProductCount,
-      // TabSalesInvoiceRevnue: QUERY.TabSalesInvoiceRevnue(state.startDate,state.endDate),
-      // TabSalesInvoiceTopCustomerByRevenue:
-      //   QUERY.TabSalesInvoiceTopCustomerByRevenue,
-      // TabSalesInvoiceTopCustomerGroupByRevenue:
-      //   QUERY.TabSalesInvoiceTopCustomerGroupByRevenue,
-      // TabSalesInvoiceTopsalesPartnerByRevenue:
-      //   QUERY.TabSalesInvoiceTopsalesPartnerByRevenue,
-      // TabSalesInvoiceRevenueByTerritory:
-      //   QUERY.TabSalesInvoiceRevenueByTerritory,
-      // TabSalesInvoiceWeeklySales: QUERY.TabSalesInvoiceWeeklySales,
     };
-    return { ...dataObj, startDate, endDate };
+    return { ...dataObj, startDate, endDate};
   },
   watch: {
     startDate: function () {
@@ -602,7 +581,7 @@ export default {
       return QUERY.TabSalesInvoiceTopCustomerGroupByRevenue(
         this.startDate,
         this.endDate
-      )
+      );
     },
 
     TabSalesInvoiceTopsalesPartnerByRevenue() {
@@ -619,12 +598,9 @@ export default {
       );
     },
 
-    TabSalesInvoiceWeeklySales(){
-      return QUERY.TabSalesInvoiceWeeklySales(
-        this.startDate,
-        this.endDate
-      );
-    }
+    TabSalesInvoiceWeeklySales() {
+      return QUERY.TabSalesInvoiceWeeklySales(this.startDate, this.endDate);
+    },
   },
 };
 </script>

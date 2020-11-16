@@ -10,17 +10,25 @@ frappe.pages['admin_insights'].on_page_load = function(wrapper) {
 
 frappe.views.InsightsFactory = class InsightsFactory extends frappe.views.Factory {
 	make(page_name) {
-		console.log("hola main bola!");
 		const assets = [
 			'assets/bloomstack_core/js/min/admin_insights.min.js'
 		];
-
-		console.log("namaste memsahab");
-		frappe.require(assets, () => {
-			console.log(bloomstack_core.admin_insights);
-			const say_what = new bloomstack_core.admin_insights({
-				parent: this.make_page(true, page_name)
-			});
+		frappe.call({
+			method:
+				"bloomstack_core.bloomstack_core.page.admin_insights.admin_insights.get_cubejs_host",
+			callback: (r) => {
+				var cube_js_host = r.message.cube_js_host;
+				var cube_js_secret = r.message.cube_js_secret;
+				localStorage.setItem("cube_js_host", cube_js_host);
+				localStorage.setItem("cube_js_secret", cube_js_secret)
+				frappe.require(assets, () => {
+					console.log(bloomstack_core.admin_insights);
+					const say_what = new bloomstack_core.admin_insights({
+						parent: this.make_page(true, page_name)
+					});
+				});
+			},
 		});
+		
 	}
 };
