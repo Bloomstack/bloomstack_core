@@ -9,7 +9,7 @@
 </template>
 <script>
   export default {
-    name:"TabPaymentEntryRevnue",
+    name:"KpiCurrency",
     props: {
       values: Array,
       metrics: Array,

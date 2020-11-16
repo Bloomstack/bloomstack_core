@@ -488,8 +488,8 @@ import Datepicker from "vuejs-datepicker";
 import Vue from "vue/dist/vue.js";
 
 
-let cube_js_host=localStorage.getItem("cube_js_host");
-let cube_js_secret=localStorage.getItem("cube_js_secret");
+let cube_js_host = localStorage.getItem("cube_js_host");
+let cube_js_secret = localStorage.getItem("cube_js_secret");
 const cubejsApi = cubejs(cube_js_secret, {
   apiUrl: cube_js_host + "/cubejs-api/v1",
 });

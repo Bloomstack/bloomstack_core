@@ -31,10 +31,10 @@
         <tab-lead-by-city-location v-if="!loading && type === 'TabLeadByCityLocation'" :values="values" :metrics="metrics" />
 
 
-        <tab-payment-entry-revenue v-if="!loading && type === 'TabPaymentEntryMonthlyRevnue'" :values="values" :metrics="metrics" title="MONTHLY REVENUE" description="Payments received in the last 30 days"/>
-        <tab-payment-entry-revenue v-if="!loading && type === 'TabPaymentEntryWeeklyRevnue'" :values="values" :metrics="metrics" title="WEEKLY REVENUE" description="Payments received in the last 7 days"/>
-        <tab-payment-entry-revenue v-if="!loading && type === 'TabPaymentEntryMonthlyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST MONTH)" description="Average of payments received in the last 30 days"/>
-        <tab-payment-entry-revenue v-if="!loading && type === 'TabPaymentEntryWeeklyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST WEEk)" description="Average of payments received in the last 7 days"/>
+        <kpi-currency v-if="!loading && type === 'TabPaymentEntryMonthlyRevnue'" :values="values" :metrics="metrics" title="MONTHLY REVENUE" description="Payments received in the last 30 days"/>
+        <kpi-currency v-if="!loading && type === 'TabPaymentEntryWeeklyRevnue'" :values="values" :metrics="metrics" title="WEEKLY REVENUE" description="Payments received in the last 7 days"/>
+        <kpi-currency v-if="!loading && type === 'TabPaymentEntryMonthlyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST MONTH)" description="Average of payments received in the last 30 days"/>
+        <kpi-currency v-if="!loading && type === 'TabPaymentEntryWeeklyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST WEEk)" description="Average of payments received in the last 7 days"/>
         <kpi v-if="!loading && type === 'TabSalesInvoiceItemConversionRatio'" :values="values" :metrics="metrics" title="BOOK-TO-BILL RATIO" description="% conversion rate for lifetime orders"/>
         <kpi v-if="!loading && type === 'TabSalesInvoiceTrueCount'" :values="values" :metrics="metrics" title="TOTAL INVOICES" description="Raised from the start of business"/>
         <kpi v-if="!loading && type === 'TabSalesInvoiceItemTrueQty'" :values="values" :metrics="metrics" title="PRODUCTS SOLD" description="Sold from the start of business"/>
@@ -72,7 +72,7 @@ import TabBinItemCodeWise from "./TabBinItemCodeWise.vue";
 import TabBinHandWareHouseWise from "./TabBinHandWareHouseWise.vue";
 import TabLeadByCityLocation from "./TabLeadByCityLocation.vue";
 //Insight engine Chart
-import TabPaymentEntryRevenue from "./TabPaymentEntryRevenue.vue";
+import KpiCurrency from "./KpiCurrency.vue";
 import kpi from "./Kpi.vue";
 import LineGchart from "./LineGchart.vue";
 import LineCummulativeGchart from "./LineCummulativeGchart.vue";
@@ -99,7 +99,7 @@ export default {
     TabBinHandWareHouseWise,
     TabLeadByCityLocation,
     //Insight engine Component
-    TabPaymentEntryRevenue,
+    KpiCurrency,
     kpi,
     LineGchart,
     LineCummulativeGchart,
