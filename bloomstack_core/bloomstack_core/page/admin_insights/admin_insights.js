@@ -17,18 +17,16 @@ frappe.views.InsightsFactory = class InsightsFactory extends frappe.views.Factor
 			method:
 				"bloomstack_core.bloomstack_core.page.admin_insights.admin_insights.get_cubejs_host",
 			callback: (r) => {
-				var cube_js_host = r.message.cube_js_host;
-				var cube_js_secret = r.message.cube_js_secret;
-				localStorage.setItem("cube_js_host", cube_js_host);
-				localStorage.setItem("cube_js_secret", cube_js_secret)
 				frappe.require(assets, () => {
 					console.log(bloomstack_core.admin_insights);
 					const say_what = new bloomstack_core.admin_insights({
-						parent: this.make_page(true, page_name)
+						parent: this.make_page(true, page_name),
+						cube_js_host: r.message.cube_js_host,
+						cube_js_secret: r.message.cube_js_secret
 					});
 				});
 			},
 		});
-		
+
 	}
 };

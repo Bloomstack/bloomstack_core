@@ -37,7 +37,7 @@ export default {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData:[
           [this.xname, this.yname],
-          ...this.values.map((value,i,arr)=>[moment(value.category).format("DD MMM YYYY"),value[this.metrics[0]]])
+          ...this.values.map((value,i,arr)=>[moment(value.category).format("DD MMM YYYY"),arr[i][this.metrics[0]]?arr[i][this.metrics[0]]:0])
       ],
       chartOptions: {
         chart: {
@@ -49,6 +49,7 @@ export default {
     };
   },
   mounted (){
+    console.log("line data....",this.values);
   }
 };
 </script>
