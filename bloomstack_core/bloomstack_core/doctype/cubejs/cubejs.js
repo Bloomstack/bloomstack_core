@@ -18,12 +18,6 @@ frappe.ui.form.on('Cubejs', {
 				});
 			},
 		});
-		// const myWindow=window.open("http://localhost:4000/api/restart","__blank");
-		// myWindow.close();
-		// window.location.href = "http://localhost:4000/api/restart";
-		// axios.post("http://localhost:4000/api/restart");
-		// const url = "http://localhost:4000/api/restart";
-		// const wp = "left=40, top=40, width=550, height=400, location=no, menubar=no, resizable=no, status=yes, toolbar=no";
-		// window.open(url, "winnote", wp);
+
 	}
 });
