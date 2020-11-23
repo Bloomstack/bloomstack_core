@@ -229,14 +229,6 @@ doc_events = {
 		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt",
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
 	},
-	"User": {
-		"validate": [
-			"bloomstack_core.hook_events.user.validate_if_bloomstack_user",
-			"bloomstack_core.hook_events.user.update_bloomtrace_user"
-		],
-		"before_insert": "bloomstack_core.hook_events.user.set_works_with_bloomstack_false",
-		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
-	},
 	("Sales Order", "Delivery Note"): {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
@@ -267,7 +259,6 @@ doc_events = {
 
 scheduler_events = {
 	"all": [
-		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
 		"bloomstack_core.compliance.item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
