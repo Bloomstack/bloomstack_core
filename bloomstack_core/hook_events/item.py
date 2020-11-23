@@ -28,20 +28,18 @@ def autoname(item, method=None):
 		return
 
 	# Get abbreviations
+	item_group_abbr = get_abbr(item.item_group)
+	item_name_abbr = get_abbr(item.item_name, 3)
 	default_company = get_default_company()
+
 	if default_company:
 		company_abbr = get_company_default(default_company, "abbr")
 		brand_abbr = get_abbr(item.brand, max_length=len(company_abbr))
 		brand_abbr = brand_abbr if company_abbr != brand_abbr else None
-	if not default_company:
-		brand_abbr = get_abbr(item.brand)
-	item_group_abbr = get_abbr(item.item_group)
-	item_name_abbr = get_abbr(item.item_name, 3)
-
-	if default_company:
 		params = list(filter(None, [company_abbr, brand_abbr, item_group_abbr, item_name_abbr]))
 		item_code = "-".join(params)
 	else:
+		brand_abbr = get_abbr(item.brand)
 		params = list(filter(None, [brand_abbr, item_group_abbr, item_name_abbr]))
 		item_code = "-".join(params)
 
