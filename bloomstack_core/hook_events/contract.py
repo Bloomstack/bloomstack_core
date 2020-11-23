@@ -154,9 +154,8 @@ def get_data(data):
 
 def set_contract_company(contract, method):
 	contract.signed_by_company = frappe.session.user
-	contract.company = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "company") or get_default_company()
-	contract.letter_head = frappe.db.get_value("Company", contract.company, "default_letter_head")
-
+	if contract.company:
+		contract.letter_head = frappe.db.get_value("Company", contract.company, "default_letter_head")
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
