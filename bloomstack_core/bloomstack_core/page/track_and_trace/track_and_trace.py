@@ -12,7 +12,7 @@ def search(text, start=0, limit=10):
         SELECT * FROM (
             SELECT 'Serial No' as doctype, name as docname, serial_no as searchfield FROM `tabSerial No`
             UNION
-            SELECT 'Batch' as doctype, name as docname, concat(batch_id, '.', package_tag) as searchfield FROM `tabBatch`
+            SELECT 'Batch' as doctype, name as docname, batch_id as searchfield FROM `tabBatch`
             UNION
             SELECT parenttype as doctype, parent as docname, package_tag as searchfield FROM `tabStock Entry Detail`
         ) q
