@@ -6,3 +6,7 @@ __pycache__
 tags
 node_modules
 bloomstack_core/docs/current
+*.min.js
+*.map.js
+*.js.map
+

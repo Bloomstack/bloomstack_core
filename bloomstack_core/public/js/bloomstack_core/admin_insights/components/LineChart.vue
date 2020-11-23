@@ -26,7 +26,6 @@ export default {
     },
   },
   data() {
-    console.log("It is.....", this.props);
     return {
       colors: [
         "#7DB3FF",

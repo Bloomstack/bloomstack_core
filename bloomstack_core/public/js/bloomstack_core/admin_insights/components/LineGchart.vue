@@ -49,7 +49,6 @@ export default {
     };
   },
   mounted (){
-    console.log("line data....",this.values);
   }
 };
 </script>
