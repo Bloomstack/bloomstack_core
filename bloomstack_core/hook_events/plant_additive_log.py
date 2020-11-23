@@ -61,7 +61,7 @@ def make_plant_additive_log(plant_additive_log):
 	site_url = frappe.utils.get_host_name()
 	bloomtrace_plant_dict = {
 		"doctype": "Plant Additive Log",
-		"bloomstack_site": site_url,
+		"bloomstack_company": plant_additive_log.company,
 		"additive":plant_additive_log.additive,
 		"additive_type": plant_additive_log.additive_type,
 		"total_amount_applied": plant_additive_log.total_amount_used,

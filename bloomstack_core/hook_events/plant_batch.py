@@ -59,10 +59,9 @@ def update_plant_batch(plant_batch, frappe_client):
 	frappe_client.update(bloomtrace_plant_batch)
 
 def make_plant_batch(plant_batch):
-	site_url = frappe.utils.get_host_name()
 	bloomtrace_plant_batch_dict = {
 		"doctype": "Plant Batch",
-		"bloomstack_site": site_url,
+		"bloomstack_company": plant_batch.company,
 		"plant_batch":plant_batch.title,
 		"type": plant_batch.cycle_type,
 		"strain_name": plant_batch.strain,

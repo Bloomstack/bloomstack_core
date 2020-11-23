@@ -59,10 +59,9 @@ def update_strain(strain, frappe_client):
 	frappe_client.update(bloomtrace_strain)
 
 def make_strain(strain):
-	site_url = frappe.utils.get_host_name()
 	bloomtrace_strain_dict = {
 		"doctype": "Strain",
-		"bloomstack_site": site_url,
+		"bloomstack_company": strain.company,
 		"strain": strain.strain_name,
 		"indica_percentage": strain.indica_percentage,
 		"sativa_percentage": strain.sativa_percentage
