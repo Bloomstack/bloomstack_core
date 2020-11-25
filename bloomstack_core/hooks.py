@@ -254,6 +254,9 @@ doc_events = {
 	},
 	"Plant Additive Log": {
 		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
+	},
+	"Stock Reconciliation": {
+		"on_submit": "bloomstack_core.hook_events.stock_reconciliation.create_integration_request"
 	}
 }
 
