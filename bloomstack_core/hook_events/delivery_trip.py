@@ -46,7 +46,7 @@ def link_invoice_against_trip(delivery_trip, method):
 				filters={"docstatus": 1, "parent": delivery_stop.delivery_note},
 				fields=["against_sales_invoice"],
 				distinct=True)
-            # set sale invoice for cycle sales order>>sales invoice>>delivery note>>delivery trip
+
 			if sales_invoice and len(sales_invoice) == 1:
 				delivery_stop.sales_invoice = sales_invoice[0].against_sales_invoice
 			# set sales invoice for cyecle sales order>>Delivery Note >>sales invoice>> then Delivery Trip from Delivery Note
