@@ -230,11 +230,6 @@ doc_events = {
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
 	},
 	"User": {
-		"validate": [
-			"bloomstack_core.hook_events.user.validate_if_bloomstack_user",
-			"bloomstack_core.hook_events.user.update_bloomtrace_user"
-		],
-		"before_insert": "bloomstack_core.hook_events.user.set_works_with_bloomstack_false",
 		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
 	},
 	("Sales Order", "Delivery Note"): {
@@ -267,7 +262,6 @@ doc_events = {
 
 scheduler_events = {
 	"all": [
-		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request",
 		"bloomstack_core.compliance.item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
@@ -277,6 +271,9 @@ scheduler_events = {
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
 		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request"
+	],
+	"hourly": [
+		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
 	],
 	"daily": [
 		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
