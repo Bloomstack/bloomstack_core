@@ -55,7 +55,7 @@ def link_invoice_against_trip(delivery_trip, method):
 				filters={"docstatus": 1, "delivery_note": delivery_stop.delivery_note},
 				fields=["distinct(parent)"])
 				if len(sales_invoice)==1:
-					delivery_stop.sales_invoice = sales_invoice[0].parent				
+					delivery_stop.sales_invoice = sales_invoice[0].parent
 
 
 def make_transfer_templates(delivery_trip, method):
