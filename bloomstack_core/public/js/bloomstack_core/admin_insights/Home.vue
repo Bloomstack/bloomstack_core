@@ -489,7 +489,7 @@
 <script>
 import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
-import QUERY from "./components/Query.js";
+import Query from "./components/Query.js";
 import Chart from "./components/Chart.vue";
 import Datepicker from "vuejs-datepicker";
 import Vue from "vue/dist/vue.js";
@@ -500,7 +500,7 @@ export default {
     config: Object,
   },
   components: {
-    QUERY,
+    Query,
     Chart,
     QueryBuilder,
     Datepicker,
@@ -508,8 +508,8 @@ export default {
   data() {
     var startDate = new Date("2019-01-01");
     var endDate = new Date("2020-12-31");
-    const cubejsApi = cubejs(this.config.Cube_Js_Secret, {
-      apiUrl: this.config.Cube_Js_Host + "/cubejs-api/v1",
+    const cubejsApi = cubejs(this.config.CubeJsSecret, {
+      apiUrl: this.config.CubeJsHost + "/cubejs-api/v1",
     });
     let selectedDateRange = { value: 1, text: null };
     const dataObj = {
@@ -528,44 +528,38 @@ export default {
         { value: 12, text: "Last year" },
       ],
       TabSalesInvoiceItemUniqueItemCode:
-        QUERY.TabSalesInvoiceItemUniqueItemCode,
-      TabCustomerCount: QUERY.TabCustomerCount,
-      TabSalesAverageInvoiceAmount: QUERY.TabSalesAverageInvoiceAmount,
-      tabBinPieTerritoryQuery: QUERY.tabBinPieTerritoryQuery,
-      PieChartTerritory: QUERY.PieChartTerritory,
+        Query.TabSalesInvoiceItemUniqueItemCode,
+      TabCustomerCount: Query.TabCustomerCount,
+      TabSalesAverageInvoiceAmount: Query.TabSalesAverageInvoiceAmount,
+      tabBinPieTerritoryQuery: Query.tabBinPieTerritoryQuery,
+      PieChartTerritory: Query.PieChartTerritory,
       TabSalesInvoiceItemHorizontalBarChartByItemName:
-        QUERY.TabSalesInvoiceItemHorizontalBarChartByItemName,
-      tabBinPieQuery: QUERY.tabBinPieQuery,
-      TabCustomerBarChartByNewCustomer: QUERY.TabCustomerBarChartByNewCustomer,
+        Query.TabSalesInvoiceItemHorizontalBarChartByItemName,
+      tabBinPieQuery: Query.tabBinPieQuery,
+      TabCustomerBarChartByNewCustomer: Query.TabCustomerBarChartByNewCustomer,
       TabSalesInvoiceBarChartBySalesPartner:
-        QUERY.TabSalesInvoiceBarChartBySalesPartner,
-      TabSalesInvoiceCustomerGroup: QUERY.TabSalesInvoiceCustomerGroup,
-      PieSalesInvoiceByStatus: QUERY.PieSalesInvoiceByStatus,
+        Query.TabSalesInvoiceBarChartBySalesPartner,
+      TabSalesInvoiceCustomerGroup: Query.TabSalesInvoiceCustomerGroup,
+      PieSalesInvoiceByStatus: Query.PieSalesInvoiceByStatus,
       TabSalesInvoiceItemHorizontalBarChartByItemGroup:
-        QUERY.TabSalesInvoiceItemHorizontalBarChartByItemGroup,
+        Query.TabSalesInvoiceItemHorizontalBarChartByItemGroup,
       TabPurchaseInvoiceHorizontalBarChartBySupplier:
-        QUERY.TabPurchaseInvoiceHorizontalBarChartBySupplier,
-      tabBinQuery: QUERY.tabBinQuery,
-      TabSalesInvoiceNetTotal: QUERY.TabSalesInvoiceNetTotal,
-      TabBinItemCodeWise: QUERY.TabBinItemCodeWise,
-      TabBinHandWareHouseWise: QUERY.TabBinHandWareHouseWise,
-      TabLeadByCityLocation: QUERY.TabLeadByCityLocation,
+        Query.TabPurchaseInvoiceHorizontalBarChartBySupplier,
+      tabBinQuery: Query.tabBinQuery,
+      TabSalesInvoiceNetTotal: Query.TabSalesInvoiceNetTotal,
+      TabBinItemCodeWise: Query.TabBinItemCodeWise,
+      TabBinHandWareHouseWise: Query.TabBinHandWareHouseWise,
+      TabLeadByCityLocation: Query.TabLeadByCityLocation,
     };
     return { ...dataObj, startDate, endDate, selectedDateRange };
   },
   watch: {
     startDate: function () {
-      console.log("change captured ......", this.startDate, this.endDate);
       this.selectedDateRange = { value: 0, text: null };
       this.dateRange();
     },
     endDate: function () {
-      console.log(
-        "change captured .end date.........",
-        this.startDate,
-        this.endDate,
-      );
-      this.selectedDateRange = { value: 0, text: null }
+      this.selectedDateRange = { value: 0, text: null };
       this.dateRange();
     },
     methods: {
@@ -579,7 +573,7 @@ export default {
   },
   computed: {
     TabSalesInvoiceRevnue() {
-      return QUERY.TabSalesInvoiceRevnue(
+      return Query.TabSalesInvoiceRevnue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -587,7 +581,7 @@ export default {
     },
 
     TabSalesInvoiceTopCustomerByRevenue() {
-      return QUERY.TabSalesInvoiceTopCustomerByRevenue(
+      return Query.TabSalesInvoiceTopCustomerByRevenue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -595,7 +589,7 @@ export default {
     },
 
     TabSalesInvoiceTopCustomerGroupByRevenue() {
-      return QUERY.TabSalesInvoiceTopCustomerGroupByRevenue(
+      return Query.TabSalesInvoiceTopCustomerGroupByRevenue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -603,7 +597,7 @@ export default {
     },
 
     TabSalesInvoiceTopsalesPartnerByRevenue() {
-      return QUERY.TabSalesInvoiceTopsalesPartnerByRevenue(
+      return Query.TabSalesInvoiceTopsalesPartnerByRevenue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -611,7 +605,7 @@ export default {
     },
 
     TabSalesInvoiceRevenueByTerritory() {
-      return QUERY.TabSalesInvoiceRevenueByTerritory(
+      return Query.TabSalesInvoiceRevenueByTerritory(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -620,38 +614,38 @@ export default {
     },
 
     TabSalesInvoiceWeeklySales() {
-      return QUERY.TabSalesInvoiceWeeklySales(this.startDate, this.endDate,this.selectedDateRange.text);
+      return Query.TabSalesInvoiceWeeklySales(this.startDate, this.endDate,this.selectedDateRange.text);
     },
     TabItemProductCount() {
-      return QUERY.TabItemProductCount;
+      return Query.TabItemProductCount;
     },
 
     TabSalesInvoiceItemTrueQty() {
-      return QUERY.TabSalesInvoiceItemTrueQty;
+      return Query.TabSalesInvoiceItemTrueQty;
     },
 
     TabSalesInvoiceTrueCount() {
-      return QUERY.TabSalesInvoiceTrueCount;
+      return Query.TabSalesInvoiceTrueCount;
     },
 
     TabPaymentEntryWeeklyAverage() {
-      return QUERY.TabPaymentEntryWeeklyAverage;
+      return Query.TabPaymentEntryWeeklyAverage;
     },
 
     TabPaymentEntryMonthlyAverage(){
-      return QUERY.TabPaymentEntryMonthlyAverage;
+      return Query.TabPaymentEntryMonthlyAverage;
     },
 
     TabSalesInvoiceItemConversionRatio(){
-      return QUERY.TabSalesInvoiceItemConversionRatio;
+      return Query.TabSalesInvoiceItemConversionRatio;
     },
 
     TabPaymentEntryWeeklyRevnue(){
-      return QUERY.TabPaymentEntryWeeklyRevnue;
+      return Query.TabPaymentEntryWeeklyRevnue;
     },
 
     TabPaymentEntryMonthlyRevnue(){
-      return QUERY.TabPaymentEntryMonthlyRevnue;
+      return Query.TabPaymentEntryMonthlyRevnue;
     }
   },
 };

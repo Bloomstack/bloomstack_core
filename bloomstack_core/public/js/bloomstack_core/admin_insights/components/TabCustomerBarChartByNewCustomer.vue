@@ -16,11 +16,11 @@
         chartData: {
           labels: this.values.map((value) => moment(value.category).format("YYYY-MM-DD")),
           datasets: [{
-            label: 'Bar Chart',
+            label: "Bar Chart",
             borderWidth: 1,
             backgroundColor: colour,
             borderColor: colour,
-            pointBorderColor: '#2554FF',
+            pointBorderColor: "#2554FF",
             data:this.values.map((value) => value["TabCustomer.count"])
           }]
         },

@@ -13,7 +13,7 @@
       metrics: Array,
     },
     mounted () {
-        console.log("TabSalesAverageInvoiceAmount............",this.values[0]["TabCustomer.countName"]);
+        // console.log("TabSalesAverageInvoiceAmount............",this.values[0]["TabCustomer.countName"]);
     }
-  }
+  };
 </script>

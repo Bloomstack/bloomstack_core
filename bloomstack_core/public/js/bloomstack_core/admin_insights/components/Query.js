@@ -24,7 +24,7 @@ const tabsalesQuery = (selected) => {
             },
         ],
     });
-}
+};
 
 const GuageChart = {
     measures: ["TabSalesInvoice.trueNetTotal"],
@@ -49,7 +49,7 @@ const tabBinQuery = {
         "TabBin.itemCode"
     ],
     "filters": []
-}
+};
 
 const tabBinPieQuery = {
     measures: ["TabBin.actualQty"],
@@ -77,7 +77,8 @@ const tabBinPieTerritoryQuery = {
     },
     dimensions: ["TabSalesInvoice.territory"],
     filters: [],
-}
+};
+
 const TabSalesInvoiceCustomerGroup = {
     measures: ["TabSalesInvoice.netTotal"],
     timeDimensions: [
@@ -90,7 +91,8 @@ const TabSalesInvoiceCustomerGroup = {
     },
     dimensions: ["TabSalesInvoice.customerGroup"],
     filters: [],
-}
+};
+
 const PieSalesInvoiceByStatus = {
     measures: ["TabSalesInvoice.netTotal"],
     timeDimensions: [
@@ -103,7 +105,7 @@ const PieSalesInvoiceByStatus = {
     },
     dimensions: ["TabSalesInvoice.status"],
     filters: [],
-}
+};
 
 const TabSalesAverageInvoiceAmount = {
     measures: ["TabSalesInvoice.AverageInvoiceAmount"],
@@ -114,7 +116,7 @@ const TabSalesAverageInvoiceAmount = {
     ],
     order: {},
     filters: [],
-}
+};
 
 const TabSalesTotalInvoiceCount = {
     "measures": [
@@ -127,7 +129,8 @@ const TabSalesTotalInvoiceCount = {
     ],
     "order": {},
     "filters": []
-}
+};
+
 const TabCustomerCount = {
     measures: ["TabCustomer.countName"],
     timeDimensions: [
@@ -137,7 +140,8 @@ const TabCustomerCount = {
     ],
     order: {},
     filters: [],
-}
+};
+
 const TabSalesInvoiceNetTotal = {
     measures: ["TabSalesInvoice.trueNetTotal"],
     timeDimensions: [
@@ -147,7 +151,8 @@ const TabSalesInvoiceNetTotal = {
     ],
     order: {},
     filters: [],
-}
+};
+
 const TabSalesInvoiceItemUniqueItemCode = {
     "measures": [
         "TabSalesInvoiceItem.itemCodeCount"
@@ -159,7 +164,8 @@ const TabSalesInvoiceItemUniqueItemCode = {
     ],
     "order": {},
     "filters": []
-}
+};
+
 const TabSalesInvoiceItemHorizontalBarChartByItemName = {
     measures: ["TabSalesInvoiceItem.amount"],
     timeDimensions: [
@@ -173,7 +179,8 @@ const TabSalesInvoiceItemHorizontalBarChartByItemName = {
     dimensions: ["TabSalesInvoiceItem.itemName"],
     filters: [],
     limit: 10,
-}
+};
+
 const TabSalesInvoiceItemHorizontalBarChartByItemGroup = {
     measures: ["TabSalesInvoiceItem.amount"],
     timeDimensions: [
@@ -186,7 +193,8 @@ const TabSalesInvoiceItemHorizontalBarChartByItemGroup = {
     },
     dimensions: ["TabSalesInvoiceItem.itemGroup"],
     filters: [],
-}
+};
+
 const TabPurchaseInvoiceHorizontalBarChartBySupplier = {
     measures: ["TabPurchaseInvoice.netTotal"],
     timeDimensions: [
@@ -200,7 +208,8 @@ const TabPurchaseInvoiceHorizontalBarChartBySupplier = {
     dimensions: ["TabPurchaseInvoice.supplier"],
     filters: [],
     limit: 10,
-}
+};
+
 const TabCustomerBarChartByNewCustomer = {
     measures: ["TabCustomer.count"],
     timeDimensions: [
@@ -211,7 +220,8 @@ const TabCustomerBarChartByNewCustomer = {
     ],
     order: {},
     filters: [],
-}
+};
+
 const TabSalesInvoiceBarChartBySalesPartner = {
     measures: ["TabSalesInvoice.netTotal"],
     timeDimensions: [
@@ -224,7 +234,8 @@ const TabSalesInvoiceBarChartBySalesPartner = {
     },
     dimensions: ["TabSalesInvoice.salesPartner"],
     filters: [],
-}
+};
+
 const TabBinItemCodeWise = {
     measures: ["TabBin.actualQty"],
     timeDimensions: [
@@ -237,7 +248,8 @@ const TabBinItemCodeWise = {
     },
     dimensions: ["TabBin.itemCode"],
     filters: [],
-}
+};
+
 const TabBinHandWareHouseWise = {
     "measures": [
         "TabBin.actualQty"
@@ -254,7 +266,8 @@ const TabBinHandWareHouseWise = {
         "TabBin.warehouse"
     ],
     "filters": []
-}
+};
+
 const TabLeadByCityLocation = {
     "measures": [
         "TabLead.count"
@@ -271,7 +284,7 @@ const TabLeadByCityLocation = {
         "TabLead.city"
     ],
     "filters": []
-}
+};
 
 //insight engine Query
 
@@ -287,7 +300,7 @@ const TabPaymentEntryMonthlyRevnue = {
     ],
     "order": {},
     "filters": []
-}
+};
 
 const TabPaymentEntryWeeklyRevnue = {
     "measures": [
@@ -301,7 +314,7 @@ const TabPaymentEntryWeeklyRevnue = {
     ],
     "order": {},
     "filters": []
-}
+};
 
 const TabSalesInvoiceItemConversionRatio = {
     "measures": [
@@ -314,7 +327,7 @@ const TabSalesInvoiceItemConversionRatio = {
     ],
     "order": {},
     "filters": []
-}
+};
 
 const TabPaymentEntryMonthlyAverage = {
     "measures": [
@@ -328,7 +341,7 @@ const TabPaymentEntryMonthlyAverage = {
     ],
     "order": {},
     "filters": []
-}
+};
 
 const TabPaymentEntryWeeklyAverage = {
     "measures": [
@@ -342,7 +355,8 @@ const TabPaymentEntryWeeklyAverage = {
     ],
     "order": {},
     "filters": []
-}
+};
+
 const TabSalesInvoiceTrueCount = {
     "measures": [
         "TabSalesInvoice.trueCount"
@@ -354,7 +368,7 @@ const TabSalesInvoiceTrueCount = {
     ],
     "order": {},
     "filters": []
-}
+};
 
 const TabSalesInvoiceItemTrueQty = {
     "measures": [
@@ -367,7 +381,7 @@ const TabSalesInvoiceItemTrueQty = {
     ],
     "order": {},
     "filters": []
-}
+};
 
 const TabItemProductCount = {
     "measures": [
@@ -380,7 +394,7 @@ const TabItemProductCount = {
     ],
     "order": {},
     "filters": []
-}
+};
 
 const TabSalesInvoiceRevnue = (startDate, endDate ,range) => {
     return ({
@@ -397,7 +411,7 @@ const TabSalesInvoiceRevnue = (startDate, endDate ,range) => {
         "order": {},
         "filters": []
     });
-}
+};
 
 const TabSalesInvoiceTopCustomerByRevenue = (startDate, endDate,range) => {
     return ({
@@ -419,7 +433,7 @@ const TabSalesInvoiceTopCustomerByRevenue = (startDate, endDate,range) => {
         ],
         limit: 10
     });
-}
+};
 
 const TabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate,range) => {
     return ({
@@ -441,7 +455,7 @@ const TabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate,range) => {
         ],
         limit: 10
     });
-}
+};
 
 const TabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate,range) => {
     return ({
@@ -463,7 +477,7 @@ const TabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate,range) => {
         ],
         limit: 5
     });
-}
+};
 
 const TabSalesInvoiceRevenueByTerritory = (startDate,endDate,range) => {
     return ({
@@ -499,7 +513,7 @@ const TabSalesInvoiceRevenueByTerritory = (startDate,endDate,range) => {
             }
         ]
     });
-}
+};
 
 const TabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
     return ({
@@ -516,8 +530,9 @@ const TabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
         "order": {},
         "filters": []
     });
-}
-const QUERY = {
+};
+
+const Query = {
     tabsalesQuery: (selected) => tabsalesQuery(selected),
     tabBinQuery,
     GuageChart,
@@ -555,4 +570,5 @@ const QUERY = {
     TabSalesInvoiceWeeklySales
 
 };
-export default QUERY;
+
+export default Query;

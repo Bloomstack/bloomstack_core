@@ -15,5 +15,5 @@
     mounted () {
         // console.log("TabSalesTotalInvoiceCount............",this.values[0]["TabSalesInvoice.trueCount"]);
     }
-  }
+  };
 </script>

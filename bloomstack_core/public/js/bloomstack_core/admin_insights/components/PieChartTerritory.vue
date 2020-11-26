@@ -26,7 +26,7 @@
               "rgba(255, 206, 86, 0.2)",
               "rgba(75, 192, 192, 0.2)",                
               ],
-              data: this.values.map(value=>value["TabSalesInvoice.netTotal"])
+              data: this.values.map((value) => value["TabSalesInvoice.netTotal"])
             }]
         },
         options: {

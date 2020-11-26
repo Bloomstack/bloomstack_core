@@ -66,7 +66,7 @@ import pieChartCustomerGroup from "./PieChartCustomerGroup.vue";
 import PieSalesInvoiceByStatus from "./PieSalesInvoiceByStatus.vue";
 import TabSalesInvoiceItemHorizontalBarChartByItemGroup from "./TabSalesInvoiceItemHorizontalBarChartByItemGroup.vue";
 import TabPurchaseInvoiceHorizontalBarChartBySupplier from "./TabPurchaseInvoiceHorizontalBarChartBySupplier.vue";
-import BarChartVue from './BarChart.vue';
+import BarChartVue from "./BarChart.vue";
 import GuageChart from "./GuageChart.vue";
 import TabBinItemCodeWise from "./TabBinItemCodeWise.vue";
 import TabBinHandWareHouseWise from "./TabBinHandWareHouseWise.vue";
@@ -122,12 +122,12 @@ export default {
   },
   computed: {
     values: function () {
-      if (this.loading) return [];
+      if (this.loading) { return [] };
       // console.log("qqqqq77777q....", this.loading, this.title, this.resultSet);
       return this.resultSet ? this.resultSet.chartPivot() : [];
     },
     metrics: function () {
-      if (this.loading) { return [""]; };
+      if (this.loading) { return [""] };
       // console.log("asaasss....", this.loading, this.title, this.type);
       return this.resultSet
         ? this.resultSet.seriesNames().map((x) => x.key)

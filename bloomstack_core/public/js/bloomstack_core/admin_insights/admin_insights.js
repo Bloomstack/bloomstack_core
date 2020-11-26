@@ -12,11 +12,11 @@ Vue.config.errorHandler = function (err) {
 
 frappe.provide("bloomstack_core.admin_insights");
 bloomstack_core.admin_insights = class AdminInsights {
-  constructor({ parent, Cube_Js_Host, Cube_Js_Secret }) {
+  constructor({ parent, CubeJsHost, CubeJsSecret }) {
     this.$parent = $(parent);
     this.page = parent.page;
-    this.config = { Cube_Js_Host, Cube_Js_Secret }
-    this.SetUpHeader();
+    this.config = { CubeJsHost, CubeJsSecret };
+    this.setUpHeader();
     this.make_body();
   }
   make_body() {
@@ -31,7 +31,7 @@ bloomstack_core.admin_insights = class AdminInsights {
       },
     }).$mount(".layout-main")[0];
   }
-  SetUpHeader() {
+  setUpHeader() {
     this.page.set_title(__("Admin Insights"));
   }
 };

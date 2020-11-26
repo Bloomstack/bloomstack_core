@@ -14,5 +14,5 @@
     mounted () {
         // console.log("TabSalesInvoiceItemUniqueItemCode............",this.values[0]["TabSalesInvoiceItem.itemCodeCount"]);
     }
-  }
+  };
 </script>

@@ -19,8 +19,8 @@ frappe.views.InsightsFactory = class InsightsFactory extends frappe.views.Factor
 				frappe.require(assets, () => {
 					const say_what = new bloomstack_core.admin_insights({
 						parent: this.make_page(true, page_name),
-						Cube_Js_Host: r.message.cube_js_host,
-						Cube_Js_Secret: r.message.cube_js_secret
+						CubeJsHost: r.message.cube_js_host,
+						CubeJsSecret: r.message.cube_js_secret
 					});
 				});
 			},

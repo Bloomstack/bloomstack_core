@@ -1,5 +1,5 @@
 <script>
-  import { Pie } from "vue-chartjs"
+  import { Pie } from "vue-chartjs";
 
   export default {
     name:"PieChartCustomerGroup",
@@ -26,7 +26,7 @@
               "rgba(255, 206, 86, 0.2)",
               "rgba(75, 192, 192, 0.2",                
               ],
-              data: this.values.map(value=>value["TabSalesInvoice.netTotal"])
+              data: this.values.map((value) => value["TabSalesInvoice.netTotal"])
             }]
         },
         options: {
@@ -39,7 +39,7 @@
       }
     },
     mounted () {
-      this.renderChart(this.chartData, this.options)
+      this.renderChart(this.chartData, this.options);
     }
   }
 </script>
