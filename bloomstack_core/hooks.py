@@ -214,13 +214,7 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
 	"Item": {
-		"autoname": "bloomstack_core.hook_events.item.autoname",
-		"validate": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-		],
-		"after_insert": [
-			"bloomstack_core.hook_events.utils.create_integration_request",
-		]
+		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Packing Slip": {
 		"on_submit": "bloomstack_core.hook_events.packing_slip.create_stock_entry"
@@ -240,20 +234,20 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
 	},
 	"Plant Batch": {
-		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
+		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Plant": {
-		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
+		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Strain": {
-		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
+		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Harvest": {
-		"on_update": "bloomstack_core.hook_events.harvest.create_integration_request",
-		"before_update_after_submit": "bloomstack_core.hook_events.harvest.finish_unfinish_harvest"
+		"on_submit": "bloomstack_core.hook_events.utils.create_integration_request",
+		"on_update_after_submit": "bloomstack_core.hook_events.utils.create_integration_request"
 	},
 	"Plant Additive Log": {
-		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
+		"on_update": "bloomstack_core.hook_events.utils.create_integration_request"
 	}
 }
 
@@ -270,7 +264,8 @@ scheduler_events = {
 		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
-		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.harvest.execute_bloomtrace_integration_request"
 	],
 	"hourly": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"

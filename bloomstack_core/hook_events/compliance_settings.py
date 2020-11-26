@@ -18,9 +18,9 @@ def sync_bloomtrace(compliance_settings, method):
 
 	for company in compliance_settings.company:
 		frappe_client.update({
-			"doctype": "Bloomstack Site Company",
+			"doctype": "Bloomstack Company",
 			"name": company.company,
-			"metrc_push_data": compliance_settings.metrc_push_data,
-			"metrc_pull_data": compliance_settings.metrc_pull_data,
-			"pull_incoming_transfer": compliance_settings.pull_incoming_transfer
+			"metrc_push_data": company.push_data,
+			"metrc_pull_data": company.pull_data,
+			"pull_incoming_transfer": company.pull_incoming_transfer
 		})

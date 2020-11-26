@@ -7,18 +7,6 @@ from frappe.utils import cstr
 from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
 
-def create_integration_request(doc, method):
-	integration_request = frappe.new_doc("Integration Request")
-	integration_request.update({
-		"integration_type": "Remote",
-		"integration_request_service": "BloomTrace",
-		"method": "POST",
-		"status": "Queued",
-		"reference_doctype": doc.doctype,
-		"reference_docname": doc.name
-	})
-	integration_request.save(ignore_permissions=True)
-
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
@@ -70,8 +58,3 @@ def make_harvest(harvest):
 		"is_finished": harvest.is_finished
 	}
 	return bloomtrace_harvest_dict
-
-def finish_unfinish_harvest(doc, method):
-	is_finished = frappe.db.get_value("Harvest", doc.name, "is_finished")
-	if doc.is_finished != is_finished:
-		make_integration_request("Harvest", doc.name)
