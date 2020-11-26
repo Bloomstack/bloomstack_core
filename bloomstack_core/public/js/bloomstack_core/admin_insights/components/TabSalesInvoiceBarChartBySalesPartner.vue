@@ -14,7 +14,7 @@
     data() {
       return {
         chartData: {
-          labels: this.values.map((value) =>value.x),
+          labels: this.values.map((value) => value.x),
           datasets: [{
             label: "Bar Chart",
             borderWidth: 1,
@@ -46,7 +46,7 @@
           responsive: true,
           maintainAspectRatio: false
         }
-      }
+      };
     },
     mounted() {
       this.renderChart(this.chartData, this.options);

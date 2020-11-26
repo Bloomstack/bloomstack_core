@@ -116,18 +116,18 @@ export default {
     type: String,
   },
   methods: {
-    dateFormatter: function (value) {
+    dateFormatter (value) {
       return moment(value).format("MMM YY");
     },
   },
   computed: {
-    values: function () {
-      if (this.loading) { return [] };
+    values() {
+      if (this.loading) { return []; }
       // console.log("qqqqq77777q....", this.loading, this.title, this.resultSet);
       return this.resultSet ? this.resultSet.chartPivot() : [];
     },
-    metrics: function () {
-      if (this.loading) { return [""] };
+    metrics() {
+      if (this.loading) { return [""]; }
       // console.log("asaasss....", this.loading, this.title, this.type);
       return this.resultSet
         ? this.resultSet.seriesNames().map((x) => x.key)

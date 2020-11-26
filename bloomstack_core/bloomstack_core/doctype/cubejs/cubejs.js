@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Bloom Stack, Inc and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Cubejs', {
+frappe.ui.form.on("Cubejs", {
 	after_save: function(frm) {
 		frappe.call({
 			method:

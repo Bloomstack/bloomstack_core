@@ -21,7 +21,7 @@ export default {
     metrics: Array,
   },
   methods: {
-    dateFormatter: function (value) {
+    dateFormatter (value) {
       return moment(value).format("MMM YY");
     },
   },

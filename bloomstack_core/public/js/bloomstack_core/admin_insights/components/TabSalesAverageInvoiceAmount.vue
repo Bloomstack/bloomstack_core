@@ -14,5 +14,5 @@
     mounted () {
         // console.log("TabSalesAverageInvoiceAmount............",this.values[0]["TabSalesInvoice.AverageInvoiceAmount"]);
     }
-  }
+  };
 </script>

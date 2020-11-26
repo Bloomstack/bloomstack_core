@@ -36,7 +36,8 @@ const GuageChart = {
     order: {},
     filters: [],
 
-}
+};
+
 const tabBinQuery = {
     "measures": [
         "TabBin.actualQty"

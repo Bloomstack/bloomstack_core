@@ -36,7 +36,7 @@ export default {
         ...this.values.map(
           (value, i, arr) => [
             moment(value.category).format("MMM YYYY"),
-            (arr[i][this.metrics[0]] += arr[i - 1]? arr[i - 1][this.metrics[0]]: 0),
+            (arr[parseInt(i)][this.metrics[0]] += arr[parseInt(i) - 1]? arr[parseInt(i) - 1][this.metrics[0]]: 0),
           ]
           // if(i>0){
           // return [moment(value.category).format("MMM YYYY"),arr[i][this.metrics[0]]+arr[i-1][this.metrics[0]]]

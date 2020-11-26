@@ -19,5 +19,5 @@
         // console.log("TabPaymentEntryMonthlyRevnue values............",this.values);
         // console.log("TabPaymentEntryMonthlyRevnue metrics............",this.metrics[0]);
     }
-  }
+  };
 </script>

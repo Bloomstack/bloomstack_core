@@ -48,7 +48,7 @@
           responsive: true,
           maintainAspectRatio: false
         }
-      }
+      };
     },
     mounted () {
       this.renderChart(this.chartData, this.options);

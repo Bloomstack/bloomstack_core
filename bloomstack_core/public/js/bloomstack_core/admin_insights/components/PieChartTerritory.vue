@@ -36,7 +36,7 @@
           responsive: true,
           maintainAspectRatio: false
         }
-      }
+      };
     },
     mounted () {
       // console.log("pie territory data...",this.values);

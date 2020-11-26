@@ -246,6 +246,243 @@
         </query-builder>
       </div>
     </div>
+    <!-- <div class="row">
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceItemUniqueItemCode">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Sales Invoice Item Unique Item Code Query 11"
+              type="TabSalesInvoiceItemUniqueItemCode"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="TabCustomerCount">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Customer Count Query 10"
+              type="TabCustomerCount"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesAverageInvoiceAmount">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Sales Average Invoice Amount Query 5"
+              type="TabSalesAverageInvoiceAmount"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="tabBinPieTerritoryQuery">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Bin pie Territory Query 4"
+              type="pieChartTerritory"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="tabBinPieQuery">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Bin pie Query"
+              type="pieChart"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceCustomerGroup">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Sales Customer Group Query 17  "
+              type="pieChartCustomerGroup"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="PieSalesInvoiceByStatus">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Pie Sales Invoice By Status Query 20"
+              type="PieSalesInvoiceByStatus"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query="TabSalesInvoiceItemHorizontalBarChartByItemName"
+        >
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Sales Invoice Item Horizontal Bar Chart By Item Name Query 7"
+              type="TabSalesInvoiceItemHorizontalBarChartByItemName"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query="TabPurchaseInvoiceHorizontalBarChartBySupplier"
+        >
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Purchase Invoice Horizontal Bar Chart By Supplier Query 19"
+              type="TabPurchaseInvoiceHorizontalBarChartBySupplier"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query="TabSalesInvoiceItemHorizontalBarChartByItemGroup"
+        >
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Sales Invoice Item Horizontal Bar Chart By Item Group Query 8"
+              type="TabSalesInvoiceItemHorizontalBarChartByItemGroup"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder :cubejs-api="cubejsApi" :query="TabCustomerBarChartByNewCustomer">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title="Tab Customer Bar Chart By New Customer Query 13"
+              type="TabCustomerBarChartByNewCustomer"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceBarChartBySalesPartner">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title="Tab Sales Invoice Bar Chart By Sales Partner Query 14"
+              type="TabSalesInvoiceBarChartBySalesPartner"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder :cubejs-api="cubejsApi" :query="tabBinQuery">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title="Tab Bin Query"
+              type="stackedBar"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceNetTotal">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title="GuageChart Query 2"
+              type="GuageChart"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="TabBinItemCodeWise">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Bin Item Code Wise Query 15"
+              type="TabBinItemCodeWise"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-6">
+        <query-builder :cubejs-api="cubejsApi" :query="TabBinHandWareHouseWise">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="Tab Bin hand ware Wise Query 16"
+              type="TabBinHandWareHouseWise"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div> 
+    <div class="row">
+      <div class="col-sm-12">
+        <query-builder :cubejs-api="cubejsApi" :query="TabLeadByCityLocation">
+          <template v-slot="{loading, resultSet }">
+            <Chart
+              title="TabLeadByCityLocation Query 18"
+              type="TabLeadByCityLocation"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div> -->
   </div>
 </template>
 
