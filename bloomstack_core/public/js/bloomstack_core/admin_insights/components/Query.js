@@ -396,7 +396,7 @@ const TabSalesInvoiceRevnue = (startDate, endDate ,range) => {
         ],
         "order": {},
         "filters": []
-    })
+    });
 }
 
 const TabSalesInvoiceTopCustomerByRevenue = (startDate, endDate,range) => {
@@ -418,7 +418,7 @@ const TabSalesInvoiceTopCustomerByRevenue = (startDate, endDate,range) => {
             "TabSalesInvoice.customerName"
         ],
         limit: 10
-    })
+    });
 }
 
 const TabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate,range) => {
@@ -440,7 +440,7 @@ const TabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate,range) => {
             "TabSalesInvoice.customerGroup"
         ],
         limit: 10
-    })
+    });
 }
 
 const TabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate,range) => {
@@ -462,7 +462,7 @@ const TabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate,range) => {
             "TabSalesInvoice.salesPartner"
         ],
         limit: 5
-    })
+    });
 }
 
 const TabSalesInvoiceRevenueByTerritory = (startDate,endDate,range) => {
@@ -498,7 +498,7 @@ const TabSalesInvoiceRevenueByTerritory = (startDate,endDate,range) => {
                 ]
             }
         ]
-    })
+    });
 }
 
 const TabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
@@ -515,7 +515,7 @@ const TabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
         ],
         "order": {},
         "filters": []
-    })
+    });
 }
 const QUERY = {
     tabsalesQuery: (selected) => tabsalesQuery(selected),

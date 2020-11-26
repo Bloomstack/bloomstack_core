@@ -1,5 +1,5 @@
 <script>
-  import { Bar } from 'vue-chartjs';
+  import { Bar } from "vue-chartjs";
   import colour from "./colour";
   import moment from "moment";
 
@@ -14,14 +14,14 @@
     data() {
       return {
         chartData: {
-          labels: this.values.map(value=>moment(value.category).format('YYYY-MM-DD')),
+          labels: this.values.map((value) => moment(value.category).format("YYYY-MM-DD")),
           datasets: [{
             label: 'Bar Chart',
             borderWidth: 1,
             backgroundColor: colour,
             borderColor: colour,
             pointBorderColor: '#2554FF',
-            data:this.values.map(value=>value["TabCustomer.count"])
+            data:this.values.map((value) => value["TabCustomer.count"])
           }]
         },
         options: {
@@ -49,7 +49,7 @@
       }
     },
     mounted() {
-      this.renderChart(this.chartData, this.options)
+      this.renderChart(this.chartData, this.options);
     }
   }
 </script>

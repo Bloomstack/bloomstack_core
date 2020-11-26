@@ -127,7 +127,7 @@ export default {
       return this.resultSet ? this.resultSet.chartPivot() : [];
     },
     metrics: function () {
-      if (this.loading) return [""];
+      if (this.loading) { return [""]; };
       // console.log("asaasss....", this.loading, this.title, this.type);
       return this.resultSet
         ? this.resultSet.seriesNames().map((x) => x.key)

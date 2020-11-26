@@ -508,8 +508,8 @@ export default {
   data() {
     var startDate = new Date("2019-01-01");
     var endDate = new Date("2020-12-31");
-    const cubejsApi = cubejs(this.config.cube_js_secret, {
-      apiUrl: this.config.cube_js_host + "/cubejs-api/v1",
+    const cubejsApi = cubejs(this.config.Cube_Js_Secret, {
+      apiUrl: this.config.Cube_Js_Host + "/cubejs-api/v1",
     });
     let selectedDateRange = { value: 1, text: null };
     const dataObj = {
@@ -564,8 +564,8 @@ export default {
         "change captured .end date.........",
         this.startDate,
         this.endDate,
-        (this.selectedDateRange = { value: 0, text: null })
       );
+      this.selectedDateRange = { value: 0, text: null }
       this.dateRange();
     },
     methods: {
@@ -639,19 +639,19 @@ export default {
     },
 
     TabPaymentEntryMonthlyAverage(){
-      return QUERY.TabPaymentEntryMonthlyAverage
+      return QUERY.TabPaymentEntryMonthlyAverage;
     },
 
     TabSalesInvoiceItemConversionRatio(){
-      return QUERY.TabSalesInvoiceItemConversionRatio
+      return QUERY.TabSalesInvoiceItemConversionRatio;
     },
 
     TabPaymentEntryWeeklyRevnue(){
-      return QUERY.TabPaymentEntryWeeklyRevnue
+      return QUERY.TabPaymentEntryWeeklyRevnue;
     },
 
     TabPaymentEntryMonthlyRevnue(){
-      return QUERY.TabPaymentEntryMonthlyRevnue
+      return QUERY.TabPaymentEntryMonthlyRevnue;
     }
   },
 };

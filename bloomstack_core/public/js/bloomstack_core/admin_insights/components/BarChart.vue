@@ -48,7 +48,7 @@ export default {
   
 -->
 <script>
-  import { Bar } from 'vue-chartjs';
+  import { Bar } from "vue-chartjs";
   import colour from "./colour";
 
 
@@ -62,14 +62,14 @@ export default {
     data() {
       return {
         chartData: {
-          labels: this.values.map(value=>value.category),
+          labels: this.values.map((value) => value.category),
           datasets: [{
-            label: 'Bar Chart',
+            label: "Bar Chart",
             borderWidth: 1,
             backgroundColor: colour,
             borderColor: colour,
-            pointBorderColor: '#2554FF',
-            data:this.values.map(value=>value["TabBin.actualQty"])
+            pointBorderColor: "#2554FF",
+            data:this.values.map((value) => value["TabBin.actualQty"])
           }]
         },
         options: {
@@ -97,7 +97,7 @@ export default {
       }
     },
     mounted() {
-      this.renderChart(this.chartData, this.options)
+      this.renderChart(this.chartData, this.options);
     }
   }
 </script>

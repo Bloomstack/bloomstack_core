@@ -24,15 +24,15 @@ export default {
     return {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData:[
-          ['Country', 'Popularity'],
-          ['Germany', 200],
-          ['United States', 300],
-          ['Brazil', 400],
-          ['Canada', 500],
-          ['France', 600], 
-          ['RU', 700],
+          ["Country", "Popularity"],
+          ["Germany", 200],
+          ["United States", 300],
+          ["Brazil", 400],
+          ["Canada", 500],
+          ["France", 600], 
+          ["RU", 700],
           ["MUMBAI",340], 
-          ...this.values.map(value=>[value.category,value["TabLead.count"]])
+          ...this.values.map((value) => [value.category,value["TabLead.count"]])
 
       ],
       chartOptions: {
@@ -45,7 +45,7 @@ export default {
     };
   },
   mounted (){
-      console.log(this.values.map(value=>[value.category,value["TabLead.count"]]))
+      // console.log(this.values.map(value=>[value.category,value["TabLead.count"]]));
   }
 };
 </script>

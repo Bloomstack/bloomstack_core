@@ -1,5 +1,5 @@
 <script>
-  import { HorizontalBar } from 'vue-chartjs';
+  import { HorizontalBar } from "vue-chartjs";
   import colour from "./colour";
 
 
@@ -13,14 +13,14 @@
     data() {
       return {
         chartData: {
-          labels: this.values.map(value=>value.category),
+          labels: this.values.map((value) => value.category),
           datasets: [{
-            label: 'HorizontalBar',
+            label: "HorizontalBar",
             borderWidth: 1,
             backgroundColor: colour,
             borderColor: colour,
-            pointBorderColor: '#2554FF',
-            data:this.values.map(value=>value["TabSalesInvoiceItem.amount"])
+            pointBorderColor: "#2554FF",
+            data:this.values.map((value) => value["TabSalesInvoiceItem.amount"])
           }]
         },
         options: {
@@ -48,7 +48,7 @@
       }
     },
     mounted() {
-      this.renderChart(this.chartData, this.options)
+      this.renderChart(this.chartData, this.options);
     }
   }
 </script>

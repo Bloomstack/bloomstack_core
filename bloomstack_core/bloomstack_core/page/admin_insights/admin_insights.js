@@ -1,4 +1,4 @@
-frappe.pages['admin_insights'].on_page_load = function(wrapper) {
+frappe.pages["admin_insights"].on_page_load = function(wrapper) {
 	new frappe.views.InsightsFactory().make('admin_insights');
 	// var page = frappe.ui.make_app_page({
 	// 	parent: wrapper,
@@ -19,8 +19,8 @@ frappe.views.InsightsFactory = class InsightsFactory extends frappe.views.Factor
 				frappe.require(assets, () => {
 					const say_what = new bloomstack_core.admin_insights({
 						parent: this.make_page(true, page_name),
-						cube_js_host: r.message.cube_js_host,
-						cube_js_secret: r.message.cube_js_secret
+						Cube_Js_Host: r.message.cube_js_host,
+						Cube_Js_Secret: r.message.cube_js_secret
 					});
 				});
 			},

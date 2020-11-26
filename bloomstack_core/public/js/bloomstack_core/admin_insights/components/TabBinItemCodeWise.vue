@@ -24,7 +24,7 @@ export default {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData:[
           ["Item Code", "ActualQuantity"],
-          ...this.values.map(value=>[value.category,value[this.metrics[0]]])
+          ...this.values.map((value) => [value.category,value[this.metrics[0]]])
       ],
       chartOptions: {
         chart: {

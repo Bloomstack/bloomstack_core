@@ -1,6 +1,4 @@
 import frappe
-from frappe.utils import get_site_name
-from frappe.installer import update_site_config
 
 
 @frappe.whitelist(allow_guest=True)

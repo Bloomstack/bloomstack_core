@@ -25,7 +25,7 @@ export default {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData:[
           ["Ware House", "Actual Quantity"],
-          ...this.values.map(value=>[value.category,value["TabBin.actualQty"]])
+          ...this.values.map((value) => [value.category,value["TabBin.actualQty"]])
   
       ],
       chartOptions: {
