@@ -42,6 +42,6 @@
       // console.log("pie territory data...",this.values);
       // this.renderChart(this.chartData, this.options);
     }
-  }
+  };
 </script>
 

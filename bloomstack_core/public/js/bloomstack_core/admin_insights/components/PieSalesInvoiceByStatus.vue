@@ -39,8 +39,8 @@
       };
     },
     mounted () {
-      this.renderChart(this.chartData, this.options)
+      this.renderChart(this.chartData, this.options);
     }
-  }
+  };
 </script>
 

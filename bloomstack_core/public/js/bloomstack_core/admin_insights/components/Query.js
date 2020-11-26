@@ -64,7 +64,8 @@ const tabBinPieQuery = {
     },
     dimensions: ["TabBin.warehouse"],
     filters: [],
-}
+};
+
 const tabBinPieTerritoryQuery = {
     measures: ["TabSalesInvoice.netTotal"],
     timeDimensions: [
@@ -533,7 +534,7 @@ const TabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
     });
 };
 
-const Query = {
+const query = {
     tabsalesQuery: (selected) => tabsalesQuery(selected),
     tabBinQuery,
     GuageChart,
@@ -572,4 +573,4 @@ const Query = {
 
 };
 
-export default Query;
+export default query;

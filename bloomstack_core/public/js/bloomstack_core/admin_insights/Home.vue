@@ -252,7 +252,7 @@
 <script>
 import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
-import Query from "./components/Query.js";
+import query from "./components/Query.js";
 import Chart from "./components/Chart.vue";
 import Datepicker from "vuejs-datepicker";
 import Vue from "vue/dist/vue.js";
@@ -263,7 +263,7 @@ export default {
     config: Object,
   },
   components: {
-    Query,
+    query,
     Chart,
     QueryBuilder,
     Datepicker,
@@ -291,28 +291,28 @@ export default {
         { value: 12, text: "Last year" },
       ],
       TabSalesInvoiceItemUniqueItemCode:
-        Query.TabSalesInvoiceItemUniqueItemCode,
-      TabCustomerCount: Query.TabCustomerCount,
-      TabSalesAverageInvoiceAmount: Query.TabSalesAverageInvoiceAmount,
-      tabBinPieTerritoryQuery: Query.tabBinPieTerritoryQuery,
-      PieChartTerritory: Query.PieChartTerritory,
+        query.TabSalesInvoiceItemUniqueItemCode,
+      TabCustomerCount: query.TabCustomerCount,
+      TabSalesAverageInvoiceAmount: query.TabSalesAverageInvoiceAmount,
+      tabBinPieTerritoryQuery: query.tabBinPieTerritoryQuery,
+      PieChartTerritory: query.PieChartTerritory,
       TabSalesInvoiceItemHorizontalBarChartByItemName:
-        Query.TabSalesInvoiceItemHorizontalBarChartByItemName,
-      tabBinPieQuery: Query.tabBinPieQuery,
-      TabCustomerBarChartByNewCustomer: Query.TabCustomerBarChartByNewCustomer,
+        query.TabSalesInvoiceItemHorizontalBarChartByItemName,
+      tabBinPieQuery: query.tabBinPieQuery,
+      TabCustomerBarChartByNewCustomer: query.TabCustomerBarChartByNewCustomer,
       TabSalesInvoiceBarChartBySalesPartner:
-        Query.TabSalesInvoiceBarChartBySalesPartner,
-      TabSalesInvoiceCustomerGroup: Query.TabSalesInvoiceCustomerGroup,
-      PieSalesInvoiceByStatus: Query.PieSalesInvoiceByStatus,
+        query.TabSalesInvoiceBarChartBySalesPartner,
+      TabSalesInvoiceCustomerGroup: query.TabSalesInvoiceCustomerGroup,
+      PieSalesInvoiceByStatus: query.PieSalesInvoiceByStatus,
       TabSalesInvoiceItemHorizontalBarChartByItemGroup:
-        Query.TabSalesInvoiceItemHorizontalBarChartByItemGroup,
+        query.TabSalesInvoiceItemHorizontalBarChartByItemGroup,
       TabPurchaseInvoiceHorizontalBarChartBySupplier:
-        Query.TabPurchaseInvoiceHorizontalBarChartBySupplier,
-      tabBinQuery: Query.tabBinQuery,
-      TabSalesInvoiceNetTotal: Query.TabSalesInvoiceNetTotal,
-      TabBinItemCodeWise: Query.TabBinItemCodeWise,
-      TabBinHandWareHouseWise: Query.TabBinHandWareHouseWise,
-      TabLeadByCityLocation: Query.TabLeadByCityLocation,
+        query.TabPurchaseInvoiceHorizontalBarChartBySupplier,
+      tabBinQuery: query.tabBinQuery,
+      TabSalesInvoiceNetTotal: query.TabSalesInvoiceNetTotal,
+      TabBinItemCodeWise: query.TabBinItemCodeWise,
+      TabBinHandWareHouseWise: query.TabBinHandWareHouseWise,
+      TabLeadByCityLocation: query.TabLeadByCityLocation,
     };
     return { ...dataObj, startDate, endDate, selectedDateRange };
   },
@@ -336,7 +336,7 @@ export default {
   },
   computed: {
     TabSalesInvoiceRevnue() {
-      return Query.TabSalesInvoiceRevnue(
+      return query.TabSalesInvoiceRevnue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -344,7 +344,7 @@ export default {
     },
 
     TabSalesInvoiceTopCustomerByRevenue() {
-      return Query.TabSalesInvoiceTopCustomerByRevenue(
+      return query.TabSalesInvoiceTopCustomerByRevenue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -352,7 +352,7 @@ export default {
     },
 
     TabSalesInvoiceTopCustomerGroupByRevenue() {
-      return Query.TabSalesInvoiceTopCustomerGroupByRevenue(
+      return query.TabSalesInvoiceTopCustomerGroupByRevenue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -360,7 +360,7 @@ export default {
     },
 
     TabSalesInvoiceTopsalesPartnerByRevenue() {
-      return Query.TabSalesInvoiceTopsalesPartnerByRevenue(
+      return query.TabSalesInvoiceTopsalesPartnerByRevenue(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -368,7 +368,7 @@ export default {
     },
 
     TabSalesInvoiceRevenueByTerritory() {
-      return Query.TabSalesInvoiceRevenueByTerritory(
+      return query.TabSalesInvoiceRevenueByTerritory(
         this.startDate,
         this.endDate,
         this.selectedDateRange.text
@@ -377,38 +377,38 @@ export default {
     },
 
     TabSalesInvoiceWeeklySales() {
-      return Query.TabSalesInvoiceWeeklySales(this.startDate, this.endDate,this.selectedDateRange.text);
+      return query.TabSalesInvoiceWeeklySales(this.startDate, this.endDate,this.selectedDateRange.text);
     },
     TabItemProductCount() {
-      return Query.TabItemProductCount;
+      return query.TabItemProductCount;
     },
 
     TabSalesInvoiceItemTrueQty() {
-      return Query.TabSalesInvoiceItemTrueQty;
+      return query.TabSalesInvoiceItemTrueQty;
     },
 
     TabSalesInvoiceTrueCount() {
-      return Query.TabSalesInvoiceTrueCount;
+      return query.TabSalesInvoiceTrueCount;
     },
 
     TabPaymentEntryWeeklyAverage() {
-      return Query.TabPaymentEntryWeeklyAverage;
+      return query.TabPaymentEntryWeeklyAverage;
     },
 
     TabPaymentEntryMonthlyAverage(){
-      return Query.TabPaymentEntryMonthlyAverage;
+      return query.TabPaymentEntryMonthlyAverage;
     },
 
     TabSalesInvoiceItemConversionRatio(){
-      return Query.TabSalesInvoiceItemConversionRatio;
+      return query.TabSalesInvoiceItemConversionRatio;
     },
 
     TabPaymentEntryWeeklyRevnue(){
-      return Query.TabPaymentEntryWeeklyRevnue;
+      return query.TabPaymentEntryWeeklyRevnue;
     },
 
     TabPaymentEntryMonthlyRevnue(){
-      return Query.TabPaymentEntryMonthlyRevnue;
+      return query.TabPaymentEntryMonthlyRevnue;
     }
   },
 };

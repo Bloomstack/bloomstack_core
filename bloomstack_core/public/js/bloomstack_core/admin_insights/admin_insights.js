@@ -17,9 +17,9 @@ bloomstack_core.admin_insights = class AdminInsights {
     this.page = parent.page;
     this.config = { CubeJsHost, CubeJsSecret };
     this.setUpHeader();
-    this.make_body();
+    this.makeBody();
   }
-  make_body() {
+  makeBody() {
     new Vue({
       render: (h) => h(Home, {
         props: {
