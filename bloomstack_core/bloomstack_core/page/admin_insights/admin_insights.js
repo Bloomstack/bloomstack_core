@@ -17,7 +17,7 @@ frappe.views.InsightsFactory = class InsightsFactory extends frappe.views.Factor
 				"bloomstack_core.bloomstack_core.page.admin_insights.admin_insights.get_cubejs_host",
 			callback: (r) => {
 				frappe.require(assets, () => {
-					const SayWhat = new bloomstack_core.admin_insights({
+					const sayWhat = new bloomstack_core.admin_insights({
 						parent: this.make_page(true, page_name),
 						CubeJsHost: r.message.cube_js_host,
 						CubeJsSecret: r.message.cube_js_secret
