@@ -20,5 +20,8 @@
 	],
 	"js/bloomstack_desk.js": [
 		"public/js/desk.js"
+	],
+	"bloomstack_core/js/min/admin_insights.min.js": [
+		"public/js/bloomstack_core/admin_insights/admin_insights.js"
 	]
 }
