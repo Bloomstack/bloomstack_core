@@ -155,7 +155,7 @@
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="TabSalesInvoiceCummulativeRevnue"
+              type="tabSalesInvoiceCummulativeRevnue"
               :loading="loading"
               :result-set="resultSet"
             />
