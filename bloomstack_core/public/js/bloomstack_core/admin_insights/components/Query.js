@@ -290,7 +290,7 @@ const TabLeadByCityLocation = {
 
 //insight engine Query
 
-const TabPaymentEntryMonthlyRevnue = {
+const tabPaymentEntryMonthlyRevnue = {
     "measures": [
         "TabPaymentEntry.truePaidAmount"
     ],
@@ -304,7 +304,7 @@ const TabPaymentEntryMonthlyRevnue = {
     "filters": []
 };
 
-const TabPaymentEntryWeeklyRevnue = {
+const tabPaymentEntryWeeklyRevnue = {
     "measures": [
         "TabPaymentEntry.truePaidAmount"
     ],
@@ -318,7 +318,7 @@ const TabPaymentEntryWeeklyRevnue = {
     "filters": []
 };
 
-const TabSalesInvoiceItemConversionRatio = {
+const tabSalesInvoiceItemConversionRatio = {
     "measures": [
         "TabSalesInvoiceItem.salesInvoiceToSalesOrderRatio"
     ],
@@ -331,7 +331,7 @@ const TabSalesInvoiceItemConversionRatio = {
     "filters": []
 };
 
-const TabPaymentEntryMonthlyAverage = {
+const tabPaymentEntryMonthlyAverage = {
     "measures": [
         "TabPaymentEntry.monthlyAverageTruePaidAmount"
     ],
@@ -345,7 +345,7 @@ const TabPaymentEntryMonthlyAverage = {
     "filters": []
 };
 
-const TabPaymentEntryWeeklyAverage = {
+const tabPaymentEntryWeeklyAverage = {
     "measures": [
         "TabPaymentEntry.weeklyAverageTruePaidAmount"
     ],
@@ -359,7 +359,7 @@ const TabPaymentEntryWeeklyAverage = {
     "filters": []
 };
 
-const TabSalesInvoiceTrueCount = {
+const tabSalesInvoiceTrueCount = {
     "measures": [
         "TabSalesInvoice.trueCount"
     ],
@@ -372,7 +372,7 @@ const TabSalesInvoiceTrueCount = {
     "filters": []
 };
 
-const TabSalesInvoiceItemTrueQty = {
+const tabSalesInvoiceItemTrueQty = {
     "measures": [
         "TabSalesInvoiceItem.trueQty"
     ],
@@ -385,7 +385,7 @@ const TabSalesInvoiceItemTrueQty = {
     "filters": []
 };
 
-const TabItemProductCount = {
+const tabItemProductCount = {
     "measures": [
         "TabItem.productCount"
     ],
@@ -398,7 +398,7 @@ const TabItemProductCount = {
     "filters": []
 };
 
-const TabSalesInvoiceRevnue = (startDate, endDate ,range) => {
+const tabSalesInvoiceRevnue = (startDate, endDate ,range) => {
     return ({
         "measures": [
             "TabSalesInvoice.trueGrandTotal"
@@ -415,7 +415,7 @@ const TabSalesInvoiceRevnue = (startDate, endDate ,range) => {
     });
 };
 
-const TabSalesInvoiceTopCustomerByRevenue = (startDate, endDate,range) => {
+const tabSalesInvoiceTopCustomerByRevenue = (startDate, endDate,range) => {
     return ({
         "measures": [
             "TabSalesInvoice.trueGrandTotal"
@@ -437,7 +437,7 @@ const TabSalesInvoiceTopCustomerByRevenue = (startDate, endDate,range) => {
     });
 };
 
-const TabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate,range) => {
+const tabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate,range) => {
     return ({
         "measures": [
             "TabSalesInvoice.trueGrandTotal"
@@ -459,7 +459,7 @@ const TabSalesInvoiceTopCustomerGroupByRevenue = (startDate, endDate,range) => {
     });
 };
 
-const TabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate,range) => {
+const tabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate,range) => {
     return ({
         "measures": [
             "TabSalesInvoice.trueGrandTotal"
@@ -481,7 +481,7 @@ const TabSalesInvoiceTopsalesPartnerByRevenue = (startDate,endDate,range) => {
     });
 };
 
-const TabSalesInvoiceRevenueByTerritory = (startDate,endDate,range) => {
+const tabSalesInvoiceRevenueByTerritory = (startDate,endDate,range) => {
     return ({
         "measures": [
             "TabSalesInvoice.trueGrandTotal"
@@ -517,7 +517,7 @@ const TabSalesInvoiceRevenueByTerritory = (startDate,endDate,range) => {
     });
 };
 
-const TabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
+const tabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
     return ({
         "measures": [
             "TabSalesInvoice.trueGrandTotal"
@@ -534,7 +534,7 @@ const TabSalesInvoiceWeeklySales = (startDate,endDate,range) => {
     });
 };
 
-const query = {
+const Query = {
     tabsalesQuery: (selected) => tabsalesQuery(selected),
     tabBinQuery,
     GuageChart,
@@ -556,21 +556,21 @@ const query = {
     TabLeadByCityLocation,
     TabSalesTotalInvoiceCount,
     //Insight engine Query
-    TabPaymentEntryMonthlyRevnue,
-    TabPaymentEntryWeeklyRevnue,
-    TabSalesInvoiceItemConversionRatio,
-    TabPaymentEntryMonthlyAverage,
-    TabPaymentEntryWeeklyAverage,
-    TabSalesInvoiceTrueCount,
-    TabSalesInvoiceItemTrueQty,
-    TabItemProductCount,
-    TabSalesInvoiceRevnue,
-    TabSalesInvoiceTopCustomerByRevenue,
-    TabSalesInvoiceTopCustomerGroupByRevenue,
-    TabSalesInvoiceTopsalesPartnerByRevenue,
-    TabSalesInvoiceRevenueByTerritory,
-    TabSalesInvoiceWeeklySales
+    tabPaymentEntryMonthlyRevnue,
+    tabPaymentEntryWeeklyRevnue,
+    tabSalesInvoiceItemConversionRatio,
+    tabPaymentEntryMonthlyAverage,
+    tabPaymentEntryWeeklyAverage,
+    tabSalesInvoiceTrueCount,
+    tabSalesInvoiceItemTrueQty,
+    tabItemProductCount,
+    tabSalesInvoiceRevnue,
+    tabSalesInvoiceTopCustomerByRevenue,
+    tabSalesInvoiceTopCustomerGroupByRevenue,
+    tabSalesInvoiceTopsalesPartnerByRevenue,
+    tabSalesInvoiceRevenueByTerritory,
+    tabSalesInvoiceWeeklySales
 
 };
 
-export default query;
+export default Query;

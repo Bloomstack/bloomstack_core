@@ -31,21 +31,21 @@
         <tab-lead-by-city-location v-if="!loading && type === 'TabLeadByCityLocation'" :values="values" :metrics="metrics" />
 
 
-        <kpi-currency v-if="!loading && type === 'TabPaymentEntryMonthlyRevnue'" :values="values" :metrics="metrics" title="MONTHLY REVENUE" description="Payments received in the last 30 days"/>
-        <kpi-currency v-if="!loading && type === 'TabPaymentEntryWeeklyRevnue'" :values="values" :metrics="metrics" title="WEEKLY REVENUE" description="Payments received in the last 7 days"/>
-        <kpi-currency v-if="!loading && type === 'TabPaymentEntryMonthlyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST MONTH)" description="Average of payments received in the last 30 days"/>
-        <kpi-currency v-if="!loading && type === 'TabPaymentEntryWeeklyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST WEEk)" description="Average of payments received in the last 7 days"/>
-        <kpi v-if="!loading && type === 'TabSalesInvoiceItemConversionRatio'" :values="values" :metrics="metrics" title="BOOK-TO-BILL RATIO" description="% conversion rate for lifetime orders"/>
-        <kpi v-if="!loading && type === 'TabSalesInvoiceTrueCount'" :values="values" :metrics="metrics" title="TOTAL INVOICES" description="Raised from the start of business"/>
-        <kpi v-if="!loading && type === 'TabSalesInvoiceItemTrueQty'" :values="values" :metrics="metrics" title="PRODUCTS SOLD" description="Sold from the start of business"/>
-        <kpi v-if="!loading && type === 'TabItemProductCount'" :values="values" :metrics="metrics" title="TOTAL PRODUCTS" description="Number of products being sold"/>
-        <line-gchart v-if="!loading && type === 'TabSalesInvoiceRevnue'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="month-to-date" xname="Posting Date" yname="Revenue"/>
-        <line-gchart v-if="!loading && type === 'TabSalesInvoiceWeeklySales'" :values="values" :metrics="metrics" title="TOP SALES" description="by week" xname="Posting Date" yname="Sales"/>
-        <line-cummulative-gchart v-if="!loading && type === 'TabSalesInvoiceCummulativeRevnue'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="MONTHLY" xname="Posting Date" yname="Revenue"/>
-        <coloumn-gchart v-if="!loading && type === 'TabSalesInvoiceTopCustomerByRevenue'" :values="values" :metrics="metrics" title="TOP CUSTOMER" description="MONTHLY" xname="Customer Name" yname="Revenue"/>
-        <coloumn-gchart v-if="!loading && type === 'TabSalesInvoiceTopCustomerGroupByRevenue'" :values="values" :metrics="metrics" title="TOTAL CUSTOMER GROUP" description="MONTHLY" xname="Customer Group" yname="Revenue"/>
-        <bar-gchart v-if="!loading && type === 'TabSalesInvoiceTopsalesPartnerByRevenue'" :values="values" :metrics="metrics" title="TOP SALES PARTNERS" description="MONTHLY" xname="Customer Group" yname="Revenue"/>
-        <donut-gchart v-if="!loading && type === 'TabSalesInvoiceRevenueByTerritory'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="Territory" xname="Customer Group" yname="Revenue"/>
+        <kpi-currency v-if="!loading && type === 'tabPaymentEntryMonthlyRevnue'" :values="values" :metrics="metrics" title="MONTHLY REVENUE" description="Payments received in the last 30 days"/>
+        <kpi-currency v-if="!loading && type === 'tabPaymentEntryWeeklyRevnue'" :values="values" :metrics="metrics" title="WEEKLY REVENUE" description="Payments received in the last 7 days"/>
+        <kpi-currency v-if="!loading && type === 'tabPaymentEntryMonthlyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST MONTH)" description="Average of payments received in the last 30 days"/>
+        <kpi-currency v-if="!loading && type === 'tabPaymentEntryWeeklyAverage'" :values="values" :metrics="metrics" title="AVERAGE DAILY REVENUE (LAST WEEk)" description="Average of payments received in the last 7 days"/>
+        <kpi v-if="!loading && type === 'tabSalesInvoiceItemConversionRatio'" :values="values" :metrics="metrics" title="BOOK-TO-BILL RATIO" description="% conversion rate for lifetime orders"/>
+        <kpi v-if="!loading && type === 'tabSalesInvoiceTrueCount'" :values="values" :metrics="metrics" title="TOTAL INVOICES" description="Raised from the start of business"/>
+        <kpi v-if="!loading && type === 'tabSalesInvoiceItemTrueQty'" :values="values" :metrics="metrics" title="PRODUCTS SOLD" description="Sold from the start of business"/>
+        <kpi v-if="!loading && type === 'tabItemProductCount'" :values="values" :metrics="metrics" title="TOTAL PRODUCTS" description="Number of products being sold"/>
+        <line-gchart v-if="!loading && type === 'tabSalesInvoiceRevnue'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="month-to-date" xname="Posting Date" yname="Revenue"/>
+        <line-gchart v-if="!loading && type === 'tabSalesInvoiceWeeklySales'" :values="values" :metrics="metrics" title="TOP SALES" description="by week" xname="Posting Date" yname="Sales"/>
+        <line-cummulative-gchart v-if="!loading && type === 'tabSalesInvoiceCummulativeRevnue'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="MONTHLY" xname="Posting Date" yname="Revenue"/>
+        <coloumn-gchart v-if="!loading && type === 'tabSalesInvoiceTopCustomerByRevenue'" :values="values" :metrics="metrics" title="TOP CUSTOMER" description="MONTHLY" xname="Customer Name" yname="Revenue"/>
+        <coloumn-gchart v-if="!loading && type === 'tabSalesInvoiceTopCustomerGroupByRevenue'" :values="values" :metrics="metrics" title="TOTAL CUSTOMER GROUP" description="MONTHLY" xname="Customer Group" yname="Revenue"/>
+        <bar-gchart v-if="!loading && type === 'tabSalesInvoiceTopsalesPartnerByRevenue'" :values="values" :metrics="metrics" title="TOP SALES PARTNERS" description="MONTHLY" xname="Customer Group" yname="Revenue"/>
+        <donut-gchart v-if="!loading && type === 'tabSalesInvoiceRevenueByTerritory'" :values="values" :metrics="metrics" title="TOTAL REVENUE" description="Territory" xname="Customer Group" yname="Revenue"/>
       </div>
     </div>
   </div>
