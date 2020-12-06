@@ -14,11 +14,11 @@ frappe.listview_settings['Sales Invoice'].onload =
                     }
                 };
                 frappe.call({
-                    method: "bloomstack_core.utils.get_contact",
+                    method: "erpnext.utils.get_contact",
                     args: { "doctype": doctype, "name": selected_docs[0].name, "contact_field": "customer" },
                     callback: function (r) {
                         frappe.call({
-                            method: "bloomstack_core.utils.get_document_links",
+                            method: "erpnext.utils.get_document_links",
                             args: { "doctype": doctype, "docs": selected_docs },
                             callback: function (res) {
                                 new frappe.views.CommunicationComposer({
