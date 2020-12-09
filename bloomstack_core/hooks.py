@@ -279,7 +279,8 @@ scheduler_events = {
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
 	],
 	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
+		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract",
+		"bloomstack_core.hook_events.stock_entry.raw_material_update_on_bom"
 	],
 	"daily_long": [
 		"bloomstack_core.hook_events.sales_order.update_order_status"
