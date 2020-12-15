@@ -33,7 +33,10 @@ export default {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData: [
         [this.xname, this.yname],
-        ...this.values.map((value, i, arr) => [value.category, value[this.metrics[0]]]),
+        ...this.values.map((value, i, arr) => [
+          value.category,
+          value[this.metrics[0]],
+        ]),
       ],
       chartOptions: {
         chart: {

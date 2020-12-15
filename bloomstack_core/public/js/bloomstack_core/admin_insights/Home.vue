@@ -1,45 +1,16 @@
 <template>
   <div class="container-fluid">
-    <div style="display: flex">
-      From
-      <datepicker v-model="startDate" format="dd-MM-yyyy"></datepicker>
-      To
-      <datepicker v-model="endDate" format="dd-MM-yyyy"></datepicker>
-      <select
-        v-model="selectedDateRange"
-        id="dateRangeSelect"
-        :key="selectedDateRange.value"
-      >
-        <option v-for="dateRange in dateRangevalue" :value="dateRange" v-bind:key="dateRange.value">
-          {{ dateRange.text }}
-        </option>
-      </select>
-    </div>
-    <div class="row">
-      <div class="col-sm-5">
+    <div class="average-cards">
+      <div class="row"><div class="sub-title-text">Average Cards</div></div>
+      <div class="col-sm-4">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabPaymentEntryMonthlyRevnue"
+          :query="TabPaymentEntryMonthlyRevnue"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabPaymentEntryMonthlyRevnue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-3">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="tabPaymentEntryWeeklyRevnue"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="tabPaymentEntryWeeklyRevnue"
+              type="TabPaymentEntryMonthlyRevnue"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -49,29 +20,12 @@
       <div class="col-sm-4">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceItemConversionRatio"
+          :query="TabPaymentEntryWeeklyRevnue"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabSalesInvoiceItemConversionRatio"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="tabPaymentEntryMonthlyAverage"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="tabPaymentEntryMonthlyAverage"
+              type="TabPaymentEntryWeeklyRevnue"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -81,12 +35,12 @@
       <div class="col-sm-4">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabPaymentEntryWeeklyAverage"
+          :query="TabSalesInvoiceItemConversionRatio"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabPaymentEntryWeeklyAverage"
+              type="TabSalesInvoiceItemConversionRatio"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -96,29 +50,12 @@
       <div class="col-sm-4">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceTrueCount"
+          :query="TabPaymentEntryMonthlyAverage"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabSalesInvoiceTrueCount"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceItemTrueQty"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="tabSalesInvoiceItemTrueQty"
+              type="TabPaymentEntryMonthlyAverage"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -126,11 +63,56 @@
         </query-builder>
       </div>
       <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="tabItemProductCount">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query="TabPaymentEntryWeeklyAverage"
+        >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabItemProductCount"
+              type="TabPaymentEntryWeeklyAverage"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query="TabSalesInvoiceTrueCount"
+        >
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title
+              type="TabSalesInvoiceTrueCount"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query="TabSalesInvoiceItemTrueQty"
+        >
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title
+              type="TabSalesInvoiceItemTrueQty"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+      <div class="col-sm-4">
+        <query-builder :cubejs-api="cubejsApi" :query="TabItemProductCount">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              title
+              type="TabItemProductCount"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -138,41 +120,22 @@
         </query-builder>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="tabSalesInvoiceRevnue">
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              type="tabSalesInvoiceRevnue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
+    <div class="graphs">
+      <div class="sub-title-text">Graphs</div>
+      <div class="row">
+        <div class="col-sm-4">
+          Start Date:<datepicker v-model="startDate"></datepicker>
+        </div>
+        <div class="col-sm-4">
+          End Date:<datepicker v-model="endDate"></datepicker>
+        </div>
       </div>
       <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="tabSalesInvoiceRevnue">
+        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceRevnue">
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabSalesInvoiceCummulativeRevnue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceTopCustomerByRevenue"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="tabSalesInvoiceTopCustomerByRevenue"
+              type="TabSalesInvoiceCummulativeRevnue"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -182,63 +145,57 @@
       <div class="col-sm-6">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceTopCustomerGroupByRevenue"
+          :query="TabSalesInvoiceTopCustomerByRevenue"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabSalesInvoiceTopCustomerGroupByRevenue"
+              type="TabSalesInvoiceTopCustomerByRevenue"
               :loading="loading"
               :result-set="resultSet"
             />
           </template>
         </query-builder>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-6">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceTopsalesPartnerByRevenue"
+          :query="TabSalesInvoiceTopCustomerGroupByRevenue"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabSalesInvoiceTopsalesPartnerByRevenue"
+              type="TabSalesInvoiceTopCustomerGroupByRevenue"
               :loading="loading"
               :result-set="resultSet"
             />
           </template>
         </query-builder>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-6">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceRevenueByTerritory"
+          :query="TabSalesInvoiceTopsalesPartnerByRevenue"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabSalesInvoiceRevenueByTerritory"
+              type="TabSalesInvoiceTopsalesPartnerByRevenue"
               :loading="loading"
               :result-set="resultSet"
             />
           </template>
         </query-builder>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-6">
         <query-builder
           :cubejs-api="cubejsApi"
-          :query="tabSalesInvoiceWeeklySales"
+          :query="TabSalesInvoiceRevenueByTerritory"
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              type="tabSalesInvoiceWeeklySales"
+              type="TabSalesInvoiceRevenueByTerritory"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -252,164 +209,99 @@
 <script>
 import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
-import Query from "./components/Query.js";
+import QUERY from "./components/Query.js";
 import Chart from "./components/Chart.vue";
+import { CUBE_JS_HOST, CUBE_JS_SECRET } from "../../../../../config.js";
 import Datepicker from "vuejs-datepicker";
-import Vue from "vue/dist/vue.js";
+
+const cubejsApi = cubejs(CUBE_JS_SECRET, {
+  apiUrl: CUBE_JS_HOST + "/cubejs-api/v1",
+});
 
 export default {
   name: "Home",
-  props: {
-    config: Object,
-  },
   components: {
-    Query,
+    QUERY,
     Chart,
     QueryBuilder,
     Datepicker,
   },
-  data() {
-    var startDate = new Date("2019-01-01");
-    var endDate = new Date("2020-12-31");
-    const cubejsApi = cubejs(this.config.CubeJsSecret, {
-      apiUrl: this.config.CubeJsHost + "/cubejs-api/v1",
-    });
-    let selectedDateRange = { value: 1, text: null };
-    const dataObj = {
-      cubejsApi,
-      dateRangevalue: [
-        { value: 2, text: "Today" },
-        { value: 3, text: "Yesterday" },
-        { value: 4, text: "This week" },
-        { value: 5, text: "This quarter" },
-        { value: 6, text: "This year" },
-        { value: 7, text: "Last 7 days" },
-        { value: 8, text: "Last 30 days" },
-        { value: 9, text: "Last week" },
-        { value: 10, text: "Last month" },
-        { value: 11, text: "Last quarter" },
-        { value: 12, text: "Last year" },
-      ],
-      TabSalesInvoiceItemUniqueItemCode:
-        Query.TabSalesInvoiceItemUniqueItemCode,
-      TabCustomerCount: Query.TabCustomerCount,
-      TabSalesAverageInvoiceAmount: Query.TabSalesAverageInvoiceAmount,
-      tabBinPieTerritoryQuery: Query.tabBinPieTerritoryQuery,
-      PieChartTerritory: Query.PieChartTerritory,
-      TabSalesInvoiceItemHorizontalBarChartByItemName:
-        Query.TabSalesInvoiceItemHorizontalBarChartByItemName,
-      tabBinPieQuery: Query.tabBinPieQuery,
-      TabCustomerBarChartByNewCustomer: Query.TabCustomerBarChartByNewCustomer,
-      TabSalesInvoiceBarChartBySalesPartner:
-        Query.TabSalesInvoiceBarChartBySalesPartner,
-      TabSalesInvoiceCustomerGroup: Query.TabSalesInvoiceCustomerGroup,
-      PieSalesInvoiceByStatus: Query.PieSalesInvoiceByStatus,
-      TabSalesInvoiceItemHorizontalBarChartByItemGroup:
-        Query.TabSalesInvoiceItemHorizontalBarChartByItemGroup,
-      TabPurchaseInvoiceHorizontalBarChartBySupplier:
-        Query.TabPurchaseInvoiceHorizontalBarChartBySupplier,
-      tabBinQuery: Query.tabBinQuery,
-      TabSalesInvoiceNetTotal: Query.TabSalesInvoiceNetTotal,
-      TabBinItemCodeWise: Query.TabBinItemCodeWise,
-      TabBinHandWareHouseWise: Query.TabBinHandWareHouseWise,
-      TabLeadByCityLocation: Query.TabLeadByCityLocation,
-    };
-    return { ...dataObj, startDate, endDate, selectedDateRange };
+  handleStartDate() {},
+  methods: {
+    dateRange: function () {
+      return {
+        startDate: this.startDate,
+        endDate: this.endDate,
+      };
+    },
   },
   watch: {
-    startDate () {
-      this.selectedDateRange = { value: 0, text: null };
+    startDate: function () {
+      console.log("change captured ......", this.startDate, this.endDate);
       this.dateRange();
     },
-    endDate () {
-      this.selectedDateRange = { value: 0, text: null };
+    endDate: function () {
+      console.log(
+        "change captured .end date.........",
+        this.startDate,
+        this.endDate
+      );
       this.dateRange();
-    },
-    methods: {
-      dateRange () {
-        return {
-          startDate: this.startDate,
-          endDate: this.endDate,
-        };
-      },
     },
   },
-  computed: {
-    tabSalesInvoiceRevnue() {
-      return Query.tabSalesInvoiceRevnue(
-        this.startDate,
-        this.endDate,
-        this.selectedDateRange.text
-      );
-    },
-
-    tabSalesInvoiceTopCustomerByRevenue() {
-      return Query.tabSalesInvoiceTopCustomerByRevenue(
-        this.startDate,
-        this.endDate,
-        this.selectedDateRange.text
-      );
-    },
-
-    tabSalesInvoiceTopCustomerGroupByRevenue() {
-      return Query.tabSalesInvoiceTopCustomerGroupByRevenue(
-        this.startDate,
-        this.endDate,
-        this.selectedDateRange.text
-      );
-    },
-
-    tabSalesInvoiceTopsalesPartnerByRevenue() {
-      return Query.tabSalesInvoiceTopsalesPartnerByRevenue(
-        this.startDate,
-        this.endDate,
-        this.selectedDateRange.text
-      );
-    },
-
-    tabSalesInvoiceRevenueByTerritory() {
-      return Query.tabSalesInvoiceRevenueByTerritory(
-        this.startDate,
-        this.endDate,
-        this.selectedDateRange.text
-
-      );
-    },
-
-    tabSalesInvoiceWeeklySales() {
-      return Query.tabSalesInvoiceWeeklySales(this.startDate, this.endDate,this.selectedDateRange.text);
-    },
-    tabItemProductCount() {
-      return Query.tabItemProductCount;
-    },
-
-    tabSalesInvoiceItemTrueQty() {
-      return Query.tabSalesInvoiceItemTrueQty;
-    },
-
-    tabSalesInvoiceTrueCount() {
-      return Query.tabSalesInvoiceTrueCount;
-    },
-
-    tabPaymentEntryWeeklyAverage() {
-      return Query.tabPaymentEntryWeeklyAverage;
-    },
-
-    tabPaymentEntryMonthlyAverage(){
-      return Query.tabPaymentEntryMonthlyAverage;
-    },
-
-    tabSalesInvoiceItemConversionRatio(){
-      return Query.tabSalesInvoiceItemConversionRatio;
-    },
-
-    tabPaymentEntryWeeklyRevnue(){
-      return Query.tabPaymentEntryWeeklyRevnue;
-    },
-
-    tabPaymentEntryMonthlyRevnue(){
-      return Query.tabPaymentEntryMonthlyRevnue;
-    }
+  data() {
+    var startDate = new Date(2016, 9, 16);
+    var endDate = new Date(2016, 9, 17);
+    let DateRange = "This Week";
+    const dataObj = {
+      cubejsApi,
+      TabSalesInvoiceItemUniqueItemCode:
+        QUERY.TabSalesInvoiceItemUniqueItemCode,
+      TabCustomerCount: QUERY.TabCustomerCount,
+      TabSalesAverageInvoiceAmount: QUERY.TabSalesAverageInvoiceAmount,
+      tabBinPieTerritoryQuery: QUERY.tabBinPieTerritoryQuery,
+      PieChartTerritory: QUERY.PieChartTerritory,
+      TabSalesInvoiceItemHorizontalBarChartByItemName:
+        QUERY.TabSalesInvoiceItemHorizontalBarChartByItemName,
+      tabBinPieQuery: QUERY.tabBinPieQuery,
+      TabCustomerBarChartByNewCustomer: QUERY.TabCustomerBarChartByNewCustomer,
+      TabSalesInvoiceBarChartBySalesPartner:
+        QUERY.TabSalesInvoiceBarChartBySalesPartner,
+      TabSalesInvoiceCustomerGroup: QUERY.TabSalesInvoiceCustomerGroup,
+      PieSalesInvoiceByStatus: QUERY.PieSalesInvoiceByStatus,
+      TabSalesInvoiceItemHorizontalBarChartByItemGroup:
+        QUERY.TabSalesInvoiceItemHorizontalBarChartByItemGroup,
+      TabPurchaseInvoiceHorizontalBarChartBySupplier:
+        QUERY.TabPurchaseInvoiceHorizontalBarChartBySupplier,
+      tabBinQuery: QUERY.tabBinQuery,
+      TabSalesInvoiceNetTotal: QUERY.TabSalesInvoiceNetTotal,
+      TabBinItemCodeWise: QUERY.TabBinItemCodeWise,
+      TabBinHandWareHouseWise: QUERY.TabBinHandWareHouseWise,
+      TabLeadByCityLocation: QUERY.TabLeadByCityLocation,
+      //Insight Engine Query
+      TabPaymentEntryMonthlyRevnue: QUERY.TabPaymentEntryMonthlyRevnue(
+        DateRange,
+        startDate
+      ),
+      TabPaymentEntryWeeklyRevnue: QUERY.TabPaymentEntryWeeklyRevnue,
+      TabSalesInvoiceItemConversionRatio:
+        QUERY.TabSalesInvoiceItemConversionRatio,
+      TabPaymentEntryMonthlyAverage: QUERY.TabPaymentEntryMonthlyAverage,
+      TabPaymentEntryWeeklyAverage: QUERY.TabPaymentEntryWeeklyAverage,
+      TabSalesInvoiceTrueCount: QUERY.TabSalesInvoiceTrueCount,
+      TabSalesInvoiceItemTrueQty: QUERY.TabSalesInvoiceItemTrueQty,
+      TabItemProductCount: QUERY.TabItemProductCount,
+      TabSalesInvoiceRevnue: QUERY.TabSalesInvoiceRevnue,
+      TabSalesInvoiceTopCustomerByRevenue:
+        QUERY.TabSalesInvoiceTopCustomerByRevenue,
+      TabSalesInvoiceTopCustomerGroupByRevenue:
+        QUERY.TabSalesInvoiceTopCustomerGroupByRevenue,
+      TabSalesInvoiceTopsalesPartnerByRevenue:
+        QUERY.TabSalesInvoiceTopsalesPartnerByRevenue,
+      TabSalesInvoiceRevenueByTerritory:
+        QUERY.TabSalesInvoiceRevenueByTerritory,
+    };
+    return { ...dataObj, startDate, endDate };
   },
 };
 </script>
