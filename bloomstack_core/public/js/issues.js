@@ -4,6 +4,11 @@ frappe.ready(function () {
 		if (!frappe.web_form.is_new) {
 			frappe.web_form.set_df_property('subject', 'read_only', 1);
 			frappe.web_form.set_df_property('description', 'read_only', 1);
+			frappe.web_form.set_df_property('attachment', 'read_only', 1);
+			if (!frappe.web_form.doc.attachment) {
+				frappe.web_form.set_df_property('attachment', 'hidden', 1);
+			}
+
 			$('.web-form-actions .btn-primary, .web-form-footer .btn-primary').hide();
 		}
 
