@@ -12,3 +12,4 @@ bloomstack_core.patches.v0_0_1.set_item_group_in_batch
 bloomstack_core.patches.v0_0_1.set_task_name_in_timesheet
 bloomstack_core.patches.v0_0_1.move_compliance_item_to_item
 bloomstack_core.patches.v0_0_1.remove_bloomstack_user_integration
+bloomstack_core.patches.v0_0_1.delete_bom_from_property_setter
