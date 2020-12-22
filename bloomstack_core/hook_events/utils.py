@@ -88,8 +88,8 @@ def validate_delivery_window(doc, method):
 
 
 def create_integration_request(doc, method):
-	if method == "validate":
-		if not doc.is_new():
-			make_integration_request(doc.doctype, doc.name)
-	elif method == "after_insert":
-		make_integration_request(doc.doctype, doc.name)
+	companies = frappe.cache().hget("compliance", "companies") or []
+	if not doc.company in companies:
+		return
+
+	make_integration_request(doc.doctype, doc.name)
