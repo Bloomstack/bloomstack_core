@@ -3,6 +3,9 @@ from frappe.modules.utils import sync_customizations
 
 
 def execute():
+	if not frappe.db.exists("DocType", "Compliance Item"):
+		return
+
 	compliance_items = frappe.get_all("Compliance Item", fields=["*"])
 
 	frappe.reload_doc("stock", "doctype", "item")

@@ -8,18 +8,6 @@ from frappe.utils import cstr, get_url
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 
 
-def create_integration_request(doc, method):
-	integration_request = frappe.new_doc("Integration Request")
-	integration_request.update({
-		"integration_type": "Remote",
-		"integration_request_service": "BloomTrace",
-		"method": "POST",
-		"status": "Queued",
-		"reference_doctype": doc.doctype,
-		"reference_docname": doc.name
-	})
-	integration_request.save(ignore_permissions=True)
-
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
@@ -59,10 +47,9 @@ def update_strain(strain, frappe_client):
 	frappe_client.update(bloomtrace_strain)
 
 def make_strain(strain):
-	site_url = frappe.utils.get_host_name()
 	bloomtrace_strain_dict = {
 		"doctype": "Strain",
-		"bloomstack_site": site_url,
+		"bloomstack_company": strain.company,
 		"strain": strain.strain_name,
 		"indica_percentage": strain.indica_percentage,
 		"sativa_percentage": strain.sativa_percentage
