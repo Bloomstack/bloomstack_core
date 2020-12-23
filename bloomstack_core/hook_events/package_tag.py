@@ -6,7 +6,6 @@ import frappe
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 from frappe.utils import cstr, get_host_name
 
-
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
@@ -57,6 +56,7 @@ def make_package_tag(package_tag):
 	bloomtrace_package_tag = {
 		"doctype": "Package Tag",
 		"bloomstack_site": site_url,
+		"bloomstack_company": package_tag.bloomstack_company,
 		"item": item,
 		"uid_number": package_tag.name,
 		"batch_number": package_tag.batch_no,

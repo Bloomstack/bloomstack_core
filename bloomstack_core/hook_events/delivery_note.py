@@ -67,7 +67,7 @@ def insert_transfer_template(delivery_note, frappe_client):
 	site_url = get_host_name()
 	transfer_template = {
 		"doctype": "Transfer Template",
-		"bloomstack_site": site_url,
+		"bloomstack_company": delivery_note.company,
 		"delivery_note": delivery_note.name,
 		"transporter_facility_license": frappe.db.get_value("Company", delivery_note.company, "license"),
 		"transporter_phone": frappe.db.get_value("Company", delivery_note.company, "phone_no"),
