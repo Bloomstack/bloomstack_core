@@ -1,5 +1,21 @@
 <template>
-  <div class="container-fluid">
+  <div class="average-cards">
+    <div v-for="card in cardRenderer" :key="card.id">
+      <div class="col-sm-4">
+        <query-builder
+          :cubejs-api="cubejsApi"
+          :query=card.query>
+          <template v-slot="{ loading, resultSet}">
+            <Chart
+              title="test data change"
+              :type=card.type
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
+      </div>
+    </div>
     <div class="average-cards">
       <div class="row"><div class="sub-title-text">Average Cards</div></div>
       <div class="col-sm-4">
@@ -9,7 +25,7 @@
         >
           <template v-slot="{ loading, resultSet }">
             <Chart
-              title
+              title="test data"
               type="TabPaymentEntryMonthlyRevnue"
               :loading="loading"
               :result-set="resultSet"
@@ -213,6 +229,7 @@ import QUERY from "./components/Query.js";
 import Chart from "./components/Chart.vue";
 import { CUBE_JS_HOST, CUBE_JS_SECRET } from "../../../../../config.js";
 import Datepicker from "vuejs-datepicker";
+import cardGraphData from "./data.json";
 
 const cubejsApi = cubejs(CUBE_JS_SECRET, {
   apiUrl: CUBE_JS_HOST + "/cubejs-api/v1",
@@ -247,6 +264,14 @@ export default {
         this.endDate
       );
       this.dateRange();
+    },
+  },
+  computed: {
+    cardRenderer() {
+      return cardGraphData.cards.map((item) => {
+        console.log("xxxxxxxxxxxxxxx",item);
+        return item;
+      });
     },
   },
   data() {

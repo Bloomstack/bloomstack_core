@@ -1,0 +1,47 @@
+{
+  "cards": [
+    {
+      "query": {
+        "measures": ["TabPaymentEntry.truePaidAmount"],
+        "timeDimensions": [
+          {
+            "dimension": "TabPaymentEntry.postingDate",
+            "dateRange": "Last month"
+          }
+        ],
+        "order": {},
+        "filters": []
+      },
+      "type": "TabPaymentEntryMonthlyRevnue"
+    },
+    {
+      "query": {
+        "measures": ["TabPaymentEntry.truePaidAmount"],
+        "timeDimensions": [
+          {
+            "dimension": "TabPaymentEntry.postingDate",
+            "dateRange": "Last month"
+          }
+        ],
+        "order": {},
+        "filters": []
+      },
+      "type": "TabPaymentEntryMonthlyRevnue"
+    },
+    {
+      "query": {
+        "measures": ["TabPaymentEntry.truePaidAmount"],
+        "timeDimensions": [
+          {
+            "dimension": "TabPaymentEntry.postingDate",
+            "dateRange": "Last month"
+          }
+        ],
+        "order": {},
+        "filters": []
+      },
+      "type": "TabPaymentEntryMonthlyRevnue"
+    }
+  ],
+  "graphs":[]
+}
