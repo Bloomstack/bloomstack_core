@@ -8,18 +8,6 @@ from frappe.utils import cstr, get_url
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 
 
-def create_integration_request(doc, method):
-	integration_request = frappe.new_doc("Integration Request")
-	integration_request.update({
-		"integration_type": "Remote",
-		"integration_request_service": "BloomTrace",
-		"method": "POST",
-		"status": "Queued",
-		"reference_doctype": doc.doctype,
-		"reference_docname": doc.name
-	})
-	integration_request.save(ignore_permissions=True)
-
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
@@ -59,10 +47,9 @@ def update_plant_batch(plant_batch, frappe_client):
 	frappe_client.update(bloomtrace_plant_batch)
 
 def make_plant_batch(plant_batch):
-	site_url = frappe.utils.get_host_name()
 	bloomtrace_plant_batch_dict = {
 		"doctype": "Plant Batch",
-		"bloomstack_site": site_url,
+		"bloomstack_company": plant_batch.company,
 		"plant_batch":plant_batch.title,
 		"type": plant_batch.cycle_type,
 		"strain_name": plant_batch.strain,

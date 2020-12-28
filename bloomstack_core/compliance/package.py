@@ -60,6 +60,7 @@ def build_stock_payload(stock_entry):
 
 	payload["doctype"] = "Package"
 	payload["ingredients"] = package_ingredients
+	payload["company"] = stock_entry.company
 
 	return [payload]
 
@@ -137,6 +138,7 @@ def build_delivery_payload(delivery_note, item):
 
 	payload["doctype"] = "Package"
 	payload["Ingredients"] = package_ingredients
+	payload["company"] = delivery_note.company
 
 	return [payload]
 
