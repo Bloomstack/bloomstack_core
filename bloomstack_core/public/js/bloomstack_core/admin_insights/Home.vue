@@ -1,14 +1,16 @@
 <template>
   <div class="average-cards">
+    <div class="row">
+      <div class="col-sm-4">Start Date:<datepicker v-model="startDate"></datepicker></div>
+      <div class="col-sm-4">End Date:<datepicker v-model="endDate"></datepicker></div>
+    </div>
     <div v-for="card in cardRenderer" :key="card.id">
       <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query=card.query>
-          <template v-slot="{ loading, resultSet}">
+        <query-builder :cubejs-api="cubejsApi" :query="card">
+          <template v-slot="{ loading, resultSet }">
             <Chart
               title="test data change"
-              :type=card.type
+              :type="card.type"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -17,206 +19,15 @@
       </div>
     </div>
     <div class="average-cards">
-      <div class="row"><div class="sub-title-text">Average Cards</div></div>
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabPaymentEntryMonthlyRevnue"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title="test data"
-              type="TabPaymentEntryMonthlyRevnue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabPaymentEntryWeeklyRevnue"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabPaymentEntryWeeklyRevnue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceItemConversionRatio"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceItemConversionRatio"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabPaymentEntryMonthlyAverage"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabPaymentEntryMonthlyAverage"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabPaymentEntryWeeklyAverage"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabPaymentEntryWeeklyAverage"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceTrueCount"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceTrueCount"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceItemTrueQty"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceItemTrueQty"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-4">
-        <query-builder :cubejs-api="cubejsApi" :query="TabItemProductCount">
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabItemProductCount"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-    </div>
-    <div class="graphs">
       <div class="sub-title-text">Graphs</div>
-      <div class="row">
-        <div class="col-sm-4">
-          Start Date:<datepicker v-model="startDate"></datepicker>
+      <div v-for="graph in graphRenderer" :key="graph.id">
+        <div class="col-sm-6">
+          <query-builder :cubejs-api="cubejsApi" :query="graph">
+            <template v-slot="{ loading, resultSet }">
+              <Chart :type="graph.type" :loading="loading" :result-set="resultSet" />
+            </template>
+          </query-builder>
         </div>
-        <div class="col-sm-4">
-          End Date:<datepicker v-model="endDate"></datepicker>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <query-builder :cubejs-api="cubejsApi" :query="TabSalesInvoiceRevnue">
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceCummulativeRevnue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-6">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceTopCustomerByRevenue"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceTopCustomerByRevenue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-6">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceTopCustomerGroupByRevenue"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceTopCustomerGroupByRevenue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-6">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceTopsalesPartnerByRevenue"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceTopsalesPartnerByRevenue"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
-      </div>
-      <div class="col-sm-6">
-        <query-builder
-          :cubejs-api="cubejsApi"
-          :query="TabSalesInvoiceRevenueByTerritory"
-        >
-          <template v-slot="{ loading, resultSet }">
-            <Chart
-              title
-              type="TabSalesInvoiceRevenueByTerritory"
-              :loading="loading"
-              :result-set="resultSet"
-            />
-          </template>
-        </query-builder>
       </div>
     </div>
   </div>
@@ -258,18 +69,18 @@ export default {
       this.dateRange();
     },
     endDate: function () {
-      console.log(
-        "change captured .end date.........",
-        this.startDate,
-        this.endDate
-      );
+      console.log("change captured .end date.........", this.startDate, this.endDate);
       this.dateRange();
     },
   },
   computed: {
     cardRenderer() {
       return cardGraphData.cards.map((item) => {
-        console.log("xxxxxxxxxxxxxxx",item);
+        return item;
+      });
+    },
+    graphRenderer() {
+      return cardGraphData.graphs.map((item) => {
         return item;
       });
     },

@@ -1,7 +1,6 @@
 {
   "cards": [
     {
-      "query": {
         "measures": ["TabPaymentEntry.truePaidAmount"],
         "timeDimensions": [
           {
@@ -10,12 +9,10 @@
           }
         ],
         "order": {},
-        "filters": []
-      },
+        "filters": [],
       "type": "TabPaymentEntryMonthlyRevnue"
     },
     {
-      "query": {
         "measures": ["TabPaymentEntry.truePaidAmount"],
         "timeDimensions": [
           {
@@ -24,12 +21,10 @@
           }
         ],
         "order": {},
-        "filters": []
-      },
+        "filters": [],
       "type": "TabPaymentEntryMonthlyRevnue"
     },
     {
-      "query": {
         "measures": ["TabPaymentEntry.truePaidAmount"],
         "timeDimensions": [
           {
@@ -38,10 +33,121 @@
           }
         ],
         "order": {},
-        "filters": []
-      },
+        "filters": [],
       "type": "TabPaymentEntryMonthlyRevnue"
     }
   ],
-  "graphs":[]
+  "graphs":[
+    {
+      "measures": [
+          "TabSalesInvoice.trueGrandTotal"
+      ],
+      "timeDimensions": [
+          {
+              "dimension": "TabSalesInvoice.postingDate",
+              "granularity": "month",
+              "dateRange": "This year"
+          }
+      ],
+      "order": {},
+      "filters": [],
+      "type":"TabSalesInvoiceCummulativeRevnue"
+
+  },
+  {
+    "measures": [
+        "TabSalesInvoice.trueGrandTotal"
+    ],
+    "timeDimensions": [
+        {
+            "dimension": "TabSalesInvoice.postingDate",
+            "dateRange": "This year"
+        }
+    ],
+    "order": {
+        "TabSalesInvoice.trueGrandTotal": "desc"
+    },
+    "filters": [],
+    "dimensions": [
+        "TabSalesInvoice.customerName"
+    ],
+    "limit": 10,
+    "type":"TabSalesInvoiceTopCustomerByRevenue"
+
+},
+{
+  "measures": [
+      "TabSalesInvoice.trueGrandTotal"
+  ],
+  "timeDimensions": [
+      {
+          "dimension": "TabSalesInvoice.postingDate",
+          "dateRange": "This year"
+      }
+  ],
+  "order": {
+      "TabSalesInvoice.trueGrandTotal": "desc"
+  },
+  "filters": [],
+  "dimensions": [
+      "TabSalesInvoice.customerGroup"
+  ],
+  "limit": 10,
+  "type": "TabSalesInvoiceTopCustomerGroupByRevenue"
+},
+{
+  "measures": [
+      "TabSalesInvoice.trueGrandTotal"
+  ],
+  "timeDimensions": [
+      {
+          "dimension": "TabSalesInvoice.postingDate",
+          "dateRange": "This year"
+      }
+  ],
+  "order": {
+      "TabSalesInvoice.trueGrandTotal": "desc"
+  },
+  "filters": [],
+  "dimensions": [
+      "TabSalesInvoice.salesPartner"
+  ],
+  "limit": 5,
+  "type":"TabSalesInvoiceTopsalesPartnerByRevenue"
+},
+{
+  "measures": [
+      "TabSalesInvoice.trueGrandTotal"
+  ],
+  "timeDimensions": [
+      {
+          "dimension": "TabSalesInvoice.postingDate",
+          "dateRange": "This year"
+      }
+  ],
+  "order": {
+      "TabSalesInvoice.trueGrandTotal": "desc"
+  },
+  "dimensions": [
+      "TabSalesInvoice.territory"
+  ],
+  "filters": [
+      {
+          "dimension": "TabSalesInvoice.territory",
+          "operator": "notEquals",
+          "values": [
+              "All Territories"
+          ]
+      },
+      {
+          "dimension": "TabTerritory.is_group",
+          "operator": "equals",
+          "values": [
+              "1"
+          ]
+      }
+  ],
+  "type":"TabSalesInvoiceRevenueByTerritory"
+}
+  ]
 }
