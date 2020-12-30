@@ -1,15 +1,12 @@
 <template>
-  <div class="average-cards">
-    <div class="row">
-      <div class="col-sm-4">Start Date:<datepicker v-model="startDate"></datepicker></div>
-      <div class="col-sm-4">End Date:<datepicker v-model="endDate"></datepicker></div>
-    </div>
-    <div v-for="card in cardRenderer" :key="card.id">
-      <div class="col-sm-4">
+  <div>
+    <div class="average-cards">
+      <div class="row"><div class="sub-title-text">Average Cards</div></div>
+      <div class="col-sm-4" v-for="card in cardRenderer" :key="card.id">
         <query-builder :cubejs-api="cubejsApi" :query="card">
           <template v-slot="{ loading, resultSet }">
             <Chart
-              title="test data change"
+              title
               :type="card.type"
               :loading="loading"
               :result-set="resultSet"
@@ -18,10 +15,18 @@
         </query-builder>
       </div>
     </div>
-    <div class="average-cards">
+    <div class="graphs">
       <div class="sub-title-text">Graphs</div>
+      <div class="row">
+        <div class="col-sm-4">
+          Start Date:<datepicker v-model="startDate"></datepicker>
+          </div>
+        <div class="col-sm-4">
+          End Date:<datepicker v-model="endDate"></datepicker>
+        </div>
+      </div>
       <div v-for="graph in graphRenderer" :key="graph.id">
-        <div class="col-sm-6">
+        <div class="col-sm-6" v-for="graph in graphRenderer" :key="graph.id">
           <query-builder :cubejs-api="cubejsApi" :query="graph">
             <template v-slot="{ loading, resultSet }">
               <Chart :type="graph.type" :loading="loading" :result-set="resultSet" />
