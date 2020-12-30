@@ -2,7 +2,7 @@
   <div class="col-md-4 col-xs-12 total-weekly-revenue row">
     <div class="container">
       <span class="amount" v-if="this.values[0][this.metrics[0]] === null"
-        >0</span
+        >$ 0.00</span
       >
       <span class="amount" v-else>$ {{ this.values[0][this.metrics[0]] }}</span>
       <span class="name">{{ title }}</span>
@@ -12,7 +12,7 @@
 </template>
 <script>
 export default {
-  name: "Kpi",
+  name: "TabPaymentEntryRevnue",
   props: {
     values: Array,
     metrics: Array,
@@ -20,8 +20,11 @@ export default {
     description: String,
   },
   mounted() {
-    // console.log("TabPaymentEntryMonthlyRevnue values............",this.values);
-    // console.log("TabPaymentEntryMonthlyRevnue metrics............",this.metrics[0]);
+    console.log("TabPaymentEntryMonthlyRevnue values............", this.values);
+    console.log(
+      "TabPaymentEntryMonthlyRevnue metrics............",
+      this.metrics[0]
+    );
   },
 };
 </script>

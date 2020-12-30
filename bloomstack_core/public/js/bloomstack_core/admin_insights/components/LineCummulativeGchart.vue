@@ -1,13 +1,15 @@
 <template>
-  <div>
-    <div class="section-heading">
-      <p class="heading">
-        {{ this.title }}
-        <span> by cummulative </span>
-      </p>
-      <p class="period"></p>
+  <div class="row">
+    <div class="col-md-6 col-xs-12 right-chart">
+      <div class="section-heading">
+        <p class="heading">
+          {{ this.title }}
+          <span> by cummulative </span>
+        </p>
+        <p class="period">Year-to-Date</p>
+      </div>
+      <GChart type="LineChart" :data="chartData" :options="chartOptions" />
     </div>
-    <GChart type="LineChart" :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
@@ -36,7 +38,9 @@ export default {
         ...this.values.map(
           (value, i, arr) => [
             moment(value.category).format("MMM YYYY"),
-            (arr[parseInt(i)][this.metrics[0]] += arr[parseInt(i) - 1]? arr[parseInt(i) - 1][this.metrics[0]]: 0),
+            (arr[parseInt(i)][this.metrics[0]] += arr[parseInt(i) - 1]
+              ? arr[parseInt(i) - 1][this.metrics[0]]
+              : 0),
           ]
           // if(i>0){
           // return [moment(value.category).format("MMM YYYY"),arr[i][this.metrics[0]]+arr[i-1][this.metrics[0]]]
@@ -54,8 +58,6 @@ export default {
       },
     };
   },
-  mounted() {
-    
-  },
+  mounted() {},
 };
 </script>
