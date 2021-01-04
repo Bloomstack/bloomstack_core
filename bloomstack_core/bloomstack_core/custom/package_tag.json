@@ -419,7 +419,7 @@
    "parenttype": null,
    "property": "search_fields",
    "property_type": "Data",
-   "value": "item_code,item_name,package_tag,item_group"
+   "value": "item_code,item_name,item_group"
   }
  ],
  "sync_on_migrate": 1
