@@ -1,0 +1,17 @@
+.wrapper form {
+	width: 80%;
+	margin: auto;
+	padding: 2rem;
+}
+
+textarea.form-control {
+	height: auto;
+}
+
+.btn-block {
+	float: right;
+}
+
+.wrapper .nav-tabs > li > a {
+	margin-right: 0px;
+}

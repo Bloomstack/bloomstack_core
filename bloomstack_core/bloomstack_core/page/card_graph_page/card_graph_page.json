@@ -1,0 +1,23 @@
+{
+ "content": null,
+ "creation": "2020-12-31 01:08:07.507812",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2021-01-03 07:18:42.906390",
+ "modified_by": "Administrator",
+ "module": "Bloomstack Core",
+ "name": "card-graph-page",
+ "owner": "Administrator",
+ "page_name": "Card-Graph Page",
+ "roles": [
+  {
+   "role": "All"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Card-Graph Page"
+}
