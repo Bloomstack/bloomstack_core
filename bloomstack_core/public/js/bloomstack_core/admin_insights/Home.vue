@@ -2,12 +2,12 @@
   <div>
     <div class="average-cards">
       <div class="row"><div class="sub-title-text">Average Cards</div></div>
-      <div class="col-sm-4" v-for="card in cardRenderer" :key="card.id">
-        <query-builder :cubejs-api="cubejsApi" :query="card">
+      <div class="col-sm-4" v-for="card in cardRenderer" :key="card.data.type">
+        <query-builder :cubejs-api="cubejsApi" :query="card.data">
           <template v-slot="{ loading, resultSet }">
             <Chart
               title
-              :type="card.type"
+              :type="card.data.type"
               :loading="loading"
               :result-set="resultSet"
             />
@@ -20,19 +20,25 @@
       <div class="row">
         <div class="col-sm-4">
           Start Date:<datepicker v-model="startDate"></datepicker>
-          </div>
+        </div>
         <div class="col-sm-4">
           End Date:<datepicker v-model="endDate"></datepicker>
         </div>
       </div>
-      <div v-for="graph in graphRenderer" :key="graph.id">
-        <div class="col-sm-6" v-for="graph in graphRenderer" :key="graph.id">
-          <query-builder :cubejs-api="cubejsApi" :query="graph">
-            <template v-slot="{ loading, resultSet }">
-              <Chart :type="graph.type" :loading="loading" :result-set="resultSet" />
-            </template>
-          </query-builder>
-        </div>
+      <div
+        class="col-sm-6"
+        v-for="graph in graphRenderer"
+        :key="graph.data.type"
+      >
+        <query-builder :cubejs-api="cubejsApi" :query="graph.data">
+          <template v-slot="{ loading, resultSet }">
+            <Chart
+              :type="graph.type"
+              :loading="loading"
+              :result-set="resultSet"
+            />
+          </template>
+        </query-builder>
       </div>
     </div>
   </div>
@@ -43,13 +49,25 @@ import cubejs from "@cubejs-client/core/dist/cubejs-client-core.esm";
 import { QueryBuilder } from "@cubejs-client/vue";
 import QUERY from "./components/Query.js";
 import Chart from "./components/Chart.vue";
-import { CUBE_JS_HOST, CUBE_JS_SECRET } from "../../../../../config.js";
 import Datepicker from "vuejs-datepicker";
-import cardGraphData from "./data.json";
 
-const cubejsApi = cubejs(CUBE_JS_SECRET, {
-  apiUrl: CUBE_JS_HOST + "/cubejs-api/v1",
-});
+const cubejsApiFn = (host, secret) =>
+  cubejs(secret, {
+    apiUrl: host + "/cubejs-api/v1",
+  });
+
+function transformData(cards, type) {
+  cards = cards.filter((el) => el.type === type);
+  let newCards = [];
+  cards.map((el) => {
+    let data = JSON.parse(el.data);
+    let type = el.type;
+    newCards.push({ data, type });
+  });
+  return newCards.map((item) => {
+    return item;
+  });
+}
 
 export default {
   name: "Home",
@@ -58,6 +76,15 @@ export default {
     Chart,
     QueryBuilder,
     Datepicker,
+  },
+  props: {
+    cardsData: {
+      type: Array,
+    },
+    config: {
+      CubeJsHost: String,
+      CubeJsSecret: String,
+    },
   },
   handleStartDate() {},
   methods: {
@@ -74,20 +101,25 @@ export default {
       this.dateRange();
     },
     endDate: function () {
-      console.log("change captured .end date.........", this.startDate, this.endDate);
+      console.log(
+        "change captured .end date.........",
+        this.startDate,
+        this.endDate
+      );
       this.dateRange();
     },
   },
   computed: {
+    cubejsApi() {
+      let config = this.config;
+      console.log("this is..config....", config);
+      return cubejsApiFn(config.CubeJsHost, config.CubeJsSecret);
+    },
     cardRenderer() {
-      return cardGraphData.cards.map((item) => {
-        return item;
-      });
+      return transformData(this.cardsData, "Cards");
     },
     graphRenderer() {
-      return cardGraphData.graphs.map((item) => {
-        return item;
-      });
+      return transformData(this.cardsData, "Graphs");
     },
   },
   data() {
@@ -95,7 +127,6 @@ export default {
     var endDate = new Date(2016, 9, 17);
     let DateRange = "This Week";
     const dataObj = {
-      cubejsApi,
       TabSalesInvoiceItemUniqueItemCode:
         QUERY.TabSalesInvoiceItemUniqueItemCode,
       TabCustomerCount: QUERY.TabCustomerCount,

@@ -6,7 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "type",
-  "data_object",
+  "data",
   "amended_from"
  ],
  "fields": [
@@ -19,12 +19,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "data_object",
-   "fieldtype": "Long Text",
-   "label": "Data Object",
-   "reqd": 1
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -32,10 +26,16 @@
    "options": "Admin Insights",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "data",
+   "fieldtype": "Long Text",
+   "label": "Data",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-01-05 22:11:27.309095",
+ "modified": "2021-01-08 00:22:05.799857",
  "modified_by": "Administrator",
  "module": "Bloomstack Core",
  "name": "Admin Insights",

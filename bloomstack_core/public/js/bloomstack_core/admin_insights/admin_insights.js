@@ -12,10 +12,11 @@ Vue.config.errorHandler = function (err) {
 
 frappe.provide("bloomstack_core.admin_insights");
 bloomstack_core.admin_insights = class AdminInsights {
-  constructor({ parent, CubeJsHost, CubeJsSecret }) {
+  constructor({ parent, CubeJsHost, CubeJsSecret, cardsData }) {
     this.$parent = $(parent);
     this.page = parent.page;
     this.config = { CubeJsHost, CubeJsSecret };
+    this.cardsData = cardsData;
     this.setUpHeader();
     this.makeBody();
   }
@@ -23,7 +24,8 @@ bloomstack_core.admin_insights = class AdminInsights {
     new Vue({
       render: (h) => h(Home, {
         props: {
-          config: this.config
+          config: this.config,
+          cardsData: this.cardsData
         }
       }),
       data: {
