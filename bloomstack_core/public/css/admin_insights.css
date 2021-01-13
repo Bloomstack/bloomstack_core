@@ -27,18 +27,18 @@
 }
 
 .sub-title-text {
-    margin-right: 7px;
-    max-width: 75%;
-    display: inline-block;
-    vertical-align: middle;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 20px;
-    font-family: inherit;
-    font-weight: 500;
-    line-height: 1.3em;
-    color: inherit;
+  margin-right: 7px;
+  max-width: 75%;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.3em;
+  color: inherit;
 }
 
 .revenue-section .container {

@@ -1,5 +1,4 @@
 const tabsalesQuery = (selected) => {
-    console.log("selected is,......", selected.text);
     return ({
         order: {},
         measures: [
@@ -277,7 +276,6 @@ const TabLeadByCityLocation = {
 //insight engine Query
 
 const TabPaymentEntryMonthlyRevnue = (DateRange,startDate) => {
-    console.log(DateRange,startDate);
     return ({
         "measures": [
             "TabPaymentEntry.truePaidAmount"
@@ -290,7 +288,7 @@ const TabPaymentEntryMonthlyRevnue = (DateRange,startDate) => {
         ],
         "order": {},
         "filters": []
-    })
+    });
 }
 
 const TabPaymentEntryWeeklyRevnue = {

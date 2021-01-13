@@ -1,5 +1,6 @@
 import frappe
 import json
+import ast
 
 @frappe.whitelist(allow_guest=True)
 def get_cubejs_host(cube_js_name="cubejs"):
@@ -25,7 +26,7 @@ def get_all_insights_data(types=None):
 @frappe.whitelist()
 def create_admin_insights(types, data_object):
 	if(data_object[0]=='['):
-		data_object=eval(data_object)
+		data_object =  ast.literal_eval(data_object)
 		for data in data_object:
 			doc = frappe.new_doc("Admin Insights")
 			doc.type = types

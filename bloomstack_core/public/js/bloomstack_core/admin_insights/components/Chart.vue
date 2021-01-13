@@ -296,20 +296,17 @@ export default {
     dateRange: Object,
   },
   methods: {
-    dateFormatter: function (value) {
+    dateFormatter(value) {
       return moment(value).format("MMM YY");
     },
   },
   computed: {
-    values: function () {
-      console.log("date range is...xxxx chart", this.dateRange);
+    values() {
       if (this.loading) return [];
-      // console.log("qqqqq77777q....", this.loading, this.title, this.resultSet);
       return this.resultSet ? this.resultSet.chartPivot() : [];
     },
-    metrics: function () {
+    metrics() {
       if (this.loading) return [""];
-      // console.log("asaasss....", this.loading, this.title, this.type);
       return this.resultSet
         ? this.resultSet.seriesNames().map((x) => x.key)
         : [];
