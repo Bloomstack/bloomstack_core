@@ -88,7 +88,7 @@ export default {
   },
   handleStartDate() {},
   methods: {
-    dateRange: function () {
+    dateRange() {
       return {
         startDate: this.startDate,
         endDate: this.endDate,
@@ -96,23 +96,12 @@ export default {
     },
   },
   watch: {
-    startDate: function () {
-      console.log("change captured ......", this.startDate, this.endDate);
-      this.dateRange();
-    },
-    endDate: function () {
-      console.log(
-        "change captured .end date.........",
-        this.startDate,
-        this.endDate
-      );
-      this.dateRange();
-    },
+    startDate() { this.dateRange() },
+    endDate() { this.dateRange() }
   },
   computed: {
     cubejsApi() {
       let config = this.config;
-      console.log("this is..config....", config);
       return cubejsApiFn(config.CubeJsHost, config.CubeJsSecret);
     },
     cardRenderer() {

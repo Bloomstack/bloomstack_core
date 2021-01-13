@@ -10,7 +10,7 @@ CardGraphPage = Class.extend({
 			single_column: true,
 		});
 		const assets = [
-			'assets/bloomstack_core/css/card_graph_page.css'
+			"assets/bloomstack_core/css/card_graph_page.css"
 		];
 		frappe.require(assets, () => {
 			this.make();
@@ -23,7 +23,7 @@ CardGraphPage = Class.extend({
 
 function createQuery() {
 	let types = $("#selectOption").find(":selected")[0].text;
-	let data_object = $('textarea#cubeJsQuery').val();
+	let data_object = $("textarea#cubeJsQuery").val();
 	console.log(types, data_object);
 	frappe.call({
 		method: "bloomstack_core.bloomstack_core.page.admin_insights.admin_insights.create_admin_insights",
