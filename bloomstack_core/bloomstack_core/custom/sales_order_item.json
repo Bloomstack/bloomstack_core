@@ -1,8 +1,0 @@
-{
- "custom_fields": [
-  ],
- "custom_perms": [],
- "doctype": "Sales Order Item",
- "property_setters": [],
- "sync_on_migrate": 1
-}
