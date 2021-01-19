@@ -109,30 +109,6 @@
  ],
  "custom_perms": [],
  "doctype": "Plant",
- "property_setters": [
-  {
-   "_assign": null,
-   "_comments": null,
-   "_liked_by": null,
-   "_user_tags": null,
-   "creation": "2020-10-22 04:05:59.058403",
-   "default_value": null,
-   "doc_type": "Plant",
-   "docstatus": 0,
-   "doctype_or_field": "DocType",
-   "field_name": null,
-   "idx": 0,
-   "modified": "2020-10-22 04:05:59.058403",
-   "modified_by": "testuser@bloomstack.com",
-   "name": "Plant-title_field",
-   "owner": "testuser@bloomstack.com",
-   "parent": null,
-   "parentfield": null,
-   "parenttype": null,
-   "property": "title_field",
-   "property_type": "Data",
-   "value": ""
-  }
- ],
+ "property_setters": [],
  "sync_on_migrate": 1
 }
