@@ -1,60 +1,91 @@
 import frappe
+from frappe import _
 from bloomstack_core.bloomtrace import get_bloomtrace_client
 import json
 
 @frappe.whitelist()
-def get_all_licenses(page_number, per_page, filters):
+def get_all_licenses(filters, limit_start=0, limit_page_length=21):
 	frappe_client = get_bloomtrace_client()
 	if not frappe_client:
-			return
+		frappe.throw(_("Bloomtrace Integration is disabled."))
 
-	key_map = {
-		"zip": {"key": "zip_code", "operator": "=", "pattern": "{}"},
-		"licenseType": {"key": "license_type", "operator": "=", "pattern": "{}"},
-		"search": {"key": "legal_name", "operator": "like", "pattern": "%{}%"}
+	condition_map = {
+		"zip_code": {
+			"condition": "=",
+			"pattern": "{}"
+		},
+		"license_type": {
+			"condition": "=",
+			"pattern": "{}"
+		},
+		"legal_name": {
+			"condition": "like",
+			"pattern": "%{}%"
+		}
 	}
 
-	and_filters = {}
+	license_filters = {}
 	filters = json.loads(filters)
-	for f in filters:
-		if filters[f] == "":
-			continue
+	for key, value in filters.items():
+		license_filters.update({
+			key: [condition_map.get(key).get("condition"), condition_map.get(key).get("pattern").format(value)]
+		})
 
-		and_filters[key_map[f]["key"]] = [
-			key_map[f]["operator"],
-			key_map[f]["pattern"].format(filters[f])
-		]
-
-	fields = [
-		"legal_name",
-		"zip_code",
-		"license_type",
-		"status",
-		"county",
-		"city",
-		"license_number",
-		"email_id",
-		"expiration_date",
-		"business_structure",
-		"business_owner",
-		"license_for"
-	]
-
-	limit_start = (int(page_number)-1) * int(per_page)
-	license_info = frappe_client.get_list("License Info", fields=fields,filters=and_filters, limit_start=limit_start, limit_page_length=per_page)
-
-	total_licenses = frappe_client.post_api("frappe.client.get_count", {
-		"doctype": "License Info",
-		"filters": and_filters
-	})
-
-	license_doc = frappe_client.get_doc("DocType", "License Info")
-	for field in license_doc["fields"]:
-		if field["fieldname"] == 'license_type':
-			license_types = field["options"].splitlines()
-
-	return {
-		"license_info": license_info,
-		"total_count": total_licenses,
-		"license_types": license_types
+	params = {
+		"cmd": "bloomtrace.bloomtrace.doctype.license_info.license_info.get_licenses",
+		"filters": license_filters,
+		"fields": ["legal_name", "zip_code", "license_type", "county", "city", "license_number", "email_id", "expiration_date", "status"],
+		"limit_start": limit_start,
+		"limit_page_length": limit_page_length
 	}
+
+	try:
+		r = frappe_client.post_request(params)
+		return r
+	except Exception as e:
+		frappe.log_error(e)
+		frappe.throw(_("Couldn't connect to BloomTrace."))
+
+@frappe.whitelist()
+def get_license_types():
+	if not frappe.cache().hget("cannabis", "license_type"):
+		fetch_license_types_from_bloomtrace()
+
+	return frappe.cache().hget("cannabis", "license_type")
+
+def fetch_license_types_from_bloomtrace():
+	frappe_client = get_bloomtrace_client()
+	if not frappe_client:
+		frappe.throw(_("Bloomtrace Integration is disabled."))
+
+	doc = frappe_client.get_doc("DocType", "License Info")
+
+	for field in doc.get("fields", []):
+		if field.get("fieldname") == "license_type":
+			frappe.cache().hset("cannabis", "license_type", field.get("options"))
+
+	return frappe.cache().hget("cannabis", "license_type")
+
+@frappe.whitelist()
+def add_license(license):
+	license = json.loads(license)
+
+	existing_license = frappe.db.exists("Compliance Info", license.get("license_number"))
+
+	if existing_license:
+		return existing_license
+
+
+	doc = frappe.get_doc({
+		"doctype": "Compliance Info",
+		"license_number": license.get("license_number"),
+		"license_type": license.get("license_type"),
+		"license_category": license.get("license_category"),
+		"license_expiry_date": license.get("license_expiry_date"),
+		"legal_name": license.get("legal_name"),
+		"county": license.get("county"),
+		"city": license.get("city"),
+		"license_issuer": license.get("license_issuer")
+	}).insert(ignore_permissions=True)
+
+	return doc.name
