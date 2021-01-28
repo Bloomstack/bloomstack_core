@@ -586,30 +586,6 @@
  ],
  "custom_perms": [],
  "doctype": "Company",
- "property_setters": [
-  {
-   "_assign": null,
-   "_comments": null,
-   "_liked_by": null,
-   "_user_tags": null,
-   "creation": "2019-08-02 02:37:29.854513",
-   "default_value": null,
-   "doc_type": "Company",
-   "docstatus": 0,
-   "doctype_or_field": "DocType",
-   "field_name": null,
-   "idx": 0,
-   "modified": "2019-08-02 02:37:29.854513",
-   "modified_by": "Administrator",
-   "name": "Company-read_only_onload",
-   "owner": "Administrator",
-   "parent": null,
-   "parentfield": null,
-   "parenttype": null,
-   "property": "read_only_onload",
-   "property_type": "Check",
-   "value": null
-  }
- ],
+ "property_setters": [],
  "sync_on_migrate": 1
 }

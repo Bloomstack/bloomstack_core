@@ -1,3 +1,5 @@
+# pylint: disable=W0622
+
 import frappe
 from frappe import _
 from bloomstack_core.bloomtrace import get_bloomtrace_client

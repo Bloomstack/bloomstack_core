@@ -1,12 +1,15 @@
-frappe.pages['license-search'].on_page_load = function(wrapper) {
+/* eslint-disable */
+
+frappe.pages["license-search"].on_page_load = function(wrapper) {
 	let page = frappe.ui.make_app_page({
 		parent: wrapper,
-		title: 'License Search',
+		title: "License Search",
 		single_column: true
 	});
+
 	frappe.require("assets/css/license_search.css", () => {
 		new LicenseSearch({page: page});
-	})
+	});
 }
 
 class LicenseSearch {
@@ -126,7 +129,7 @@ class LicenseSearch {
 		if (refreshing) {
 			$wrapper.html(`
 				<p class="text-muted">
-					<img src='/assets/bloomstack_core/images/bloomstack_loader_infinity.svg' width="20px" height="20px"> Refreshing
+					<img src="/assets/bloomstack_core/images/bloomstack_loader_infinity.svg" width="20px" height="20px"> Refreshing
 				</p>
 			`);
 			return;
@@ -232,7 +235,7 @@ class LicenseSearch {
 			</div>
 		`);
 
-		pagination_html.$wrapper.find('button[data-action="Prev"]').on("click", () => {
+		pagination_html.$wrapper.find("button[data-action='Prev']").on("click", () => {
 			if (me.limit_start > 0) {
 				me.limit_start -= me.limit_page_length;
 				frappe.utils.scroll_to($filters)
@@ -240,7 +243,7 @@ class LicenseSearch {
 			}
 		});
 
-		pagination_html.$wrapper.find('button[data-action="Next"]').on("click", () => {
+		pagination_html.$wrapper.find("button[data-action='Next']").on("click", () => {
 			if (me.limit_start < me.total_count) {
 				me.limit_start += me.limit_page_length;
 				frappe.utils.scroll_to($filters)
@@ -273,7 +276,7 @@ class LicenseSearch {
 		if (country) address.push(country);
 		if (zip_code) address.push(zip_code);
 
-		return address.join(' | ');
+		return address.join(" | ");
 	}
 
 	add_to_dict(license) {
@@ -302,7 +305,7 @@ class LicenseSearch {
 				onchange: () => me.filters_refresh()
 			},
 			{
-				fieldtype: 'Column Break'
+				fieldtype: "Column Break"
 			},
 			{
 				label: __("Legal Name"),
@@ -311,7 +314,7 @@ class LicenseSearch {
 				onchange: () => me.filters_refresh()
 			},
 			{
-				fieldtype: 'Column Break'
+				fieldtype: "Column Break"
 			},
 			{
 				label: __("Zipcode"),
@@ -320,19 +323,19 @@ class LicenseSearch {
 				onchange: () => me.filters_refresh()
 			},
 			{
-				fieldtype: 'Section Break'
+				fieldtype: "Section Break"
 			},
 			{
-				fieldtype: 'HTML',
-				fieldname: 'totals'
+				fieldtype: "HTML",
+				fieldname: "totals"
 			},
 			{
-				fieldtype: 'HTML',
-				fieldname: 'licenses'
+				fieldtype: "HTML",
+				fieldname: "licenses"
 			},
 			{
-				fieldtype: 'HTML',
-				fieldname: 'pagination'
+				fieldtype: "HTML",
+				fieldname: "pagination"
 			}
 		]
 	}
