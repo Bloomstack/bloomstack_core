@@ -240,6 +240,7 @@
     -ms-flex-flow: row wrap;
     flex-flow: row wrap;
   }
+
   .card-deck .card {
     display: -webkit-box;
     display: -webkit-flex;
@@ -255,9 +256,11 @@
     -ms-flex-direction: column;
     flex-direction: column;
   }
+
   .card-deck .card:not(:first-child) {
     margin-left: 15px;
   }
+
   .card-deck .card:not(:last-child) {
     margin-right: 15px;
   }
@@ -273,39 +276,49 @@
     -ms-flex-flow: row wrap;
     flex-flow: row wrap;
   }
+
   .card-group .card {
     -webkit-box-flex: 1;
     -webkit-flex: 1 0 0%;
     -ms-flex: 1 0 0%;
     flex: 1 0 0%;
   }
+
   .card-group .card + .card {
     margin-left: 0;
     border-left: 0;
   }
+
   .card-group .card:first-child {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
   }
+
   .card-group .card:first-child .card-img-top {
     border-top-right-radius: 0;
   }
+
   .card-group .card:first-child .card-img-bottom {
     border-bottom-right-radius: 0;
   }
+
   .card-group .card:last-child {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
   }
+
   .card-group .card:last-child .card-img-top {
     border-top-left-radius: 0;
   }
+
   .card-group .card:last-child .card-img-bottom {
     border-bottom-left-radius: 0;
   }
+
   .card-group .card:not(:first-child):not(:last-child) {
     border-radius: 0;
   }
+
   .card-group .card:not(:first-child):not(:last-child) .card-img-top,
   .card-group .card:not(:first-child):not(:last-child) .card-img-bottom {
     border-radius: 0;
@@ -321,6 +334,7 @@
     -moz-column-gap: 1.25rem;
     column-gap: 1.25rem;
   }
+
   .card-columns .card {
     display: inline-block;
     width: 100%;
@@ -332,18 +346,18 @@
 .list-group-item-no-border {
   position: relative;
   display: block;
-  padding: 10px 0px;
+  padding: 10px 0;
   margin-bottom: -1px;
   background-color: #fff;
 }
 
 /* custom BS utilities */
 .p-0 {
-  padding: 0px !important;
+  padding: 0 !important;
 }
 
 .pt-0 {
-  padding-top: 0px !important;
+  padding-top: 0 !important;
 }
 
 .pt-15px {
@@ -355,7 +369,7 @@
 }
 
 .bg-color {
-  background-color: #E8EAED !important;
+  background-color: #e8eaed !important;
 }
 
 .mb-10 {
@@ -374,4 +388,5 @@
   padding-top: calc(20vh);
   padding-bottom: calc(20vh);
 }
+
 /* csslint ignore:end */
