@@ -221,7 +221,7 @@ class LicenseSearch {
 		let pagination_html = me.frm.get_field("pagination");
 		let $filters = me.frm.get_field("filters").$wrapper;
 
-		if (me.licenses.length === 0) {
+		if (me.licenses.length === 0 || me.licenses.length <= me.limit_page_length) {
 			pagination_html.$wrapper.html(``);
 			return;
 		}
