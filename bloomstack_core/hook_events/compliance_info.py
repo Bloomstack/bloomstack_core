@@ -6,7 +6,7 @@ from frappe.utils import get_host_name
 
 def create_bloomtrace_license(compliance_info, method):
 	frappe_client = get_bloomtrace_client()
-	if not frappe_client:
+	if not frappe_client or compliance_info.synced_from_bloomtrace:
 		return
 
 	license_info = frappe_client.get_doc("License Info", compliance_info.license_number)

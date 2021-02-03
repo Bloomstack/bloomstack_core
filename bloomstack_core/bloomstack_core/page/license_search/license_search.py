@@ -87,7 +87,8 @@ def add_license(license):
 		"legal_name": license.get("legal_name"),
 		"county": license.get("county"),
 		"city": license.get("city"),
-		"license_issuer": license.get("license_issuer")
+		"license_issuer": license.get("license_issuer"),
+		"synced_from_bloomtrace": 1
 	}).insert(ignore_permissions=True)
 
 	return doc.name
