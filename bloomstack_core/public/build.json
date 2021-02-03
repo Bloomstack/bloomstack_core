@@ -11,9 +11,8 @@
 	"js/license_search.min.js": [
 		"public/js/bloomstack_core/license_search/license_search.js"
 	],
-	"css/license_search.min.css": [
-		"public/css/nprogress.css",
-		"public/css/license_search.css"
+	"css/license_search.css": [
+		"bloomstack_core/page/license_search/license_search.css"
 	],
 	"css/reports.min.css": [
 		"public/css/reports.css"
