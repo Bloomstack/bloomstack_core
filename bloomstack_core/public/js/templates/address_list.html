@@ -17,11 +17,13 @@
 	</p>
 	<p class="h6">
 		{% if(addr_list[i].address_type!="Other") { %}
-		<span class="text-muted">({%= __(addr_list[i].address_type) %})</span>{% } %}
+		<span class="text-muted">Address Type: {%= __(addr_list[i].address_type) %}</span>{% } %}
+	</p>
+	<p class="h6">
 		{% if(addr_list[i].is_primary_address) { %}
-		<span class="text-muted">({%= __("Primary") %})</span>{% } %}
+		<span class="text-muted">({%= __("Preferred Billing") %})</span>{% } %}
 		{% if(addr_list[i].is_shipping_address) { %}
-		<span class="text-muted">({%= __("Shipping") %})</span>{% } %}
+		<span class="text-muted">({%= __("Preferred Shipping") %})</span>{% } %}
 		{% if(addr_list[i].disabled) { %}
 		<span class="text-muted">({%= __("Disabled") %})</span>{% } %}
 	</p>
