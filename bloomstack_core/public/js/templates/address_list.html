@@ -22,6 +22,8 @@
 		<span class="text-muted">({%= __("Primary") %})</span>{% } %}
 		{% if(addr_list[i].is_shipping_address) { %}
 		<span class="text-muted">({%= __("Shipping") %})</span>{% } %}
+		{% if(addr_list[i].disabled) { %}
+		<span class="text-muted">({%= __("Disabled") %})</span>{% } %}
 	</p>
 	<p>{%= addr_list[i].display %}</p>
 </div>
