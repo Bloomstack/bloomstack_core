@@ -253,20 +253,49 @@ class LicenseSearch {
 	}
 
 	create_document(doctype, license) {
-		frappe.show_alert({
-			message: __("Saving License {0}", [license.license_number]),
-			indicator: "blue"
-		});
-		frappe.xcall("bloomstack_core.bloomstack_core.page.license_search.license_search.add_license", {
-			license: license
-		}).then(r => {
-			frappe.show_alert({
-				message: __("Saved"),
-				indicator: "green"
-			});
+		let me = this;
 
-			frappe.new_doc(doctype);
+		let d = new frappe.ui.Dialog({
+			title: __("Select Company"),
+			fields: [
+				{
+					label: __("Company"),
+					fieldtype: "Link",
+					fieldname: "company",
+					options: "Company",
+					reqd: 1
+				}
+			],
+			primary_action: function() {
+				d.hide();
+				let values = d.get_values();
+				frappe.show_alert({
+					message: __("Saving License {0}", [license.license_number]),
+					indicator: "blue"
+				});
+				frappe.xcall("bloomstack_core.bloomstack_core.page.license_search.license_search.add_license", {
+					license: license,
+					company: values.company
+				}).then(r => {
+					frappe.show_alert({
+						message: __("Saved"),
+						indicator: "green"
+					});
+
+					frappe.model.open_mapped_doc({
+						method: "bloomstack_core.bloomstack_core.page.license_search.license_search.create",
+						args: {
+							party: doctype,
+							license: {
+								license: r
+							}
+						}
+					});
+				});
+			}
 		});
+
+		d.show();
 	}
 
 	get_address(city, country, zip_code) {

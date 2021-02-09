@@ -69,7 +69,7 @@ def fetch_license_types_from_bloomtrace():
 	return frappe.cache().hget("cannabis", "license_type")
 
 @frappe.whitelist()
-def add_license(license):
+def add_license(license, company):
 	license = json.loads(license)
 
 	existing_license = frappe.db.exists("Compliance Info", license.get("license_number"))
@@ -80,6 +80,7 @@ def add_license(license):
 
 	doc = frappe.get_doc({
 		"doctype": "Compliance Info",
+		"company": company,
 		"license_number": license.get("license_number"),
 		"license_type": license.get("license_type"),
 		"license_category": license.get("license_category"),
@@ -92,3 +93,12 @@ def add_license(license):
 	}).insert(ignore_permissions=True)
 
 	return doc.name
+
+@frappe.whitelist()
+def create(source_name, target_doc=None):
+	args = frappe.flags.args
+
+	party = frappe.new_doc(args.party)
+	party.append("licenses", args.license)
+
+	return party
