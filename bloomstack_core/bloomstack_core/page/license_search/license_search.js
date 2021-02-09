@@ -283,7 +283,7 @@ class LicenseSearch {
 					});
 
 					frappe.model.open_mapped_doc({
-						method: "bloomstack_core.bloomstack_core.page.license_search.license_search.create",
+						method: "bloomstack_core.bloomstack_core.page.license_search.license_search.create_party_with_license",
 						args: {
 							party: doctype,
 							license: {
