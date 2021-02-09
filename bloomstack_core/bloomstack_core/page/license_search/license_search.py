@@ -95,7 +95,7 @@ def add_license(license, company):
 	return doc.name
 
 @frappe.whitelist()
-def create(source_name, target_doc=None):
+def create_party_with_license(source_name, target_doc=None):
 	args = frappe.flags.args
 
 	party = frappe.new_doc(args.party)
