@@ -14,21 +14,6 @@
   <table
   style="max-width: 600px; margin: 0 auto; font-family: Helvetica, 'sans-serif'; color: #808080; line-height: 24px;">
   
-  <thead style="background-color: #f7f7f7;">
-    <tr>
-      <td style="padding: 40px 20px">
-        <img src="https://gallery.mailchimp.com/8450e0cdfc0ece704a354070c/images/c93dc6dd-9e56-4435-ad7e-355038318242.png" alt="Logo" style="width: 40%; height: auto; float: left;">
-        <p style="float: right; padding-top: 25px; font-size: 21px; margin-bottom: 0;">
-          {% if authorization_request.status == "Request Sent" %}
-            Authorization Request
-          {% else %}
-            {{ authorization_request.linked_docname }}
-          {% endif %}
-        </p>
-      </td>
-    </tr>
-  </thead>
-  
   <tbody>
     <tr>
       <td>
@@ -88,7 +73,7 @@
           </tr>
           <tr>
             <td>
-              <p style="margin: 0; padding-left: 20px; margin-bottom: 0!important;">Bloomstack Team</p>
+              <p style="margin: 0; padding-left: 20px; margin-bottom: 0!important;">{{ company }} Team</p>
             </td>
           </tr>
         </table>
@@ -96,26 +81,6 @@
     </tr>
   </tbody>
   
-  <tfoot style="background-color: #4f5161; text-align: center;">
-    <tr>
-      <td style="padding: 50px 10px;">
-        <table style="width: 100%;">
-          <tr>
-            <td>
-              <p style="color: #fff; margin-bottom: 0!important;">Our support address is:</p>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <p style="margin: 0;"><a href="emailto:support@bloomstack.com"
-                style="color: #00ADD8">support@bloomstack.com</a></p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </tfoot>
-    
   </table>
   
 </body>
