@@ -135,7 +135,7 @@ class LicenseSearch {
 			return;
 		}
 
-		$wrapper.html(`<p class="text-muted">${cards_range_start} -
+		$wrapper.html(`<p class="text-muted">${cards_range_start ? cards_range_start : 1} -
 			${(cards_range_end >= me.total_count ? me.total_count : cards_range_end)}
 			of ${me.total_count}</p>`);
 	}
