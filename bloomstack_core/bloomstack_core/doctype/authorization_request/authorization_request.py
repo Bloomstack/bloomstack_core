@@ -28,12 +28,17 @@ class AuthorizationRequest(Document):
 
 		doc = frappe.get_doc(self.linked_doctype, self.linked_docname)
 		company = doc.company if hasattr(doc, 'company') else get_default_company()
+		default_letterhead = frappe.db.get_value("Company", company, "default_letter_head")
+		letterhead_content = ""
+		if default_letterhead:
+			letterhead_content = frappe.db.get_value("Letter Head", default_letterhead, "content")
 
 		subject = "{0} requests your authorization on {1}".format(company, self.linked_doctype)
 		message = frappe.render_template("templates/emails/authorization_request.html", {
 			"authorization_request": self,
 			"linked_doc": doc,
-			"company": company
+			"company": company,
+			"letter_head": letterhead_content
 		})
 
 		frappe.sendmail(recipients=[self.authorizer_email], subject=subject, message=message)

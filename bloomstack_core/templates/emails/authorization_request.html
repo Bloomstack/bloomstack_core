@@ -10,10 +10,25 @@
 </head>
 
 <body style="margin: 0;">
-  
+
   <table
   style="max-width: 600px; margin: 0 auto; font-family: Helvetica, 'sans-serif'; color: #808080; line-height: 24px;">
   
+  <thead style="background-color: #f7f7f7;">
+    <tr>
+      <td style="padding: 40px 20px">
+        <div style="margin-bottom: 7px;" class="text-center">{{ letter_head }}</div>
+        <p style="float: right; padding-top: 25px; font-size: 21px; margin-bottom: 0;">
+          {% if authorization_request.status == "Request Sent" %}
+            Authorization Request
+          {% else %}
+            {{ authorization_request.linked_docname }}
+          {% endif %}
+        </p>
+      </td>
+    </tr>
+  </thead>
+
   <tbody>
     <tr>
       <td>
