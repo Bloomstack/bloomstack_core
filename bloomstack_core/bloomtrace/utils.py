@@ -21,7 +21,7 @@ def get_bloomtrace_client():
 
 
 def make_integration_request(doctype, docname):
-	if frappe.conf.enable_bloomtrace:
+	if frappe.conf.enable_bloomtrace and frappe.db.get_single_value("Compliance Settings", "is_compliance_enabled"):
 		integration_request = frappe.new_doc("Integration Request")
 		integration_request.update({
 			"integration_type": "Remote",
