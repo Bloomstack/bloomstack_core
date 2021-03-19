@@ -56,6 +56,12 @@ def insert_transfer_template(delivery_note, frappe_client):
 		if stop.delivery_note == delivery_note.name:
 			estimated_arrival = stop.estimated_arrival
 
+	if not estimated_arrival:
+		try:
+			delivery_trip.process_route()
+		except Exception:
+			frappe.throw(_("Estimated Arrival Times are not present."))
+
 	transfer_template_packages = []
 	for item in delivery_note.items:
 		if item.package_tag:
