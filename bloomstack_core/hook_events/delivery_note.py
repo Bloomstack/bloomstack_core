@@ -38,6 +38,11 @@ def execute_bloomtrace_integration_request():
 	for request in pending_requests:
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		delivery_note = frappe.get_doc("Delivery Note", integration_request.reference_docname)
+
+		# If delivery trip is created, only then move forward to integrate with BloomTrace
+		if not delivery_note.lr_no:
+			continue
+
 		try:
 			insert_transfer_template(delivery_note, frappe_client)
 			integration_request.error = ""
