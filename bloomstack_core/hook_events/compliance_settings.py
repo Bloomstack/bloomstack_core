@@ -13,7 +13,8 @@ def sync_bloomtrace(compliance_settings, method):
 	site_url = get_host_name()
 	frappe_client.update({
 		"doctype": "Bloomstack Site",
-		"name": site_url
+		"name": site_url,
+		"metrc_user_key": compliance_settings.metrc_user_key
 	})
 
 	for company in compliance_settings.company:
