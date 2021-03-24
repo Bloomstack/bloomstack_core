@@ -39,8 +39,8 @@ def execute_bloomtrace_integration_request():
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		delivery_note = frappe.get_doc("Delivery Note", integration_request.reference_docname)
 
-		# If delivery trip is created, only then move forward to integrate with BloomTrace
-		if not delivery_note.lr_no:
+		# If delivery trip is created or estimated_arrival and departure_time is present, only then move forward to integrate with BloomTrace
+		if not delivery_note.lr_no or not (delivery_note.estimated_arrival and delivery_note.departure_time):
 			continue
 
 		try:
@@ -55,24 +55,30 @@ def execute_bloomtrace_integration_request():
 
 
 def insert_transfer_template(delivery_note, frappe_client):
-	delivery_trip = frappe.get_doc("Delivery Trip", delivery_note.lr_no)
-	estimated_arrival = ''
-	for stop in delivery_trip.delivery_stops:
-		if stop.delivery_note == delivery_note.name:
-			estimated_arrival = stop.estimated_arrival
+	estimated_arrival = delivery_note.estimated_arrival
+	departure_time = delivery_note.departure_time
 
-	if not estimated_arrival:
-		try:
-			delivery_trip.process_route()
-		except Exception:
-			frappe.throw(_("Estimated Arrival Times are not present."))
+	if delivery_note.lr_no:
+		delivery_trip = frappe.get_doc("Delivery Trip", delivery_note.lr_no)
+		for stop in delivery_trip.delivery_stops:
+			if stop.delivery_note == delivery_note.name:
+				estimated_arrival = stop.estimated_arrival
+
+		if not estimated_arrival:
+			try:
+				delivery_trip.process_route()
+			except Exception:
+				frappe.throw(_("Estimated Arrival Times are not present."))
+
+		if not departure_time:
+			departure_time = delivery_trip.departure_time
 
 	transfer_template_packages = []
 	for item in delivery_note.items:
 		if item.package_tag:
 			transfer_template_packages.append({
 				"package_tag": item.package_tag,
-				"wholesale_price": item.rate
+				"wholesale_price": item.amount
 			})
 
 	site_url = get_host_name()
@@ -88,7 +94,7 @@ def insert_transfer_template(delivery_note, frappe_client):
 		"vehicle_license_plate_number": delivery_note.vehicle_no,
 		"driver_name": delivery_note.driver_name,
 		"driver_license_number": frappe.db.get_value("Driver", delivery_note.driver, "license_number"),
-		"estimated_departure": delivery_trip.departure_time,
+		"estimated_departure": departure_time,
 		"estimated_arrival": estimated_arrival,
 		"packages": transfer_template_packages
 	}
