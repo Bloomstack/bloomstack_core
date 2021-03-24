@@ -186,6 +186,7 @@ doc_events = {
 			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 			"bloomstack_core.compliance.package.create_package_from_delivery"
 		],
+		"on_submit": "bloomstack_core.hook_events.utils.create_integration_request",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
 	},
 	"Package Tag": {

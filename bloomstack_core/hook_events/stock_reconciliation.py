@@ -4,22 +4,14 @@
 
 import frappe
 from frappe.utils import cstr, today
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
 
 def create_integration_request(doc, method):
-	if doc.items[0].package_tag:
-		integration_request = frappe.new_doc("Integration Request")
-		integration_request.update({
-			"integration_type": "Remote",
-			"integration_request_service": "BloomTrace",
-			"method": "POST",
-			"status": "Queued",
-			"endpoint": "adjust",
-			"reference_doctype": "Stock Reconciliation",
-			"reference_docname": doc.name
-		})
-		integration_request.save(ignore_permissions=True)
+	for item in doc.items:
+		if item.package_tag:
+			make_integration_request("Stock Reconciliation", doc.name)
+			break
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()

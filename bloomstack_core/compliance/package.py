@@ -9,10 +9,8 @@ from frappe.utils import cstr
 def create_package_from_stock(stock_entry, method):
 	# TODO: Handle non-manufacture Stock Entries for intermediate packages
 	stock_entry_purpose = frappe.db.get_value("Stock Entry Type", stock_entry.stock_entry_type, "purpose")
-	if stock_entry_purpose not in ["Manufacture", "Repack"]:
-		return
-
-	make_integration_request("Stock Entry", stock_entry.name)
+	if stock_entry_purpose in ["Manufacture", "Repack"]:
+		make_integration_request("Stock Entry", stock_entry.name)
 
 
 def adjust_package_from_stock(stock_entry, method):
