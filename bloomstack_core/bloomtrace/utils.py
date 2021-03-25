@@ -22,12 +22,12 @@ def get_bloomtrace_client():
 
 def make_integration_request(doctype, docname):
 	if frappe.conf.enable_bloomtrace and frappe.db.get_single_value("Compliance Settings", "is_compliance_enabled"):
-		integration_request = frappe.new_doc("Integration Request")
-		integration_request.update({
-			"integration_type": "Remote",
-			"integration_request_service": "BloomTrace",
-			"status": "Queued",
-			"reference_doctype": doctype,
-			"reference_docname": docname
-		})
-		integration_request.save(ignore_permissions=True)
+		if not frappe.db.exists("Integration Request", {"reference_doctype": doctype, "reference_docname": docname}):
+			integration_request = frappe.get_doc({
+				"doctype": "Integration Request",
+				"integration_type": "Remote",
+				"integration_request_service": "BloomTrace",
+				"status": "Queued",
+				"reference_doctype": doctype,
+				"reference_docname": docname
+			}).save(ignore_permissions=True)

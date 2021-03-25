@@ -30,7 +30,7 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
 		except Exception as e:
-			integration_request.error = cstr(e)
+			integration_request.error = cstr(frappe.get_traceback())
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 

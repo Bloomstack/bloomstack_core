@@ -183,8 +183,7 @@ doc_events = {
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
-			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
-			"bloomstack_core.compliance.package.create_package_from_delivery"
+			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
 		],
 		"on_submit": "bloomstack_core.hook_events.utils.create_integration_request",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
@@ -198,7 +197,7 @@ doc_events = {
 		"on_update_after_submit": "bloomstack_core.hook_events.sales_order.check_overdue_status"
 	},
 	"Stock Entry": {
-		"on_submit": "bloomstack_core.compliance.package.create_package_from_stock"
+		"on_submit": "bloomstack_core.hook_events.stock_entry.create_package_from_stock"
 	},
 	"Delivery Trip": {
 		"validate": [
@@ -267,7 +266,6 @@ scheduler_events = {
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
 		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
-		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_delivery_note",
 		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.harvest.execute_bloomtrace_integration_request"
 	],

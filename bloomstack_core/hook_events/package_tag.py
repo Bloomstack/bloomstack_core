@@ -20,6 +20,7 @@ def execute_bloomtrace_integration_request():
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		package_tag = frappe.get_doc("Package Tag", integration_request.reference_docname)
 		bloomtrace_package_tag = frappe_client.get_doc("Package Tag", integration_request.reference_docname)
+
 		try:
 			if not bloomtrace_package_tag:
 				insert_package_tag(package_tag, frappe_client)
@@ -29,7 +30,7 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
 		except Exception as e:
-			integration_request.error = cstr(e)
+			integration_request.error = cstr(frappe.get_traceback())
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 

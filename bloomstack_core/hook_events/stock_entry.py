@@ -1,5 +1,5 @@
 import frappe
-
+from bloomstack_core.bloomtrace import make_integration_request
 
 def add_comment_to_batch(stock_entry, method):
 	for item in stock_entry.items:
@@ -17,3 +17,11 @@ def add_comment_to_batch(stock_entry, method):
 			comment.save()
 
 	frappe.db.commit()
+
+def create_package_from_stock(stock_entry, method):
+	# TODO: Handle non-manufacture Stock Entries for intermediate packages
+	stock_entry_purpose = frappe.db.get_value("Stock Entry Type", stock_entry.stock_entry_type, "purpose")
+	if stock_entry_purpose not in ["Manufacture", "Repack"]:
+		return
+
+	make_integration_request("Stock Entry", stock_entry.name)
