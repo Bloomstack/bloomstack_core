@@ -140,6 +140,6 @@ def insert_delivery_payload(delivery_note, frappe_client):
 
 		payload["doctype"] = "Package"
 		payload["Ingredients"] = package_ingredients
-		payload["company"] = delivery_note.company
+		payload["bloomstack_company"] = delivery_note.company
 
-		frappe_client.insert([payload])
+		frappe_client.insert(payload)
