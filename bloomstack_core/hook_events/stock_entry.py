@@ -25,7 +25,7 @@ def create_package_from_stock(stock_entry, method):
 	if stock_entry_purpose not in ["Manufacture", "Repack"]:
 		return
 
-	make_integration_request("Stock Entry", stock_entry.name)
+	make_integration_request("Stock Entry", stock_entry.name, "Package")
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()

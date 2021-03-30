@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2021, Bloomstack Inc. and contributors
+# For license information, please see license.txt
+
 import frappe
 from frappe.frappeclient import FrappeClient, AuthError
 
@@ -20,24 +24,28 @@ def get_bloomtrace_client():
 	return client
 
 
-def make_integration_request(doctype, docname):
-	if frappe.conf.enable_bloomtrace and frappe.db.get_single_value("Compliance Settings", "is_compliance_enabled"):
-		settings = frappe.get_cached_doc("Compliance Settings")
-		companies = [company.company for company in settings.company]
-		doc = frappe.get_doc(doctype, docname)
+def make_integration_request(doctype, docname, integration):
+	settings = frappe.get_cached_doc("Compliance Settings")
+	if not (frappe.conf.enable_bloomtrace and settings.is_compliance_enabled) or \
+		frappe.db.exists("Integration Request", {"reference_doctype": doctype, "reference_docname": docname}):
+		return
 
-		if not doc.company in companies:
-			return
+	doc = frappe.get_doc(doctype, docname)
+	company = settings.get("company", {"company": doc.company}) and settings.get("company", {"company": doc.company})[0]
+	fieldname = "push_{0}".format(frappe.scrub(integration))
 
-		if not frappe.db.exists("Integration Request", {"reference_doctype": doctype, "reference_docname": docname}):
-			integration_request = frappe.get_doc({
-				"doctype": "Integration Request",
-				"integration_type": "Remote",
-				"integration_request_service": "BloomTrace",
-				"status": "Queued",
-				"reference_doctype": doctype,
-				"reference_docname": docname
-			}).save(ignore_permissions=True)
+	if not company or not company.get(fieldname):
+		return
+
+	integration_request = frappe.get_doc({
+		"doctype": "Integration Request",
+		"integration_type": "Remote",
+		"integration_request_service": "BloomTrace",
+		"status": "Queued",
+		"reference_doctype": doctype,
+		"reference_docname": docname,
+		"endpoint": integration
+	}).save(ignore_permissions=True)
 
 
 def create_integration_request(doc, method):

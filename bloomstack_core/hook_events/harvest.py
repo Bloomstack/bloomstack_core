@@ -6,6 +6,8 @@ import frappe
 from frappe.utils import cstr
 from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
+def create_integration_request(doc, method):
+	make_integration_request(doc.doctype, doc.name, "Harvest")
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()

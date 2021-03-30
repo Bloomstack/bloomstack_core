@@ -5,8 +5,13 @@
 import frappe
 from frappe import _
 from frappe.utils import cstr, get_host_name
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
+def create_integration_request(doc, method):
+	if not doc.is_return:
+		make_integration_request(doc.doctype, doc.name, "Package")
+
+	make_integration_request(doc.doctype, doc.name, "Transfer")
 
 def link_invoice_against_delivery_note(delivery_note, method):
 	for item in delivery_note.items:

@@ -3,8 +3,11 @@
 # For license information, please see license.txt
 
 import frappe
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 from frappe.utils import cstr, get_host_name
+
+def insert_bloomtrace_integration_request(doc, method):
+	make_integration_request(doc.doctype, doc.name, "Package Tag")
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
