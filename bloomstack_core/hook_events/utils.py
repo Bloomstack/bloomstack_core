@@ -85,13 +85,3 @@ def validate_delivery_window(doc, method):
 				))
 
 			frappe.sendmail(recipients=recipients, subject=subject, message=message)
-
-
-def create_integration_request(doc, method):
-	settings = frappe.get_cached_doc("Compliance Settings")
-	companies = [company.company for company in settings.company]
-
-	if not doc.company in companies:
-		return
-
-	make_integration_request(doc.doctype, doc.name)

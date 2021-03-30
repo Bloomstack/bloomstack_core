@@ -5,8 +5,13 @@
 import frappe
 from frappe import _
 from frappe.utils import cstr, get_host_name
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
+def create_integration_request(doc, method):
+	if not doc.is_return:
+		make_integration_request(doc.doctype, doc.name, "Package")
+
+	make_integration_request(doc.doctype, doc.name, "Transfer")
 
 def link_invoice_against_delivery_note(delivery_note, method):
 	for item in delivery_note.items:
@@ -39,17 +44,19 @@ def execute_bloomtrace_integration_request():
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		delivery_note = frappe.get_doc("Delivery Note", integration_request.reference_docname)
 
-		# If delivery trip is created or estimated_arrival and departure_time is present, only then move forward to integrate with BloomTrace
-		if not delivery_note.lr_no or not (delivery_note.estimated_arrival and delivery_note.departure_time):
-			continue
-
 		try:
-			insert_transfer_template(delivery_note, frappe_client)
+			if not delivery_note.is_return:
+				insert_delivery_payload(delivery_note, frappe_client)
+
+			if delivery_note.lr_no or (delivery_note.estimated_arrival and delivery_note.departure_time):
+				# If delivery trip is created or estimated_arrival and departure_time is present, only then move forward to integrate with BloomTrace
+				insert_transfer_template(delivery_note, frappe_client)
+
 			integration_request.error = ""
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
 		except Exception as e:
-			integration_request.error = cstr(e)
+			integration_request.error = cstr(frappe.get_traceback())
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
@@ -66,7 +73,7 @@ def insert_transfer_template(delivery_note, frappe_client):
 
 		if not estimated_arrival:
 			try:
-				delivery_trip.process_route()
+				delivery_trip.process_route(False)
 			except Exception:
 				frappe.throw(_("Estimated Arrival Times are not present."))
 
@@ -99,3 +106,45 @@ def insert_transfer_template(delivery_note, frappe_client):
 		"packages": transfer_template_packages
 	}
 	frappe_client.insert(transfer_template)
+
+def insert_delivery_payload(delivery_note, frappe_client):
+	"""
+	Create the request body for package doctype in bloomtrace from a Delivery Note.
+
+	Args:
+		delivery_note (object): The `Delivery Note` Frappe object.
+
+	Returns:
+		payload (list of dict): The `Delivery Note` payload, if an Item is moved / created, otherwise `None` is reported to BloomTrace
+	"""
+
+	for item in delivery_note.items:
+		payload = {}
+		package_ingredients = []
+
+		if item.package_tag:
+			source_package_tag = frappe.db.get_value("Package Tag", item.package_tag, "source_package_tag")
+			if source_package_tag:
+				package_ingredients.append({
+					"package": source_package_tag,
+					"quantity": item.qty,
+					"unit_of_measure": item.uom,
+				})
+			elif item.warehouse:
+				payload = {
+					"tag": item.package_tag,
+					"item": item.item_name,
+					"quantity": item.qty,
+					"unit_of_measure": item.uom,
+					"patient_license_number": "",
+					"actual_date": delivery_note.lr_date or delivery_note.posting_date
+				}
+
+		if not payload:
+			return
+
+		payload["doctype"] = "Package"
+		payload["Ingredients"] = package_ingredients
+		payload["bloomstack_company"] = delivery_note.company
+
+		frappe_client.insert(payload)
