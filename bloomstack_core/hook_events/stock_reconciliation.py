@@ -10,7 +10,8 @@ from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_r
 def create_integration_request(doc, method):
 	for item in doc.items:
 		if item.package_tag:
-			make_integration_request("Stock Reconciliation", doc.name)
+			# UID Transaction Log is used to make changes in Package using adjust endpoint
+			make_integration_request("Stock Reconciliation", doc.name, "Package")
 			break
 
 def execute_bloomtrace_integration_request():
