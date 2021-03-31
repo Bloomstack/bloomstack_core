@@ -65,7 +65,7 @@ def make_transfer_templates(delivery_trip, method):
 
 		for item in frappe.get_doc("Delivery Note", stop.delivery_note).items:
 			if frappe.db.get_value("Item", item.item_code, "is_compliance_item"):
-				make_integration_request("Delivery Note", stop.delivery_note)
+				make_integration_request("Delivery Note", stop.delivery_note, "Transfer")
 				break
 
 
