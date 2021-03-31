@@ -43,15 +43,23 @@ def execute_bloomtrace_integration_request():
 		delivery_note = frappe.get_doc("Delivery Note", integration_request.reference_docname)
 
 		try:
-			if not delivery_note.is_return and integration_request.endpoint == "Package":
-				insert_delivery_payload(delivery_note, frappe_client)
+			error, status = "", "Completed"
 
-			if delivery_note.lr_no or (delivery_note.estimated_arrival and delivery_note.departure_time) and integration_request.endpoint == "Transfer":
-				# If delivery trip is created or estimated_arrival and departure_time is present, only then move forward to integrate with BloomTrace
-				insert_transfer_template(delivery_note, frappe_client)
+			if integration_request.endpoint == "Package":
+				if not delivery_note.is_return:
+					insert_delivery_payload(delivery_note, frappe_client)
+				else:
+					error, status = "Delivery Note is marked as return", "Failed"
 
-			integration_request.error = ""
-			integration_request.status = "Completed"
+			if integration_request.endpoint == "Transfer":
+				if delivery_note.lr_no or (delivery_note.estimated_arrival and delivery_note.departure_time):
+					# If delivery trip is created or estimated_arrival and departure_time is present, only then move forward to integrate with BloomTrace
+					insert_transfer_template(delivery_note, frappe_client)
+				else:
+					error, status = "Delivery Trip / Estimated Departure / Estimated Arrival is missing", "Failed"
+
+			integration_request.error = error
+			integration_request.status = status
 			integration_request.save(ignore_permissions=True)
 		except Exception as e:
 			integration_request.error = cstr(frappe.get_traceback())
