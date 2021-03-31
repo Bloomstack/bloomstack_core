@@ -24,15 +24,15 @@ def get_bloomtrace_client():
 	return client
 
 
-def make_integration_request(doctype, docname, integration):
+def make_integration_request(doctype, docname, endpoint):
 	settings = frappe.get_cached_doc("Compliance Settings")
 	if not (frappe.conf.enable_bloomtrace and settings.is_compliance_enabled) or \
-		frappe.db.exists("Integration Request", {"reference_doctype": doctype, "reference_docname": docname}):
+		frappe.db.exists("Integration Request", {"reference_doctype": doctype, "reference_docname": docname, "endpoint": endpoint}):
 		return
 
 	doc = frappe.get_doc(doctype, docname)
 	company = settings.get("company", {"company": doc.company}) and settings.get("company", {"company": doc.company})[0]
-	fieldname = "push_{0}".format(frappe.scrub(integration))
+	fieldname = "push_{0}".format(frappe.scrub(endpoint))
 
 	if not company or not company.get(fieldname):
 		return
@@ -44,7 +44,7 @@ def make_integration_request(doctype, docname, integration):
 		"status": "Queued",
 		"reference_doctype": doctype,
 		"reference_docname": docname,
-		"endpoint": integration
+		"endpoint": endpoint
 	}).save(ignore_permissions=True)
 
 
