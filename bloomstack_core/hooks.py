@@ -264,7 +264,7 @@ scheduler_events = {
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
-		"bloomstack_core.compliance.package.execute_bloomtrace_integration_request_for_stock_entry",
+		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.harvest.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request"
