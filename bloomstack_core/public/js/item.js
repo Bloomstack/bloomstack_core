@@ -5,7 +5,7 @@ frappe.ui.form.on('Item', {
 		frm.set_query("metrc_item_category", () => {
 			if (frm.doc.metrc_uom) {
 				return {
-					query: "bloomstack_core.compliance.item.metrc_item_category_query",
+					query: "bloomstack_core.hook_events.item.metrc_item_category_query",
 					filters: {
 						metrc_uom: frm.doc.metrc_uom
 					}
@@ -16,7 +16,7 @@ frappe.ui.form.on('Item', {
 		frm.set_query("metrc_uom", () => {
 			if (frm.doc.metrc_item_category) {
 				return {
-					query: "bloomstack_core.compliance.item.metrc_uom_query",
+					query: "bloomstack_core.hook_events.item.metrc_uom_query",
 					filters: {
 						metrc_item_category: frm.doc.metrc_item_category
 					}
@@ -27,7 +27,7 @@ frappe.ui.form.on('Item', {
 		frm.set_query("metrc_unit_uom", () => {
 			if (frm.doc.metrc_item_category) {
 				return {
-					query: "bloomstack_core.compliance.item.metrc_unit_uom_query",
+					query: "bloomstack_core.hook_events.item.metrc_unit_uom_query",
 					filters: {
 						metrc_item_category: frm.doc.metrc_item_category
 					}

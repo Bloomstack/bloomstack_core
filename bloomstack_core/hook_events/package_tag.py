@@ -3,8 +3,11 @@
 # For license information, please see license.txt
 
 import frappe
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 from frappe.utils import cstr, get_host_name
+
+def insert_bloomtrace_integration_request(doc, method):
+	make_integration_request(doc.doctype, doc.name, "Package Tag")
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
@@ -20,6 +23,7 @@ def execute_bloomtrace_integration_request():
 		integration_request = frappe.get_doc("Integration Request", request.name)
 		package_tag = frappe.get_doc("Package Tag", integration_request.reference_docname)
 		bloomtrace_package_tag = frappe_client.get_doc("Package Tag", integration_request.reference_docname)
+
 		try:
 			if not bloomtrace_package_tag:
 				insert_package_tag(package_tag, frappe_client)
@@ -29,7 +33,7 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
 		except Exception as e:
-			integration_request.error = cstr(e)
+			integration_request.error = cstr(frappe.get_traceback())
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
@@ -56,7 +60,7 @@ def make_package_tag(package_tag):
 	bloomtrace_package_tag = {
 		"doctype": "Package Tag",
 		"bloomstack_site": site_url,
-		"bloomstack_company": package_tag.bloomstack_company,
+		"bloomstack_company": package_tag.company,
 		"item": item,
 		"uid_number": package_tag.name,
 		"batch_number": package_tag.batch_no,

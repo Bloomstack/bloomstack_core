@@ -5,8 +5,10 @@
 from urllib.parse import urlparse
 import frappe
 from frappe.utils import cstr, get_url
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
+def create_integration_request(doc, method):
+	make_integration_request(doc.doctype, doc.name, "Strain")
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
@@ -31,7 +33,7 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
 		except Exception as e:
-			integration_request.error = cstr(e)
+			integration_request.error = cstr(frappe.get_traceback())
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 

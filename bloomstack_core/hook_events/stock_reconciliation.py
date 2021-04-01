@@ -4,22 +4,15 @@
 
 import frappe
 from frappe.utils import cstr, today
-from bloomstack_core.bloomtrace import get_bloomtrace_client
+from bloomstack_core.bloomtrace import get_bloomtrace_client, make_integration_request
 
 
 def create_integration_request(doc, method):
-	if doc.items[0].package_tag:
-		integration_request = frappe.new_doc("Integration Request")
-		integration_request.update({
-			"integration_type": "Remote",
-			"integration_request_service": "BloomTrace",
-			"method": "POST",
-			"status": "Queued",
-			"endpoint": "adjust",
-			"reference_doctype": "Stock Reconciliation",
-			"reference_docname": doc.name
-		})
-		integration_request.save(ignore_permissions=True)
+	for item in doc.items:
+		if item.package_tag:
+			# UID Transaction Log is used to make changes in Package using adjust endpoint
+			make_integration_request("Stock Reconciliation", doc.name, "Package")
+			break
 
 def execute_bloomtrace_integration_request():
 	frappe_client = get_bloomtrace_client()
@@ -44,7 +37,7 @@ def execute_bloomtrace_integration_request():
 			integration_request.status = "Completed"
 			integration_request.save(ignore_permissions=True)
 		except Exception as e:
-			integration_request.error = cstr(e)
+			integration_request.error = cstr(frappe.get_traceback())
 			integration_request.status = "Failed"
 			integration_request.save(ignore_permissions=True)
 
