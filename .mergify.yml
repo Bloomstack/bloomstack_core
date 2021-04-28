@@ -4,7 +4,6 @@ pull_request_rules:
       - status-success=Sider
       - status-success=Semantic Pull Request
       - status-success=Codacy Static Code Analysis
-      - status-success=Travis CI - Pull Request
       - status-success=security/snyk (Bloomstack)
       - label!=Don't Merge
       - label!=squash
@@ -16,7 +15,6 @@ pull_request_rules:
     conditions:
       - status-success=Sider
       - status-success=Codacy Static Code Analysis
-      - status-success=Travis CI - Pull Request
       - status-success=security/snyk (Bloomstack)
       - label!=Don't Merge
       - label=squash
