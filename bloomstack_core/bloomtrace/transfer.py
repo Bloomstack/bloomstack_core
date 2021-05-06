@@ -5,12 +5,11 @@ def create_purchase_receipt(transfer):
 	transfer = frappe.parse_json(transfer)
 
 	for item in transfer.get("items", []):
-		item_exists = frappe.get_all("Item", filters={"metrc_item_name": item.pop("product_name")}, fields=["name", "item_name"])
-		if item_exists:
-			item.update({
-				"item_code": item_exists[0].name,
-				"item_name": item_exists[0].item_name
-			})
+		supplier_item = frappe.db.get_all("Item Supplier", filters={"supplier_part_no": item.get("product_name")}, fields=["parent"])
+		item.update({
+			"item_code": supplier_item[0].parent if supplier_item else None,
+			"metrc_product_name": item.get("product_name")
+		})
 
 	doc = frappe.get_doc({"doctype": "Purchase Receipt"})
 	doc.update(transfer)
