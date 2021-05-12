@@ -86,6 +86,7 @@ def validate_delivery_window(doc, method):
 			frappe.sendmail(recipients=recipients, subject=subject, message=message)
 
 def get_users_with_role(role):
+	# returns users with the specified role
 	return [user for users in frappe.db.sql("""SELECT DISTINCT `tabUser`.`name`
 		FROM `tabHas Role`, `tabUser`
 		WHERE `tabHas Role`.`role`=%s
