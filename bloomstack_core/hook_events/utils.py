@@ -87,9 +87,13 @@ def validate_delivery_window(doc, method):
 
 def get_users_with_role(role):
 	# returns users with the specified role
-	return [user for users in frappe.db.sql("""SELECT DISTINCT `tabUser`.`name`
-		FROM `tabHas Role`, `tabUser`
-		WHERE `tabHas Role`.`role`=%s
-		AND `tabUser`.`name`!='Administrator'
-		AND `tabHas Role`.`parent`=`tabUser`.`name`
-		AND `tabUser`.`enabled`=1""", role) for user in users]
+	user_list = frappe.get_all("User", fields="name",
+		filters = [
+			["Has Role", "role", "=", role],
+			["User", "name", "!=", "Administrator"],
+			["User", "enabled", "=", 1]
+		],
+		as_list=1
+	)
+
+	return[user for users in user_list for user in users]
