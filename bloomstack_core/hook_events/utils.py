@@ -90,7 +90,7 @@ def get_users_with_role(role):
 	user_list = frappe.get_all("User", fields=["`tabUser`.name"],
 		filters = [
 			["Has Role", "role", "=", role],
-			["User", "name", "!=", "Administrator"],
+			["User", "name", "not in", ["Guest", "Administrator"]],
 			["User", "enabled", "=", 1]
 		],
 		as_list=1
