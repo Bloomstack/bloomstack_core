@@ -87,7 +87,7 @@ def validate_delivery_window(doc, method):
 
 def get_users_with_role(role):
 	# returns users with the specified role
-	user_list = frappe.get_all("User", fields="name",
+	user_list = frappe.get_all("User", fields=["`tabUser`.name"],
 		filters = [
 			["Has Role", "role", "=", role],
 			["User", "name", "!=", "Administrator"],
@@ -96,4 +96,4 @@ def get_users_with_role(role):
 		as_list=1
 	)
 
-	return[user for users in user_list for user in users]
+	return [user for users in user_list for user in users]
