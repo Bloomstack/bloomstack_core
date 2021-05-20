@@ -4,7 +4,6 @@ from frappe import _
 from frappe.core.utils import find
 from frappe.desk.form.linked_with import get_linked_docs, get_linked_doctypes
 from frappe.utils import date_diff, get_time, getdate, nowdate, to_timedelta, today
-from frappe.utils.user import get_users_with_role
 
 
 def validate_default_license(doc, method):
@@ -85,3 +84,16 @@ def validate_delivery_window(doc, method):
 				))
 
 			frappe.sendmail(recipients=recipients, subject=subject, message=message)
+
+def get_users_with_role(role):
+	# returns users with the specified role
+	user_list = frappe.get_all("User", fields=["`tabUser`.name"],
+		filters = [
+			["Has Role", "role", "=", role],
+			["User", "name", "not in", ["Guest", "Administrator"]],
+			["User", "enabled", "=", 1]
+		],
+		as_list=1
+	)
+
+	return [user for users in user_list for user in users]
