@@ -1,8 +1,4 @@
 {
-	"js/chart.js": [
-		"node_modules/chart.js/dist/Chart.min.js",
-		"node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"
-	],
 	"js/address_and_contact.min.js": [
 		"public/js/templates/address_list.html",
 		"public/js/templates/contact_list.html",
@@ -19,8 +15,5 @@
 	],
 	"js/bloomstack_desk.js": [
 		"public/js/desk.js"
-	],
-	"bloomstack_core/js/min/admin_insights.min.js": [
-		"public/js/bloomstack_core/admin_insights/admin_insights.js"
 	]
 }
