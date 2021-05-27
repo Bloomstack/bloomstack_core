@@ -70,7 +70,6 @@ webform_include_js = {
 doctype_js = {
 	"Batch": "public/js/batch.js",
 	"Compliance Settings": "public/js/compliance_settings.js",
-	"Contract": "public/js/contract.js",
 	"Delivery Note": "public/js/delivery_note.js",
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
@@ -94,13 +93,11 @@ doctype_list_js = {
 }
 
 override_doctype_dashboards = {
-	"Contract": "bloomstack_core.hook_events.contract.get_data",
 	"Employee": "bloomstack_core.hook_events.employee.get_data"
 }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 doctype_calendar_js = {
-	"Contract": "public/js/contract_calendar.js",
 	"Work Order": "public/js/work_order_calendar.js"
 }
 
@@ -158,16 +155,6 @@ doc_events = {
 	},
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
-	},
-	"Contract": {
-		"validate": "bloomstack_core.hook_events.contract.generate_contract_terms_display",
-		"on_update_after_submit": [
-			"bloomstack_core.hook_events.contract.create_project_against_contract",
-			"bloomstack_core.hook_events.contract.create_order_against_contract"
-		],
-		"on_submit": "bloomstack_core.hook_events.contract.create_event_against_contract",
-		"before_submit": "bloomstack_core.hook_events.contract.set_contract_company",
-		"on_cancel": "bloomstack_core.hook_events.contract.create_event_against_contract"
 	},
 	"Customer": {
 		"validate": [
