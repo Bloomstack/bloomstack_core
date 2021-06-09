@@ -30,7 +30,7 @@ def generate_directions_url(delivery_trip, method):
 			route_list = route_list[0]
 
 			context = {
-				"key": get_decrypted_password("Google Settings", "Google Settings", "geocode_api_key"),
+				"key": get_decrypted_password("Google Settings", "Google Settings", "api_key"),
 				"origin": quote(route_list[0], safe=''),
 				"destination": quote(route_list[-1], safe=''),
 				"waypoints": quote('|'.join(route_list[1:-1]), safe='')
