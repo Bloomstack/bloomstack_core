@@ -10,6 +10,7 @@ import frappe
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import flt, nowdate, today
+from frappe.utils.password import get_decrypted_password
 from bloomstack_core.bloomtrace import make_integration_request
 
 def generate_directions_url(delivery_trip, method):
@@ -29,7 +30,7 @@ def generate_directions_url(delivery_trip, method):
 			route_list = route_list[0]
 
 			context = {
-				"key": frappe.db.get_single_value("Google Settings", "api_key"),
+				"key": get_decrypted_password("Google Settings", "Google Settings", "api_key"),
 				"origin": quote(route_list[0], safe=''),
 				"destination": quote(route_list[-1], safe=''),
 				"waypoints": quote('|'.join(route_list[1:-1]), safe='')
