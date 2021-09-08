@@ -90,9 +90,8 @@ doctype_list_js = {
 	"Purchase Invoice": "public/js/purchase_invoice_list.js"
 }
 
-override_doctype_dashboards = {
-	"Employee": "bloomstack_core.hook_events.employee.get_data"
-}
+# override_doctype_dashboards = {
+# }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 doctype_calendar_js = {
@@ -193,9 +192,6 @@ doc_events = {
 	},
 	"Driver": {
 		"validate": "bloomstack_core.hook_events.driver.get_employee_from_user"
-	},
-	"Employee": {
-		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
 	},
 	"Item": {
 		"on_update": "bloomstack_core.hook_events.item.create_integration_request"
