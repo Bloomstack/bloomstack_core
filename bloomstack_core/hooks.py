@@ -154,11 +154,6 @@ doc_events = {
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},
-	"Customer": {
-		"validate": [
-			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
-		]
-	},
 	("Company", "Supplier", "Customer"): {
 		"validate": [
 			"bloomstack_core.hook_events.utils.validate_default_license",
