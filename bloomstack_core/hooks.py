@@ -34,7 +34,6 @@ website_context = {
 app_include_js = [
 	"/assets/bloomstack_core/js/conf.js",
 	"/assets/bloomstack_core/js/query_report.js",
-	"/assets/bloomstack_core/js/banner.js",
 	"/assets/js/bloomstack_desk.js"
 ]
 app_include_css = [
