@@ -10,7 +10,7 @@ app_icon = "octicon octicon-gear"
 app_color = "light green"
 app_email = "developers@bloomstack.com"
 app_license = "MIT"
-app_logo_url = '/assets/bloomstack_core/images/icon.png'
+# app_logo_url = '/assets/bloomstack_core/images/icon.png'
 
 
 # Set setup defaults
@@ -22,10 +22,7 @@ boot_session = "bloomstack_core.boot.boot_session"
 login_mail_title = "New Bloomstack Account"
 welcome_email = "bloomstack_core.utils.welcome_email"
 error_report_email = "support@bloomstack.com"
-website_context = {
-	"favicon": "/assets/bloomstack_core/images/favicon.ico",
-	"splash_image": "/assets/bloomstack_core/images/splash.png"
-}
+# website_context = {}
 
 # Includes in <head>
 # ------------------
@@ -37,22 +34,10 @@ app_include_js = [
 	"/assets/bloomstack_core/js/banner.js",
 	"/assets/js/bloomstack_desk.js"
 ]
-app_include_css = [
-	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/trees.css",
-	"/assets/bloomstack_core/css/mobile-fixes.css",
-	"/assets/bloomstack_core/css/banner.css",
-	"/assets/bloomstack_core/css/desk.css",
-	"/assets/bloomstack_core/css/order_desk.css",
-	"/assets/bloomstack_core/css/contract.css",
-	"/assets/css/reports.min.css"
-]
+# app_include_css = []
 
 # include js, css files in header of web template
-web_include_css = [
-	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/login.css"
-]
+# web_include_css = []
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
 # include js, css files in header of web form
