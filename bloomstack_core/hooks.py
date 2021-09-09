@@ -176,10 +176,6 @@ doc_events = {
 	"Package Tag": {
 		"on_update": "bloomstack_core.hook_events.package_tag.insert_bloomtrace_integration_request"
 	},
-	"Sales Order": {
-		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item",
-		"on_update_after_submit": "bloomstack_core.hook_events.sales_order.check_overdue_status"
-	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.hook_events.stock_entry.create_package_from_stock"
 	},
