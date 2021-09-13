@@ -2,7 +2,6 @@ from six import string_types
 
 import frappe
 from erpnext import get_default_company
-from erpnext.stock.doctype.batch.batch import get_batch_qty
 
 def welcome_email():
 	return "Welcome to Bloomstack"
@@ -66,32 +65,6 @@ def get_abbr(txt, max_length=2):
 
 	abbr = abbr.upper()
 	return abbr
-
-
-@frappe.whitelist()
-def move_expired_batches(source_name, target_doc=None):
-	batch_details = get_batch_qty(source_name)
-	target_warehouse = frappe.flags.args.get("warehouse")
-
-	item = frappe.db.get_value("Batch", source_name, "item")
-	uom = frappe.db.get_value("Item", item, "stock_uom")
-
-	stock_entry = frappe.new_doc("Stock Entry")
-	stock_entry.stock_entry_type = "Material Transfer"
-
-	for batch in batch_details:
-		if batch.get("qty") > 0:
-			stock_entry.append("items", {
-				"item_code": item,
-				"qty": batch.get("qty"),
-				"uom": uom,
-				"stock_uom": uom,
-				"batch_no": source_name,
-				"s_warehouse": batch.get("warehouse"),
-				"t_warehouse": target_warehouse
-			})
-
-	return stock_entry
 
 
 def email_authorized_doc(authorization_request_name):
