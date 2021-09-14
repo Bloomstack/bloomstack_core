@@ -202,9 +202,6 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
 	},
-	"Production Plan": {
-		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
-	},
 	"Plant Batch": {
 		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
 	},
