@@ -18,7 +18,6 @@ setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
 setup_wizard_stages = "bloomstack_core.setup.setup_wizard.get_setup_stages"
 
 # Set website defaults
-boot_session = "bloomstack_core.boot.boot_session"
 login_mail_title = "New Bloomstack Account"
 welcome_email = "bloomstack_core.utils.welcome_email"
 error_report_email = "support@bloomstack.com"
