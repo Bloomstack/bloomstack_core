@@ -72,7 +72,6 @@ doctype_js = {
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
 	"Item": "public/js/item.js",
-	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
