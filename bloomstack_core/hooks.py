@@ -167,10 +167,6 @@ doc_events = {
 	"Package Tag": {
 		"on_update": "bloomstack_core.hook_events.package_tag.insert_bloomtrace_integration_request"
 	},
-	"Sales Order": {
-		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item",
-		"on_update_after_submit": "bloomstack_core.hook_events.sales_order.check_overdue_status"
-	},
 	"Stock Entry": {
 		"on_submit": "bloomstack_core.hook_events.stock_entry.create_package_from_stock"
 	},
@@ -235,12 +231,6 @@ scheduler_events = {
 	],
 	"hourly": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
-	],
-	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
-	],
-	"daily_long": [
-		"bloomstack_core.hook_events.sales_order.update_order_status"
 	]
 }
 
