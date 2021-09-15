@@ -19,7 +19,6 @@ setup_wizard_stages = "bloomstack_core.setup.setup_wizard.get_setup_stages"
 
 # Set website defaults
 login_mail_title = "New Bloomstack Account"
-welcome_email = "bloomstack_core.utils.welcome_email"
 error_report_email = "support@bloomstack.com"
 website_context = {
 	"favicon": "/assets/bloomstack_core/images/favicon.ico",
