@@ -234,7 +234,6 @@ scheduler_events = {
 }
 
 after_migrate = [
-	'bloomstack_core.hook_events.lead.rearrange_standard_fields',
 	'bloomstack_core.hook_events.cognito.setup'
 ]
 
