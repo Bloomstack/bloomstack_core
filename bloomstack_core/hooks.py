@@ -70,6 +70,7 @@ doctype_js = {
 	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
 	"Item": "public/js/item.js",
+	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
@@ -80,8 +81,8 @@ doctype_js = {
 }
 
 doctype_list_js = {
+	"Delivery Trip": "public/js/delivery_trip_list.js",
 	"Sales Order": "public/js/sales_order_list.js",
-	"Sales Invoice": "public/js/sales_invoice_list.js",
 	"Purchase Order": "public/js/purchase_order_list.js",
 	"Purchase Invoice": "public/js/purchase_invoice_list.js"
 }
