@@ -89,9 +89,8 @@ doctype_list_js = {
 	"Purchase Invoice": "public/js/purchase_invoice_list.js"
 }
 
-override_doctype_dashboards = {
-	"Employee": "bloomstack_core.hook_events.employee.get_data"
-}
+# override_doctype_dashboards = {
+# }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 doctype_calendar_js = {
@@ -153,11 +152,6 @@ doc_events = {
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},
-	"Customer": {
-		"validate": [
-			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
-		]
-	},
 	("Company", "Supplier", "Customer"): {
 		"validate": [
 			"bloomstack_core.hook_events.utils.validate_default_license",
@@ -190,12 +184,6 @@ doc_events = {
 		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
-	"Driver": {
-		"validate": "bloomstack_core.hook_events.driver.get_employee_from_user"
-	},
-	"Employee": {
-		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
-	},
 	"Item": {
 		"on_update": "bloomstack_core.hook_events.item.create_integration_request"
 	},
@@ -209,9 +197,6 @@ doc_events = {
 	("Sales Order", "Delivery Note"): {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
-	},
-	"Production Plan": {
-		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
 	},
 	"Plant Batch": {
 		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
