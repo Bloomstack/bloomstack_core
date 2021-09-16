@@ -75,7 +75,6 @@ doctype_js = {
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
-	"Stock Entry": "public/js/stock_entry.js",
 	"Work Order": "public/js/work_order.js",
 }
 
