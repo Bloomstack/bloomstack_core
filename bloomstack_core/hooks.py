@@ -151,14 +151,6 @@ doc_events = {
 			"bloomstack_core.hook_events.utils.validate_expired_licenses"
 		]
 	},
-	"Delivery Note": {
-		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
-		"before_submit": [
-			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
-		],
-		"on_submit": "bloomstack_core.hook_events.delivery_note.create_integration_request",
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
-	},
 	"Package Tag": {
 		"on_update": "bloomstack_core.hook_events.package_tag.insert_bloomtrace_integration_request"
 	},
@@ -215,7 +207,6 @@ scheduler_events = {
 	"all": [
 		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
