@@ -144,9 +144,6 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
-	"Compliance Info": {
-		"before_insert": "bloomstack_core.hook_events.compliance_info.create_bloomtrace_license",
-	},
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},
