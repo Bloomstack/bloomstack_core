@@ -158,12 +158,6 @@ doc_events = {
 		"on_submit": "bloomstack_core.hook_events.delivery_note.create_integration_request",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
 	},
-	"Package Tag": {
-		"on_update": "bloomstack_core.hook_events.package_tag.insert_bloomtrace_integration_request"
-	},
-	"Stock Entry": {
-		"on_submit": "bloomstack_core.hook_events.stock_entry.create_package_from_stock"
-	},
 	"Delivery Trip": {
 		"validate": [
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
@@ -194,12 +188,6 @@ doc_events = {
 	},
 	"Strain": {
 		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
-	},
-	"Plant Additive Log": {
-		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
-	},
-	"Stock Reconciliation": {
-		"on_submit": "bloomstack_core.hook_events.stock_reconciliation.create_integration_request"
 	}
 }
 
@@ -209,14 +197,10 @@ doc_events = {
 scheduler_events = {
 	"all": [
 		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request"
 	],
 	"hourly": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
