@@ -172,10 +172,6 @@ doc_events = {
 	"Item": {
 		"on_update": "bloomstack_core.hook_events.item.create_integration_request"
 	},
-	"Sales Invoice": {
-		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt",
-		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
-	},
 	"User": {
 		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
 	},
