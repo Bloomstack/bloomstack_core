@@ -185,9 +185,6 @@ doc_events = {
 	},
 	"Plant": {
 		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
-	},
-	"Strain": {
-		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	}
 }
 
@@ -200,7 +197,6 @@ scheduler_events = {
 		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
 		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request"
 	],
 	"hourly": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
