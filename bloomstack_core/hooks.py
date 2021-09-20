@@ -192,9 +192,6 @@ doc_events = {
 	"Harvest": {
 		"on_submit": "bloomstack_core.hook_events.harvest.create_integration_request",
 		"on_update_after_submit": "bloomstack_core.hook_events.harvest.create_integration_request"
-	},
-	"Stock Reconciliation": {
-		"on_submit": "bloomstack_core.hook_events.stock_reconciliation.create_integration_request"
 	}
 }
 
