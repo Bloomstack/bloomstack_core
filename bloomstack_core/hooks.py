@@ -144,12 +144,6 @@ doc_events = {
 	"Compliance Settings": {
 		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
 	},
-	("Company", "Supplier", "Customer"): {
-		"validate": [
-			"bloomstack_core.hook_events.utils.validate_default_license",
-			"bloomstack_core.hook_events.utils.validate_expired_licenses"
-		]
-	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
@@ -175,10 +169,6 @@ doc_events = {
 	},
 	"User": {
 		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
-	},
-	("Sales Order", "Delivery Note"): {
-		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
-		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
 	},
 	"Plant Batch": {
 		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
