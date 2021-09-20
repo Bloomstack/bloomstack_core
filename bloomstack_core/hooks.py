@@ -30,7 +30,6 @@ website_context = {
 
 # include js, css files in header of desk.html
 app_include_js = [
-	"/assets/bloomstack_core/js/conf.js",
 	"/assets/bloomstack_core/js/query_report.js",
 	"/assets/bloomstack_core/js/banner.js",
 	"/assets/js/bloomstack_desk.js"
@@ -142,20 +141,11 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
-	"Compliance Settings": {
-		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
-	},
 	("Company", "Supplier", "Customer"): {
 		"validate": [
 			"bloomstack_core.hook_events.utils.validate_default_license",
 			"bloomstack_core.hook_events.utils.validate_expired_licenses"
 		]
-	},
-	"Package Tag": {
-		"on_update": "bloomstack_core.hook_events.package_tag.insert_bloomtrace_integration_request"
-	},
-	"Stock Entry": {
-		"on_submit": "bloomstack_core.hook_events.stock_entry.create_package_from_stock"
 	},
 	"Delivery Trip": {
 		"validate": [
@@ -179,24 +169,8 @@ doc_events = {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
 	},
-	"Plant Batch": {
-		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
-	},
 	"Plant": {
 		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
-	},
-	"Strain": {
-		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
-	},
-	"Harvest": {
-		"on_submit": "bloomstack_core.hook_events.harvest.create_integration_request",
-		"on_update_after_submit": "bloomstack_core.hook_events.harvest.create_integration_request"
-	},
-	"Plant Additive Log": {
-		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
-	},
-	"Stock Reconciliation": {
-		"on_submit": "bloomstack_core.hook_events.stock_reconciliation.create_integration_request"
 	}
 }
 
@@ -206,14 +180,7 @@ doc_events = {
 scheduler_events = {
 	"all": [
 		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.harvest.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request"
 	],
 	"hourly": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
