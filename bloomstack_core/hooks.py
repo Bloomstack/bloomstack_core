@@ -158,14 +158,6 @@ doc_events = {
 		"on_submit": "bloomstack_core.hook_events.delivery_note.create_integration_request",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
 	},
-	"Delivery Trip": {
-		"validate": [
-			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
-			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
-		],
-		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
-	},
 	"Item": {
 		"on_update": "bloomstack_core.hook_events.item.create_integration_request"
 	},
