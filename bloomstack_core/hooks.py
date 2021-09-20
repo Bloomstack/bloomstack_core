@@ -176,9 +176,6 @@ doc_events = {
 	("Sales Order", "Delivery Note"): {
 		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
 		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
-	},
-	"Plant": {
-		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
 	}
 }
 
@@ -188,8 +185,7 @@ doc_events = {
 scheduler_events = {
 	"all": [
 		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
 	],
 	"hourly": [
 		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
