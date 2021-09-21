@@ -139,12 +139,6 @@ doctype_calendar_js = {
 # Hook on document methods and events
 
 doc_events = {
-	("Company", "Supplier", "Customer"): {
-		"validate": [
-			"bloomstack_core.hook_events.utils.validate_default_license",
-			"bloomstack_core.hook_events.utils.validate_expired_licenses"
-		]
-	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
@@ -164,10 +158,6 @@ doc_events = {
 	"Sales Invoice": {
 		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt",
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
-	},
-	("Sales Order", "Delivery Note"): {
-		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
-		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
 	}
 }
 
