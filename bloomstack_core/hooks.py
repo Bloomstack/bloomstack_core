@@ -120,7 +120,7 @@ doctype_calendar_js = {
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-notification_config = "bloomstack_core.notifications.get_notification_config"
+# notification_config = "bloomstack_core.notifications.get_notification_config"
 
 # Permissions
 # -----------
