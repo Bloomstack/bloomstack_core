@@ -154,10 +154,6 @@ doc_events = {
 		],
 		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
-	},
-	"Sales Invoice": {
-		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt",
-		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
 	}
 }
 
