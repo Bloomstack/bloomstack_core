@@ -1,5 +1,5 @@
 import frappe
-from erpnext.stock.doctype.delivery_trip.delivery_trip import get_address_display
+from erpnext.stock.doctype.delivery_trip.delivery_trip import get_address_display_for_trip
 from frappe.utils import add_days, getdate, nowdate
 
 API_VERSION = "v1.0"
