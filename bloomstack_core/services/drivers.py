@@ -59,7 +59,7 @@ def build_stop_data(trip):
 		stops_data.append({
 			"name": stop.name,
 			"visited": bool(stop.visited),
-			"address": get_address_display(stop.address),
+			"address": get_address_display_for_trip(stop.address),
 			"customer": stop.customer,
 			"amountToCollect": stop.grand_total,
 			"deliveryNote": stop.delivery_note,
