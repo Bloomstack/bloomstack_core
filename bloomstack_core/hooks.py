@@ -179,7 +179,8 @@ doc_events = {
 
 scheduler_events = {
 	"all": [
-		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request",
+		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
 	]
 }
 
