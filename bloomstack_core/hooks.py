@@ -139,14 +139,6 @@ doctype_calendar_js = {
 # Hook on document methods and events
 
 doc_events = {
-	"Delivery Note": {
-		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
-		"before_submit": [
-			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
-		],
-		"on_submit": "bloomstack_core.hook_events.delivery_note.create_integration_request",
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
-	},
 	"Delivery Trip": {
 		"validate": [
 			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
@@ -160,11 +152,7 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {
-	"all": [
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
-	]
-}
+scheduler_events = {}
 
 # Testing
 # -------
