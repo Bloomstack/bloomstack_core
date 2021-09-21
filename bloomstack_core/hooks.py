@@ -72,14 +72,12 @@ doctype_js = {
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
-	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
 	"Work Order": "public/js/work_order.js",
 }
 
 doctype_list_js = {
 	"Sales Order": "public/js/sales_order_list.js",
-	"Sales Invoice": "public/js/sales_invoice_list.js",
 	"Purchase Order": "public/js/purchase_order_list.js",
 	"Purchase Invoice": "public/js/purchase_invoice_list.js"
 }
@@ -122,7 +120,7 @@ doctype_calendar_js = {
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-notification_config = "bloomstack_core.notifications.get_notification_config"
+# notification_config = "bloomstack_core.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -141,9 +139,6 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # Hook on document methods and events
 
 doc_events = {
-	"Compliance Settings": {
-		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
-	},
 	"Delivery Note": {
 		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
 		"before_submit": [
@@ -160,24 +155,9 @@ doc_events = {
 		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
 		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
 	},
-	"Item": {
-		"on_update": "bloomstack_core.hook_events.item.create_integration_request"
-	},
 	"Sales Invoice": {
 		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt",
 		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
-	},
-	"User": {
-		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
-	},
-	"Plant Batch": {
-		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
-	},
-	"Plant": {
-		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
-	},
-	"Strain": {
-		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
 	}
 }
 
@@ -186,20 +166,9 @@ doc_events = {
 
 scheduler_events = {
 	"all": [
-		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request"
-	],
-	"hourly": [
-		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
+		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request"
 	]
 }
-
-after_migrate = [
-	'bloomstack_core.hook_events.cognito.setup'
-]
 
 # Testing
 # -------
