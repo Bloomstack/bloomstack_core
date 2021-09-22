@@ -1,5 +1,5 @@
 import frappe
-from bloomstack_core.hook_events.delivery_trip import get_address_display
+from erpnext.stock.doctype.delivery_trip.delivery_trip import get_address_display_for_trip
 from frappe.utils import add_days, getdate, nowdate
 
 API_VERSION = "v1.0"
@@ -59,7 +59,7 @@ def build_stop_data(trip):
 		stops_data.append({
 			"name": stop.name,
 			"visited": bool(stop.visited),
-			"address": get_address_display(stop.address),
+			"address": get_address_display_for_trip(stop.address),
 			"customer": stop.customer,
 			"amountToCollect": stop.grand_total,
 			"deliveryNote": stop.delivery_note,

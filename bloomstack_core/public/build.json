@@ -12,8 +12,5 @@
 	],
 	"css/reports.min.css": [
 		"public/css/reports.css"
-	],
-	"js/bloomstack_desk.js": [
-		"public/js/desk.js"
 	]
 }

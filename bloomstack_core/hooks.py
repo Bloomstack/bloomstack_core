@@ -18,9 +18,7 @@ setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
 setup_wizard_stages = "bloomstack_core.setup.setup_wizard.get_setup_stages"
 
 # Set website defaults
-boot_session = "bloomstack_core.boot.boot_session"
 login_mail_title = "New Bloomstack Account"
-welcome_email = "bloomstack_core.utils.welcome_email"
 error_report_email = "support@bloomstack.com"
 website_context = {
 	"favicon": "/assets/bloomstack_core/images/favicon.ico",
@@ -32,9 +30,7 @@ website_context = {
 
 # include js, css files in header of desk.html
 app_include_js = [
-	"/assets/bloomstack_core/js/conf.js",
-	"/assets/bloomstack_core/js/query_report.js",
-	"/assets/js/bloomstack_desk.js"
+	"/assets/bloomstack_core/js/query_report.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
@@ -68,35 +64,23 @@ doctype_js = {
 	"Batch": "public/js/batch.js",
 	"Compliance Settings": "public/js/compliance_settings.js",
 	"Delivery Note": "public/js/delivery_note.js",
-	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
-	"Item": "public/js/item.js",
-	"Lead": "public/js/lead.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
-	"Quotation": "public/js/quotation.js",
 	"Sales Order": "public/js/sales_order.js",
-	"Stock Entry": "public/js/stock_entry.js",
-	"Work Order": "public/js/work_order.js",
 }
 
 doctype_list_js = {
-	"Delivery Trip": "public/js/delivery_trip_list.js",
 	"Sales Order": "public/js/sales_order_list.js",
-	"Sales Invoice": "public/js/sales_invoice_list.js",
 	"Purchase Order": "public/js/purchase_order_list.js",
 	"Purchase Invoice": "public/js/purchase_invoice_list.js"
 }
 
-override_doctype_dashboards = {
-	"Employee": "bloomstack_core.hook_events.employee.get_data"
-}
+# override_doctype_dashboards = {
+# }
 
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-doctype_calendar_js = {
-	"Work Order": "public/js/work_order_calendar.js"
-}
 
 # Home Pages
 # ----------
@@ -128,7 +112,7 @@ doctype_calendar_js = {
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-notification_config = "bloomstack_core.notifications.get_notification_config"
+# notification_config = "bloomstack_core.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -146,125 +130,12 @@ notification_config = "bloomstack_core.notifications.get_notification_config"
 # ---------------
 # Hook on document methods and events
 
-doc_events = {
-	"Compliance Info": {
-		"before_insert": "bloomstack_core.hook_events.compliance_info.create_bloomtrace_license",
-	},
-	"Compliance Settings": {
-		"validate": "bloomstack_core.hook_events.compliance_settings.sync_bloomtrace"
-	},
-	"Customer": {
-		"validate": [
-			"bloomstack_core.hook_events.customer.update_lead_acc_open_date"
-		]
-	},
-	("Company", "Supplier", "Customer"): {
-		"validate": [
-			"bloomstack_core.hook_events.utils.validate_default_license",
-			"bloomstack_core.hook_events.utils.validate_expired_licenses"
-		]
-	},
-	"Delivery Note": {
-		"validate": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note",
-		"before_submit": [
-			"bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
-		],
-		"on_submit": "bloomstack_core.hook_events.delivery_note.create_integration_request",
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_note.link_invoice_against_delivery_note"
-	},
-	"Package Tag": {
-		"on_update": "bloomstack_core.hook_events.package_tag.insert_bloomtrace_integration_request"
-	},
-	"Sales Order": {
-		"validate": "bloomstack_core.hook_events.sales_order.validate_batch_item",
-		"on_update_after_submit": "bloomstack_core.hook_events.sales_order.check_overdue_status"
-	},
-	"Stock Entry": {
-		"on_submit": "bloomstack_core.hook_events.stock_entry.create_package_from_stock"
-	},
-	"Delivery Trip": {
-		"validate": [
-			"bloomstack_core.hook_events.delivery_trip.generate_directions_url",
-			"bloomstack_core.hook_events.delivery_trip.link_invoice_against_trip"
-		],
-		"on_submit" : "bloomstack_core.hook_events.delivery_trip.make_transfer_templates",
-		"on_update_after_submit": "bloomstack_core.hook_events.delivery_trip.set_vehicle_last_odometer_value",
-	},
-	"Driver": {
-		"validate": "bloomstack_core.hook_events.driver.get_employee_from_user"
-	},
-	"Employee": {
-		"validate": "bloomstack_core.hook_events.employee.update_driver_employee"
-	},
-	"Item": {
-		"on_update": "bloomstack_core.hook_events.item.create_integration_request"
-	},
-	"Sales Invoice": {
-		"before_submit": "bloomstack_core.hook_events.sales_invoice.create_metrc_sales_receipt",
-		"before_update_after_submit": "bloomstack_core.hook_events.sales_invoice.set_invoice_status"
-	},
-	"User": {
-		"after_insert": "bloomstack_core.hook_events.user.update_bloomtrace_user"
-	},
-	("Sales Order", "Delivery Note"): {
-		"validate": "bloomstack_core.hook_events.utils.validate_delivery_window",
-		"on_submit": "bloomstack_core.hook_events.utils.validate_delivery_window"
-	},
-	"Production Plan": {
-		"validate": "bloomstack_core.hook_events.production_plan.set_workstations"
-	},
-	"Plant Batch": {
-		"on_update": "bloomstack_core.hook_events.plant_batch.create_integration_request"
-	},
-	"Plant": {
-		"on_update": "bloomstack_core.hook_events.plant.create_integration_request"
-	},
-	"Strain": {
-		"on_update": "bloomstack_core.hook_events.strain.create_integration_request"
-	},
-	"Harvest": {
-		"on_submit": "bloomstack_core.hook_events.harvest.create_integration_request",
-		"on_update_after_submit": "bloomstack_core.hook_events.harvest.create_integration_request"
-	},
-	"Plant Additive Log": {
-		"on_update": "bloomstack_core.hook_events.plant_additive_log.create_integration_request"
-	},
-	"Stock Reconciliation": {
-		"on_submit": "bloomstack_core.hook_events.stock_reconciliation.create_integration_request"
-	}
-}
+doc_events = {}
 
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {
-	"all": [
-		"bloomstack_core.hook_events.item.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.package_tag.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.delivery_note.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant_batch.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.strain.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.plant_additive_log.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.harvest.execute_bloomtrace_integration_request",
-		"bloomstack_core.hook_events.stock_entry.execute_bloomtrace_integration_request"
-	],
-	"hourly": [
-		"bloomstack_core.hook_events.user.execute_bloomtrace_integration_request"
-	],
-	"daily": [
-		"bloomstack_core.hook_events.sales_order.create_sales_invoice_against_contract"
-	],
-	"daily_long": [
-		"bloomstack_core.hook_events.sales_order.update_order_status"
-	]
-}
-
-after_migrate = [
-	'bloomstack_core.hook_events.lead.rearrange_standard_fields',
-	'bloomstack_core.hook_events.cognito.setup'
-]
+scheduler_events = {}
 
 # Testing
 # -------
