@@ -73,7 +73,6 @@ doctype_js = {
 	"Pick List": "public/js/pick_list.js",
 	"Quality Inspection": "public/js/quality_inspection.js",
 	"Sales Order": "public/js/sales_order.js",
-	"Work Order": "public/js/work_order.js",
 }
 
 doctype_list_js = {
