@@ -14,7 +14,7 @@ app_logo_url = '/assets/bloomstack_core/images/icon.png'
 
 
 # Set setup defaults
-setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
+# setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
 
 # Set website defaults
 login_mail_title = "New Bloomstack Account"
@@ -28,46 +28,50 @@ website_context = {
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = [
-	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/trees.css",
-	"/assets/bloomstack_core/css/mobile-fixes.css",
-	"/assets/bloomstack_core/css/banner.css",
-	"/assets/bloomstack_core/css/desk.css",
-	"/assets/bloomstack_core/css/order_desk.css",
-	"/assets/bloomstack_core/css/contract.css",
-	"/assets/css/reports.min.css"
-]
+# app_include_js = [
+# 	"/assets/bloomstack_core/js/query_report.js"
+# ]
+# app_include_css = [
+# 	"/assets/bloomstack_core/css/buttons.css",
+# 	"/assets/bloomstack_core/css/trees.css",
+# 	"/assets/bloomstack_core/css/mobile-fixes.css",
+# 	"/assets/bloomstack_core/css/banner.css",
+# 	"/assets/bloomstack_core/css/desk.css",
+# 	"/assets/bloomstack_core/css/order_desk.css",
+# 	"/assets/bloomstack_core/css/contract.css",
+# 	"/assets/css/reports.min.css"
+# ]
+
 
 # include js, css files in header of web template
-web_include_css = [
-	"/assets/bloomstack_core/css/buttons.css",
-	"/assets/bloomstack_core/css/login.css"
-]
+# web_include_css = [
+# 	"/assets/bloomstack_core/css/buttons.css",
+# 	"/assets/bloomstack_core/css/login.css"
+# ]
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
 # include js, css files in header of web form
-webform_include_js = {
-	"Issue": "public/js/issues.js"
-}
+# webform_include_js = {
+	# "Issue": "public/js/issues.js"
+# }
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {
-	"Batch": "public/js/batch.js",
-	"Compliance Settings": "public/js/compliance_settings.js",
-	"Delivery Note": "public/js/delivery_note.js",
-	"Driver": "public/js/driver.js",
-	"Packing Slip": "public/js/packing_slip.js",
-	"Pick List": "public/js/pick_list.js",
-	"Quality Inspection": "public/js/quality_inspection.js",
-	"Sales Order": "public/js/sales_order.js",
-}
+# doctype_js = {
+# 	"Batch": "public/js/batch.js",
+# 	"Compliance Settings": "public/js/compliance_settings.js",
+# 	"Delivery Note": "public/js/delivery_note.js",
+# 	"Driver": "public/js/driver.js",
+# 	"Packing Slip": "public/js/packing_slip.js",
+# 	"Pick List": "public/js/pick_list.js",
+# 	"Quality Inspection": "public/js/quality_inspection.js",
+# 	"Sales Order": "public/js/sales_order.js",
+# }
 
-doctype_list_js = {}
+# doctype_list_js = {}
 
 # override_doctype_dashboards = {
 # }
@@ -122,12 +126,12 @@ doctype_list_js = {}
 # ---------------
 # Hook on document methods and events
 
-doc_events = {}
+# doc_events = {}
 
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {}
+# scheduler_events = {}
 
 # Testing
 # -------
