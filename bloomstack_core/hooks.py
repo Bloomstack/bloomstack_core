@@ -14,8 +14,7 @@ app_logo_url = '/assets/bloomstack_core/images/icon.png'
 
 
 # Set setup defaults
-setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
-setup_wizard_stages = "bloomstack_core.setup.setup_wizard.get_setup_stages"
+# setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
 
 # Set website defaults
 login_mail_title = "New Bloomstack Account"
@@ -29,9 +28,9 @@ website_context = {
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_js = [
-	"/assets/bloomstack_core/js/query_report.js"
-]
+# app_include_js = [
+# 	"/assets/bloomstack_core/js/query_report.js"
+# ]
 # app_include_css = [
 # 	"/assets/bloomstack_core/css/buttons.css",
 # 	"/assets/bloomstack_core/css/trees.css",
@@ -52,9 +51,9 @@ app_include_js = [
 # web_include_js = "/assets/bloomstack_core/js/bloomstack_core.js"
 
 # include js, css files in header of web form
-webform_include_js = {
+# webform_include_js = {
 	# "Issue": "public/js/issues.js"
-}
+# }
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
@@ -72,9 +71,7 @@ webform_include_js = {
 # 	"Sales Order": "public/js/sales_order.js",
 # }
 
-doctype_list_js = {
-	"Purchase Order": "public/js/purchase_order_list.js"
-}
+# doctype_list_js = {}
 
 # override_doctype_dashboards = {
 # }
@@ -129,12 +126,12 @@ doctype_list_js = {
 # ---------------
 # Hook on document methods and events
 
-doc_events = {}
+# doc_events = {}
 
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {}
+# scheduler_events = {}
 
 # Testing
 # -------
