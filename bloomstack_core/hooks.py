@@ -43,6 +43,7 @@ app_include_js = [
 # 	"/assets/css/reports.min.css"
 # ]
 
+
 # include js, css files in header of web template
 # web_include_css = [
 # 	"/assets/bloomstack_core/css/buttons.css",
