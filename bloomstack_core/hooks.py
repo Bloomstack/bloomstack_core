@@ -65,7 +65,6 @@ doctype_js = {
 	"Batch": "public/js/batch.js",
 	"Compliance Settings": "public/js/compliance_settings.js",
 	"Delivery Note": "public/js/delivery_note.js",
-	"Delivery Trip": "public/js/delivery_trip.js",
 	"Driver": "public/js/driver.js",
 	"Packing Slip": "public/js/packing_slip.js",
 	"Pick List": "public/js/pick_list.js",
