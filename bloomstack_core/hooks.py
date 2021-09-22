@@ -31,8 +31,7 @@ website_context = {
 # include js, css files in header of desk.html
 app_include_js = [
 	"/assets/bloomstack_core/js/query_report.js",
-	"/assets/bloomstack_core/js/banner.js",
-	"/assets/js/bloomstack_desk.js"
+	"/assets/bloomstack_core/js/banner.js"
 ]
 app_include_css = [
 	"/assets/bloomstack_core/css/buttons.css",
