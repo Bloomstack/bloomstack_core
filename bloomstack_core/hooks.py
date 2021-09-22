@@ -15,7 +15,6 @@ app_logo_url = '/assets/bloomstack_core/images/icon.png'
 
 # Set setup defaults
 setup_wizard_requires = "/assets/bloomstack_core/js/setup_wizard.js"
-setup_wizard_stages = "bloomstack_core.setup.setup_wizard.get_setup_stages"
 
 # Set website defaults
 login_mail_title = "New Bloomstack Account"
