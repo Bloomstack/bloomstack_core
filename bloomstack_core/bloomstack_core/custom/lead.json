@@ -375,29 +375,6 @@
  "custom_perms": [],
  "doctype": "Lead",
  "property_setters": [
-  {
-   "_assign": null,
-   "_comments": null,
-   "_liked_by": null,
-   "_user_tags": null,
-   "creation": "2021-08-02 01:19:39.019864",
-   "default_value": null,
-   "doc_type": "Lead",
-   "docstatus": 0,
-   "doctype_or_field": "DocField",
-   "field_name": "status",
-   "idx": 0,
-   "modified": "2021-08-02 01:19:39.019864",
-   "modified_by": "Administrator",
-   "name": "Lead-status-options",
-   "owner": "Administrator",
-   "parent": null,
-   "parentfield": null,
-   "parenttype": null,
-   "property": "options",
-   "property_type": "Text",
-   "value": "Lead\nOpen\nReplied\nOpportunity\nQuotation\nLost Quotation\nInterested\nConverted\nNot Qualified\nInvestor\nDo Not Contact\nSpam\nChannel Partner\nReferral Partner\nSales Partner Prospect"
-  }
  ],
  "sync_on_migrate": 1
 }
