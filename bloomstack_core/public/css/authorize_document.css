@@ -99,6 +99,18 @@
     -webkit-print-color-adjust: exact;
 }
 
+.print-format, .print-format h1, .print-format h2, .print-format h3, .print-format p, .print-format td, .print-format th {
+    color: black;
+}
+
+.print-format .bill-ship-section {
+    display: flex;
+}
+
+.print-format .bill-ship-section > * {
+    flex: 1 1 auto;
+}
+
 .page-break {
     page-break-after: always;
 }
