@@ -17,9 +17,14 @@ def create_integration_request(doc, method):
 
 @frappe.whitelist()
 def autoname_item(item):
-	item = frappe._dict(json.loads(item))
-	item_code = autoname(item)
-	return item_code
+	config = frappe.get_site_config() or frappe._dict()
+
+	if config.enforce_item_code_naming == True or config.enforce_item_code_naming == None:
+		item = frappe._dict(json.loads(item))
+		item_code = autoname(item)
+		return item_code
+
+	return item.item_code
 
 
 def autoname(item, method=None):
